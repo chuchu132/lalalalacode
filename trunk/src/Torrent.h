@@ -23,7 +23,7 @@
 /*ACA hay que poner un server que actue como peer para el resto del mundo*/
 
 class Tracker;
-class Torrent : {
+class Torrent {
 public:
 	Torrent();
 	/*

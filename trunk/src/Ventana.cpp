@@ -6,7 +6,7 @@
  */
 #include "Ventana.h"
 
-#define FILE_WINDOW "wind.vista"
+#define FILE_WINDOW "res/wind.vista"
 #define MAIN_WINDOW "main_wind"
 #define ABOUT_WINDOW "about_wind"
 #define BUTTON_ADD 	"boton_agregar"
@@ -19,6 +19,7 @@
 #define BUTTON_ABOUT "about"
 
 #define MENU_HELP "Ayuda"
+#define VIEW_TORRENTS "torrents"
 
 
 Ventana::Ventana()
@@ -27,24 +28,33 @@ Ventana::Ventana()
 	try
 	{
 		builder = Gtk::Builder::create_from_file(FILE_WINDOW);
+		std::cout<<"archivo cargado"<<std::endl;
+
+		//obtengo la ventana principal
+		main_window = 0;
+		builder->get_widget(MAIN_WINDOW, main_window);
+		std::cout<<"ventana ppal cargada"<<std::endl;
+
+		//obtengo la ventana principal
+		about_window = 0;
+		builder->get_widget(ABOUT_WINDOW, about_window);
+		std::cout<<"ventana acerca de cargada"<<std::endl;
+
+		//obtengo el tree view de torrents
+		view_torrents = 0;
+		builder->get_widget(VIEW_TORRENTS,view_torrents);
+		std::cout<<"view torrents cargado"<<std::endl;
+
+		//	builder->get_widget(MENU_HELP, menu_help);
+
+		//obtengo los botones
+		this->getButtons();
+		this->connectSignals();
+
 	}catch(Glib::FileError& ex)
 	{
 		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
 	}
-	std::cout<<"archivo cargado"<<std::endl;
-
-	//obtengo la ventana
-	main_window = 0;
-	builder->get_widget(MAIN_WINDOW, main_window);
-	std::cout<<"obtengo ventana"<<std::endl;
-	builder->get_widget(ABOUT_WINDOW, about_window);
-
-//	builder->get_widget(MENU_HELP, menu_help);
-
-	//obtengo los botones
-	this->getButtons();
-	this->connectSignals();
-
 }
 
 Ventana::~Ventana()
