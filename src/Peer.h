@@ -14,7 +14,7 @@
  *
  * TODO tengo que leer mas aca no llegue.
  */
-
+#include "Thread.h"
 
 class Peer: public Thread {
 public:
