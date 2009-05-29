@@ -56,6 +56,22 @@ public:
 	 * los agrega a la lista de peers del Torrent*/
 	void agregarPeer(std::string ip,int puerto);
 
+	/* Devuelve el estado por ej: "detenido", "pausado", "conectando", "completo", etc */
+	std::string getEstado();
+
+	/* devuelve el tamaño del archivo (en kb??) */
+	unsigned int getTamanio();
+
+	/* devuelve el tamanio descargado (en kb?) */
+	unsigned int getTamanioDescargado();
+
+	int getVelocidadSubida();
+
+	int getVelocidadBajada();
+
+
+
+
 private:
 
 	ClienteTorrent* clienteTorrent;

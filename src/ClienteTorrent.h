@@ -9,6 +9,7 @@
 #define CLIENTETORRENT_H_
 
 #include <list>
+#include <iostream>
 
 /* ********************************************************************
  * TODO Completar Comentario                                          *
@@ -36,6 +37,15 @@ private:
 	 * Opciones: usar Pocess ID, time stamp.
 	 */
 	char peer_id[20];
+
+	/* recibe la ruta del archivo .torrent
+	 * devuelve un puntero al objeto torrent o NULL en caso de error */
+	Torrent* agregarTorrent(std::string ruta);
+
+	/* borra el torrent indicado en el parametro
+	 * ver si devuelve algo en caso de error */
+	void borrarTorrent(Torrent*);
+
 };
 
 #endif /* CLIENTETORRENT_H_ */
