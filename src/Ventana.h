@@ -10,15 +10,18 @@
 
 #include <gtkmm.h>
 #include <glib.h>
-
 #include <iostream>
+
+#include "TorrentListStore.h"
 
 class Ventana {
 
 private:
-	Glib::RefPtr<Gtk::Builder> builder;//builder que hace referencia al archivo .glade
+	Glib::RefPtr<Gtk::Builder> builder;//builder que obtiene datos del archivo de la vista
+
+	/* ventanas */
 	Gtk::Window *main_window; //ventana principal de la aplicacion
-	Gtk::AboutDialog* about_window; //ventana acerca de
+	Gtk::AboutDialog *about_window; //ventana acerca de
 
 
 	/* botones */
@@ -30,7 +33,13 @@ private:
 	Gtk::ToolButton *button_up;
 	Gtk::ToolButton *button_down;
 
+	/* menu */
 	//Gtk::MenuItem *menu_help;
+	//TODO conectar señales del menu
+
+	/* lista de torrents */
+	TorrentListStore torrents;
+	Gtk::TreeView *view_torrents;
 
 
 protected:
