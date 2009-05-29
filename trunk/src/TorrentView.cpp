@@ -50,7 +50,22 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 	this->view_torrents->append_column(COL_NAME, col_name);
 	this->view_torrents->append_column(COL_SIZE, col_size);
 	this->view_torrents->append_column(COL_STATUS, col_status);
-	this->view_torrents->append_column(COL_PROGRESS, col_progress);
+
+	//this->view_torrents->append_column(COL_PROGRESS, col_progress);
+
+	//mostrar una progress bar para el porcentaje de progreso
+	Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
+	int cols_count = this->view_torrents->append_column(COL_PROGRESS, *cell);
+	Gtk::TreeViewColumn* pColumn = this->view_torrents->get_column(cols_count - 1);
+ 	if(pColumn)
+ 	{
+#ifdef GLIBMM_PROPERTIES_ENABLED
+ 		pColumn->add_attribute(cell->property_value(), col_progress);
+#else
+ 		pColumn->add_attribute(*cell, "value", col_progress);
+#endif
+ 	}
+
 	this->view_torrents->append_column(COL_COMPLETED, col_completed);
 	this->view_torrents->append_column(COL_DOWNSPEED, col_downspeed);
 	this->view_torrents->append_column(COL_UPSPEED, col_upspeed);
@@ -65,9 +80,18 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 	//selection->signal_changed().connect( sigc::mem_fun(*this, &TorrentView::on_row_selected) );
 }
 
-void TorrentView::addRow(Torrent*)
+void TorrentView::addRow(Torrent* t)
 {
-	//list_torrents.append();
+	Gtk::TreeModel::Row row = (* list_torrents->append());
+	row[col_name] = "Lucia.torrent";
+	row[col_size] = 35000;
+	row[col_status] = "Pausado";
+	row[col_progress] = 32;
+	row[col_completed] = (35000*0.32);
+	row[col_downspeed] = "25 kb/s";
+	row[col_upspeed] = "-";
+	row[col_time] = "1h 25m";
+	row[col_torrent] = t;
 }
 
 Torrent* TorrentView::getSelectedTorrent()

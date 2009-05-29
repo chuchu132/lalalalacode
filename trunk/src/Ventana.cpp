@@ -104,7 +104,8 @@ void Ventana::connectSignals()
 void Ventana::on_button_add_clicked()
 {
 	std::cout<<"añadir clickeado"<<std::endl;
-	select_window->show();
+	torrents.addRow(NULL);
+	//select_window->show();
 	//el accept de esta ventana deberia hacer un agregar torrent
 	//el cancelar deberia cerrar la ventana
 
