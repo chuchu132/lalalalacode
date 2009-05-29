@@ -6,9 +6,12 @@
  */
 #include "Ventana.h"
 
-#define FILE_WINDOW "res/wind.vista"
+#define WINDOW_FILE "res/wind.vista"
+
 #define MAIN_WINDOW "main_wind"
 #define ABOUT_WINDOW "about_wind"
+#define SELECT_WINDOW "select_wind"
+
 #define BUTTON_ADD 	"boton_agregar"
 #define BUTTON_ERASE "boton_borrar"
 #define BUTTON_STOP	"boton_detener"
@@ -27,7 +30,7 @@ Ventana::Ventana()
 	std::cout<<"comienzo ventana"<<std::endl;
 	try
 	{
-		builder = Gtk::Builder::create_from_file(FILE_WINDOW);
+		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
 		std::cout<<"archivo cargado"<<std::endl;
 
 		//obtengo la ventana principal
@@ -39,6 +42,11 @@ Ventana::Ventana()
 		about_window = 0;
 		builder->get_widget(ABOUT_WINDOW, about_window);
 		std::cout<<"ventana acerca de cargada"<<std::endl;
+
+		//obtengo la ventana de seleccion de archivo
+		select_window = 0;
+		builder->get_widget(SELECT_WINDOW, select_window);
+		std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
 
 		//	builder->get_widget(MENU_HELP, menu_help);
 
@@ -96,36 +104,61 @@ void Ventana::connectSignals()
 void Ventana::on_button_add_clicked()
 {
 	std::cout<<"añadir clickeado"<<std::endl;
+	select_window->show();
+	//el accept de esta ventana deberia hacer un agregar torrent
+	//el cancelar deberia cerrar la ventana
+
 }
 
 void Ventana::on_button_erase_clicked()
 {
 	std::cout<<"borrar clickeado"<<std::endl;
+	Torrent *t = torrents.getSelectedTorrent();
+	torrents.eraseSelectedRow();
+	//todo: llamar a borrar torrent
+
 }
 
 void Ventana::on_button_stop_clicked()
 {
 	std::cout<<"detener clickeado"<<std::endl;
+	Torrent *t = torrents.getSelectedTorrent();
+	if (t != NULL)
+	{
+		//t->detener(); poner esto en el controlador!!!
+	}
 }
 
 void Ventana::on_button_pause_clicked()
 {
 	std::cout<<"pausar clickeado"<<std::endl;
+	Torrent *t = torrents.getSelectedTorrent();
+	if (t != NULL)
+	{
+		//t->pausar();
+	}
 }
 
 void Ventana::on_button_continue_clicked()
 {
 	std::cout<<"continuar clickeado"<<std::endl;
+	Torrent *t = torrents.getSelectedTorrent();
+	if (t != NULL)
+	{
+		//t->continuar();
+	}
 }
 
 void Ventana::on_button_up_clicked()
 {
 	std::cout<<"subir clickeado"<<std::endl;
+	torrents.selectPrevious();
 }
 
 void Ventana::on_button_down_clicked()
 {
 	std::cout<<"bajar clickeado"<<std::endl;
+	torrents.selectNext();
 }
 
 void Ventana::on_menu_about()

@@ -52,14 +52,24 @@ public:
 	/* settea el tree view donde se va a mostrar la lista de torrents */
 	void setTreeView(Gtk::TreeView *view_torrents);
 
-	void addRow();
-	void removeRow();
-	void updateList();
-	void updateRow();
+	/* agregar una fila para este torrent */
+	void addRow(Torrent*);
+//	void removeRow();
+//	void updateList();
+//	void updateRow();
 
 	/* devuelve el torrent de la columna seleccionada
 	 * devuelve NULL en caso de no haber columnas seleccionadas */
 	Torrent* getSelectedTorrent();
+
+	/* selecciona la fila anterior. Se queda en el lugar si es la primer fila */
+	void selectNext();
+	/* selecciona la fila anterior. Se queda en el lugar si es la ultima fila */
+	void selectPrevious();
+
+	/* borra la fila seleccionada
+	 * si existe, selecciona la siguiente fila */
+	void eraseSelectedRow();
 
 };
 
