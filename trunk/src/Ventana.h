@@ -12,7 +12,7 @@
 #include <glib.h>
 #include <iostream>
 
-#include "TorrentListStore.h"
+#include "TorrentView.h"
 
 class Ventana {
 
@@ -38,9 +38,7 @@ private:
 	//TODO conectar señales del menu
 
 	/* lista de torrents */
-	TorrentListStore torrents;
-	Gtk::TreeView *view_torrents;
-
+	TorrentView torrents;
 
 protected:
   //Signal handlers:
