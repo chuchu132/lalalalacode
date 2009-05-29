@@ -19,8 +19,8 @@
 #define BUTTON_ABOUT "about"
 
 #define MENU_HELP "Ayuda"
-#define VIEW_TORRENTS "torrents"
 
+#define VIEW_TORRENTS "torrents"
 
 Ventana::Ventana()
 {
@@ -35,17 +35,18 @@ Ventana::Ventana()
 		builder->get_widget(MAIN_WINDOW, main_window);
 		std::cout<<"ventana ppal cargada"<<std::endl;
 
-		//obtengo la ventana principal
+		//obtengo la ventana acerca de
 		about_window = 0;
 		builder->get_widget(ABOUT_WINDOW, about_window);
 		std::cout<<"ventana acerca de cargada"<<std::endl;
 
-		//obtengo el tree view de torrents
-		view_torrents = 0;
-		builder->get_widget(VIEW_TORRENTS,view_torrents);
-		std::cout<<"view torrents cargado"<<std::endl;
-
 		//	builder->get_widget(MENU_HELP, menu_help);
+
+		//obtengo el tree view de torrents
+		Gtk::TreeView *view_torrents = 0;
+		builder->get_widget(VIEW_TORRENTS,view_torrents);
+		torrents.setTreeView(view_torrents);
+		std::cout<<"view torrents cargado"<<std::endl;
 
 		//obtengo los botones
 		this->getButtons();
