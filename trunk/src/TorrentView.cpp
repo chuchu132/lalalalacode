@@ -65,7 +65,7 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 	//selection->signal_changed().connect( sigc::mem_fun(*this, &TorrentView::on_row_selected) );
 }
 
-void TorrentView::addRow()
+void TorrentView::addRow(Torrent*)
 {
 	//list_torrents.append();
 }
@@ -84,7 +84,39 @@ Torrent* TorrentView::getSelectedTorrent()
 	}
 }
 
+void TorrentView::eraseSelectedRow()
+{
+	Gtk::TreeModel::iterator iter = selection->get_selected();
+	if(iter) //si hay algo seleccionado
+	{
+	  iter = list_torrents->erase(iter); //borro y obtengo un iter a la sgte fila
+	  //if (iter != list_torrents->end()) todo.. ver como comprobar iteradores
+	  if(iter)						//si existe la fila
+		  selection->select(iter);	//selecciono la fila
+	}
+}
 
+void TorrentView::selectNext()
+{
+	Gtk::TreeModel::iterator iter = selection->get_selected();
+	if(iter) //si hay algo seleccionado
+	{
+	  iter++;
+	  if(iter)						//si existe la fila
+		  selection->select(iter);	//selecciono la fila
+	}
+}
+
+void TorrentView::selectPrevious()
+{
+	Gtk::TreeModel::iterator iter = selection->get_selected();
+	if(iter) //si hay algo seleccionado
+	{
+	  iter--;
+	  if(iter)						//si existe la fila
+		  selection->select(iter);	//selecciono la fila
+	}
+}
 
 
 

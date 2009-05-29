@@ -22,6 +22,7 @@ private:
 	/* ventanas */
 	Gtk::Window *main_window; //ventana principal de la aplicacion
 	Gtk::AboutDialog *about_window; //ventana acerca de
+	Gtk::FileChooserDialog *select_window; //ventana de seleccion de archivo
 
 
 	/* botones */
