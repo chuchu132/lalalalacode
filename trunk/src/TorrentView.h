@@ -20,9 +20,12 @@ class TorrentView {
 private:
 
 	Gtk::TreeView *view_torrents; //vista de la lista
+	Gtk::TreeView *view_categories; //vista del selector
 
 	/* columnas */ //todo: cambiar tipos
 	Gtk::TreeModelColumnRecord columns;
+	Gtk::TreeModelColumnRecord columns_categories;
+
 	Gtk::TreeModelColumn<Glib::ustring> col_name; 	//nombre del torrent
 	Gtk::TreeModelColumn<unsigned int> col_size;	//tam del archivo (en kb?? mb??)
 	Gtk::TreeModelColumn<Glib::ustring> col_status; 	//estado del torrent
@@ -33,15 +36,20 @@ private:
 	Gtk::TreeModelColumn<Glib::ustring> col_time; 	//tiempo restante para completar descarga
 	Gtk::TreeModelColumn<Torrent*> col_torrent; 	//puntero al objeto torrent que se esta mostrando
 
+	Gtk::TreeModelColumn<Glib::ustring> col_categories;
+
 	/* lista */
 	Glib::RefPtr<Gtk::ListStore> list_torrents;
+	Glib::RefPtr<Gtk::ListStore> list_categories;
 
 	/* fila seleccionada */
 	Glib::RefPtr<Gtk::TreeSelection> selection;
+	Glib::RefPtr<Gtk::TreeSelection> selection_categories;
 
+	int i;
 
-	/* handler de la señal emitida al seleccionar una fila */
-	//void on_row_selected();
+	/* Signal handler para fila del categories view seleccionada */
+	void on_row_selected();
 
 public:
 
@@ -52,9 +60,12 @@ public:
 	/* settea el tree view donde se va a mostrar la lista de torrents */
 	void setTreeView(Gtk::TreeView *view_torrents);
 
+	/* vista que muestra a los torrents segun su estado */
+	void setCategoriesView(Gtk::TreeView *view_categories);
+
 	/* agregar una fila para este torrent */
 	void addRow(Torrent*);
-//	void removeRow();
+
 //	void updateList();
 //	void updateRow();
 
@@ -64,12 +75,16 @@ public:
 
 	/* selecciona la fila anterior. Se queda en el lugar si es la primer fila */
 	void selectNext();
+
 	/* selecciona la fila anterior. Se queda en el lugar si es la ultima fila */
 	void selectPrevious();
 
 	/* borra la fila seleccionada
 	 * si existe, selecciona la siguiente fila */
 	void eraseSelectedRow();
+
+	/* vacia la lista de torrents */
+	void empty();
 
 };
 

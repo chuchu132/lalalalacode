@@ -8,11 +8,45 @@
 #ifndef CONTROLADOR_H_
 #define CONTROLADOR_H_
 
-class Controlador
-{
+#include "Ventana.h"
+#include "Torrent.h"
+#include "ClienteTorrent.h"
+
+class Ventana;
+
+class Controlador {
+
+private:
+	Ventana *ventana;
+	ClienteTorrent cliente;
 public:
-	Controlador();
+
+	Controlador(ClienteTorrent&);
 	~Controlador();
+
+	void setVentana(Ventana *ventana);
+
+	//TODO ver que devuelven las funciones en caso de error
+
+	void borrarTorrent(Torrent *t);
+
+	Torrent* agregarTorrent(std::string ruta);
+
+	void detenerTorrent(Torrent*);
+
+	void pausarTorrent(Torrent*);
+
+	void continuarTorrent(Torrent*);
+
+	/* muestra todos los torrents que tiene el cliente */
+	void mostrarTorrents();
+
+	/* muestra los torrents completos */
+	void mostrarCompletos();
+
+	/* muestra los torrents que se estan descargado o subiendo */
+	void mostrarActivos();
+
 };
 
 #endif /* CONTROLADOR_H_ */

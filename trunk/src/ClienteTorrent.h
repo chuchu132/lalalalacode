@@ -38,6 +38,8 @@ private:
 	 */
 	char peer_id[20];
 
+public:
+
 	/* recibe la ruta del archivo .torrent
 	 * devuelve un puntero al objeto torrent o NULL en caso de error */
 	Torrent* agregarTorrent(std::string ruta);
