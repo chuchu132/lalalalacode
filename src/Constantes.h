@@ -15,4 +15,6 @@
 #define ERROR -1
 #define OK 0
 
+#define TAM_BUFFER 100 //TODO redefinir
+
 #endif /* CONSTANTES_H_ */
