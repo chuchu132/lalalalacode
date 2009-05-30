@@ -79,7 +79,7 @@ public:
 	bool estaActivo();
 
 	/* devuelve el nombre del archivo .torrent */
-	std::string getNombre()
+	std::string getNombre();
 
 
 private:
