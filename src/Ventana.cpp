@@ -24,6 +24,7 @@
 #define MENU_HELP "Ayuda"
 
 #define VIEW_TORRENTS "torrents"
+#define VIEW_CATEGORIES "clasificacion"
 
 Ventana::Ventana()
 {
@@ -54,6 +55,10 @@ Ventana::Ventana()
 		Gtk::TreeView *view_torrents = 0;
 		builder->get_widget(VIEW_TORRENTS,view_torrents);
 		torrents.setTreeView(view_torrents);
+
+		Gtk::TreeView *view_cat = 0;
+		builder->get_widget(VIEW_CATEGORIES,view_cat);
+		torrents.setCategoriesView(view_cat);
 		std::cout<<"view torrents cargado"<<std::endl;
 
 		//obtengo los botones
@@ -76,6 +81,11 @@ Gtk::Window& Ventana::getVentana()
 	return (*main_window);
 }
 
+void Ventana::setControlador(Controlador *c)
+{
+	this->controlador = c;
+}
+
 void Ventana::getButtons()
 {
 	builder->get_widget(BUTTON_ADD, button_add);
@@ -85,7 +95,6 @@ void Ventana::getButtons()
 	builder->get_widget(BUTTON_CONTINUE, button_continue);
 	builder->get_widget(BUTTON_UP, button_up);
 	builder->get_widget(BUTTON_DOWN, button_down);
-
 }
 
 void Ventana::connectSignals()
@@ -104,20 +113,21 @@ void Ventana::connectSignals()
 void Ventana::on_button_add_clicked()
 {
 	std::cout<<"añadir clickeado"<<std::endl;
-	torrents.addRow(NULL);
 	//select_window->show();
-	//el accept de esta ventana deberia hacer un agregar torrent
+	//el accept de esta ventana deberia hacer un agregar torrent con la ruta del archivo
 	//el cancelar deberia cerrar la ventana
-
+	torrents.addRow(NULL);
 }
 
 void Ventana::on_button_erase_clicked()
 {
 	std::cout<<"borrar clickeado"<<std::endl;
 	Torrent *t = torrents.getSelectedTorrent();
-	torrents.eraseSelectedRow();
-	//todo: llamar a borrar torrent
-
+	if (t != NULL)
+	{
+		controlador->borrarTorrent(t);
+		torrents.eraseSelectedRow();
+	}
 }
 
 void Ventana::on_button_stop_clicked()
@@ -126,7 +136,7 @@ void Ventana::on_button_stop_clicked()
 	Torrent *t = torrents.getSelectedTorrent();
 	if (t != NULL)
 	{
-		//t->detener(); poner esto en el controlador!!!
+		controlador->detenerTorrent(t);
 	}
 }
 
@@ -136,7 +146,7 @@ void Ventana::on_button_pause_clicked()
 	Torrent *t = torrents.getSelectedTorrent();
 	if (t != NULL)
 	{
-		//t->pausar();
+		controlador->pausarTorrent(t);
 	}
 }
 
@@ -146,7 +156,7 @@ void Ventana::on_button_continue_clicked()
 	Torrent *t = torrents.getSelectedTorrent();
 	if (t != NULL)
 	{
-		//t->continuar();
+		controlador->continuarTorrent(t);
 	}
 }
 
@@ -166,21 +176,5 @@ void Ventana::on_menu_about()
 {
 	std::cout<<"about clickeado"<<std::endl;
 	about_window->show();
-}
-
-
-
-
-int main (int argc, char* argv[])
-{
-	Gtk::Main kit(argc, argv);
-
-	Ventana ventana;
-
-	kit.run(ventana.getVentana());
-
-	std::cout<<"fin"<<std::endl;
-
-	return 0;
 }
 

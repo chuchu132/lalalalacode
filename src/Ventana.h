@@ -13,6 +13,9 @@
 #include <iostream>
 
 #include "TorrentView.h"
+#include "Controlador.h"
+
+class Controlador;
 
 class Ventana {
 
@@ -41,7 +44,9 @@ private:
 	/* lista de torrents */
 	TorrentView torrents;
 
-protected:
+	/* controlador de la vista */
+	Controlador *controlador;
+
   //Signal handlers:
 	void on_button_add_clicked();
   	void on_button_erase_clicked();
@@ -53,7 +58,11 @@ protected:
 
 	void on_menu_about();
 
+	//obtiene los botones desde el archivo
+	void getButtons();
 
+	//conecta las señales con los signal handlers
+	void connectSignals();
 
 public:
 	Ventana();
@@ -61,12 +70,8 @@ public:
 
 	Gtk::Window& getVentana();
 
-private:
-	//obtiene los botones desde el archivo
-	void getButtons();
+	void setControlador(Controlador *c);
 
-	//conecta las señales con los signal handlers
-	void connectSignals();
 
 };
 
