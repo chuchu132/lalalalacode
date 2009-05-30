@@ -12,18 +12,21 @@
 #include <string>
 #include "Bitmap.h"
 #include "ClienteTorrent.h"
+#include "Mutex.h"
 #include "Peer.h"
+#include "Socket.h"
 #include "Tracker.h"
-/******************************************************************
- * Torrent, contiene toda la informacion que viene en el archivo  *
- * .torrent, la cual es utilizada para comunicarse con el Tracker *
+/*******************************************************************
+ * Torrent, contiene toda la informacion que viene en el archivo   *
+ * .torrent, la cual es utilizada para comunicarse con el Tracker  *
  * y los Peers.                                                    *
- * ****************************************************************/
+ * *****************************************************************/
 
 /*ACA hay que poner un server que actue como peer para el resto del mundo*/
 
+class Peer;
 class Tracker;
-class Torrent {
+class Torrent : public Thread{
 public:
 	Torrent();
 	/*
@@ -56,26 +59,33 @@ public:
 	 * los agrega a la lista de peers del Torrent*/
 	void agregarPeer(std::string ip,int puerto);
 
+	/*En el run el Torrent recibe conexiones de Peers remotos y los agrega a la lista de
+	 * Peers.*/
+	void* run();
+
 	/* Devuelve el estado por ej: "detenido", "pausado", "conectando", "completo", etc */
 	std::string getEstado();
 
-	/* devuelve el tamaño del archivo (en kb??) */
+	/* devuelve el tamaño del archivo (en kb??) Respuesta= bytes */
 	unsigned int getTamanio();
 
-	/* devuelve el tamanio descargado (en kb?) */
+	/* devuelve el tamanio descargado (en kb?) Respuesta= bytes*/
 	unsigned int getTamanioDescargado();
 
 	int getVelocidadSubida();
 
 	int getVelocidadBajada();
 
-
+	bool estaActivo();
 
 
 private:
 
 	ClienteTorrent* clienteTorrent;
 	Tracker* tracker;
+	Socket peerListener;
+	bool activo; // TODO sirve para dejar de escuchar conexiones
+	Mutex llaveListaPeers;
 	std::list<Peer*> peers;
 	Bitmap partes;
 	std::string info_hash;
