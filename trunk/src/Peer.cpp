@@ -31,4 +31,5 @@ void* Peer::run(){
 			//TODO error marcar peer como desactivado para eliminarlo de la lista
 		}
 	}
+	return NULL;
 }
