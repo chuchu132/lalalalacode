@@ -38,6 +38,12 @@ public:
 
 	void continuarTorrent(Torrent*);
 
+	/* actualiza el estado de los torrents en la vista */
+	void actualizarTodos();
+
+	/* actualiza el estado de un torrent en la vista */
+	void actualizarEstado(Torrent*);
+
 	/* muestra todos los torrents que tiene el cliente */
 	void mostrarTorrents();
 

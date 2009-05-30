@@ -78,8 +78,9 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 	this->view_torrents->columns_autosize();
 //todo.. set columns resizable!
 
-
 	selection = this->view_torrents->get_selection();
+	selection->signal_changed().connect( sigc::mem_fun(*this, &TorrentView::on_row_selected) );
+
 }
 
 void TorrentView::setCategoriesView(Gtk::TreeView *view_categories)
@@ -98,11 +99,11 @@ void TorrentView::setCategoriesView(Gtk::TreeView *view_categories)
 
 	selection_categories = this->view_categories->get_selection();
 	//me conecto a la señal de fila seleccionada
-	selection_categories->signal_changed().connect( sigc::mem_fun(*this, &TorrentView::on_row_selected) );
+	selection_categories->signal_changed().connect( sigc::mem_fun(*this, &TorrentView::on_category_selected) );
 
 }
 
-void TorrentView::on_row_selected()
+void TorrentView::on_category_selected()
 {
 	//veo que fila esta seleccionada
 	Gtk::TreeModel::iterator iter = selection_categories->get_selected();
@@ -111,6 +112,27 @@ void TorrentView::on_row_selected()
 	  Gtk::TreeModel::Row row = *iter;
 	  //todo hago algo con la fila...
 	}
+}
+
+void TorrentView::on_row_selected()
+{
+	std::cout<<"fila seleccionada"<<std::endl;
+	//agrego todos los datos que me interesen
+	//en la parte de estado del torrent
+}
+
+void TorrentView::setRowValues(Gtk::TreeModel::Row &row, Torrent *t)
+{
+	//todo crear los metodos necesarios y ver tipos
+	/*row[col_name] = t->getNombre();
+	row[col_size] = t->getTamanio();
+	row[col_status] = t->getEstado();
+	row[col_progress] = t->getPorcentaje();
+	row[col_completed] = t->getTamanioDescargado();
+	row[col_downspeed] = t->getVelocidadBajada();
+	row[col_upspeed] = t->getVelocidadSubida();
+	row[col_time] = t->getTiempoRestante();*/
+	row[col_torrent] = t;
 }
 
 void TorrentView::addRow(Torrent* t)
@@ -126,6 +148,7 @@ void TorrentView::addRow(Torrent* t)
 	row[col_time] = "1h 25m";
 	row[col_torrent] = t;
 	i++;
+	//setRowValues(row,t);
 }
 
 Torrent* TorrentView::getSelectedTorrent()
@@ -180,6 +203,23 @@ void TorrentView::selectPrevious()
 void TorrentView::empty()
 {
 	list_torrents->clear();
+}
+
+void TorrentView::updateRow(Torrent *t)
+{
+	//busco la fila
+	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+	Gtk::TreeModel::Row row;
+	while (iter != list_torrents->children().end())
+	{
+		row = *iter;
+		if (row[col_torrent] == t)
+		{
+			this->setRowValues(row,t);
+			break;
+		}
+		iter++;
+	}
 }
 
 

@@ -46,10 +46,15 @@ private:
 	Glib::RefPtr<Gtk::TreeSelection> selection;
 	Glib::RefPtr<Gtk::TreeSelection> selection_categories;
 
-	int i;
+	int i;//sacar despues
 
 	/* Signal handler para fila del categories view seleccionada */
+	void on_category_selected();
+
+	/* Signal handler para fila del tree view seleccionada */
 	void on_row_selected();
+
+	void setRowValues(Gtk::TreeModel::Row &, Torrent*);
 
 public:
 
@@ -67,7 +72,7 @@ public:
 	void addRow(Torrent*);
 
 //	void updateList();
-//	void updateRow();
+	void updateRow(Torrent*);
 
 	/* devuelve el torrent de la columna seleccionada
 	 * devuelve NULL en caso de no haber columnas seleccionadas */
