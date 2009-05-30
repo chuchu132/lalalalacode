@@ -24,7 +24,7 @@ class Peer: public Thread {
 public:
 	Peer(Socket* peerRemoto,Torrent* torrent);
 	virtual ~Peer();
-	void* run(){return NULL;};
+	void* run();
 private:
 	Socket* peerRemoto;
 	Torrent* torrent;

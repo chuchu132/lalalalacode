@@ -26,8 +26,8 @@ void* Torrent::run(){
 	Socket* conexionPeerNuevo;
 	while(activo){
 		conexionPeerNuevo = peerListener.accept();
-		if(peerNuevo != NULL){
-			Peer* peerNuevo = new Peer(conexionPeerNuevo);
+		if(conexionPeerNuevo != NULL){
+			Peer* peerNuevo = new Peer(conexionPeerNuevo,this);
 			if(peerNuevo != NULL){
 			//TODO peerNuevo->run(); o algo asi
 			llaveListaPeers.lock();
@@ -36,4 +36,5 @@ void* Torrent::run(){
 			}
 		}
 	}
+	return NULL;
 }
