@@ -42,11 +42,8 @@ private:
 	Gtk::Button *button_accept;
 	Gtk::Button *button_cancel;
 
-
-
 	/* menu */
-	//Gtk::MenuItem *menu_help;
-	//TODO conectar señales del menu
+	Gtk::ImageMenuItem *menu_about;
 
 	/* lista de torrents */
 	TorrentView torrents;
@@ -66,11 +63,16 @@ private:
 	void on_button_down_clicked();
 	void on_button_accept_clicked();
 	void on_button_cancel_clicked();
-
 	void on_menu_about();
 
 	//obtiene los botones desde el archivo
 	void getButtons();
+
+	//obtiene las ventanas desde el archivo
+	void getWindows();
+
+	//obtiene los menues desde el archivo
+	void getMenues();
 
 	//conecta las señales con los signal handlers
 	void connectSignals();
