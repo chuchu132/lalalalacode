@@ -39,8 +39,8 @@ private:
 	Gtk::ToolButton *button_down;
 
 	/* botones de la ventana de seleccion de archivo */
-	Gtk::Button *button_accept;
-	Gtk::Button *button_cancel;
+	//Gtk::Button *button_accept;
+	//Gtk::Button *button_cancel;
 
 	/* menu */
 	Gtk::ImageMenuItem *menu_about;

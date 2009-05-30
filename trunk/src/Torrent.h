@@ -78,6 +78,9 @@ public:
 
 	bool estaActivo();
 
+	/* devuelve el nombre del archivo .torrent */
+	std::string getNombre()
+
 
 private:
 
@@ -89,6 +92,7 @@ private:
 	std::list<Peer*> peers;
 	Bitmap partes;
 	std::string info_hash;
+	std::string nombre;
 	int port; // puerto donde esta escuchando el Cliente.
 	int uploaded;
 	int downloaded;

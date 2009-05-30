@@ -54,7 +54,7 @@ private:
 	/* Signal handler para fila del tree view seleccionada */
 	void on_row_selected();
 
-	void setRowValues(Gtk::TreeModel::Row &, Torrent*);
+	void updateRowValues(Gtk::TreeModel::Row &, Torrent*);
 
 public:
 
@@ -69,7 +69,7 @@ public:
 	void setCategoriesView(Gtk::TreeView *view_categories);
 
 	/* agregar una fila para este torrent */
-	void addRow(Torrent*);
+	void addRow(Torrent *t);
 
 //	void updateList();
 	void updateRow(Torrent*);

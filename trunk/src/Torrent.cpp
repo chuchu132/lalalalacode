@@ -16,6 +16,12 @@ Torrent::~Torrent() {
 	// TODO Auto-generated destructor stub
 }
 
+
+std::string Torrent::getNombre()
+{
+	return nombre;
+}
+
 void* Torrent::run(){
 	Socket* conexionPeerNuevo;
 	while(activo){

@@ -128,34 +128,33 @@ void TorrentView::on_row_selected()
 	Torrent *t = getSelectedTorrent();
 }
 
-void TorrentView::setRowValues(Gtk::TreeModel::Row &row, Torrent *t)
+void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)
 {
 	//todo crear los metodos necesarios y ver tipos
-	/*row[col_name] = t->getNombre();
-	row[col_size] = t->getTamanio();
+	/*
 	row[col_status] = t->getEstado();
 	row[col_progress] = t->getPorcentaje();
 	row[col_completed] = t->getTamanioDescargado();
 	row[col_downspeed] = t->getVelocidadBajada();
 	row[col_upspeed] = t->getVelocidadSubida();
 	row[col_time] = t->getTiempoRestante();*/
-	row[col_torrent] = t;
-}
-
-void TorrentView::addRow(Torrent* t)
-{
-	Gtk::TreeModel::Row row = (* list_torrents->append());
-	row[col_name] = "Lucia.torrent";
-	row[col_size] = 35000;
 	row[col_status] = "Pausado";
 	row[col_progress] = i;
 	row[col_completed] = (35000*i/100);
 	row[col_downspeed] = "25 kb/s";
 	row[col_upspeed] = "-";
 	row[col_time] = "1h 25m";
-	row[col_torrent] = t;
+}
+
+void TorrentView::addRow(Torrent *t)
+{
+	Gtk::TreeModel::Row row = (* list_torrents->append());
 	i++;
-	//setRowValues(row,t);
+	row[col_name] = t->getNombre();
+	row[col_size] = 35000;//t->getTamanio();
+	row[col_torrent] = t;
+
+	updateRowValues(row,t);
 }
 
 Torrent* TorrentView::getSelectedTorrent()
@@ -222,7 +221,7 @@ void TorrentView::updateRow(Torrent *t)
 		row = *iter;
 		if (row[col_torrent] == t)
 		{
-			this->setRowValues(row,t);
+			this->updateRowValues(row,t);
 			break;
 		}
 		iter++;
