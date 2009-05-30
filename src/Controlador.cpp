@@ -10,7 +10,6 @@
 Controlador::Controlador(ClienteTorrent& c):cliente(c)
 {
 	// TODO Auto-generated constructor stub
-
 }
 
 Controlador::~Controlador()
@@ -50,7 +49,10 @@ void Controlador::pausarTorrent(Torrent *t)
 
 }
 
-
+void Controlador::actualizarEstado(Torrent *t)
+{
+	ventana->actualizarEstado(t);
+}
 
 
 

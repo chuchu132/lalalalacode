@@ -19,6 +19,9 @@
 #define BUTTON_CONTINUE "boton_continuar"
 #define BUTTON_UP 	"boton_subir"
 #define BUTTON_DOWN	"boton_bajar"
+#define BUTTON_ACCEPT "boton_aceptar"
+#define BUTTON_CANCEL "boton_cancelar"
+
 #define BUTTON_ABOUT "about"
 
 #define MENU_HELP "Ayuda"
@@ -43,11 +46,15 @@ Ventana::Ventana()
 		about_window = 0;
 		builder->get_widget(ABOUT_WINDOW, about_window);
 		std::cout<<"ventana acerca de cargada"<<std::endl;
+		about_window->show();
 
 		//obtengo la ventana de seleccion de archivo
 		select_window = 0;
 		builder->get_widget(SELECT_WINDOW, select_window);
 		std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
+
+		filter.set_name(".torrent");
+		filter.add_pattern("*.torrent");
 
 		//	builder->get_widget(MENU_HELP, menu_help);
 
@@ -95,6 +102,9 @@ void Ventana::getButtons()
 	builder->get_widget(BUTTON_CONTINUE, button_continue);
 	builder->get_widget(BUTTON_UP, button_up);
 	builder->get_widget(BUTTON_DOWN, button_down);
+	builder->get_widget(BUTTON_ACCEPT, button_accept);
+	builder->get_widget(BUTTON_CANCEL, button_cancel);
+
 }
 
 void Ventana::connectSignals()
@@ -106,6 +116,8 @@ void Ventana::connectSignals()
 	button_continue->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_continue_clicked) );
 	button_up->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_up_clicked) );
 	button_down->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_down_clicked) );
+	button_accept->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_accept_clicked) );
+	button_cancel->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_cancel_clicked) );
 
 	//button_about->signal_activate().connect(sigc::mem_fun(*this,&Ventana::on_button_about_clicked));
 }
@@ -113,10 +125,9 @@ void Ventana::connectSignals()
 void Ventana::on_button_add_clicked()
 {
 	std::cout<<"añadir clickeado"<<std::endl;
+	//select_window->add_filter(filter);
 	//select_window->show();
-	//el accept de esta ventana deberia hacer un agregar torrent con la ruta del archivo
-	//el cancelar deberia cerrar la ventana
-	torrents.addRow(NULL);
+	torrents.addRow(&tor);
 }
 
 void Ventana::on_button_erase_clicked()
@@ -176,5 +187,25 @@ void Ventana::on_menu_about()
 {
 	std::cout<<"about clickeado"<<std::endl;
 	about_window->show();
+}
+
+void Ventana::on_button_accept_clicked()
+{
+	//ver! selecciona cualquier cosa .. no solo archivos torrents
+	 std::string filename = select_window->get_filename();
+     std::cout << "archivo seleccionado: " << filename << std::endl;
+
+     select_window->hide();
+     controlador->agregarTorrent(filename);
+}
+
+void Ventana::on_button_cancel_clicked()
+{
+	select_window->hide();
+}
+
+void Ventana::actualizarEstado(Torrent* t)
+{
+	torrents.updateRow(t);
 }
 

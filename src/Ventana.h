@@ -27,6 +27,7 @@ private:
 	Gtk::AboutDialog *about_window; //ventana acerca de
 	Gtk::FileChooserDialog *select_window; //ventana de seleccion de archivo
 
+	Gtk::FileFilter filter; //filtro para la seleccion de archivos
 
 	/* botones */
 	Gtk::ToolButton *button_add;
@@ -36,6 +37,12 @@ private:
 	Gtk::ToolButton *button_continue;
 	Gtk::ToolButton *button_up;
 	Gtk::ToolButton *button_down;
+
+	/* botones de la ventana de seleccion de archivo */
+	Gtk::Button *button_accept;
+	Gtk::Button *button_cancel;
+
+
 
 	/* menu */
 	//Gtk::MenuItem *menu_help;
@@ -47,6 +54,8 @@ private:
 	/* controlador de la vista */
 	Controlador *controlador;
 
+	Torrent tor;
+
   //Signal handlers:
 	void on_button_add_clicked();
   	void on_button_erase_clicked();
@@ -55,6 +64,8 @@ private:
 	void on_button_continue_clicked();
 	void on_button_up_clicked();
 	void on_button_down_clicked();
+	void on_button_accept_clicked();
+	void on_button_cancel_clicked();
 
 	void on_menu_about();
 
@@ -64,6 +75,7 @@ private:
 	//conecta las señales con los signal handlers
 	void connectSignals();
 
+
 public:
 	Ventana();
 	~Ventana();
@@ -72,6 +84,7 @@ public:
 
 	void setControlador(Controlador *c);
 
+	void actualizarEstado(Torrent*);
 
 };
 
