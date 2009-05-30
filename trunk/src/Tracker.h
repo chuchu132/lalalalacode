@@ -14,7 +14,7 @@
 #include "Torrent.h"
 
 class Torrent;
-class Tracker: public Thread {
+class Tracker: public Thread{
 public:
 	Tracker();
 	virtual ~Tracker();
@@ -27,7 +27,8 @@ public:
 	 * procesa y luego continua recibiendo
 	 */
 	void procesar(std::string mensajeRecibido);
-
+	bool connect(std::string url,int port);
+	bool send(const char* stream,unsigned int size);
 private:
 	Torrent* torrent;
 	Socket trackerRemoto; // Conexion con el tracker remoto.
