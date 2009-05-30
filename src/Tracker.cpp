@@ -5,6 +5,7 @@
  *      Author: ale
  */
 
+#include "Constantes.h"
 #include "Tracker.h"
 
 Tracker::Tracker() {
@@ -14,4 +15,12 @@ Tracker::Tracker() {
 
 Tracker::~Tracker() {
 	// TODO Auto-generated destructor stub
+}
+
+bool Tracker::connect(std::string url,int port){
+	return (trackerRemoto.connect(url,port) == OK);
+}
+
+bool Tracker::send(const char* stream,unsigned int size){
+	return ((unsigned int)trackerRemoto.send(stream,size) == size);
 }

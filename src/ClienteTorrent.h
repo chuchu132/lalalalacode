@@ -47,7 +47,7 @@ public:
 	/* borra el torrent indicado en el parametro
 	 * ver si devuelve algo en caso de error */
 	void borrarTorrent(Torrent*);
-
+	std::string getPeerId();
 };
 
 #endif /* CLIENTETORRENT_H_ */
