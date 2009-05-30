@@ -52,6 +52,9 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 	//agrego la lista de torrents al tree view
 	this->view_torrents->set_model(list_torrents);
 
+	Gtk::TreeViewColumn* pColumn;
+	int cols_count;
+
 	//agrego columnas al Tree View
 	this->view_torrents->append_column(COL_NAME, col_name);
 	this->view_torrents->append_column(COL_SIZE, col_size);
@@ -59,8 +62,8 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 
 	//mostrar una progress bar para el porcentaje de progreso
 	Gtk::CellRendererProgress* cell = Gtk::manage(new Gtk::CellRendererProgress);
-	int cols_count = this->view_torrents->append_column(COL_PROGRESS, *cell);
-	Gtk::TreeViewColumn* pColumn = this->view_torrents->get_column(cols_count - 1);
+	cols_count = this->view_torrents->append_column(COL_PROGRESS, *cell);
+	pColumn = this->view_torrents->get_column(cols_count - 1);
  	if(pColumn)
  	{
 #ifdef GLIBMM_PROPERTIES_ENABLED
@@ -73,14 +76,17 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 	this->view_torrents->append_column(COL_COMPLETED, col_completed);
 	this->view_torrents->append_column(COL_DOWNSPEED, col_downspeed);
 	this->view_torrents->append_column(COL_UPSPEED, col_upspeed);
-	this->view_torrents->append_column(COL_TIME, col_time);
+	cols_count = this->view_torrents->append_column(COL_TIME, col_time);
 
+	for (int i=0; i<cols_count; i++)
+	{
+		pColumn = this->view_torrents->get_column(i);
+		pColumn->set_resizable(true);	//hago que sean columnas redimensionables
+	}
 	this->view_torrents->columns_autosize();
-//todo.. set columns resizable!
 
 	selection = this->view_torrents->get_selection();
 	selection->signal_changed().connect( sigc::mem_fun(*this, &TorrentView::on_row_selected) );
-
 }
 
 void TorrentView::setCategoriesView(Gtk::TreeView *view_categories)
@@ -110,7 +116,7 @@ void TorrentView::on_category_selected()
 	if (iter) //si hay algo seleccionado
 	{
 	  Gtk::TreeModel::Row row = *iter;
-	  //todo hago algo con la fila...
+	  //todo veo que fila es y muestro solo los torrents en ese estado
 	}
 }
 
@@ -119,6 +125,7 @@ void TorrentView::on_row_selected()
 	std::cout<<"fila seleccionada"<<std::endl;
 	//agrego todos los datos que me interesen
 	//en la parte de estado del torrent
+	Torrent *t = getSelectedTorrent();
 }
 
 void TorrentView::setRowValues(Gtk::TreeModel::Row &row, Torrent *t)

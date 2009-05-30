@@ -22,9 +22,7 @@
 #define BUTTON_ACCEPT "boton_aceptar"
 #define BUTTON_CANCEL "boton_cancelar"
 
-#define BUTTON_ABOUT "about"
-
-#define MENU_HELP "Ayuda"
+#define MENU_ABOUT "about"
 
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
@@ -37,26 +35,8 @@ Ventana::Ventana()
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
 		std::cout<<"archivo cargado"<<std::endl;
 
-		//obtengo la ventana principal
-		main_window = 0;
-		builder->get_widget(MAIN_WINDOW, main_window);
-		std::cout<<"ventana ppal cargada"<<std::endl;
-
-		//obtengo la ventana acerca de
-		about_window = 0;
-		builder->get_widget(ABOUT_WINDOW, about_window);
-		std::cout<<"ventana acerca de cargada"<<std::endl;
-		about_window->show();
-
-		//obtengo la ventana de seleccion de archivo
-		select_window = 0;
-		builder->get_widget(SELECT_WINDOW, select_window);
-		std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
-
-		filter.set_name(".torrent");
-		filter.add_pattern("*.torrent");
-
-		//	builder->get_widget(MENU_HELP, menu_help);
+		this->getWindows();
+		this->getMenues();
 
 		//obtengo el tree view de torrents
 		Gtk::TreeView *view_torrents = 0;
@@ -93,6 +73,36 @@ void Ventana::setControlador(Controlador *c)
 	this->controlador = c;
 }
 
+void Ventana::getWindows()
+{
+	//obtengo la ventana principal
+	main_window = 0;
+	builder->get_widget(MAIN_WINDOW, main_window);
+	std::cout<<"ventana ppal cargada"<<std::endl;
+
+	//obtengo la ventana acerca de
+	about_window = 0;
+	builder->get_widget(ABOUT_WINDOW, about_window);
+	std::cout<<"ventana acerca de cargada"<<std::endl;
+	//about_window->show();
+
+	//obtengo la ventana de seleccion de archivo
+	select_window = 0;
+	builder->get_widget(SELECT_WINDOW, select_window);
+
+	filter.set_name("Archivos Torrent (*.torrent)");
+	filter.add_pattern("*.torrent");
+	std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
+}
+
+void Ventana::getMenues()
+{
+	//builder->add_from_file(MENU_ABOUT, menu_about);
+	//builder->get_widget(MENU_ABOUT, menu_about);
+	//builder->get_object(MENU_ABOUT, menu_about);
+//	builder->get_widget_derived(MENU_ABOUT, menu_about);
+}
+
 void Ventana::getButtons()
 {
 	builder->get_widget(BUTTON_ADD, button_add);
@@ -119,7 +129,7 @@ void Ventana::connectSignals()
 	button_accept->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_accept_clicked) );
 	button_cancel->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_cancel_clicked) );
 
-	//button_about->signal_activate().connect(sigc::mem_fun(*this,&Ventana::on_button_about_clicked));
+	//menu_about->signal_activate().connect(sigc::mem_fun(*this,&Ventana::on_menu_about));
 }
 
 void Ventana::on_button_add_clicked()
