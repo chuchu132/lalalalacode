@@ -99,7 +99,7 @@ int Socket::receive(char* stream, unsigned int size) {
 	unsigned int recibido = 0;
 	int aux = 0;
 	while (recibido < size ) {
-		aux = recv(fd, stream + recibido, size - recibido, 0); ::send(fd, stream + enviado, size - enviado, 0);
+		aux = recv(fd, stream + recibido, size - recibido, 0);
 		if (aux > 0) {
 			recibido += aux;
 			if(recibido == size){return size;}
@@ -107,6 +107,8 @@ int Socket::receive(char* stream, unsigned int size) {
 			return ERROR;
 		}
 	}
+	return ERROR;
+}
 
 	Socket* Socket::accept() {
 		struct sockaddr_in client;

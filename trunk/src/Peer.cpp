@@ -23,7 +23,7 @@ void* Peer::run(){
 	int cantidad;
 	bool error = true; // error puede ser en la conexion, en lo recibido o al procesar
 	while(torrent->estaActivo()){
-		cantidad = peerRemoto->receive(&length,sizeof(int)); //TODO RE IMPORTNATE!!acomodar el receive para que leea lo esperado
+		cantidad = peerRemoto->receive((char*)&length,sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 		if(cantidad > 0){
 			char buffer[length];
 			cantidad =  peerRemoto->receive(buffer,length);
@@ -36,4 +36,9 @@ void* Peer::run(){
 		}
 	}
 	return NULL;
+}
+
+bool Peer::procesar(const char* buffer,int length){
+	return true;
+	//TODO implementar
 }
