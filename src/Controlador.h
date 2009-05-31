@@ -9,16 +9,18 @@
 #define CONTROLADOR_H_
 
 #include "Ventana.h"
-#include "Torrent.h"
 #include "ClienteTorrent.h"
 
 class Ventana;
+class ClienteTorrent;
+class Torrent;
 
 class Controlador {
 
+
 private:
 	Ventana *ventana;
-	ClienteTorrent cliente;
+	ClienteTorrent &cliente;
 public:
 
 	Controlador(ClienteTorrent&);
@@ -38,7 +40,7 @@ public:
 
 	void continuarTorrent(Torrent*);
 
-	/* actualiza el estado de los torrents en la vista */
+	/* actualiza el estado de todos los torrents en la vista */
 	void actualizarTodos();
 
 	/* actualiza el estado de un torrent en la vista */

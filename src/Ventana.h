@@ -14,8 +14,17 @@
 
 #include "TorrentView.h"
 #include "Controlador.h"
+#include "Torrent.h"
 
 class Controlador;
+class Torrent;
+class TorrentView;
+
+/****
+ * no compila por las inclusiones mutuas..
+ * si alguien se da cuenta como arrelgarlo ayudeme ;)
+ * sino mañana me siento a tratar de que compile ^_^
+ * *******/
 
 class Ventana {
 
@@ -51,7 +60,7 @@ private:
 	/* controlador de la vista */
 	Controlador *controlador;
 
-	Torrent tor;
+	Torrent tor;//temporal
 
   //Signal handlers:
 	void on_button_add_clicked();
@@ -61,8 +70,6 @@ private:
 	void on_button_continue_clicked();
 	void on_button_up_clicked();
 	void on_button_down_clicked();
-	void on_button_accept_clicked();
-	void on_button_cancel_clicked();
 	void on_menu_about();
 
 	//obtiene los botones desde el archivo
@@ -77,6 +84,8 @@ private:
 	//conecta las señales con los signal handlers
 	void connectSignals();
 
+	void button_accept_clicked();
+	void button_cancel_clicked();
 
 public:
 	Ventana();

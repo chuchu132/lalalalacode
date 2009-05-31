@@ -16,6 +16,8 @@
 #include "Peer.h"
 #include "Socket.h"
 #include "Tracker.h"
+#include "Controlador.h"
+
 /*******************************************************************
  * Torrent, contiene toda la informacion que viene en el archivo   *
  * .torrent, la cual es utilizada para comunicarse con el Tracker  *
@@ -26,6 +28,9 @@
 
 class Peer;
 class Tracker;
+class Controlador;
+class ClienteTorrent;
+
 class Torrent : public Thread{
 public:
 	Torrent();
@@ -34,7 +39,7 @@ public:
 	 * se pasa la ruta del archivo .torrent y se parsea adentro.(Podria haber un
 	 * error al construir :S ).
 	 */
-	Torrent(std::string url);
+	Torrent(std::string url, Controlador* ctrl);
 	virtual ~Torrent();
 
 	bool conectarTracker(std::string url,int port);
@@ -81,6 +86,12 @@ public:
 	/* devuelve el nombre del archivo .torrent */
 	std::string getNombre();
 
+	/* metodos llamados por el controlador desde la vista
+	 * para controlar el trafico del torrent */
+	void detener();
+	void continuar();
+	void pausar();
+
 
 private:
 
@@ -96,6 +107,10 @@ private:
 	int port; // puerto donde esta escuchando el Cliente.
 	int uploaded;
 	int downloaded;
+
+	Controlador *controlador;
+	/*torrent notifica a controlador por medio del metodo
+	 * controlador->actualizarEstado(this) */
 
 };
 

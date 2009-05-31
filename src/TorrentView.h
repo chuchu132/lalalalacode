@@ -13,6 +13,7 @@
 #include <iostream>
 
 #include "Torrent.h"
+class Torrent;
 
 class TorrentView {
 	/* Lista de Torrents perteneciente a la vista */
@@ -72,6 +73,7 @@ public:
 	void addRow(Torrent *t);
 
 //	void updateList();
+	/* actualiza los datos del torrent en la vista */
 	void updateRow(Torrent*);
 
 	/* devuelve el torrent de la columna seleccionada

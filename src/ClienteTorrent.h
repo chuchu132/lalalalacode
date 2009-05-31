@@ -11,12 +11,15 @@
 #include <list>
 #include <iostream>
 
+#include "Controlador.h"
+
 /* ********************************************************************
  * TODO Completar Comentario                                          *
  * El cliente torrent es el encargado de agregar y sacar torrents.    *
  * El usuario accede a él a traves de la vista.                       *
  **********************************************************************/
 class Torrent;
+class Controlador;
 class ClienteTorrent {
 public:
 	ClienteTorrent();
@@ -38,6 +41,8 @@ private:
 	 */
 	char peer_id[20];
 
+	Controlador *controlador;
+
 public:
 
 	/* recibe la ruta del archivo .torrent
@@ -47,7 +52,10 @@ public:
 	/* borra el torrent indicado en el parametro
 	 * ver si devuelve algo en caso de error */
 	void borrarTorrent(Torrent*);
+
 	std::string getPeerId();
+
+	void setControlador(Controlador *ctrl);
 };
 
 #endif /* CLIENTETORRENT_H_ */

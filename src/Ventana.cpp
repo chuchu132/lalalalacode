@@ -138,23 +138,23 @@ void Ventana::on_button_add_clicked()
 
 	if (result == Gtk::RESPONSE_OK)
 	{
-		this->on_button_accept_clicked();
+		this->button_accept_clicked();
 	}
 	else if (result == Gtk::RESPONSE_CANCEL)
 	{
-		this->on_button_cancel_clicked();
+		this->button_cancel_clicked();
 	}
-
 }
 
 void Ventana::on_button_erase_clicked()
 {
+	//tal vez deberia desabilitar las señales de row selected!!!!!!!!!!
 	std::cout<<"borrar clickeado"<<std::endl;
 	Torrent *t = torrents.getSelectedTorrent();
 	if (t != NULL)
 	{
-		controlador->borrarTorrent(t);
 		torrents.eraseSelectedRow();
+		controlador->borrarTorrent(t);
 	}
 }
 
@@ -206,9 +206,8 @@ void Ventana::on_menu_about()
 	about_window->show();
 }
 
-void Ventana::on_button_accept_clicked()
+void Ventana::button_accept_clicked()
 {
-	//ver! selecciona cualquier cosa .. no solo archivos torrents
 	 std::string filename = select_window->get_filename();
      std::cout << "archivo seleccionado: " << filename << std::endl;
 
@@ -219,7 +218,7 @@ void Ventana::on_button_accept_clicked()
      torrents.addRow(&tor);
 }
 
-void Ventana::on_button_cancel_clicked()
+void Ventana::button_cancel_clicked()
 {
 	select_window->hide();
 }
@@ -227,5 +226,6 @@ void Ventana::on_button_cancel_clicked()
 void Ventana::actualizarEstado(Torrent* t)
 {
 	torrents.updateRow(t);
+	//update pestañas??
 }
 

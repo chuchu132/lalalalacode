@@ -24,29 +24,27 @@ void Controlador::setVentana(Ventana *ventana)
 
 Torrent* Controlador::agregarTorrent(std::string ruta)
 {
-	//return cliente.agregarTorrent(ruta);
-	return NULL;
+	return cliente.agregarTorrent(ruta);
 }
 
 void Controlador::borrarTorrent(Torrent *t)
 {
-	//cliente.borrarTorrent(t);
+	cliente.borrarTorrent(t);
 }
 
 void Controlador::continuarTorrent(Torrent *t)
 {
-	//todo! ver si el encargado de hacer esto es el cliente
-	//o si llamo directamente al torrent :S :S
+	t->continuar();
 }
 
 void Controlador::detenerTorrent(Torrent *t)
 {
-
+	t->detener();
 }
 
 void Controlador::pausarTorrent(Torrent *t)
 {
-
+	t->pausar();
 }
 
 void Controlador::actualizarEstado(Torrent *t)
