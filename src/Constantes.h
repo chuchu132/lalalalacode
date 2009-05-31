@@ -41,6 +41,4 @@
 #define TAM_BLOQUES 16384 //ver http://wiki.theory.org/BitTorrentSpecification#Messages
 #define TAM_BUFFER 100 //TODO redefinir
 
-#define TIMEOUT 2 // segundos
-
 #endif /* CONSTANTES_H_ */
