@@ -4,6 +4,7 @@
  *  Created on: 28/05/2009
  *      Author: teddy
  */
+
 #include "Ventana.h"
 
 #define WINDOW_FILE "res/wind.vista"
