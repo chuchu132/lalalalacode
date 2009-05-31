@@ -60,9 +60,7 @@ private:
 	/* controlador de la vista */
 	Controlador *controlador;
 
-	Torrent tor;//temporal
-
-  //Signal handlers:
+	//Signal handlers:
 	void on_button_add_clicked();
   	void on_button_erase_clicked();
 	void on_button_stop_clicked();
@@ -88,6 +86,9 @@ private:
 	void button_cancel_clicked();
 
 public:
+
+	Torrent *tor;//temporal, solo para probar la vista
+
 	Ventana();
 	~Ventana();
 
