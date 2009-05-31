@@ -15,3 +15,8 @@ ClienteTorrent::ClienteTorrent() {
 ClienteTorrent::~ClienteTorrent() {
 	// TODO Auto-generated destructor stub
 }
+
+std::string ClienteTorrent::getPeerId(){
+	std::string temp = peer_id;
+	return temp;
+}

@@ -50,7 +50,7 @@ public:
 	 * sino
 	 *  envio numwant
 	 */
-	bool enviarEventoEstado(const char* event=NULL,int numwant = 0);
+	bool enviarEventoEstado(const char* event,int numwant);
 
 	/*Calcula cuantos bytes faltan descargar*/
 	int  left();

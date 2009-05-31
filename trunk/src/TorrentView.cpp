@@ -125,7 +125,7 @@ void TorrentView::on_row_selected()
 	std::cout<<"fila seleccionada"<<std::endl;
 	//agrego todos los datos que me interesen
 	//en la parte de estado del torrent
-	Torrent *t = getSelectedTorrent();
+	// TODO descomentar Torrent *t = getSelectedTorrent();
 }
 
 void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)
