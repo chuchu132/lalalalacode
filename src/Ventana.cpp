@@ -215,7 +215,7 @@ void Ventana::button_accept_clicked()
      controlador->agregarTorrent(filename);
      //Torrent *t = controlador->agregarTorrent(filename);
      //torrents.addRow(t);
-     torrents.addRow(&tor);
+     torrents.addRow(tor);
 }
 
 void Ventana::button_cancel_clicked()
