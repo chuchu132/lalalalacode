@@ -79,3 +79,16 @@ void* Torrent::run() {
 	}
 	return NULL;
 }
+
+//implementar
+void Torrent::continuar() {
+
+}
+
+void Torrent::detener() {
+
+}
+
+void Torrent::pausar() {
+
+}

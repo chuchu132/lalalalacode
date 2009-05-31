@@ -131,6 +131,7 @@ void TorrentView::on_row_selected()
 void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)
 {
 	//todo crear los metodos necesarios y ver tipos
+	//podria agregar una col bytes left :P
 	/*
 	row[col_status] = t->getEstado();
 	row[col_progress] = t->getPorcentaje();
