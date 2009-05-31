@@ -19,3 +19,10 @@ Bitmap::~Bitmap() {
 int Bitmap::getTamanio(){
 	return tamanio;
 }
+
+void Bitmap::getMap(char* map,int* length){
+ //TODO implementar
+}
+void Bitmap::getBlock(int index,int begin,char* data,int* longitud){
+	//TODO implementar
+}

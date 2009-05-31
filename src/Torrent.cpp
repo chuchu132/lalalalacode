@@ -80,6 +80,12 @@ void* Torrent::run() {
 	return NULL;
 }
 
+
+Bitmap* Torrent::getBitmap(){
+	return &partes;
+}
+
+
 //implementar
 void Torrent::continuar() {
 
@@ -92,3 +98,4 @@ void Torrent::detener() {
 void Torrent::pausar() {
 
 }
+
