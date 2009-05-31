@@ -25,6 +25,20 @@ public:
 	Peer(Socket* peerRemoto,Torrent* torrent);
 	virtual ~Peer();
 	void* run();
+
+
+	/*Metodos que envian diferentes mensajes al Peer remoto*/
+	bool sendKeepAlive();
+	bool sendMsg(const char id); // se usa para mandar mensajes sin parametros ej: choke,unchoke,interested,etc.
+	bool sendHave(int index);
+	bool sendBitfield();
+	bool sendRequest(int index,int block,int length);
+	bool sendPiece(int index,int block);
+	bool sendCancel(int index,int block,int length);
+	bool sendPort(unsigned short puerto);
+
+	bool procesar(const char* buffer,int length);
+
 private:
 	Socket* peerRemoto;
 	Torrent* torrent;

@@ -22,8 +22,8 @@ Socket::Socket() {
 	}
 }
 Socket::Socket(int fdNuevo) {
-		this->fd = fdNuevo;
-		valido = true;
+	this->fd = fdNuevo;
+	valido = true;
 }
 
 Socket::Socket(const Socket& original) {
@@ -96,20 +96,29 @@ int Socket::send(const char* stream, unsigned int size) {
 }
 
 int Socket::receive(char* stream, unsigned int size) {
-	return recv(fd, stream, size, 0);
-}
-
-Socket* Socket::accept() {
-	struct sockaddr_in client;
-	memset(&client, 0, sizeof(client));
-	unsigned int sizeClient = sizeof(client);
-	int fdNuevo;
-	if ((fdNuevo = ::accept(fd, (struct sockaddr *) &(client), &sizeClient))) {
-		return new Socket(fdNuevo);
+	unsigned int recibido = 0;
+	int aux = 0;
+	while (recibido < size ) {
+		aux = recv(fd, stream + recibido, size - recibido, 0); ::send(fd, stream + enviado, size - enviado, 0);
+		if (aux > 0) {
+			recibido += aux;
+			if(recibido == size){return size;}
+		} else {
+			return ERROR;
+		}
 	}
-	return NULL;
-}
 
-bool Socket::is_valid() {
-	return valido;
-}
+	Socket* Socket::accept() {
+		struct sockaddr_in client;
+		memset(&client, 0, sizeof(client));
+		unsigned int sizeClient = sizeof(client);
+		int fdNuevo;
+		if ((fdNuevo = ::accept(fd, (struct sockaddr *) &(client), &sizeClient))) {
+			return new Socket(fdNuevo);
+		}
+		return NULL;
+	}
+
+	bool Socket::is_valid() {
+		return valido;
+	}
