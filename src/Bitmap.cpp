@@ -15,3 +15,7 @@ Bitmap::Bitmap() {
 Bitmap::~Bitmap() {
 	// TODO Auto-generated destructor stub
 }
+
+int Bitmap::getTamanio(){
+	return tamanio;
+}

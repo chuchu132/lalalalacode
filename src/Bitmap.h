@@ -20,6 +20,9 @@ class Bitmap {
 public:
 	Bitmap();
 	virtual ~Bitmap();
+	int getTamanio();
+private:
+	int tamanio; //tamnio total de los archivos a descargar
 };
 
 #endif /* BITMAP_H_ */

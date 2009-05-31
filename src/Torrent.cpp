@@ -16,48 +16,63 @@ Torrent::Torrent() {
 Torrent::~Torrent() {
 	// TODO Auto-generated destructor stub
 }
-bool Torrent::conectarTracker(std::string url,int port){
-	if(tracker->connect(url,port)){
-		//TODO ver si el mensaje no lo arma un "Parser" o va en otro metodo
-		std::string envio;
-		envio = "GET /?info_hash=";
-		envio += info_hash;
-		envio += "& peer_id=";
-		envio += clienteTorrent->getPeerId();
-		envio += "&port=";
-		char temp[20];
-		sprintf(temp,"%d",port);
-		envio += temp;
-		envio +="&uploaded=";
-		sprintf(temp,"%d",uploaded);
-		envio += temp;
-		envio += "&downloaded=";
-		sprintf(temp,"%d",downloaded);
-		envio += temp;
-		envio += "&left=";
-		sprintf(temp,"%d",left());
-		envio += temp;
-		envio += "&event=started";
-		return (tracker->send(envio.c_str(),envio.length()));
-	}
-	return false;
+bool Torrent::conectarTracker(std::string url, int port) {
+	return tracker->connect(url, port);
 }
 
-std::string Torrent::getNombre()
-{
+bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
+	//TODO ver si el mensaje no lo arma un "Parser" o va en otro metodo
+	std::string envio;
+	envio = "GET /?info_hash=";
+	envio += info_hash;
+	envio += "& peer_id=";
+	envio += clienteTorrent->getPeerId();
+	envio += "&port=";
+	char temp[20];
+	sprintf(temp, "%d", port);
+	envio += temp;
+	envio += "&uploaded=";
+	sprintf(temp, "%d", uploaded);
+	envio += temp;
+	envio += "&downloaded=";
+	sprintf(temp, "%d", downloaded);
+	envio += temp;
+	envio += "&left=";
+	sprintf(temp, "%d", left());
+	envio += temp;
+	if (numwant < 0) {
+		envio += "&event=";
+		envio += event;
+	} else {
+		envio += "&numwant=";
+		sprintf(temp, "%d", numwant);
+		envio += temp;
+	}
+	return (tracker->send(envio.c_str(), envio.length()));
+}
+
+std::string Torrent::getNombre() {
 	return nombre;
 }
 
-void* Torrent::run(){
+int  Torrent::left(){
+	return (partes.getTamanio() - downloaded);
+}
+
+bool Torrent::estaActivo(){
+	return activo;
+}
+
+void* Torrent::run() {
 	Socket* conexionPeerNuevo;
-	while(activo){
+	while (activo) {
 		conexionPeerNuevo = peerListener.accept();
-		if(conexionPeerNuevo != NULL){
-			Peer* peerNuevo = new Peer(conexionPeerNuevo,this);
-			if(peerNuevo != NULL){
+		if (conexionPeerNuevo != NULL) {
+			Peer* peerNuevo = new Peer(conexionPeerNuevo, this);
+			if (peerNuevo != NULL) {
 				//TODO peerNuevo->run(); o algo asi
 				llaveListaPeers.lock();
-				peers.insert(peers.end(),peerNuevo);
+				peers.insert(peers.end(), peerNuevo);
 				llaveListaPeers.unlock();
 			}
 		}
