@@ -38,16 +38,16 @@ public:
     void procesar();
 
     //Parser para el tipo diccionario
-    void parserDiccionario(FILE *fp);
+    void parserDiccionario();
 
     //Parser para el tipo lista
-    void parserLista(FILE*fp);
+    void parserLista();
 
     //Parser para los datos numericos
-    void parserNumerico(FILE *fp);
+    void parserNumerico();
 
     //Parser para las cadenas de caracteres
-    void parserCadena(FILE *fp);
+    void parserCadena();
 
     //Funcion que se encarga de realizar una tabulacion cuando se imprime
     //es una funcion temporal solo para la visualizacion por pantalla 

@@ -21,27 +21,27 @@ void BencodeParser::procesar() {
 
     switch (caracter) {
 
-        case 'd': parserDiccionario(fp);
+        case 'd': parserDiccionario();
             break;
 
-        case 'l': parserLista(fp);
+        case 'l': parserLista();
             break;
 
-        case 'i': parserNumerico(fp);
+        case 'i': parserNumerico();
             break;
 
-        default: parserCadena(fp);
+        default: parserCadena();
 
     }
 }
 
-void BencodeParser::parserDiccionario(FILE *fp) {
+void BencodeParser::parserDiccionario() {
 
     compararCaracter('d');
     ident = 0;
     while (verCaracterSiguiente() != 'e') {
 
-        parserCadena(fp);
+        parserCadena();
        
         procesar();
     }
@@ -50,7 +50,7 @@ void BencodeParser::parserDiccionario(FILE *fp) {
 
 }
 
-void BencodeParser::parserLista(FILE*fp) {
+void BencodeParser::parserLista() {
 
     compararCaracter('l');
     ident = 1;
@@ -61,7 +61,7 @@ void BencodeParser::parserLista(FILE*fp) {
 
 }
 
-void BencodeParser::parserNumerico(FILE *fp) {
+void BencodeParser::parserNumerico() {
 
     compararCaracter('i');
     long val = 0;
@@ -74,7 +74,7 @@ void BencodeParser::parserNumerico(FILE *fp) {
 
 }
 
-void BencodeParser::parserCadena(FILE *fp) {
+void BencodeParser::parserCadena() {
 
 
     int len = 0;

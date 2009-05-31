@@ -37,7 +37,8 @@ FILE* menuInicio() {
     int seleccion;
     FILE*fp;
 
-    std::cout << std::endl << " --- Si utilizar el archivo defaut ( PSP.torrent ) presionar 0 \n --- Si desea ingresar otro .torrent presionar 1---" << std::endl;
+    std::cout << std::endl << " --- El archivo defaut es ( PSP.torrent ) --- "<<std::endl;
+    std::cout <<" --- Si desea ingresar otro .torrent presionar 1---" << std::endl;
     std::cout << "     ";
     std::cin >> seleccion;
 
