@@ -13,8 +13,8 @@
 #include <iostream>
 
 #include "Torrent.h"
-class Torrent;
 
+class Torrent;
 class TorrentView {
 	/* Lista de Torrents perteneciente a la vista */
 

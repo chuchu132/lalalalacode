@@ -86,6 +86,8 @@ public:
 	/* devuelve el nombre del archivo .torrent */
 	std::string getNombre();
 
+	Bitmap* getBitmap();
+
 	/* metodos llamados por el controlador desde la vista
 	 * para controlar el trafico del torrent */
 	void detener();

@@ -10,6 +10,7 @@
 
 #include "Ventana.h"
 #include "ClienteTorrent.h"
+#include "Torrent.h"
 
 class Ventana;
 class ClienteTorrent;
