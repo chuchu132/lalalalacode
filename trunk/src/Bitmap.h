@@ -21,6 +21,10 @@ public:
 	Bitmap();
 	virtual ~Bitmap();
 	int getTamanio();
+	/*Devuelve un arreglo con el bitmap, quien lo solicita debe liberarlo*/
+	void getMap(char* map,int* length);
+	/*Devuelve un arreglo con el bloque pedido y su longitud, quien lo solicita debe liberarlo*/
+	void getBlock(int index,int begin,char* data,int* longitud);
 private:
 	int tamanio; //tamnio total de los archivos a descargar
 };
