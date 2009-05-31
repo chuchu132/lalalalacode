@@ -188,8 +188,12 @@ void TorrentView::selectNext()
 	if(iter) //si hay algo seleccionado
 	{
 	  iter++;
-	  if(iter)						//si existe la fila
-		  selection->select(iter);	//selecciono la fila
+	  if(iter)		  //si existe la fila
+	  {
+		   selection->select(iter);	//selecciono la fila
+		   Gtk::TreePath::TreePath path(iter);
+		   view_torrents->scroll_to_row(path); //muevo el scroll de la vista
+	  }
 	}
 }
 
@@ -202,6 +206,8 @@ void TorrentView::selectPrevious()
 		{
 			iter--;	//retrocedo
 			selection->select(iter);	//selecciono la fila
+			Gtk::TreePath::TreePath path(iter);
+			view_torrents->scroll_to_row(path); //muevo el scroll de la vista
 		}
 	}
 }
