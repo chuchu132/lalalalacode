@@ -68,6 +68,11 @@ public:
 	 * Peers.*/
 	void* run();
 
+
+	std::string getInfoHash();
+
+	std::string getPeerId();
+
 	/* Devuelve el estado por ej: "detenido", "pausado", "conectando", "completo", etc */
 	std::string getEstado();
 

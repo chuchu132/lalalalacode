@@ -14,6 +14,19 @@
 #define EVENT_COMPLETED  "completed"
 #define EVENT_STOPPED   "stopped"
 
+const int LEN_SHA1 = 20;
+
+/*Constantes utilizadas en el Handshake entre Peers*/
+const char* PROTOCOL =  "BitTorrent protocol";
+const char  PSTRLEN = 19;
+const int   LEN_HANDSHAKE = 68;
+const int   OFFSET_PSTRLEN = 0;
+const int   OFFSET_PROTOCOL = 1;
+const int   OFFSET_RESERVED = (OFFSET_PROTOCOL + OFFSET_PSTRLEN);
+const int   LEN_RESERVED = 8;
+const int   OFFSET_INFO_HASH = (OFFSET_PROTOCOL + PSTRLEN + LEN_RESERVED);
+const int   OFFSET_PEER_ID = (OFFSET_INFO_HASH + 20);
+
 /*IDs de los diferentes tipos de mensajes entre Peers*/
 const char ID_MSJ_CHOKE = 0;
 const char ID_MSJ_UNCHOKE = 1;

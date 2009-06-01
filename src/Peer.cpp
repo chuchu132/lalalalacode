@@ -45,6 +45,16 @@ bool Peer::procesar(const char* buffer, int length) {
 	//TODO implementar
 }
 
+bool Peer::sendHandshake(){
+	char buffer[LEN_HANDSHAKE];
+	buffer[OFFSET_PSTRLEN]= PSTRLEN;
+	memcpy((buffer + OFFSET_PROTOCOL),PROTOCOL,PSTRLEN);
+	memset((buffer + OFFSET_RESERVED),0,LEN_RESERVED);
+	memcpy((buffer + OFFSET_INFO_HASH),torrent->getInfoHash().c_str(),LEN_SHA1);
+	memcpy((buffer + OFFSET_PEER_ID),torrent->getPeerId().c_str(),LEN_SHA1);
+	return (peerRemoto->send(buffer,LEN_HANDSHAKE) != ERROR);
+}
+
 bool Peer::sendKeepAlive() {
 	return (peerRemoto->send(LEN_MSJ_KEEPALIVE, sizeof(int)) != ERROR);
 }
