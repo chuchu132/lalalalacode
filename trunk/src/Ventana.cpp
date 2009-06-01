@@ -32,6 +32,7 @@ Ventana::Ventana()
 {
 	std::cout<<"comienzo ventana"<<std::endl;
 	torrents = new TorrentView();
+	torrents->setAttributesView(&attr);
 	try
 	{
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
@@ -50,6 +51,8 @@ Ventana::Ventana()
 		torrents->setCategoriesView(view_cat);
 		std::cout<<"view torrents cargado"<<std::endl;
 
+		attr.setAttributesView(builder);
+
 		//obtengo los botones
 		this->getButtons();
 		this->connectSignals();
@@ -62,7 +65,7 @@ Ventana::Ventana()
 
 Ventana::~Ventana()
 {
-	// TODO Auto-generated destructor stub
+	delete torrents;
 }
 
 Gtk::Window& Ventana::getVentana()
@@ -228,6 +231,7 @@ void Ventana::button_cancel_clicked()
 void Ventana::actualizarEstado(Torrent* t)
 {
 	torrents->updateRow(t);
-	//update pestañas??
+	if ( t == torrents->getSelectedTorrent())
+		attr.showInfo(t);
 }
 

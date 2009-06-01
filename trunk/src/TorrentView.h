@@ -13,8 +13,11 @@
 #include <iostream>
 
 #include "Torrent.h"
+#include "Constantes.h"
+//#include "AttributesView.h"
 
 class Torrent;
+class AttributesView;
 
 class TorrentView {
 	/* Lista de Torrents perteneciente a la vista */
@@ -29,12 +32,13 @@ private:
 	Gtk::TreeModelColumnRecord columns_categories;
 
 	Gtk::TreeModelColumn<Glib::ustring> col_name; 	//nombre del torrent
-	Gtk::TreeModelColumn<unsigned int> col_size;	//tam del archivo (en kb?? mb??)
+	Gtk::TreeModelColumn<Glib::ustring> col_size;	//tam del archivo
 	Gtk::TreeModelColumn<Glib::ustring> col_status; 	//estado del torrent
 	Gtk::TreeModelColumn<int> col_progress; 	//progreso del torrent (porcentaje)
-	Gtk::TreeModelColumn<unsigned int> col_completed; 	//tamaño completado del torrent
-	Gtk::TreeModelColumn<Glib::ustring> col_downspeed; 	//velocidad de descarga del torrent
-	Gtk::TreeModelColumn<Glib::ustring> col_upspeed; 	//velocidad de subida del torrent
+	Gtk::TreeModelColumn<Glib::ustring> col_completed; 	//tamaño completado del torrent
+	Gtk::TreeModelColumn<Glib::ustring> col_remaining; 	//tamaño restante para completar descarga
+	Gtk::TreeModelColumn<int> col_downspeed; 	//velocidad de descarga del torrent//todo: float!!!!!
+	Gtk::TreeModelColumn<int> col_upspeed; 	//velocidad de subida del torrent
 	Gtk::TreeModelColumn<Glib::ustring> col_time; 	//tiempo restante para completar descarga
 	Gtk::TreeModelColumn<Torrent*> col_torrent; 	//puntero al objeto torrent que se esta mostrando
 
@@ -58,6 +62,11 @@ private:
 
 	void updateRowValues(Gtk::TreeModel::Row &, Torrent*);
 
+	/* transforma bytes en un string para mostrar por pantalla */
+	std::string showBytes(float bytes);
+
+	AttributesView *attr;//muestra los atributos del torrent
+
 public:
 
 	TorrentView();
@@ -69,6 +78,8 @@ public:
 
 	/* vista que muestra a los torrents segun su estado */
 	void setCategoriesView(Gtk::TreeView *view_categories);
+
+	void setAttributesView(AttributesView *attr);
 
 	/* agregar una fila para este torrent */
 	void addRow(Torrent *t);

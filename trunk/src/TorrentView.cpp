@@ -6,12 +6,14 @@
  */
 
 #include "TorrentView.h"
+#include <iomanip>
 
 #define COL_NAME "Nombre del Torrent"
 #define COL_SIZE "Tamaño"
 #define COL_STATUS "Estado"
 #define COL_PROGRESS "Progreso"
 #define COL_COMPLETED "Completado"
+#define COL_REMAINING "Restante"
 #define COL_DOWNSPEED "Vel descarga (kb/s)"
 #define COL_UPSPEED "Vel subida (kb/s)"
 #define COL_TIME "Tiempo Restante"
@@ -26,6 +28,7 @@ TorrentView::TorrentView()
 	columns.add(col_status);
 	columns.add(col_progress);
 	columns.add(col_completed);
+	columns.add(col_remaining);
 	columns.add(col_downspeed);
 	columns.add(col_upspeed);
 	columns.add(col_time);
@@ -43,6 +46,8 @@ TorrentView::TorrentView()
 TorrentView::~TorrentView()
 {
 	// TODO Auto-generated destructor stub
+	list_torrents->clear();
+	list_categories->clear();
 }
 
 void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
@@ -74,6 +79,7 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
  	}
 
 	this->view_torrents->append_column(COL_COMPLETED, col_completed);
+	this->view_torrents->append_column(COL_REMAINING, col_remaining);
 	this->view_torrents->append_column(COL_DOWNSPEED, col_downspeed);
 	this->view_torrents->append_column(COL_UPSPEED, col_upspeed);
 	cols_count = this->view_torrents->append_column(COL_TIME, col_time);
@@ -87,6 +93,7 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents)
 
 	selection = this->view_torrents->get_selection();
 	selection->signal_changed().connect( sigc::mem_fun(*this, &TorrentView::on_row_selected) );
+
 }
 
 void TorrentView::setCategoriesView(Gtk::TreeView *view_categories)
@@ -109,6 +116,11 @@ void TorrentView::setCategoriesView(Gtk::TreeView *view_categories)
 
 }
 
+void TorrentView::setAttributesView(AttributesView *attr)
+{
+	this->attr = attr;
+}
+
 void TorrentView::on_category_selected()
 {
 	//veo que fila esta seleccionada
@@ -125,25 +137,29 @@ void TorrentView::on_row_selected()
 	std::cout<<"fila seleccionada"<<std::endl;
 	//agrego todos los datos que me interesen
 	//en la parte de estado del torrent
-	// TODO descomentar Torrent *t = getSelectedTorrent();
+	Torrent *t = getSelectedTorrent();
+	attr->showInfo(t);
 }
 
 void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)
 {
 	//todo crear los metodos necesarios y ver tipos
 	//podria agregar una col bytes left :P
-	/*
 	row[col_status] = t->getEstado();
-	row[col_progress] = t->getPorcentaje();
-	row[col_completed] = t->getTamanioDescargado();
+	row[col_progress] = t->getTamanioDescargado() * 100 / t->getTamanio();
+	row[col_completed] = showBytes(t->getTamanioDescargado());
+	row[col_remaining] = showBytes(t->left());
 	row[col_downspeed] = t->getVelocidadBajada();
 	row[col_upspeed] = t->getVelocidadSubida();
-	row[col_time] = t->getTiempoRestante();*/
-	row[col_status] = "Pausado";
+	//row[col_time] = t->getTiempoRestante();
+
+	row[col_status] = "Detenido";
 	row[col_progress] = i;
-	row[col_completed] = (35000*i/100);
-	row[col_downspeed] = "25 kb/s";
-	row[col_upspeed] = "-";
+	row[col_size] = showBytes(35000);
+	row[col_completed] = showBytes(35000*i/100);
+	row[col_remaining] = showBytes(35000-(35000*i/100));
+	row[col_downspeed] = 25;
+	row[col_upspeed] = 3;
 	row[col_time] = "1h 25m";
 }
 
@@ -152,7 +168,7 @@ void TorrentView::addRow(Torrent *t)
 	Gtk::TreeModel::Row row = (* list_torrents->append());
 	i++;
 	row[col_name] = t->getNombre();
-	row[col_size] = 35000;//t->getTamanio();
+	row[col_size] = showBytes(t->getTamanio());
 	row[col_torrent] = t;
 
 	updateRowValues(row,t);
@@ -235,4 +251,27 @@ void TorrentView::updateRow(Torrent *t)
 	}
 }
 
+std::string TorrentView::showBytes(float bytes)
+{
+	std::stringstream buffer;
+//castear a float
+	if (bytes < 1024)
+	{
+		buffer << std::setprecision(2)<< bytes<<" bytes";
+	}
+	else
+	{
+		bytes /= 1024;
+		if (bytes < 1024)
+		{
+			buffer << std::setprecision(2)<<bytes<<" kb";
+		}
+		else
+		{
+			bytes /= 1024;
+			buffer << std::setprecision(2)<<bytes<<" Mb";
+		}
+	}
+	return buffer.str();
+}
 
