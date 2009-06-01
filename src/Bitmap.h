@@ -15,18 +15,29 @@
  * esta descargando.
  */
 
+#include <list>
+#include "BencodeParser.h"
 
 class Bitmap {
 public:
-	Bitmap();
+	Bitmap(BencodeParser* parser);
 	virtual ~Bitmap();
 	int getTamanio();
 	/*Devuelve un arreglo con el bitmap, quien lo solicita debe liberarlo*/
 	void getMap(char* map,int* length);
 	/*Devuelve un arreglo con el bloque pedido y su longitud, quien lo solicita debe liberarlo*/
-	void getBlock(int index,int begin,char* data,int* longitud);
+	bool getBlock(int index,int begin,char* data,int* longitud);
+
+	//TODO agregar metodo para escribir un bloque en una pieza de un archivo
+
 private:
-	int tamanio; //tamnio total de los archivos a descargar
+	char* bitmap;
+	int tamBitmapBytes;
+	//TODO agregar una lista de mutex y bloquear escritura por archivo.
+	std::list<int> piezasXarchivo; // TODO deberia ser una list de "Archivo"
+	int tamanioPieza;
+	int bloquesXPieza;
+	int bytesTotales; //tamnio total de los archivos a descargar
 };
 
 #endif /* BITMAP_H_ */
