@@ -14,8 +14,6 @@
 #define EVENT_COMPLETED  "completed"
 #define EVENT_STOPPED   "stopped"
 
-const int LEN_SHA1 = 20;
-
 /*Constantes utilizadas en el Handshake entre Peers*/
 const char* PROTOCOL =  "BitTorrent protocol";
 const char  PSTRLEN = 19;
@@ -72,6 +70,10 @@ const int OFFSET_ID = 4;
 const int OFFSET_ARG_1 = 5;
 const int OFFSET_ARG_2 = 9;
 const int OFFSET_ARG_3 = 13;
+
+/*Otras Constantes*/
+const int LEN_SHA1 = 20;
+const int BUFSIZE = 1000;
 
 const int ERROR = -1;
 const int OK = 0;
