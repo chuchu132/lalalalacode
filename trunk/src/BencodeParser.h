@@ -1,7 +1,6 @@
 /*
  * File:   BencodeParser.h
- * Author: gustavo
- *
+ * Author:
  * Created on 30 de mayo de 2009, 23:25
  */
 

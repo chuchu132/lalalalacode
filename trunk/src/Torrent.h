@@ -58,7 +58,7 @@ public:
 	bool enviarEventoEstado(const char* event,int numwant);
 
 	/*Calcula cuantos bytes faltan descargar*/
-	int  left();
+	unsigned int  left();
 
 	/*Cuando el Tracker recibe una lista de peers desde el Tracker remoto
 	 * los agrega a la lista de peers del Torrent*/
@@ -76,10 +76,10 @@ public:
 	/* Devuelve el estado por ej: "detenido", "pausado", "conectando", "completo", etc */
 	std::string getEstado();
 
-	/* devuelve el tamaño del archivo (en kb??) Respuesta= bytes */
+	/* devuelve el tamaño del archivo en bytes */
 	unsigned int getTamanio();
 
-	/* devuelve el tamanio descargado (en kb?) Respuesta= bytes*/
+	/* devuelve el tamanio descargado en bytes*/
 	unsigned int getTamanioDescargado();
 
 	int getVelocidadSubida();
@@ -112,8 +112,8 @@ private:
 	std::string info_hash;
 	std::string nombre;
 	int port; // puerto donde esta escuchando el Cliente.
-	int uploaded;
-	int downloaded;
+	unsigned int uploaded;
+	unsigned int downloaded;
 
 	Controlador *controlador;
 	/*torrent notifica a controlador por medio del metodo

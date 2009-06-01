@@ -55,7 +55,7 @@ std::string Torrent::getNombre() {
 	return nombre;
 }
 
-int  Torrent::left(){
+unsigned int  Torrent::left(){
 	return (partes.getTamanio() - downloaded);
 }
 
