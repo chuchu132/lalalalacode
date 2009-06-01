@@ -106,3 +106,23 @@ void Torrent::pausar() {
 
 }
 
+std::string Torrent::getEstado() {
+	return T_DETENIDO;
+}
+
+unsigned int Torrent::getTamanio() {
+	return 0;
+}
+
+unsigned int Torrent::getTamanioDescargado() {
+	return 0;
+}
+
+int Torrent::getVelocidadSubida() {
+	return 0;
+}
+
+int Torrent::getVelocidadBajada() {
+	return 0;
+}
+

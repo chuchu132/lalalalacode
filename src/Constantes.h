@@ -81,4 +81,11 @@ const int OK = 0;
 const int TAM_BLOQUES = 16384; //ver http://wiki.theory.org/BitTorrentSpecification#Messages
 const int TAM_BUFFER = 100; //TODO redefinir
 
+/* Estados del Torrent */
+//ver!!
+#define T_ACTIVO "Activo";
+#define T_PAUSADO "Pausado";
+#define T_DETENIDO "Detenido";
+#define T_COMPLETO "Completo";
+
 #endif /* CONSTANTES_H_ */
