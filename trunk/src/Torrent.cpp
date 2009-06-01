@@ -63,6 +63,14 @@ bool Torrent::estaActivo(){
 	return activo;
 }
 
+std::string Torrent::getInfoHash(){
+	return info_hash;
+}
+
+std::string Torrent::getPeerId(){
+	return clienteTorrent->getPeerId();
+}
+
 void* Torrent::run() {
 	Socket* conexionPeerNuevo;
 	while (activo) {
@@ -79,7 +87,6 @@ void* Torrent::run() {
 	}
 	return NULL;
 }
-
 
 Bitmap* Torrent::getBitmap(){
 	return &partes;
