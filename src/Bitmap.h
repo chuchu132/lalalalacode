@@ -19,18 +19,25 @@
 #include "BencodeParser.h"
 
 class Bitmap {
+
 public:
+
 	Bitmap(BencodeParser* parser);
+
 	virtual ~Bitmap();
+
 	int getTamanio();
+
 	/*Devuelve un arreglo con el bitmap, quien lo solicita debe liberarlo*/
 	void getMap(char* map,int* length);
+
 	/*Devuelve un arreglo con el bloque pedido y su longitud, quien lo solicita debe liberarlo*/
 	bool getBlock(int index,int begin,char* data,int* longitud);
 
 	//TODO agregar metodo para escribir un bloque en una pieza de un archivo
 
 private:
+
 	char* bitmap;
 	int tamBitmapBytes;
 	//TODO agregar una lista de mutex y bloquear escritura por archivo.
