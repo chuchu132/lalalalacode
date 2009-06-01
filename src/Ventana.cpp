@@ -31,6 +31,7 @@
 Ventana::Ventana()
 {
 	std::cout<<"comienzo ventana"<<std::endl;
+	torrents = new TorrentView();
 	try
 	{
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
@@ -42,11 +43,11 @@ Ventana::Ventana()
 		//obtengo el tree view de torrents
 		Gtk::TreeView *view_torrents = 0;
 		builder->get_widget(VIEW_TORRENTS,view_torrents);
-		torrents.setTreeView(view_torrents);
+		torrents->setTreeView(view_torrents);
 
 		Gtk::TreeView *view_cat = 0;
 		builder->get_widget(VIEW_CATEGORIES,view_cat);
-		torrents.setCategoriesView(view_cat);
+		torrents->setCategoriesView(view_cat);
 		std::cout<<"view torrents cargado"<<std::endl;
 
 		//obtengo los botones
@@ -151,10 +152,10 @@ void Ventana::on_button_erase_clicked()
 {
 	//tal vez deberia desabilitar las señales de row selected!!!!!!!!!!
 	std::cout<<"borrar clickeado"<<std::endl;
-	Torrent *t = torrents.getSelectedTorrent();
+	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
-		torrents.eraseSelectedRow();
+		torrents->eraseSelectedRow();
 		controlador->borrarTorrent(t);
 	}
 }
@@ -162,7 +163,7 @@ void Ventana::on_button_erase_clicked()
 void Ventana::on_button_stop_clicked()
 {
 	std::cout<<"detener clickeado"<<std::endl;
-	Torrent *t = torrents.getSelectedTorrent();
+	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
 		controlador->detenerTorrent(t);
@@ -172,7 +173,7 @@ void Ventana::on_button_stop_clicked()
 void Ventana::on_button_pause_clicked()
 {
 	std::cout<<"pausar clickeado"<<std::endl;
-	Torrent *t = torrents.getSelectedTorrent();
+	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
 		controlador->pausarTorrent(t);
@@ -182,7 +183,7 @@ void Ventana::on_button_pause_clicked()
 void Ventana::on_button_continue_clicked()
 {
 	std::cout<<"continuar clickeado"<<std::endl;
-	Torrent *t = torrents.getSelectedTorrent();
+	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
 		controlador->continuarTorrent(t);
@@ -192,13 +193,13 @@ void Ventana::on_button_continue_clicked()
 void Ventana::on_button_up_clicked()
 {
 	std::cout<<"subir clickeado"<<std::endl;
-	torrents.selectPrevious();
+	torrents->selectPrevious();
 }
 
 void Ventana::on_button_down_clicked()
 {
 	std::cout<<"bajar clickeado"<<std::endl;
-	torrents.selectNext();
+	torrents->selectNext();
 }
 
 void Ventana::on_menu_about()
@@ -215,8 +216,8 @@ void Ventana::button_accept_clicked()
      select_window->hide();
      controlador->agregarTorrent(filename);
      //Torrent *t = controlador->agregarTorrent(filename);
-     //torrents.addRow(t);
-     torrents.addRow(tor);
+     //torrents->addRow(t);
+     torrents->addRow(tor);
 }
 
 void Ventana::button_cancel_clicked()
@@ -226,7 +227,7 @@ void Ventana::button_cancel_clicked()
 
 void Ventana::actualizarEstado(Torrent* t)
 {
-	torrents.updateRow(t);
+	torrents->updateRow(t);
 	//update pestañas??
 }
 

@@ -13,18 +13,13 @@
 #include <iostream>
 
 #include "TorrentView.h"
-#include "Controlador.h"
 #include "Torrent.h"
+#include "Controlador.h"
 
+
+class TorrentView;
 class Controlador;
 class Torrent;
-class TorrentView;
-
-/****
- * no compila por las inclusiones mutuas..
- * si alguien se da cuenta como arrelgarlo ayudeme ;)
- * sino mañana me siento a tratar de que compile ^_^
- * *******/
 
 class Ventana {
 
@@ -47,15 +42,11 @@ private:
 	Gtk::ToolButton *button_up;
 	Gtk::ToolButton *button_down;
 
-	/* botones de la ventana de seleccion de archivo */
-	//Gtk::Button *button_accept;
-	//Gtk::Button *button_cancel;
-
 	/* menu */
 	Gtk::ImageMenuItem *menu_about;
 
 	/* lista de torrents */
-	TorrentView torrents;
+	TorrentView *torrents;
 
 	/* controlador de la vista */
 	Controlador *controlador;
