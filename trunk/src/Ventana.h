@@ -15,11 +15,12 @@
 #include "TorrentView.h"
 #include "Torrent.h"
 #include "Controlador.h"
-#include "AttributesView.h"
+#include "AttributeView.h"
 
 
 class TorrentView;
 class Controlador;
+class AttributesView;
 class Torrent;
 
 class Ventana {
@@ -48,7 +49,7 @@ private:
 
 	/* lista de torrents */
 	TorrentView *torrents;
-	AttributesView attr;
+	AttributesView *attr;
 
 	/* controlador de la vista */
 	Controlador *controlador;

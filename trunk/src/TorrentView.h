@@ -14,7 +14,7 @@
 
 #include "Torrent.h"
 #include "Constantes.h"
-//#include "AttributesView.h"
+#include "AttributeView.h"
 
 class Torrent;
 class AttributesView;

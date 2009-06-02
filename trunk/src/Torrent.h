@@ -39,7 +39,7 @@ public:
 	 * se pasa la ruta del archivo .torrent y se parsea adentro.(Podria haber un
 	 * error al construir :S ).
 	 */
-	Torrent(std::string url, Controlador* ctrl);
+	Torrent(std::string url);
 	virtual ~Torrent();
 
 	bool conectarTracker(std::string url,int port);
@@ -98,6 +98,8 @@ public:
 	void detener();
 	void continuar();
 	void pausar();
+
+	void setControlador(Controlador* ctrl);
 
 
 private:
