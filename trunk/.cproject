@@ -5,6 +5,7 @@
 <storageModule moduleId="org.eclipse.cdt.core.settings">
 <cconfiguration id="cdt.managedbuild.config.gnu.exe.debug.218400242">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.debug.218400242" moduleId="org.eclipse.cdt.core.settings" name="Debug">
+
 <macros>
 <stringMacro name="gtkmm" type="VALUE_TEXT" value=""/>
 </macros>
@@ -473,6 +474,7 @@
 </cconfiguration>
 <cconfiguration id="cdt.managedbuild.config.gnu.exe.release.100473295">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.release.100473295" moduleId="org.eclipse.cdt.core.settings" name="Release">
+
 <macros>
 <stringMacro name="gtkmm" type="VALUE_TEXT" value="`pkg-config --cflags --libs gtkmm-2.4`"/>
 <stringMacro name="gtkc" type="VALUE_TEXT" value="`pkg-config --cflags --libs gtk+-2.0`"/>
