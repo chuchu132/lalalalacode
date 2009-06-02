@@ -5,9 +5,9 @@
 <storageModule moduleId="org.eclipse.cdt.core.settings">
 <cconfiguration id="cdt.managedbuild.config.gnu.exe.debug.218400242">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.debug.218400242" moduleId="org.eclipse.cdt.core.settings" name="Debug">
-
 <macros>
-<stringMacro name="gtkmm" type="VALUE_TEXT" value=""/>
+<stringMacro name="gtkmm" type="VALUE_TEXT" value="`pkg-config --cflags --libs gtkmm-2.4`"/>
+<stringMacro name="gtkc" type="VALUE_TEXT" value="`pkg-config --cflags --libs gtk+-2.0`"/>
 </macros>
 <externalSettings/>
 <extensions>
@@ -28,6 +28,7 @@
 <tool id="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug.1231125365" name="GCC C++ Compiler" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.exe.debug">
 <option id="gnu.cpp.compiler.exe.debug.option.optimization.level.1339879802" name="Optimization Level" superClass="gnu.cpp.compiler.exe.debug.option.optimization.level" value="gnu.cpp.compiler.optimization.level.none" valueType="enumerated"/>
 <option id="gnu.cpp.compiler.exe.debug.option.debugging.level.994237445" name="Debug Level" superClass="gnu.cpp.compiler.exe.debug.option.debugging.level" value="gnu.cpp.compiler.debugging.level.max" valueType="enumerated"/>
+<option id="gnu.cpp.compiler.option.other.other.1848129521" name="Other flags" superClass="gnu.cpp.compiler.option.other.other" value="-c -fmessage-length=0 ${gtkmm} ${gtkc}" valueType="string"/>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.compiler.input.1334274016" superClass="cdt.managedbuild.tool.gnu.cpp.compiler.input"/>
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.compiler.exe.debug.849649407" name="GCC C Compiler" superClass="cdt.managedbuild.tool.gnu.c.compiler.exe.debug">
@@ -37,6 +38,7 @@
 </tool>
 <tool id="cdt.managedbuild.tool.gnu.c.linker.exe.debug.491206763" name="GCC C Linker" superClass="cdt.managedbuild.tool.gnu.c.linker.exe.debug"/>
 <tool id="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug.531972442" name="GCC C++ Linker" superClass="cdt.managedbuild.tool.gnu.cpp.linker.exe.debug">
+<option id="gnu.cpp.link.option.flags.1537446678" name="Linker flags" superClass="gnu.cpp.link.option.flags" value="${gtkmm} ${gtkc}" valueType="string"/>
 <inputType id="cdt.managedbuild.tool.gnu.cpp.linker.input.1052377298" superClass="cdt.managedbuild.tool.gnu.cpp.linker.input">
 <additionalInput kind="additionalinputdependency" paths="$(USER_OBJS)"/>
 <additionalInput kind="additionalinput" paths="$(LIBS)"/>
@@ -474,7 +476,6 @@
 </cconfiguration>
 <cconfiguration id="cdt.managedbuild.config.gnu.exe.release.100473295">
 <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="cdt.managedbuild.config.gnu.exe.release.100473295" moduleId="org.eclipse.cdt.core.settings" name="Release">
-
 <macros>
 <stringMacro name="gtkmm" type="VALUE_TEXT" value="`pkg-config --cflags --libs gtkmm-2.4`"/>
 <stringMacro name="gtkc" type="VALUE_TEXT" value="`pkg-config --cflags --libs gtk+-2.0`"/>
