@@ -56,7 +56,7 @@ std::string Torrent::getNombre() {
 }
 
 unsigned int  Torrent::left(){
-	return (partes.getTamanio() - downloaded);
+	return (archivos.getTamanio() - downloaded);
 }
 
 bool Torrent::estaActivo(){
@@ -88,8 +88,8 @@ void* Torrent::run() {
 	return NULL;
 }
 
-Bitmap* Torrent::getBitmap(){
-	return &partes;
+FileManager* Torrent::getFileManager(){
+	return &archivos;
 }
 
 
