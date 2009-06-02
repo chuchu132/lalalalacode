@@ -15,9 +15,7 @@
 
 /*
  * TODO
- * El parser deberia gusrdar en alguna estructura dinamica tal vez un hashmap, el archivo
- * parseado, e implementar algunas funciones para hacer consultas.
- *
+ * Crear Lista de Archivos con la info del .torrent
  * Ver metodos que no tiene sentido llamar desde afuera del objeto, ponerlos private.
  */
 
