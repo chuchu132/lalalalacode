@@ -5,7 +5,7 @@
  *      Author: teddy
  */
 
-#include "AttributesView.h"
+#include "AttributeView.h"
 
 #define VIEW_ATTRIBUTES "peers"
 #define COL_NAME_PEER "Nombre"
@@ -21,7 +21,7 @@ AttributesView::~AttributesView()
 	// TODO Auto-generated destructor stub
 }
 
-void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder>)
+void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 {
 	builder->get_widget(VIEW_ATTRIBUTES,view_peers);
 	setPeersView();
@@ -31,8 +31,8 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder>)
 void AttributesView::setPeersView()
 {
 
-	Gtk::TreeViewColumn* pColumn;
-	int cols_count;
+//	Gtk::TreeViewColumn* pColumn;
+//	int cols_count;
 
 	//agrego columnas al Tree View
 	//this->view_torrents->append_column(COL_NAME_PEER, col_name_peers);
