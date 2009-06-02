@@ -111,19 +111,19 @@ std::string Torrent::getEstado() {
 }
 
 unsigned int Torrent::getTamanio() {
-	return 0;
+	return 40000;
 }
 
 unsigned int Torrent::getTamanioDescargado() {
-	return 0;
+	return 1000;
 }
 
 int Torrent::getVelocidadSubida() {
-	return 0;
+	return 2;
 }
 
 int Torrent::getVelocidadBajada() {
-	return 0;
+	return 30;
 }
 
 void Torrent::setControlador(Controlador* ctrl)
