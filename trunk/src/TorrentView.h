@@ -33,7 +33,7 @@ private:
 
 	Gtk::TreeModelColumn<Glib::ustring> col_name; 	//nombre del torrent
 	Gtk::TreeModelColumn<Glib::ustring> col_size;	//tam del archivo
-	Gtk::TreeModelColumn<Glib::ustring> col_status; 	//estado del torrent
+	Gtk::TreeModelColumn<std::string> col_status; 	//estado del torrent
 	Gtk::TreeModelColumn<int> col_progress; 	//progreso del torrent (porcentaje)
 	Gtk::TreeModelColumn<Glib::ustring> col_completed; 	//tamaño completado del torrent
 	Gtk::TreeModelColumn<Glib::ustring> col_remaining; 	//tamaño restante para completar descarga
@@ -41,17 +41,23 @@ private:
 	Gtk::TreeModelColumn<int> col_upspeed; 	//velocidad de subida del torrent
 	Gtk::TreeModelColumn<Glib::ustring> col_time; 	//tiempo restante para completar descarga
 	Gtk::TreeModelColumn<Torrent*> col_torrent; 	//puntero al objeto torrent que se esta mostrando
+	Gtk::TreeModelColumn<bool> col_visible;//indica si la fila es visible o no
+
+	Glib::RefPtr<Gtk::TreeModelFilter> filter;
 
 	Gtk::TreeModelColumn<Glib::ustring> col_categories;
+	Gtk::TreeModelColumn<std::string> col_cat_status;
 
 	/* lista */
 	Glib::RefPtr<Gtk::ListStore> list_torrents;
 	Glib::RefPtr<Gtk::ListStore> list_categories;
+	//Glib::RefPtr<Gtk::ListStore> list_hidden; //guarda las filas que no estan siendo mostradas
 
 	/* fila seleccionada */
 	Glib::RefPtr<Gtk::TreeSelection> selection;
 	Glib::RefPtr<Gtk::TreeSelection> selection_categories;
 
+	AttributesView *attr;//muestra los atributos del torrent
 	int i;//sacar despues
 
 	/* Signal handler para fila del categories view seleccionada */
@@ -65,7 +71,10 @@ private:
 	/* transforma bytes en un string para mostrar por pantalla */
 	std::string showBytes(float bytes);
 
-	AttributesView *attr;//muestra los atributos del torrent
+	/* muestra las filas ocultas */
+	void showHidden();
+	/* oculta los que no tienen este estado */
+	void hideRows(std::string);
 
 public:
 

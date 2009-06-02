@@ -19,6 +19,7 @@
 #define COL_TIME "Tiempo Restante"
 #define COL_CAT "Mostrar"
 
+#define SHOW_ALL "Todos"
 
 TorrentView::TorrentView()
 {
@@ -33,19 +34,23 @@ TorrentView::TorrentView()
 	columns.add(col_upspeed);
 	columns.add(col_time);
 	columns.add(col_torrent);
+	columns.add(col_visible);
 
 	columns_categories.add(col_categories);
+	columns_categories.add(col_cat_status);
 
 	//creo la lista con las columnas
 	list_torrents = Gtk::ListStore::create(columns);
 	list_categories = Gtk::ListStore::create(columns_categories);
+
+	filter = Gtk::TreeModelFilter::create(list_torrents);
+	filter->set_visible_column(col_visible);
 
 	i = 0;
 }
 
 TorrentView::~TorrentView()
 {
-	// TODO Auto-generated destructor stub
 	list_torrents->clear();
 	list_categories->clear();
 }
@@ -105,10 +110,20 @@ void TorrentView::setCategoriesView(Gtk::TreeView *view_categories)
 	//agrego filas a la lista
 	Gtk::TreeModel::Row row = (* list_categories->append());
 	row[col_categories] = "Todos";
-	row = (* list_categories->append());
-	row[col_categories] = "Completos";
+	row[col_cat_status] = SHOW_ALL;
+
 	row = (* list_categories->append());
 	row[col_categories] = "Activos";
+	row[col_cat_status] = T_ACTIVO;
+
+	row = (* list_categories->append());
+	row[col_categories] = "Completos";
+	row[col_cat_status] = T_COMPLETO;
+
+	row = (* list_categories->append());
+	row[col_categories] = "Detenidos";
+	row[col_cat_status] = T_DETENIDO;
+
 
 	selection_categories = this->view_categories->get_selection();
 	//me conecto a la señal de fila seleccionada
@@ -128,15 +143,17 @@ void TorrentView::on_category_selected()
 	if (iter) //si hay algo seleccionado
 	{
 	  Gtk::TreeModel::Row row = *iter;
-	  //todo veo que fila es y muestro solo los torrents en ese estado
+	  //veo que fila es y muestro solo los torrents en ese estado
+	  std::string type = row[col_cat_status];
+	  std::cout<<"categoria seleccionada: "<<type<<std::endl;
+	  (type != SHOW_ALL) ? hideRows(type) : showHidden();
 	}
 }
 
 void TorrentView::on_row_selected()
 {
 	std::cout<<"fila seleccionada"<<std::endl;
-	//agrego todos los datos que me interesen
-	//en la parte de estado del torrent
+	//muestra informacion del torrent en la parte inferior de la pantalla
 	Torrent *t = getSelectedTorrent();
 	attr->showInfo(t);
 }
@@ -163,7 +180,9 @@ void TorrentView::addRow(Torrent *t)
 	row[col_name] = t->getNombre();
 	row[col_size] = showBytes(t->getTamanio());
 	row[col_torrent] = t;
-	row[col_name] = "Nombre.torrent";
+	row[col_visible] = true;
+	//row[col_name] = t->getNombre();
+	row[col_name] = "Nombre del Torrent";
 
 	updateRowValues(row,t);
 	i += 1000;
@@ -251,21 +270,51 @@ std::string TorrentView::showBytes(float bytes)
 	std::stringstream buffer;
 	if (bytes < 1024)
 	{
-		buffer << std::setprecision(2)<< bytes<<" bytes";
+		buffer << std::setprecision(3)<< bytes<<" bytes";
 	}
 	else
 	{
 		bytes /= 1024;
 		if (bytes < 1024)
 		{
-			buffer << std::setprecision(2)<<bytes<<" kb";
+			buffer << std::setprecision(3)<<bytes<<" kb";
 		}
 		else
 		{
 			bytes /= 1024;
-			buffer << std::setprecision(2)<<bytes<<" Mb";
+			buffer << std::setprecision(3)<<bytes<<" Mb";
 		}
 	}
 	return buffer.str();
+}
+
+void TorrentView::hideRows(std::string type)
+{
+	std::cout<<"mostrar "<<type<<"s"<<std::endl;
+	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+	Gtk::TreeModel::Row row;
+	Torrent *t;
+	while (iter != list_torrents->children().end())
+	{
+		row = *iter;
+		t = row[col_torrent];
+		row[col_visible] = (type == t->getEstado());
+		iter++;
+	}
+	filter->refilter();//ver si es necesario
+}
+
+void TorrentView::showHidden()
+{
+	std::cout<<"mostrar todos"<<std::endl;
+	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+	Gtk::TreeModel::Row row;
+	while (iter != list_torrents->children().end())
+	{
+		row = *iter;
+		row[col_visible] = true;
+		iter++;
+	}
+	filter->refilter();//ver si es necesario
 }
 

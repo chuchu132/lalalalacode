@@ -84,13 +84,19 @@ public:
 	Torrent *tor;//temporal, solo para probar la vista
 
 	Ventana();
+
 	~Ventana();
 
+	/* devuelve una referencia a la ventana principal */
 	Gtk::Window& getVentana();
 
 	void setControlador(Controlador *c);
 
+	/* actualiza el estado del torrent */
 	void actualizarEstado(Torrent*);
+
+	/* agrega el torrent a la vista */
+	void addTorrent(Torrent*);
 
 };
 

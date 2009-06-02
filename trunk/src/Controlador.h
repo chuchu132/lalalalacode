@@ -31,8 +31,10 @@ public:
 
 	//TODO ver que devuelven las funciones en caso de error
 
+	/* borra un torrent del cliente */
 	void borrarTorrent(Torrent *t);
 
+	/* agrega un torrent al cliente */
 	Torrent* agregarTorrent(std::string ruta);
 
 	void detenerTorrent(Torrent*);
@@ -55,6 +57,9 @@ public:
 
 	/* muestra los torrents que se estan descargado o subiendo */
 	void mostrarActivos();
+
+	/* agrega el torrent en la vista */
+	void agregarTorrentEnVista(Torrent*);
 
 };
 

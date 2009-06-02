@@ -237,3 +237,8 @@ void Ventana::actualizarEstado(Torrent* t)
 		attr->showInfo(t);
 }
 
+void Ventana::addTorrent(Torrent *t)
+{
+	torrents->addRow(t);
+}
+
