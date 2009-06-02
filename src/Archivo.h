@@ -8,6 +8,8 @@
 #ifndef ARCHIVO_H_
 #define ARCHIVO_H_
 
+#include <fstream>
+
 class Archivo {
 public:
 	Archivo();
@@ -15,9 +17,10 @@ public:
 
 private:
 	//FILE* o lo que corresponda en C++
-	//string path
-	//string name
-	//int tamPieza
+	std::fstream file;
+	std::string path;
+	std::string name;
+	int tamPieza;
 	//sha1
 
 };

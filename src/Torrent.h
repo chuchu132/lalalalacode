@@ -10,7 +10,7 @@
 
 #include <list>
 #include <string>
-#include "Bitmap.h"
+#include "FileManager.h"
 #include "ClienteTorrent.h"
 #include "Mutex.h"
 #include "Peer.h"
@@ -91,7 +91,7 @@ public:
 	/* devuelve el nombre del archivo .torrent */
 	std::string getNombre();
 
-	Bitmap* getBitmap();
+	FileManager* getFileManager();
 
 	/* metodos llamados por el controlador desde la vista
 	 * para controlar el trafico del torrent */
@@ -110,7 +110,7 @@ private:
 	bool activo; // TODO sirve para dejar de escuchar conexiones
 	Mutex llaveListaPeers;
 	std::list<Peer*> peers;
-	Bitmap partes;
+	FileManager archivos;
 	std::string info_hash;
 	std::string nombre;
 	int port; // puerto donde esta escuchando el Cliente.

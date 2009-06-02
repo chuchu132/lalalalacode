@@ -82,10 +82,10 @@ bool Peer::sendHave(int index) {
 }
 /*Formato mensaje Bitfiel: <len=0001 + X><Id=5><bitfield>  X = longitud en bytes de bitfield*/
 bool Peer::sendBitfield() {
-	Bitmap* bitmap = this->torrent->getBitmap();
+	FileManager* fileManager = this->torrent->getFileManager();
 	char* map = NULL;
 	int longitud;
-	bitmap->getMap(map, &longitud);
+	fileManager->getMap(map, &longitud);
 	int tamBuffer = (LEN_BASE_MSJ_BITFIELD + longitud + 1);
 	char* buffer = new char[tamBuffer];
 
@@ -111,10 +111,10 @@ bool Peer::sendRequest(int index, int block, int length) {
 
 /*Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block */
 bool Peer::sendPiece(int index, int begin) {
-	Bitmap* bitmap = this->torrent->getBitmap();
+	FileManager* fileManager = this->torrent->getFileManager();
 	char* data = NULL;
 	int longitud;
-	bitmap->getBlock(index, begin, data, &longitud);
+	fileManager->getBlock(index, begin, data, &longitud);
 	int tamBuffer = (LEN_BASE_MSJ_PIECE + longitud + 1);
 	char* buffer = new char[tamBuffer];
 
