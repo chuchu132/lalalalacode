@@ -15,7 +15,7 @@
 #define EVENT_STOPPED   "stopped"
 
 /*Constantes utilizadas en el Handshake entre Peers*/
-const char* PROTOCOL =  "BitTorrent protocol";
+#define PROTOCOL  "BitTorrent protocol"
 const char  PSTRLEN = 19;
 const int   LEN_HANDSHAKE = 68;
 const int   OFFSET_PSTRLEN = 0;
