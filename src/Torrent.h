@@ -43,6 +43,7 @@ public:
 	virtual ~Torrent();
 
 	bool conectarTracker(std::string url,int port);
+
 	/* Se envia un GET con la siguiente informacion:
 	 * info_hash
 	 * peer_id
