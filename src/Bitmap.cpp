@@ -9,7 +9,7 @@
 
 /*TODO Parser deberia tener un lista de Archivos que adentro tienen nombre, path, piezas y sha1*/
 
-Bitmap::Bitmap(BencodeParser* parser) {
+Bitmap::Bitmap() {
 //	IteradorArchivosParser it = parser->iterador();
 //	int acum = 0;
 //	int aux=0;
@@ -38,7 +38,7 @@ int Bitmap::getTamanio(){
 void Bitmap::getMap(char* map,int* length){
 	map = new char[tamBitmapBytes];
 	mempcpy(map,bitmap,tamBitmapBytes);
-	length* = tamBitmapBytes;
+	(*length) = tamBitmapBytes;
 }
 
 bool Bitmap::getBlock(int index,int begin,char* data,int* longitud){

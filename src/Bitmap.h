@@ -22,7 +22,7 @@ class Bitmap {
 
 public:
 
-	Bitmap(BencodeParser* parser);
+	Bitmap();
 
 	virtual ~Bitmap();
 
@@ -33,6 +33,9 @@ public:
 
 	/*Devuelve un arreglo con el bloque pedido y su longitud, quien lo solicita debe liberarlo*/
 	bool getBlock(int index,int begin,char* data,int* longitud);
+
+	/*Recibe un Parser con la info del archivo .torrent y con el, inicializa el bitmap.*/
+	void inicializar(BencodeParser* parser);
 
 	//TODO agregar metodo para escribir un bloque en una pieza de un archivo
 
