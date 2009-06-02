@@ -12,6 +12,7 @@
 #include <string>
 #include <string.h>
 #include <iostream>
+#include "Archivo.h"
 #include "Constantes.h"
 
 /*
@@ -31,6 +32,10 @@ private:
     FILE *fp; //File pointer al archivo .torrent que se esta parseando
     int ident; //Atributo para visualizacion por pantalla
     int salida; //Atributo para la salida del parser
+
+    std::list<Archivo*> listaArchivos; // TODO agregado por ale.
+    int tamanioPiezas; // el tamanio de las piezas es comun para todos los archivos del .torrent
+                       //TODO agregado por ale.
 
 public:
 
@@ -74,6 +79,8 @@ public:
     //Verifica que el caracter sea un match con el que se le pasa como parametro
     void compararCaracter(char c);
 
+    std::list<Archivo*> getListaArchivos(); // TODO ver bien este metodo
+    int getTamanioPiezas();
 };
 
 #endif	/* _BENCODEPARSER_H */
