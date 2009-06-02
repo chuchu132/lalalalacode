@@ -99,6 +99,7 @@ void Ventana::getWindows()
 
 	filter.set_name("Archivos Torrent (*.torrent)");
 	filter.add_pattern("*.torrent");
+	select_window->add_filter(filter);
 
 	select_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	select_window->add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
@@ -140,7 +141,6 @@ void Ventana::connectSignals()
 void Ventana::on_button_add_clicked()
 {
 	std::cout<<"añadir clickeado"<<std::endl;
-	select_window->add_filter(filter);
 	int result = select_window->run();
 
 	if (result == Gtk::RESPONSE_OK)
@@ -221,7 +221,7 @@ void Ventana::button_accept_clicked()
      select_window->hide();
      controlador->agregarTorrent(filename);
      //Torrent *t = controlador->agregarTorrent(filename);
-     //torrents->addRow(t);
+     //it t!= null torrents->addRow(t);
      torrents->addRow(tor);
 }
 
