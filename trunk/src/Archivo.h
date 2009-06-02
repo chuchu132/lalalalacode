@@ -14,13 +14,14 @@ class Archivo {
 public:
 	Archivo();
 	virtual ~Archivo();
-
+	std::fstream* getArchivo();
+	int getTamanio();
 private:
 	//FILE* o lo que corresponda en C++
-	std::fstream file;
+	std::fstream file; // Esta abierto mientras viva Archivo.
 	std::string path;
 	std::string name;
-	int tamPieza;
+	int tamanio;
 	//sha1
 
 };

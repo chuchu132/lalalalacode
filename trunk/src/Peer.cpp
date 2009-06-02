@@ -110,22 +110,30 @@ bool Peer::sendRequest(int index, int block, int length) {
 }
 
 /*Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block */
-bool Peer::sendPiece(int index, int begin) {
+bool Peer::sendPiece(int index, int begin,int lenght) {
 	FileManager* fileManager = this->torrent->getFileManager();
 	char* data = NULL;
-	int longitud;
-	fileManager->getBlock(index, begin, data, &longitud);
-	int tamBuffer = (LEN_BASE_MSJ_PIECE + longitud + 1);
-	char* buffer = new char[tamBuffer];
 
-	(*((int*) (buffer + OFFSET_LEN))) = htonl(LEN_BASE_MSJ_PIECE + longitud); //seteo len
-	buffer[OFFSET_ID] = ID_MSJ_BITFIELD; //seteo  Id
-	(*((int*) (buffer + OFFSET_ARG_1))) = index; // seteo index
-	(*((int*) (buffer + OFFSET_ARG_2))) = begin; // seteo begin
-	memcpy(buffer + OFFSET_ARG_3, data, longitud); //seteo block
+	if((data = fileManager->getBlock(index, begin, lenght)) != NULL){
 
-	delete[] data;
-	return (peerRemoto->send(buffer, tamBuffer) != ERROR);
+		int tamBuffer = (LEN_BASE_MSJ_PIECE + lenght + 1);
+		char* buffer = new char[tamBuffer];
+
+		(*((int*) (buffer + OFFSET_LEN))) = htonl(LEN_BASE_MSJ_PIECE + lenght); //seteo len
+		buffer[OFFSET_ID] = ID_MSJ_BITFIELD; //seteo  Id
+		(*((int*) (buffer + OFFSET_ARG_1))) = index; // seteo index
+		(*((int*) (buffer + OFFSET_ARG_2))) = begin; // seteo begin
+		memcpy(buffer + OFFSET_ARG_3, data, lenght); //seteo block
+
+		delete[] data;
+		delete[] buffer;
+		return (peerRemoto->send(buffer, tamBuffer) != ERROR);
+	}
+	else{
+		//TODO error cerrar conexion/dar de baja
+
+	}
+	return false;
 }
 /* Formato mensaje Piece: <len=0013><Id=8><index><begin><length>  */
 bool Peer::sendCancel(int index, int block, int length) {

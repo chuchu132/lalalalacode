@@ -15,3 +15,9 @@ Archivo::Archivo() {
 Archivo::~Archivo() {
 	// TODO Auto-generated destructor stub
 }
+int Archivo::getTamanio(){
+	return tamanio;
+}
+std::fstream* Archivo::getArchivo(){
+	return &file;
+}

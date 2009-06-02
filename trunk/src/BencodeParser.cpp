@@ -7,7 +7,7 @@ BencodeParser::BencodeParser(FILE*fp) {
     pos = 0;
     buf_lim = 0;
     ident = 0;
-    salida = 1; 
+    salida = 1;
 }
 
 BencodeParser::~BencodeParser() {
@@ -42,10 +42,10 @@ void BencodeParser::parserDiccionario(FILE *fp) {
     while (verCaracterSiguiente() != 'e') {
 
         parserCadena(fp);
-        if (salida == 0)break; 
+        if (salida == 0)break;
         procesar();
     }
-    if (salida == 1) 
+    if (salida == 1)
         compararCaracter('e');
 
 }
@@ -54,9 +54,9 @@ void BencodeParser::parserLista(FILE*fp) {
 
     compararCaracter('l');
     ident = 1;
-    while (verCaracterSiguiente() != 'e') 
+    while (verCaracterSiguiente() != 'e')
         procesar();
-    
+
     compararCaracter('e');
 
 }
@@ -78,12 +78,12 @@ void BencodeParser::parserCadena(FILE *fp) {
 
 
     int len = 0;
-  
+
 
     while (isdigit(verCaracterSiguiente()))
         len = len * 10 + (obtenerCaracter() - '0');
 
-    if (salida == 1) { 
+    if (salida == 1) {
         compararCaracter(':');
         char *s = new char[len + 1];
         int i;
@@ -94,7 +94,7 @@ void BencodeParser::parserCadena(FILE *fp) {
         identacion(ident);
         std::cout << s << std::endl << std::endl;
 
-    
+
         if (!strcmp(s, "pieces")) {
             int len = 0;
             while (isdigit(verCaracterSiguiente()))
@@ -107,23 +107,23 @@ void BencodeParser::parserCadena(FILE *fp) {
 
 	    // Imprime caracteres que se encuentran al final del archivo .torrent
             // En teoria son los caracteres del sha1 , pero no son legibles para la impresion almenos en las pruebas
-	    // Si se descomenta esta seccion del codigo los muestra por pantalla	
+	    // Si se descomenta esta seccion del codigo los muestra por pantalla
             /*
-	      int posActual,posFinal;	
+	      int posActual,posFinal;
 	      posActual=ftell(fp);
               fseek(fp,0,SEEK_END);
               posFinal=ftell(fp);
               fseek(fp,posActual,SEEK_SET);
-          
+
               char* cadenaSha1= new char[len+1];
               fread(cadenaSha1,1,len,fp);
-    
+
               std::cout<< " Caracteres supuestos de 'SHA1' : "<<std::endl;
               std::cout<<cadenaSha1<<std::endl;
               delete []cadenaSha1;*/
         }
         delete []s;
-    } 
+    }
 
 }
 
@@ -162,4 +162,12 @@ void BencodeParser::identacion(int indent) {
     int i;
     for (i = 0; i < indent; ++i)
         std::cout << "   ";
+}
+
+std::list<Archivo*> BencodeParser::getListaArchivos(){
+	return listaArchivos;
+}
+
+int BencodeParser::getTamanioPiezas(){
+	return tamanioPiezas;
 }

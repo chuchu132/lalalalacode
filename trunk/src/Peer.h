@@ -12,8 +12,6 @@
 /*
  * Cada Peer se ejecuta en un hilo aparte y se va a encargar de
  * pedir y enviar partes a otros Peers remotos.
- *
- * TODO tengo que leer mas aca no llegue.
  */
 #include "Socket.h"
 #include "Thread.h"
@@ -75,7 +73,7 @@ public:
 	 * Formato mensaje Request: <len=0013><Id=6><index><begin><length>
 	 * request: Solicitud de un bloque
 	 *   index: numero de pieza
-	 *   begin: numero de bloque dentro de la pieza
+	 *   begin: offset en bytes dentro de la pieza
 	 *   length: longitud del bloque solicitado
 	 */
 	bool sendRequest(int index,int block,int length);
@@ -83,15 +81,15 @@ public:
 	 * Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block
 	 * piece: Transmisión de un bloque
 	 *   index: numero de pieza
-	 *   begin: numero de bloque dentro de la pieza
+	 *   begin:offset en bytes dentro de la pieza
 	 *   block: el bloque con los datos, que es una porcion de la pieza solicitada.
 	 */
-	bool sendPiece(int index,int begin);
+	bool sendPiece(int index,int begin,int length);
 	/*
 	 * Formato mensaje Piece: <len=0013><Id=8><index><begin><length>
 	 * cancel: Petición de cancelación de transmisión de un bloque
 	 *   index: numero de pieza
-	 *   begin: numero de bloque dentro de la pieza
+	 *   begin: offset en bytes dentro de la pieza
 	 *   length: longitud del bloque solicitado y que quiero cancelar
 	 */
 	bool sendCancel(int index,int block,int length);

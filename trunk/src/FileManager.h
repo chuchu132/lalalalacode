@@ -32,11 +32,11 @@ public:
 	/*Devuelve un arreglo con el bitmap, quien lo solicita debe liberarlo*/
 	void getMap(char* map,int* length);
 
-	/*Devuelve un arreglo con el bloque pedido y su longitud, quien lo solicita debe liberarlo*/
-	bool getBlock(int index,int begin,char* data,int* longitud);
+	/* Devuelve un arreglo con el bloque pedido, quien lo solicita debe liberarlo*/
+	char* getBlock(int index,int begin,int longitud);
 
 	/*Recibe un Parser con la info del archivo .torrent y con el, inicializa el bitmap.*/
-	bool inicializar(BencodeParser* parser);
+	void inicializar(BencodeParser* parser);
 
 	//TODO agregar metodo para escribir un bloque en una pieza de un archivo
 
