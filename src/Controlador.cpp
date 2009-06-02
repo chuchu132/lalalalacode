@@ -52,6 +52,10 @@ void Controlador::actualizarEstado(Torrent *t)
 	ventana->actualizarEstado(t);
 }
 
+void Controlador::agregarTorrentEnVista(Torrent *t)
+{
+	ventana->addTorrent(t);
+}
 
 
 int main (int argc, char* argv[])
