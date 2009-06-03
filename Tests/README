@@ -1,0 +1,13 @@
+README
+
+ Created on: 03/06/2009
+     Author: ale
+
+
+Para crear un test hay q Heredar de la clase Test e Implementar el metodo void run()
+Si hay que inicializar atributos se sobre escribe el metodo void setup() que se llama
+automaticamente antes de cada test. 
+
+Luego hay que agregar el test en el main
+
+Ver ejemplo con TestDummie

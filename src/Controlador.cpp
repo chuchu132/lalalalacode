@@ -57,23 +57,3 @@ void Controlador::agregarTorrentEnVista(Torrent *t)
 	ventana->addTorrent(t);
 }
 
-
-int main (int argc, char* argv[])
-{
-	Gtk::Main kit(argc, argv);
-
-	ClienteTorrent cliente;
-	Torrent t;//para probar la vista
-	Ventana ventana;
-	ventana.tor = &t;
-	Controlador controlador(cliente);
-
-	ventana.setControlador(&controlador);
-	controlador.setVentana(&ventana);
-
-	kit.run(ventana.getVentana());
-
-	std::cout<<"fin"<<std::endl;
-
-	return 0;
-}
