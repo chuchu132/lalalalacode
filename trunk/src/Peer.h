@@ -104,6 +104,7 @@ public:
 private:
 	Socket* peerRemoto;
 	Torrent* torrent;
+	//TODO agregar birfield del peer remoto  para llevar control blabla
 };
 
 #endif /* PEER_H_ */
