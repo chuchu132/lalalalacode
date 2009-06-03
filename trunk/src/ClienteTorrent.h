@@ -10,8 +10,9 @@
 
 #include <list>
 #include <iostream>
-
 #include "Controlador.h"
+#include "Socket.h"
+#include "Thread.h"
 
 /* ********************************************************************
  * TODO Completar Comentario                                          *
@@ -20,7 +21,7 @@
  **********************************************************************/
 class Torrent;
 class Controlador;
-class ClienteTorrent {
+class ClienteTorrent : public Thread {
 public:
 	ClienteTorrent();
 	virtual ~ClienteTorrent();
@@ -40,7 +41,8 @@ private:
 	 * Opciones: usar Pocess ID, time stamp.
 	 */
 	char peer_id[20];
-
+	Socket peerListener;
+	bool activo; // TODO sirve para dejar de escuchar conexiones
 	Controlador *controlador;
 
 public:
@@ -52,6 +54,10 @@ public:
 	/* borra el torrent indicado en el parametro
 	 * ver si devuelve algo en caso de error */
 	void borrarTorrent(Torrent*);
+
+	void* run();
+
+	bool estaActivo();
 
 	std::string getPeerId();
 

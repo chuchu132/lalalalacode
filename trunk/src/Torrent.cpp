@@ -51,6 +51,12 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 	return (tracker->send(envio.c_str(), envio.length()));
 }
 
+void Torrent::agregarPeer(Peer* peerNuevo){
+	llaveListaPeers.lock();
+	peers.insert(peers.end(), peerNuevo);
+	llaveListaPeers.unlock();
+}
+
 std::string Torrent::getNombre() {
 	return nombre;
 }
@@ -59,9 +65,6 @@ unsigned int  Torrent::left(){
 	return (archivos.getTamanio() - downloaded);
 }
 
-bool Torrent::estaActivo(){
-	return activo;
-}
 
 std::string Torrent::getInfoHash(){
 	return info_hash;
@@ -71,22 +74,6 @@ std::string Torrent::getPeerId(){
 	return clienteTorrent->getPeerId();
 }
 
-void* Torrent::run() {
-	Socket* conexionPeerNuevo;
-	while (activo) {
-		conexionPeerNuevo = peerListener.accept();
-		if (conexionPeerNuevo != NULL) {
-			Peer* peerNuevo = new Peer(conexionPeerNuevo, this);
-			if (peerNuevo != NULL) {
-				//TODO peerNuevo->run(); o algo asi
-				llaveListaPeers.lock();
-				peers.insert(peers.end(), peerNuevo);
-				llaveListaPeers.unlock();
-			}
-		}
-	}
-	return NULL;
-}
 
 FileManager* Torrent::getFileManager(){
 	return &archivos;
