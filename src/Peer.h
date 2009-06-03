@@ -10,6 +10,8 @@
 
 
 /*
+ * CLASE ABSTRACTA
+ *
  * Cada Peer se ejecuta en un hilo aparte y se va a encargar de
  * pedir y enviar partes a otros Peers remotos.
  */
@@ -22,7 +24,6 @@ class Peer: public Thread {
 public:
 	Peer(Socket* peerRemoto,Torrent* torrent);
 	virtual ~Peer();
-	void* run();
 
 	/*
 	 * Handshake, es el primer mensaje que se envia al Peer remoto.

@@ -14,7 +14,6 @@
 #include "ClienteTorrent.h"
 #include "Mutex.h"
 #include "Peer.h"
-#include "Socket.h"
 #include "Tracker.h"
 #include "Controlador.h"
 
@@ -24,22 +23,14 @@
  * y los Peers.                                                    *
  * *****************************************************************/
 
-/*ACA hay que poner un server que actue como peer para el resto del mundo*/
-
 class Peer;
 class Tracker;
 class Controlador;
 class ClienteTorrent;
 
-class Torrent : public Thread{
+class Torrent{
 public:
 	Torrent();
-	/*
-	 * TODO ver si se parsea el torrent y despues se crea con parametros o
-	 * se pasa la ruta del archivo .torrent y se parsea adentro.(Podria haber un
-	 * error al construir :S ).
-	 */
-	Torrent(std::string url);
 	virtual ~Torrent();
 
 	bool conectarTracker(std::string url,int port);
@@ -65,10 +56,7 @@ public:
 	 * los agrega a la lista de peers del Torrent*/
 	void agregarPeer(std::string ip,int puerto);
 
-	/*En el run el Torrent recibe conexiones de Peers remotos y los agrega a la lista de
-	 * Peers.*/
-	void* run();
-
+	void agregarPeer(Peer* peerNuevo);
 
 	std::string getInfoHash();
 
@@ -87,7 +75,6 @@ public:
 
 	int getVelocidadBajada();
 
-	bool estaActivo();
 
 	/* devuelve el nombre del archivo .torrent */
 	std::string getNombre();
@@ -107,8 +94,6 @@ private:
 
 	ClienteTorrent* clienteTorrent;
 	Tracker* tracker;
-	Socket peerListener;
-	bool activo; // TODO sirve para dejar de escuchar conexiones
 	Mutex llaveListaPeers;
 	std::list<Peer*> peers;
 	FileManager archivos;
