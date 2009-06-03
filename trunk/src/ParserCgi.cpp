@@ -4,9 +4,8 @@
  *  Created on: 03/06/2009
  *      Author: ale
  */
-
 #include "ParserCgi.h"
-
+#include <string>
 
 ParserCgi::ParserCgi() {}
 
@@ -16,10 +15,10 @@ ParserCgi::~ParserCgi() {}
 std::string ParserCgi::codificar(const std::string original){
 	std::string codificado = "";
 	for (unsigned int i = 0; i < original.length(); ++i) {
-		if (hayQueCodificarlo(original[i])){
-			codificado += intAhexaNN(original[i]);
+		if (hayQueCodificarlo(original.c_str()[i])){
+			codificado += intAhexaNN(original.c_str()[i]);
 		}else{
-			codificado += original[i];
+			codificado += original.c_str()[i];
 		}
 	}
 	return codificado;
@@ -29,15 +28,15 @@ std::string ParserCgi::codificar(const std::string original){
 std::string ParserCgi::decodificar(const std::string codificado){
 	std::string decodificado = "";
 	char aux[3];
-	aux[3] = '\0';
+	memset(aux,0,3);
 	for (unsigned int i = 0; i < codificado.length(); i++) {
-		if(codificado[i] == '%'){
+		if(codificado.c_str()[i] == '%'){
 			codificado.copy(aux,2,i+1);
 			i+=2;
 			decodificado += hexaNNaChar(aux);
 		}
 		else{
-			decodificado += codificado[i];
+			decodificado += codificado.c_str()[i];
 		}
 	}
 	return decodificado;
@@ -53,10 +52,10 @@ bool ParserCgi::hayQueCodificarlo(const char caracter){
 }
 /*El numero ingresado debe estar en el rango [0,15]*/
 char ParserCgi::intAhexaChar(const int numero){
-	if(0<=numero<=9){
+	if(0 <= numero && numero<=9){
 		return (numero + 48);
 	}
-	if(10<=numero<=15){
+	if(10<=numero && numero<=15){
 		return (numero + 55);
 	}
 	return 0;
@@ -64,22 +63,21 @@ char ParserCgi::intAhexaChar(const int numero){
 /*Convierte un numero [0,255] a %nn */
 std::string ParserCgi::intAhexaNN(const int numero){
 	int primero = (int)(numero / 16);
-	int segundo = numero % 16;
+	int segundo = (numero % 16);
 	std::string resultado = "%";
 	resultado += intAhexaChar(primero);
 	resultado += intAhexaChar(segundo);
-
 	return resultado;
 }
 
 int ParserCgi::hexaCharAint(char hexa){
-	if('0'<=hexa<='9'){
+	if('0'<=hexa && hexa<='9'){
 		return (hexa - 48);
 	}
-	if('A'<=hexa<='F') {
+	if('A'<=hexa && hexa<='F') {
 		return (hexa - 55);
 	}
-	if('a'<=hexa<='f') {
+	if('a'<=hexa && hexa<='f') {
 		return (hexa - 87);
 	}
 	return 0;
