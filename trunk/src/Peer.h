@@ -105,7 +105,20 @@ public:
 private:
 	Socket* peerRemoto;
 	Torrent* torrent;
+	/*choked e interested guardan informacion sobre el estado del peer remoto*/
+	bool am_choking;
+	bool am_interested;
+	bool peer_choking;
+	bool peer_interested;
 	//TODO agregar birfield del peer remoto  para llevar control blabla
+
+	/*Metodos utilizados para procesar los mensajes que llegan desde el peer remoto*/
+	//TODO Implementar
+	void procesarHave(int index);
+	void procesarBitfield(const char* bitfield, int length );
+	void procesarRequest(int index,int begin,int length);
+	void procesarCancel(int index,int begin,int length);
+
 };
 
 #endif /* PEER_H_ */

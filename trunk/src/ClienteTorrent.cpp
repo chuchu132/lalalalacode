@@ -4,7 +4,7 @@
  *  Created on: 28/05/2009
  *      Author: ale
  */
-
+#include <arpa/inet.h>
 #include "ClienteTorrent.h"
 #include "ParserMensaje.h"
 #include "Peer.h"
@@ -27,6 +27,7 @@ void* ClienteTorrent::run() {
 		if (conexionPeerNuevo != NULL) {
 			cantidad = conexionPeerNuevo->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 			if (cantidad > 0) {
+				length = ntohl(length);// pasa a de big endian al endian local
 				char* handshake = new char[length];
 				cantidad = conexionPeerNuevo->receive(handshake, length);
 				if (cantidad > 0) {
