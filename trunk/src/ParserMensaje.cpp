@@ -9,6 +9,7 @@
 #include "Constantes.h"
 #include "ParserMensaje.h"
 #include "ParserCgi.h"
+#include "Sha1.h"
 
 ParserMensaje::ParserMensaje() {
 	// TODO Auto-generated constructor stub
@@ -103,4 +104,12 @@ std::string ParserMensaje::crearGetConNumwant(std::string info_hash,
 	std::stringstream buffer;
 	buffer << base << "&numwant=" << numwant;
 	return buffer.str();
+}
+
+std::string ParserMensaje::getHash(char* handshakeMsj) {
+	int saltoHastaHash;
+	char hashBinario[20];
+	memcpy(&saltoHastaHash, handshakeMsj, sizeof(int));
+	memcpy(hashBinario, (handshakeMsj + saltoHastaHash), LEN_SHA1);
+	return Sha1::hashAstring(hashBinario);
 }

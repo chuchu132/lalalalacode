@@ -11,3 +11,9 @@ automaticamente antes de cada test.
 Luego hay que agregar el test en el main
 
 Ver ejemplo con TestDummy
+
+
+Otra cosa nada q ver:
+
+Los hash cuando se espera un string tiene q estar codificado de la forma :A9993E364706816ABA3E25717850C26C9CD0D89D
+cuando se espera un char* tiene q estar en binario.

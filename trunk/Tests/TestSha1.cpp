@@ -32,7 +32,7 @@ void MostrarSalidaSha(unsigned *mensajeDigerido)
 }
 
 void TestSha1::run(){
-	SHA1		sha;
+	Sha1		sha;
 	unsigned	mensajeDigerido[5];
 	const char* prueba1 = "abc";
 	const char* prueba2 = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
