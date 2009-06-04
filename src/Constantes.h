@@ -70,6 +70,15 @@ const int OFFSET_ARG_1 = 5;
 const int OFFSET_ARG_2 = 9;
 const int OFFSET_ARG_3 = 13;
 
+/*
+ * Formato generico de un mensaje sin campo len:   <id><arg1><arg2><arg3>
+ * Offsets al comienzo de cada campo:              0   1     5    9
+ */
+const int OFFSET_ID_SIN_LEN = 0;
+const int OFFSET_ARG_1_SIN_LEN = 1;
+const int OFFSET_ARG_2_SIN_LEN = 5;
+const int OFFSET_ARG_3_SIN_LEN = 9;
+
 /*Otras Constantes*/
 const int LEN_SHA1 = 20;
 const int BUFSIZE = 1000;
