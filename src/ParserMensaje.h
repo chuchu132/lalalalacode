@@ -40,6 +40,7 @@ public:
 
 	std::string crearGetConNumwant(std::string info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
 
+	std::string getHash(char* handshakeMsj);
 };
 
 #endif /* PARSERMENSAJE_H_ */

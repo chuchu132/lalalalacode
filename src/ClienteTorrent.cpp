@@ -6,7 +6,7 @@
  */
 
 #include "ClienteTorrent.h"
-#include "ParserCgi.h"
+#include "ParserMensaje.h"
 #include "Peer.h"
 #include "PeerUp.h"
 
@@ -20,31 +20,32 @@ ClienteTorrent::~ClienteTorrent() {
 }
 
 void* ClienteTorrent::run() {
-//	Socket* conexionPeerNuevo;
-//	int cantidad, length;
-//	while (activo) {
-//		conexionPeerNuevo = peerListener.accept();
-//		if (conexionPeerNuevo != NULL) {
-//			cantidad = conexionPeerNuevo->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
-//			if (cantidad > 0) {
-//				char* handshake = new char[length];
-//				cantidad = conexionPeerNuevo->receive(handshake, length);
-//				if (cantidad > 0) {
-//					ParserCgi parserCgi;
-//					std::string hash = parserCgi.getHash(handshake,length);
-//					Torrent* torrent = buscarTorrent(hash);
-//					if (torrent != NULL) {
-//						Peer* peerNuevo = new PeerUp(conexionPeerNuevo, torrent);
-//						if (peerNuevo != NULL) {
-//							torrent->agregarPeer(peerNuevo);
-//							//TODO peerNuevo->run(); o algo asi
-//						}
-//					}
-//					delete[] handshake;
-//				}
-//			}
-//		}
-//	}
+	Socket* conexionPeerNuevo;
+	int cantidad, length;
+	while (activo) {
+		conexionPeerNuevo = peerListener.accept();
+		if (conexionPeerNuevo != NULL) {
+			cantidad = conexionPeerNuevo->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
+			if (cantidad > 0) {
+				char* handshake = new char[length];
+				cantidad = conexionPeerNuevo->receive(handshake, length);
+				if (cantidad > 0) {
+					ParserMensaje parser;
+					std::string hash = parser.getHash(handshake);
+					Torrent* torrent = buscarTorrent(hash);
+					if (torrent != NULL) {
+						Peer* peerNuevo =
+								new PeerUp(conexionPeerNuevo, torrent);
+						if (peerNuevo != NULL) {
+							torrent->agregarPeer(peerNuevo);
+							//TODO peerNuevo->run(); o algo asi
+						}
+					}
+					delete[] handshake;
+				}
+			}
+		}
+	}
 	return NULL;
 }
 

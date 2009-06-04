@@ -17,7 +17,8 @@
 /*Constantes utilizadas en el Handshake entre Peers*/
 #define PROTOCOL  "BitTorrent protocol"
 const char  PSTRLEN = 19;
-const int   LEN_HANDSHAKE = 68;
+const int	LEN_BASE_HANDSHAKE = 49;
+const int   LEN_HANDSHAKE = PSTRLEN + LEN_BASE_HANDSHAKE;
 const int   OFFSET_PSTRLEN = 0;
 const int   OFFSET_PROTOCOL = 1;
 const int   OFFSET_RESERVED = (OFFSET_PROTOCOL + OFFSET_PSTRLEN);

@@ -24,7 +24,8 @@ std::string ParserCgi::codificar(const std::string original){
 	return codificado;
 }
 
-/*Codifica un string en URL Encoding */
+/*Deodifica un string en URL Encoding y lo pasa a ASCII*/
+//TODO ver que pasa si llega un \0 codificado
 std::string ParserCgi::decodificar(const std::string codificado){
 	std::string decodificado = "";
 	char aux[3];
@@ -41,6 +42,8 @@ std::string ParserCgi::decodificar(const std::string codificado){
 	}
 	return decodificado;
 }
+
+
 
 bool ParserCgi::hayQueCodificarlo(const char caracter){
 	return !(('0'<=caracter && caracter<='9')||
