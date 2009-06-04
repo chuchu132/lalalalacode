@@ -10,12 +10,14 @@
 
 #include <list>
 #include <string>
-#include "FileManager.h"
+#include "BencodeParser.h"
 #include "ClienteTorrent.h"
+#include "Controlador.h"
+#include "FileManager.h"
 #include "Mutex.h"
 #include "Peer.h"
 #include "Tracker.h"
-#include "Controlador.h"
+
 
 /*******************************************************************
  * Torrent, contiene toda la informacion que viene en el archivo   *
@@ -32,6 +34,12 @@ class Torrent{
 public:
 	Torrent();
 	virtual ~Torrent();
+
+	/*
+	 * Inicializa los atributos de Torent con la informacion que levanto el parser del
+	 * archivo .torrent
+	 */
+	bool inicializarTorrent(BencodeParser* parser);
 
 	bool conectarTracker(std::string url,int port);
 

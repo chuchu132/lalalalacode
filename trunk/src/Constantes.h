@@ -35,7 +35,6 @@ const char ID_MSJ_BITFIELD = 5;
 const char ID_MSJ_REQUEST = 6;
 const char ID_MSJ_PIECE = 7;
 const char ID_MSJ_CANCEL = 8;
-const char ID_MSJ_PORT = 9;//TODO borrar si no se implementa msj port
 
 /*Longitudes constantes del campo Len de los mensajes entre peers*/
 const int  LEN_MSJ_KEEPALIVE = 0;
@@ -53,7 +52,6 @@ const int  LEN_BASE_MSJ_BITFIELD = 1;
 const int  LEN_MSJ_REQUEST = 13;
 const int  LEN_BASE_MSJ_PIECE = 9;
 const int  LEN_MSJ_CANCEL = 13;
-const int  LEN_MSJ_PORT = 3; //TODO borrar si no se implementa msj port
 
 /*Longitudes de los mensajes constantes*/
 const int FIXED_LENGTH_COMMON = 5;

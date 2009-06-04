@@ -55,7 +55,15 @@ public:
 	 * ver si devuelve algo en caso de error */
 	void borrarTorrent(Torrent*);
 
+	/*
+	 * En el run el ClienteTorrent recibe conexiones de Peers remotos y los
+	 * linkea con el Torrent correspondiente
+	 */
 	void* run();
+
+	/* Devuelve el Torrent asociado al hash pasado por parametro o NULL si no lo
+	 * encuentra*/
+	Torrent* buscarTorrent(std::string hashTorrent);
 
 	bool estaActivo();
 
