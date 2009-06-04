@@ -1,6 +1,5 @@
 /* 
- * File:   BencodeParser.h
- * Author: gustavo
+ * File:   BencodeParser.h 
  *
  * Created on 30 de mayo de 2009, 23:25
  */
@@ -12,8 +11,12 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
+#include <list>
+#include "datosParser.h"
 
 #define BUFSIZE 1000
+
+using namespace std;
 
 class BencodeParser {
 private:
@@ -24,7 +27,8 @@ private:
 
     FILE *fp; //File pointer al archivo .torrent que se esta parseando
     int ident; //Atributo para visualizacion por pantalla
-   
+
+    datosParser *datos;//objeto que almacena los datos obtenidos del parser
 
 public:
 
@@ -38,20 +42,16 @@ public:
     void procesar();
 
     //Parser para el tipo diccionario
-    void parserDiccionario();
+    void parserDiccionario(FILE *fp);
 
     //Parser para el tipo lista
-    void parserLista();
+    void parserLista(FILE*fp);
 
     //Parser para los datos numericos
-    void parserNumerico();
+    void parserNumerico(FILE *fp);
 
     //Parser para las cadenas de caracteres
-    void parserCadena();
-
-    //Funcion que se encarga de realizar una tabulacion cuando se imprime
-    //es una funcion temporal solo para la visualizacion por pantalla 
-    void identacion(int indent);
+    void parserCadena(FILE *fp);
 
     //Realiza la Carga del buffer 
     void cargarBuffer();
@@ -68,6 +68,10 @@ public:
     //Verifica que el caracter sea un match con el que se le pasa como parametro
     void compararCaracter(char c);
 
+    //Retorna la salida del parser
+    datosParser* salidaParser (); 
+
+    
 };
 
 #endif	/* _BENCODEPARSER_H */

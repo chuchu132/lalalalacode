@@ -7,12 +7,14 @@ BencodeParser::BencodeParser(FILE*fp) {
     pos = 0;
     buf_lim = 0;
     ident = 0;
-   
+    datos=new datosParser();
 }
 
 BencodeParser::~BencodeParser() {
 
     fclose(fp);
+    delete datos;
+   
 }
 
 void BencodeParser::procesar() {
@@ -21,27 +23,27 @@ void BencodeParser::procesar() {
 
     switch (caracter) {
 
-        case 'd': parserDiccionario();
+        case 'd': parserDiccionario(fp);
             break;
 
-        case 'l': parserLista();
+        case 'l': parserLista(fp);
             break;
 
-        case 'i': parserNumerico();
+        case 'i': parserNumerico(fp);
             break;
 
-        default: parserCadena();
+        default: parserCadena(fp);
 
     }
 }
 
-void BencodeParser::parserDiccionario() {
+void BencodeParser::parserDiccionario(FILE *fp) {
 
     compararCaracter('d');
     ident = 0;
     while (verCaracterSiguiente() != 'e') {
 
-        parserCadena();
+        parserCadena(fp);
        
         procesar();
     }
@@ -50,7 +52,7 @@ void BencodeParser::parserDiccionario() {
 
 }
 
-void BencodeParser::parserLista() {
+void BencodeParser::parserLista(FILE*fp) {
 
     compararCaracter('l');
     ident = 1;
@@ -61,20 +63,21 @@ void BencodeParser::parserLista() {
 
 }
 
-void BencodeParser::parserNumerico() {
+void BencodeParser::parserNumerico(FILE *fp) {
 
     compararCaracter('i');
     long val = 0;
     while (isdigit(verCaracterSiguiente()))
         val = val * 10 + (obtenerCaracter() - '0');
     compararCaracter('e');
-    identacion(ident);
-    std::cout << val << std::endl << std::endl;
-
+   
+    char *cadena=new char[BUFSIZE];
+    sprintf (cadena,"%ld",val);
+    datos->agregarDato(cadena);
 
 }
 
-void BencodeParser::parserCadena() {
+void BencodeParser::parserCadena(FILE *fp) {
 
 
     int len = 0;
@@ -90,9 +93,9 @@ void BencodeParser::parserCadena() {
     for (i = 0; i < len; ++i)
            s[i] = obtenerCaracter();
     s[len] = 0;
-    identacion(ident);
-    std::cout << s << std::endl << std::endl;
-
+   
+    datos->agregarDato(s);
+  
 }
 
 
@@ -126,8 +129,22 @@ void BencodeParser::compararCaracter(char c) {
     }
 }
 
-void BencodeParser::identacion(int indent) {
-    int i;
-    for (i = 0; i < indent; ++i)
-        std::cout << "   ";
+
+datosParser* BencodeParser::salidaParser(){
+
+   datosParser* salida=new datosParser();
+   datos->primero();
+   
+   while (datos->final()){  
+	
+   	char *cadena= new char [datos->obtenerLongitudDato()+1];
+        strcpy(cadena,datos->obtenerDato());
+	salida->agregarDato(cadena);
+        datos->siguiente();
+   
+   }
+   return salida; 
 }
+
+
+
