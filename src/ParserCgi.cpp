@@ -88,3 +88,7 @@ char ParserCgi::hexaNNaChar(std::string nn){
 	resultado += hexaCharAint(nn[1]);
 	return resultado;
 }
+
+//std::string ParserCgi::getHash(char* handshakeMsj,int longitud){
+//	handshakeMsg.find()
+//TODO implementar}
