@@ -22,7 +22,7 @@ void SHA1::inicializacion() {
     longitudInferior = 0;
     longitudSuperior = 0;
     IndiceArrayBloques = 0;
-    
+
     //Condicion del buffer para el algoritmo
     bufferMensaje[0] = 0x67452301;
     bufferMensaje[1] = 0xEFCDAB89;
@@ -30,7 +30,6 @@ void SHA1::inicializacion() {
     bufferMensaje[3] = 0x10325476;
     bufferMensaje[4] = 0xC3D2E1F0;
 }
-
 
 void SHA1::entrada(const char *mensaje, unsigned longitud) {
 
@@ -42,30 +41,30 @@ void SHA1::entrada(const char *mensaje, unsigned longitud) {
         //Coloco el mensaje de entrad en el buffer 
         while (longitud-- && !error) {
             bloquesMensaje[IndiceArrayBloques++] = (*mensaje & 0xFF);
-            
-            longitudSuperior += 8;            
+
+            longitudSuperior += 8;
             //Fuerzo a que sea 32 bits 
-            longitudSuperior &= 0xFFFFFFFF; 
+            longitudSuperior &= 0xFFFFFFFF;
             //Proceso los bloques 
             if (IndiceArrayBloques == 64) {
                 procesarBloques();
             }
             mensaje++;
         }
-      
+
     }
 }
 
 bool SHA1::salida(unsigned *mensajeSalida) {
 
     int contador;
-    
+
     //Verifico que no se haya dado un error en el proceso
     if (error) {
         return false;
-    }   
+    }
     rellenado();
-    
+
     //Copio el contenido del buffer con el mensaje procesado al mensaje de salida
     for (contador = 0; contador < 5; contador++) {
         mensajeSalida[contador] = bufferMensaje[contador];
@@ -74,36 +73,35 @@ bool SHA1::salida(unsigned *mensajeSalida) {
     return true;
 }
 
-
 void SHA1::procesarBloques() {
 
-    int cont; 
-    unsigned temp; 
+    int cont;
+    unsigned temp;
     unsigned Aux[100];
-    unsigned bufferTemp[5]; 
+    unsigned bufferTemp[5];
 
     //Inicializo el array 
     setearBloque(Aux, bufferTemp);
 
-     //Proceso del algoritmo Sha1
+    //Proceso del algoritmo Sha1
     for (cont = 0; cont < 80; cont++) {
-    
-        if (cont>=0 && cont <20)          
-                temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | ((~bufferTemp[1]) & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[0];
-          
-        if (cont>=20 && cont <40)
-                temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[1];
 
-        if (cont>=40 && cont <60)
-                temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | (bufferTemp[1] & bufferTemp[3]) | (bufferTemp[2] & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[2];
+        if (cont >= 0 && cont < 20)
+            temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | ((~bufferTemp[1]) & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[0];
 
-        if (cont>=60 && cont<80)
-                temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[3];
+        if (cont >= 20 && cont < 40)
+            temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[1];
+
+        if (cont >= 40 && cont < 60)
+            temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | (bufferTemp[1] & bufferTemp[3]) | (bufferTemp[2] & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[2];
+
+        if (cont >= 60 && cont < 80)
+            temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[3];
 
         asignacionParcial(temp, bufferTemp);
     }
 
-    
+
     for (cont = 0; cont < 5; cont++) {
         bufferMensaje[cont] = (bufferMensaje[cont] + bufferTemp[cont]) & 0xFFFFFFFF;
     }
@@ -156,10 +154,10 @@ void SHA1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 
 void SHA1::rellenado() {
 
-    
+
     //Se realiza el padding como establece el estandar, debe realizarse el padding a 512bits
     //Despues de terminado este procedimiento se obtiene el mensaje procesado por completo
-    
+
     bloquesMensaje[IndiceArrayBloques++] = 0x80;
 
     if (IndiceArrayBloques > 55) {
@@ -168,9 +166,9 @@ void SHA1::rellenado() {
         procesarBloques();
     }
     rellenadoParcial(56);
-    
+
     // Se almacena la longitud del mensaje en las ultimas 8 posiciones
-     
+
     int cont, mov = 24;
     for (cont = 56; cont < 64; cont++) {
 
@@ -184,7 +182,7 @@ void SHA1::rellenado() {
     }
 
     procesarBloques();
-   
+
 }
 
 void SHA1::rellenadoParcial(int limite) {
@@ -198,3 +196,61 @@ void SHA1::rellenadoParcial(int limite) {
 unsigned SHA1::circularShift(int cantBits, unsigned bloque) {
     return ((bloque << cantBits) & 0xFFFFFFFF) | ((bloque & 0xFFFFFFFF) >> (32 - cantBits));
 }
+
+char* SHA1::salidaAstring(unsigned *salidaSha1) {
+    int i;
+    char *hash = new char [20 * sizeof (char) ];
+    
+    for (i = 0; i < 5; i++)
+        sprintf(hash, "%s%u", hash, salidaSha1[i]);
+    
+    //retorna la salida del sha1 en forma de una cadena 
+    return hash;
+}
+
+char* SHA1::sha1Abinario(string hash) {
+
+    unsigned int n_bits, it, i, LEN_SHA1 = 20;
+
+    char *cadenaBinaria = new char [LEN_SHA1 * sizeof (char) ];
+
+    char ret, val;
+
+    if (hash.size() == 20)LEN_SHA1 = hash.size();
+
+    for (it = 0; it < LEN_SHA1; it++) {
+
+        ret = 0;
+        val = hash[it];
+        n_bits = sizeof ( char) * CHAR_BIT;
+
+        for (i = 0; i < n_bits; ++i) {
+            ret = (ret << 1) | (val & 1);
+            val >>= 1;
+        }
+
+        cadenaBinaria[it] = ret;
+    }
+    return cadenaBinaria;
+}
+
+void SHA1::imprimirShaBinario(string hash) {
+
+    unsigned int n_bits, i, it, LEN_SHA1 = 20;
+    char val;
+
+    if (hash.size() < 20) LEN_SHA1 = hash.size();
+
+    for (it = 0; it < LEN_SHA1; it++) {
+        val = hash[it];
+        n_bits = sizeof ( char) * CHAR_BIT;
+
+        for (i = 0; i < n_bits; ++i) {
+            std::cout << !!(val & 1);
+            val >>= 1;
+        }
+    }
+
+
+}
+

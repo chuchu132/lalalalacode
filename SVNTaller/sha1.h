@@ -4,7 +4,7 @@
  * Created on 27 de mayo de 2009, 11:04
  */
 #include "iostream"
-
+#include <string>
 using namespace std;
 
 #ifndef _SHA1_H_
@@ -24,7 +24,7 @@ private:
     unsigned char bloquesMensaje[64]; // bloques de mensaje de 512 bits 512-bit
     int IndiceArrayBloques; // Indice para el array de bloques del mensaje
 
-//Metodos de la clase SHA1
+    //Metodos de la clase SHA1
 
 public:
 
@@ -36,7 +36,7 @@ public:
 
     // Inicializa los atributos de la clase para el ingreso de un nuevo mensaje a procesar
     void inicializacion();
-    
+
     // Devuelve el mensaje procesado en el parametro mensajeDigerido.
     // Si hubo un error devuelve false , en caso contrario true 
     bool salida(unsigned *mensajeDigerido);
@@ -44,8 +44,17 @@ public:
     // Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
     void entrada(const char *mensaje, unsigned longitud);
 
+    // Recibe como parametros la salida del sha1 y la pasa a una cadena que se devuelve finalizado el metodo
+    char* salidaAstring(unsigned *salidaSha1);
 
-private:   
+    // Recibe como entrada el string que representa al sha1 y lo convierte en su correspondiente binario
+    // devuelve el resultado en una cadena 
+    char* sha1Abinario(string hash);
+
+    // Imprime por pantalla la cadena sha1 binario que se obtuvo con el metodo Sha1Abinario()
+    void imprimirShaBinario(string hash);
+
+private:
 
     //  Procesa los bloques del mensaje
     void procesarBloques();
@@ -55,13 +64,13 @@ private:
 
     //  Asigna los valores parciales procesados 
     void asignacionParcial(unsigned & temp, unsigned bufferTemp[]);
-    
+
     //  Realiza el padding de bloque actual a 512 bits
     void rellenado();
 
     //  Rellena con ceros hasta el valor del limite que se le envia como parametro
     void rellenadoParcial(int limite);
-    
+
     //  Realiza la operacion de  shift del algoritmo
     inline unsigned circularShift(int cantBits, unsigned bloque);
 
