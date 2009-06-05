@@ -61,6 +61,9 @@ public:
 	/* agrega el torrent en la vista */
 	void agregarTorrentEnVista(Torrent*);
 
+	/* cierra el cliente */
+	void cerrar();
+
 };
 
 #endif /* CONTROLADOR_H_ */

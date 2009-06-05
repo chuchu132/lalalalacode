@@ -29,8 +29,6 @@ void TestVista::run(){
 
 		kit.run(ventana.getVentana());
 
-		std::cout<<"fin"<<std::endl;
-
 		assert(true,"No message.");
 }
 

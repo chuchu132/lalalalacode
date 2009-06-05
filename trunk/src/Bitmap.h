@@ -31,7 +31,7 @@ public:
 	/*Devuelve el estado del Bitmap*/
 	bool estaOk();
 
-	/*TODO nombre poco feliz pero es lo que hay
+	/*TODO nombre poco feliz pero es lo que hay <- LU: esta bien el nombre.. sino se podria llamar Partes.. es lo mismo XD
 	 * Aplica bit a bit la funcion ~(A + ~(B))
 	 * donde A son los bits del Bitmap "this"
 	 * y B son los bits del Bitmap "otro".

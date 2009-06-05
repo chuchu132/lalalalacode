@@ -20,15 +20,18 @@ ClienteTorrent::~ClienteTorrent() {
 }
 
 void* ClienteTorrent::run() {
+
 	Socket* conexionPeerNuevo;
 	int cantidad, length;
+	char* handshake;
+
 	while (activo) {
 		conexionPeerNuevo = peerListener.accept();
 		if (conexionPeerNuevo != NULL) {
 			cantidad = conexionPeerNuevo->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 			if (cantidad > 0) {
 				length = ntohl(length);// pasa a de big endian al endian local
-				char* handshake = new char[length];
+				handshake = new char[length];
 				cantidad = conexionPeerNuevo->receive(handshake, length);
 				if (cantidad > 0) {
 					ParserMensaje parser;
@@ -42,8 +45,9 @@ void* ClienteTorrent::run() {
 							//TODO peerNuevo->run(); o algo asi
 						}
 					}
-					delete[] handshake;
+					//delete[] handshake;
 				}
+				delete[] handshake;
 			}
 		}
 	}
@@ -59,6 +63,14 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 		}
 	}
 	return NULL;
+}
+
+void ClienteTorrent::finalizar()
+{
+	//implementar: yo lo hago esto ;) LU
+	//activo = false;
+	//cerrar todas las conexiones
+	//guardar info sobre los torrents
 }
 
 bool ClienteTorrent::estaActivo() {

@@ -6,6 +6,7 @@
  */
 #include <arpa/inet.h>
 #include <sstream>
+#include <string.h>
 #include "Constantes.h"
 #include "ParserMensaje.h"
 #include "ParserCgi.h"
