@@ -28,9 +28,8 @@ void FileManager::inicializar(BencodeParser* parser) {
 	bloquesXPieza = (tamanioPieza > TAM_BLOQUES) ? (tamanioPieza / TAM_BLOQUES)
 			: 1; // division entre potencias de 2
 
-	tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0 : 1);
-	bitmap = new char[tamBitmapBytes];
-	memset(bitmap, 0, tamBitmapBytes);
+	int tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0 : 1);
+	bitmap.inicializarBitmap(tamBitmapBytes);
 
 }
 
@@ -38,12 +37,9 @@ int FileManager::getTamanio() {
 	return bytesTotales;
 }
 
-void FileManager::getMap(char* map, int* length) {
-	map = new char[tamBitmapBytes];
-	mempcpy(map, bitmap, tamBitmapBytes);
-	(*length) = tamBitmapBytes;
+Bitmap& FileManager::getBitmap(){
+	return bitmap;
 }
-
 
 char* FileManager::getBlock(int index, int begin, int longitud) {
 	int sumaAnterior = 0;

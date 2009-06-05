@@ -104,13 +104,14 @@ public:
 
 private:
 	Socket* peerRemoto;
+	bool conexionOK;
 	Torrent* torrent;
 	/*choked e interested guardan informacion sobre el estado del peer remoto*/
 	bool am_choking;
 	bool am_interested;
 	bool peer_choking;
 	bool peer_interested;
-	//TODO agregar birfield del peer remoto  para llevar control blabla
+	Bitmap bitmap;
 
 	/*Metodos utilizados para procesar los mensajes que llegan desde el peer remoto*/
 	//TODO Implementar
