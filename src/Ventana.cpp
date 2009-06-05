@@ -20,8 +20,7 @@
 #define BUTTON_CONTINUE "boton_continuar"
 #define BUTTON_UP 	"boton_subir"
 #define BUTTON_DOWN	"boton_bajar"
-#define BUTTON_ACCEPT "boton_aceptar"
-#define BUTTON_CANCEL "boton_cancelar"
+#define BUTTON_PEERS "boton_peers"
 
 #define MENU_ABOUT "about"
 
@@ -68,7 +67,7 @@ Ventana::~Ventana()
 {
 	delete torrents;
 	delete attr;
-	controlador->cerrar();
+	controlador->cerrarCliente();
 	std::cout<<"fin"<<std::endl;
 }
 
@@ -93,7 +92,7 @@ void Ventana::getWindows()
 	about_window = 0;
 	builder->get_widget(ABOUT_WINDOW, about_window);
 	std::cout<<"ventana acerca de cargada"<<std::endl;
-	about_window->show();
+	//about_window->show();
 
 	//obtengo la ventana de seleccion de archivo
 	select_window = 0;
@@ -112,8 +111,7 @@ void Ventana::getMenues()
 {
 	//builder->add_from_file(MENU_ABOUT, menu_about);
 	//builder->get_widget(MENU_ABOUT, menu_about);
-	//builder->get_object(MENU_ABOUT, menu_about);
-//	builder->get_widget_derived(MENU_ABOUT, menu_about);
+	//	builder->get_widget_derived(MENU_ABOUT, menu_about);
 }
 
 void Ventana::getButtons()
@@ -125,6 +123,7 @@ void Ventana::getButtons()
 	builder->get_widget(BUTTON_CONTINUE, button_continue);
 	builder->get_widget(BUTTON_UP, button_up);
 	builder->get_widget(BUTTON_DOWN, button_down);
+	builder->get_widget(BUTTON_PEERS, button_peers);
 }
 
 void Ventana::connectSignals()
@@ -136,8 +135,9 @@ void Ventana::connectSignals()
 	button_continue->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_continue_clicked) );
 	button_up->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_up_clicked) );
 	button_down->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_down_clicked) );
+	button_peers->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_peers_clicked) );
 
-	//menu_about->signal_activate().connect(sigc::mem_fun(*this,&Ventana::on_menu_about));
+//	menu_about->signal_activate().connect(sigc::mem_fun(*this,&Ventana::on_menu_about));
 }
 
 void Ventana::on_button_add_clicked()
@@ -194,6 +194,15 @@ void Ventana::on_button_continue_clicked()
 	if (t != NULL)
 	{
 		controlador->continuarTorrent(t);
+	}
+}
+void Ventana::on_button_peers_clicked()
+{
+	std::cout<<"refrescar peers clickeado"<<std::endl;
+	Torrent *t = torrents->getSelectedTorrent();
+	if (t != NULL)
+	{
+		controlador->refrescarPeers(t);
 	}
 }
 

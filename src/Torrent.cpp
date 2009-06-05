@@ -108,3 +108,7 @@ void Torrent::setControlador(Controlador* ctrl)
 	this->controlador = ctrl;
 }
 
+void Torrent::refrescarPeers()
+{
+	//todo implementar
+}

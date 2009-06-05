@@ -31,6 +31,10 @@ public:
 
 	//TODO ver que devuelven las funciones en caso de error
 
+	/* cierra el cliente
+	 * es llamado al salir de la aplicacion */
+	void cerrarCliente();
+
 	/* borra un torrent del cliente */
 	void borrarTorrent(Torrent *t);
 
@@ -43,26 +47,17 @@ public:
 
 	void continuarTorrent(Torrent*);
 
-	/* actualiza el estado de todos los torrents en la vista */
-	void actualizarTodos();
+	/* refresca la lista de peers del torrent */
+	void refrescarPeers(Torrent*);
 
 	/* actualiza el estado de un torrent en la vista */
 	void actualizarEstado(Torrent*);
 
-	/* muestra todos los torrents que tiene el cliente */
-	void mostrarTorrents();
-
-	/* muestra los torrents completos */
-	void mostrarCompletos();
-
-	/* muestra los torrents que se estan descargado o subiendo */
-	void mostrarActivos();
-
 	/* agrega el torrent en la vista */
 	void agregarTorrentEnVista(Torrent*);
 
-	/* cierra el cliente */
-	void cerrar();
+	/* muestra un mensaje en la barra de estado */
+	void notificarVista(std::string);
 
 };
 

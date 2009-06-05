@@ -8,10 +8,7 @@
 #include "TestDummy.h"
 #include <iostream>
 
-TestDummy::TestDummy() {
-	// TODO Auto-generated constructor stub
-
-}
+TestDummy::TestDummy() {}
 
 TestDummy::~TestDummy() {}
 

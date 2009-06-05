@@ -13,6 +13,7 @@
 AttributesView::AttributesView()
 {
 	// TODO Auto-generated constructor stub
+	num_selected = 1;
 
 }
 
@@ -44,10 +45,21 @@ void AttributesView::setStatusView()
 /*Gtk::Label */
 }
 
+void AttributesView::setFilesView()
+{
+/*Gtk::treeview */
+}
 void AttributesView::showInfo(Torrent *t)
 {
-	this->showPeers(t);
-	this->showStatus(t);
+	switch (num_selected)
+	{
+	case 1:
+		break;
+	case 2:
+		break;
+	case 3:
+		break;
+	}
 }
 
 void AttributesView::showPeers(Torrent *t)
@@ -60,3 +72,7 @@ void AttributesView::showStatus(Torrent *t)
 	//muestra el estado del torrent
 }
 
+void AttributesView::showFiles(Torrent *t)
+{
+	//muestra los archivos del torrent
+}
