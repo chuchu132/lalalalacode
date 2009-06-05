@@ -33,12 +33,15 @@ public:
 	Bitmap& getBitmap();
 
 	/* Devuelve un arreglo con el bloque pedido, quien lo solicita debe liberarlo*/
-	char* getBlock(int index,int begin,int longitud);
+	char* readBlock(int index,int begin,int longitud);
 
 	/*Recibe un Parser con la info del archivo .torrent y con el, inicializa el bitmap.*/
 	void inicializar(BencodeParser* parser);
 
-	//TODO agregar metodo para escribir un bloque en una pieza de un archivo
+	/* Escribe en disco el bloque */
+	void writeBlock(int index,int begin,int longitud,char* block);
+
+	bool verificarHashPieza(int index);
 
 private:
 
@@ -48,6 +51,8 @@ private:
 	int tamanioPieza;
 	int bloquesXPieza;
 	int bytesTotales; //tamnio total de los archivos a descargar
+	std::fstream descarga; // file del tamanio del total de la descarga.
+	std::string hashPiezas;
 };
 
 #endif /* FILEMANAGER_H_ */

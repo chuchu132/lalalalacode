@@ -100,7 +100,7 @@ public:
 	 * Cuando llega un mensaje desde el peer remoto, se lo guarda en un
 	 * buffer que luego se manda a procesar.
 	 * */
-	bool procesar(const char* buffer,int length);
+	bool procesar(char* buffer,int length);
 
 private:
 	Socket* peerRemoto;
@@ -118,8 +118,9 @@ private:
 	void procesarHave(int index);
 	void procesarBitfield(const char* bitfield, int length );
 	void procesarRequest(int index,int begin,int length);
+	void procesarPiece(int index,int begin,int longitud,char* data );
 	void procesarCancel(int index,int begin,int length);
-
+	void repartirHave(int index);
 };
 
 #endif /* PEER_H_ */
