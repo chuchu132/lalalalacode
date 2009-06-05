@@ -50,11 +50,18 @@ Bitmap::~Bitmap() {
 	}
 }
 
-void Bitmap::marcarPieza(int index) {
+void Bitmap::marcarBit(int index) {
 	int byte = (index / 8);
 	int offset = (index % 8);
 	int bloqueBits = bitmap[byte];
-	bitmap[byte] = (bloqueBits | (int)pow(2, (7 - offset))); //pone en 1 el bit offset empezando de izq a derecha
+	bitmap[byte] = (bloqueBits | (int)pow(2, (7 - offset))); //pone en 1 el bit #offset empezando de izq a derecha
+}
+
+void Bitmap::desmarcarBit(int index){
+	int byte = (index / 8);
+		int offset = (index % 8);
+		int bloqueBits = bitmap[byte];
+		bitmap[byte] = (bloqueBits & ~((int)pow(2, (7 - offset)))); //pone en 0 el bit #offset empezando de izq a derecha
 }
 
 bool Bitmap::estaMarcada(int index) {

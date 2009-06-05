@@ -41,6 +41,13 @@ public:
 	std::string crearGetConNumwant(std::string info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
 
 	std::string getHash(char* handshakeMsj);
+
+	char decodificarId(char* buffer);
+	void decodificarHave(char* buffer,int& index);
+	void decodificarBitfield(char* buffer,int longitudBuffer, int& longitud,char** bitfield);
+	void decodificarRequest(char* buffer,int& index,int& begin,int& length);
+	void decodificarPiece(char* buffer,int longitudBuffer,int& index,int& begin,int& longitud,char** data);
+	void decodificarCancel(char* buffer,int& index,int& begin,int& length);
 };
 
 #endif /* PARSERMENSAJE_H_ */

@@ -18,6 +18,7 @@
 //	while (torrent->estaActivo() && conexionOK) {
 //		cantidad = peerRemoto->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 //		if (cantidad > 0) {
+//			length = ntohl(length);
 //			char* buffer = new char[length];
 //			cantidad = peerRemoto->receive(buffer, length);
 //			if (cantidad > 0) {
@@ -47,8 +48,9 @@ Peer::~Peer() {
 	// TODO Auto-generated destructor stub
 }
 
-bool Peer::procesar(const char* buffer, int length) {
-	char id = buffer[OFFSET_ID_SIN_LEN];
+bool Peer::procesar(char* buffer, int length) {
+	ParserMensaje parser;
+	char id = parser.decodificarId(buffer);
 	switch (id) {
 	case ID_MSJ_CHOKE:{
 		peer_choking = true;
@@ -68,37 +70,35 @@ bool Peer::procesar(const char* buffer, int length) {
 	break;
 	case ID_MSJ_HAVE:{
 		int index;
-		memcpy(&index,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
-		index = ntohl(index);
+		parser.decodificarHave(buffer,index);
 		procesarHave(index);
 	}
 	break;
 	case ID_MSJ_BITFIELD:{
-		/*Pasa el bitfield y la lonfitud en bytes del mismo*/
-		procesarBitfield(buffer + OFFSET_ARG_2_SIN_LEN,length - LEN_BASE_MSJ_BITFIELD );
+		char* bitfield;
+		int longitud;
+		parser.decodificarBitfield(buffer,length,longitud,&bitfield);
+		procesarBitfield(bitfield,longitud);
 	}
 	break;
 	case ID_MSJ_REQUEST:
 	{
-		int index,begin,length;
-		memcpy(&index,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
-		index = ntohl(index);
-		memcpy(&begin,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
-		begin = ntohl(begin);
-		memcpy(&length,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(int));
-		length = ntohl(length);
-		procesarRequest(index,begin,length);
+		int index,begin,length2;
+		parser.decodificarRequest(buffer,index,begin,length2);
+		procesarRequest(index,begin,length2);
+	}
+	break;
+	case ID_MSJ_PIECE:{
+		char* data;
+		int index,begin,length2;
+		parser.decodificarPiece(buffer,length,index,begin,length2,&data);
+		procesarPiece(index,begin,length2,data);
 	}
 	break;
 	case ID_MSJ_CANCEL:{
-		int index,begin,length;
-		memcpy(&index,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
-		index = ntohl(index);
-		memcpy(&begin,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
-		begin = ntohl(begin);
-		memcpy(&length,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(int));
-		length = ntohl(length);
-		procesarCancel(index,begin,length);
+		int index,begin,length2;
+		parser.decodificarCancel(buffer,index,begin,length2);
+		procesarCancel(index,begin,length2);
 	}
 	break;
 
@@ -168,7 +168,7 @@ bool Peer::sendPiece(int index, int begin, int lenght) {
 	FileManager* fileManager = this->torrent->getFileManager();
 	char* data = NULL;
 
-	if ((data = fileManager->getBlock(index, begin, lenght)) != NULL) {
+	if ((data = fileManager->readBlock(index, begin, lenght)) != NULL) {
 		ParserMensaje parser;
 		bool retorno;
 		int tamBuffer = (LEN_BASE_MSJ_PIECE + lenght + 1);
@@ -193,7 +193,7 @@ bool Peer::sendCancel(int index, int block, int length) {
 
 void Peer::procesarHave(int index){
 	if(bitmap.estaOk()){
-		bitmap.marcarPieza(index);
+		bitmap.marcarBit(index);
 	}
 }
 
@@ -209,7 +209,19 @@ void Peer::procesarRequest(int index,int begin,int length){
 	}
 }
 
+void Peer::procesarPiece(int index,int begin,int longitud,char* data ){
+	torrent->getFileManager()->writeBlock(index,begin,longitud,data);
+	if(torrent->getFileManager()->getBitmap().estaMarcada(index)){
+		repartirHave(index);
+		//TODO ver si hace falta desmarcar
+		bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
+	}
+}
+
 void Peer::procesarCancel(int index,int begin,int length){
 	//TODO preguntar que hace...
 }
 
+void Peer::repartirHave(int index){
+	//TODO implementar manda un have index a todos los peers
+}

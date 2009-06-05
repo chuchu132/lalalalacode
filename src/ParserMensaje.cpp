@@ -80,9 +80,9 @@ std::string ParserMensaje::crearGetBase(std::string info_hash,
 	ParserCgi parserCgi;
 	std::stringstream buffer;
 	buffer << "GET /?info_hash=" << parserCgi.codificar(info_hash)
-			<< "& peer_id=" << parserCgi.codificar(peer_id) << "&port=" << port
-			<< "&uploaded=" << uploaded << "&downloaded=" << downloaded
-			<< "&left=" << left;
+	<< "& peer_id=" << parserCgi.codificar(peer_id) << "&port=" << port
+	<< "&uploaded=" << uploaded << "&downloaded=" << downloaded
+	<< "&left=" << left;
 	return buffer.str();
 }
 
@@ -112,4 +112,48 @@ std::string ParserMensaje::getHash(char* handshakeMsj) {
 	memcpy(&saltoHastaHash, handshakeMsj, sizeof(int));
 	memcpy(hashBinario, (handshakeMsj + saltoHastaHash), LEN_SHA1);
 	return Sha1::hashAstring(hashBinario);
+}
+
+char ParserMensaje::decodificarId(char* buffer){
+	return buffer[OFFSET_ID_SIN_LEN];
+}
+
+void ParserMensaje::decodificarHave(char* buffer,int& index){
+	int temp;
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+	index = ntohl(temp);
+}
+void ParserMensaje::decodificarBitfield(char* buffer,int longitudbuffer, int& longitud,char** bitfield){
+	*bitfield = (buffer + OFFSET_ARG_2_SIN_LEN);
+	longitud = longitudbuffer - LEN_BASE_MSJ_BITFIELD;
+}
+
+void ParserMensaje::decodificarRequest(char* buffer,int& index,int& begin,int& length){
+	int temp;
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+	index = ntohl(temp);
+	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
+	begin = ntohl(temp);
+	memcpy(&temp,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(int));
+	length = ntohl(temp);
+}
+
+void ParserMensaje::decodificarPiece(char* buffer,int longitudBuffer,int& index,int& begin,int& longitud,char** data){
+	longitud = longitudBuffer - LEN_BASE_MSJ_PIECE;
+	int temp;
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+	index = ntohl(temp);
+	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
+	begin = ntohl(temp);
+	*data = (buffer + OFFSET_ARG_3_SIN_LEN);
+}
+
+void ParserMensaje::decodificarCancel(char* buffer,int& index,int& begin,int& length){
+	int temp;
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+	index = ntohl(temp);
+	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
+	begin = ntohl(temp);
+	memcpy(&temp,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(int));
+	length = ntohl(temp);
 }

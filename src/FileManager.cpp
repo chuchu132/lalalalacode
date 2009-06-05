@@ -16,6 +16,14 @@ FileManager::~FileManager() {
 	// TODO Auto-generated destructor stub
 }
 
+/*TODO Pedir info_hash tratar de abrir un archivo con ese nombre
+ * de la carpeta donde se guardan las descargas, sino existe
+ * crearlo del tamaño TOTAL que indica e torrent y rellenar de
+ * 0, si existe verificar cada pieza y crear un bitmap con
+ * el estado del archivo.
+ * Inicializar el resto de los campos segun corresponda con la
+ * info obtenida del .torrent y del archivo descargado parcialmente.
+ * */
 void FileManager::inicializar(BencodeParser* parser) {
 	archivos = parser->getListaArchivos(); //TODO ojo quedan apuntando los mismos Archivo*
 	std::list<Archivo*>::iterator it;
@@ -28,7 +36,8 @@ void FileManager::inicializar(BencodeParser* parser) {
 	bloquesXPieza = (tamanioPieza > TAM_BLOQUES) ? (tamanioPieza / TAM_BLOQUES)
 			: 1; // division entre potencias de 2
 
-	int tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0 : 1);
+	int tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0
+			: 1);
 	bitmap.inicializarBitmap(tamBitmapBytes);
 
 }
@@ -37,43 +46,42 @@ int FileManager::getTamanio() {
 	return bytesTotales;
 }
 
-Bitmap& FileManager::getBitmap(){
+Bitmap& FileManager::getBitmap() {
 	return bitmap;
 }
 
-char* FileManager::getBlock(int index, int begin, int longitud) {
-	int sumaAnterior = 0;
-	int sumaAcumulada = 0;
-	int inicioBloque = (index * tamanioPieza) + begin;
-	std::list<Archivo*>::iterator it;
-	it = archivos.begin();
-	do {
-		sumaAnterior = sumaAcumulada;
-		sumaAcumulada += (*it)->getTamanio();
-		it++;
-	} while (sumaAcumulada < inicioBloque && (it != archivos.end()));
-	if (it == archivos.end()) {
-		return NULL;
-	}
-
-	char* data = new char[longitud + 1];
-	int offset = (index * tamanioPieza - sumaAnterior);
-	int resto = longitud;
-	int leidos = 0;
-
-	while ((resto != 0) && it != archivos.end()) { //TODO ¡¡¡¡¡¡¡¡¡ ver si funciona !!!!!!
-		std::fstream* file = (*it)->getArchivo(); // pide el archivo
-		file->seekg(offset);       // se para en el offset inicial, en caso de tener q leer de otro archivo, empieza desde el inicio
-		file->get(data, longitud); // lee
-		leidos = strlen(data);    // compruebo cuantos leyo
-		resto = longitud - leidos;
-		it++;					  // salto al siguiente archivo
-		offset = 0;
-	}
-	if (resto == 0) {
+char* FileManager::readBlock(int index, int begin, int longitud) {
+	if (bitmap.estaMarcada(index)) {
+		char* data = new char[longitud + 1];
+		int offset = (index * tamanioPieza + begin );
+		descarga.seekg(offset); // se para en el offset inicial
+		descarga.get(data, longitud); // lee
 		return data;
 	} else {
-		delete[] data;
 		return NULL;
 	}
+}
+
+void FileManager::writeBlock(int index,int begin,int longitud,char* block){
+	if (!bitmap.estaMarcada(index)) {
+		int offset = (index * tamanioPieza + begin );
+		descarga.seekp(offset); // se para en el offset inicial
+		descarga.write(block, longitud); // escribe
+		if(verificarHashPieza(index)){
+			bitmap.marcarBit(index);
+		}
+	}
+}
+//TODO descomentar cuando este sha1
+bool FileManager::verificarHashPieza(int index){
+//	char pieza[tamanioPieza];
+//	int offset = (index * tamanioPieza);
+//	descarga->seekg(offset);
+//	descarga->get(pieza,tamanioPieza);
+//	Sha1 sha1Encoder;
+//	std::string hashObtenido = sha1Encoder.codificar(pieza,tamanioPieza);
+//	std::string hashOriginal;
+//	hashOriginal.assign(hashPiezas,index*LEN_SHA1_ASCII,LEN_SHA1_ASCII);
+//	return (hashOriginal.compare(hashObtenido) == 0);
+	return true;
 }
