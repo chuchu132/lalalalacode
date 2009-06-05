@@ -57,3 +57,8 @@ void Controlador::agregarTorrentEnVista(Torrent *t)
 	ventana->addTorrent(t);
 }
 
+void Controlador::cerrar()
+{
+	cliente.finalizar();
+}
+

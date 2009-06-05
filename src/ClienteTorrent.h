@@ -61,6 +61,11 @@ public:
 	 */
 	void* run();
 
+	/* realiza todo lo necesario para cerrar el programa
+	 * por ej: cerrar todas las conexiones y guardar info sobre los torrents
+	 * se llama al cerrar la ventana*/
+	void finalizar();
+
 	/* Devuelve el Torrent asociado al hash pasado por parametro o NULL si no lo
 	 * encuentra*/
 	Torrent* buscarTorrent(std::string hashTorrent);

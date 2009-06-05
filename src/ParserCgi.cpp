@@ -6,6 +6,7 @@
  */
 #include "ParserCgi.h"
 #include <string>
+#include <string.h>
 
 ParserCgi::ParserCgi() {}
 

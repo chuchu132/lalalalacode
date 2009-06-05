@@ -68,6 +68,8 @@ Ventana::~Ventana()
 {
 	delete torrents;
 	delete attr;
+	controlador->cerrar();
+	std::cout<<"fin"<<std::endl;
 }
 
 Gtk::Window& Ventana::getVentana()
@@ -91,7 +93,7 @@ void Ventana::getWindows()
 	about_window = 0;
 	builder->get_widget(ABOUT_WINDOW, about_window);
 	std::cout<<"ventana acerca de cargada"<<std::endl;
-	//about_window->show();
+	about_window->show();
 
 	//obtengo la ventana de seleccion de archivo
 	select_window = 0;

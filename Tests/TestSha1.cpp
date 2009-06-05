@@ -7,6 +7,7 @@
 
 #include "TestSha1.h"
 #include "../src/Sha1.h"
+#include <string.h>
 
 TestSha1::TestSha1() {
 	// TODO Auto-generated constructor stub
