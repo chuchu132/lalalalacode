@@ -44,7 +44,12 @@ public:
 	bool verificarHashPieza(int index);
 
 private:
-
+	/*TODO
+	 * Los archivos se manejan como uno del tamaño total
+	 * una vez que se completa la descarga se generan los
+	 * archivos y carpetas correspondientes con la info
+	 * obtenida del .torrent.
+	 * */
 	Bitmap bitmap;
 	//TODO agregar una lista de mutex y bloquear escritura por archivo.
 	std::list<Archivo*> archivos;
