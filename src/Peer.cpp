@@ -15,7 +15,7 @@
 //	int length;
 //	int cantidad;
 //	bool error = true; // error puede ser en la conexion, en lo recibido o al procesar
-//	while (torrent->estaActivo()) {
+//	while (torrent->estaActivo() && conexionOK) {
 //		cantidad = peerRemoto->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 //		if (cantidad > 0) {
 //			char* buffer = new char[length];
@@ -35,6 +35,7 @@
 
 Peer::Peer(Socket* peerRemoto, Torrent* torrent) {
 	this->peerRemoto = peerRemoto;
+	conexionOK = peerRemoto->is_valid();
 	this->torrent = torrent;
 	am_choking = true;
 	am_interested = false;
@@ -138,18 +139,18 @@ bool Peer::sendHave(int index) {
 bool Peer::sendBitfield() {
 	ParserMensaje parser;
 	FileManager* fileManager = this->torrent->getFileManager();
-	char* map = NULL;
 	int longitud;
 	bool retorno;
 
-	fileManager->getMap(map, &longitud);
+	const char* map = fileManager->getBitmap().getBitmap();
+	longitud = fileManager->getBitmap().getTamanioEnBytes();
 	int tamBuffer = (LEN_BASE_MSJ_BITFIELD + longitud + 1);
 	char* buffer = new char[tamBuffer];
 
 	parser.crearMensajeBitfield(map, longitud, buffer);
 
 	retorno = (peerRemoto->send(buffer, tamBuffer) != ERROR);
-	delete[] map;
+
 	delete[] buffer;
 	return retorno;
 }
@@ -188,5 +189,27 @@ bool Peer::sendCancel(int index, int block, int length) {
 	char buffer[FIXED_LENGTH_CANCEL];
 	parser.crearMensajeCancel(index, block, length, buffer);
 	return (peerRemoto->send(buffer, FIXED_LENGTH_CANCEL) != ERROR);
+}
+
+void Peer::procesarHave(int index){
+	if(bitmap.estaOk()){
+		bitmap.marcarPieza(index);
+	}
+}
+
+void Peer::procesarBitfield(const char* bitfield, int length ){
+	bitmap.inicializarBitmap(bitfield,length);
+}
+
+void Peer::procesarRequest(int index,int begin,int length){
+	if(am_choking){
+		sendMsg(ID_MSJ_CHOKE);
+	}else{
+		sendPiece(index,begin,length);
+	}
+}
+
+void Peer::procesarCancel(int index,int begin,int length){
+	//TODO preguntar que hace...
 }
 

@@ -18,6 +18,7 @@
 #include <list>
 #include "Archivo.h"
 #include "BencodeParser.h"
+#include "Bitmap.h"
 
 class FileManager {
 
@@ -29,8 +30,7 @@ public:
 
 	int getTamanio();
 
-	/*Devuelve un arreglo con el bitmap, quien lo solicita debe liberarlo*/
-	void getMap(char* map,int* length);
+	Bitmap& getBitmap();
 
 	/* Devuelve un arreglo con el bloque pedido, quien lo solicita debe liberarlo*/
 	char* getBlock(int index,int begin,int longitud);
@@ -42,8 +42,7 @@ public:
 
 private:
 
-	char* bitmap;
-	int tamBitmapBytes;
+	Bitmap bitmap;
 	//TODO agregar una lista de mutex y bloquear escritura por archivo.
 	std::list<Archivo*> archivos;
 	int tamanioPieza;

@@ -22,7 +22,7 @@ private:
 	std::string path;
 	std::string name;
 	int tamanio;
-	//sha1
+
 
 };
 
