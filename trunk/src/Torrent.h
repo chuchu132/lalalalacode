@@ -57,14 +57,28 @@ public:
 	 */
 	bool enviarEventoEstado(const char* event,int numwant);
 
-	/*Calcula cuantos bytes faltan descargar*/
-	unsigned int  left();
-
 	/*Cuando el Tracker recibe una lista de peers desde el Tracker remoto
 	 * los agrega a la lista de peers del Torrent*/
 	void agregarPeer(std::string ip,int puerto);
 
 	void agregarPeer(Peer* peerNuevo);
+
+	/* detiene el trafico del torrent */
+	void detener();
+
+	/* reanuda el trafico del torrent */
+	void continuar();
+
+	/* pausa el trafico del torrent */
+	void pausar();
+
+	/* refresca la lista de peers del torrent */
+	void refrescarPeers();
+
+
+
+	/* Calcula cuantos bytes faltan descargar */
+	unsigned int left();
 
 	std::string getInfoHash();
 
@@ -83,17 +97,10 @@ public:
 
 	int getVelocidadBajada();
 
-
 	/* devuelve el nombre del archivo .torrent */
 	std::string getNombre();
 
 	FileManager* getFileManager();
-
-	/* metodos llamados por el controlador desde la vista
-	 * para controlar el trafico del torrent */
-	void detener();
-	void continuar();
-	void pausar();
 
 	void setControlador(Controlador* ctrl);
 

@@ -26,16 +26,21 @@ private:
 	//TODO ver que columnas tiene que tener esta seccion
 
 
+	GtkNotebookPage *selected_page;
+	guint num_selected; //conectar señal.. que llama a showinfo
+
 	Gtk::Label lurl;
 	Gtk::Label lhash;
-	Gtk::Label lfile_name;
 	Gtk::Label lparts;
 
 	void showPeers(Torrent *t);
 	void showStatus(Torrent *t);
+	void showFiles(Torrent *t);
+
 
 	void setPeersView();
 	void setStatusView();
+	void setFilesView();
 
 public:
 
@@ -48,6 +53,7 @@ public:
 
 	/* muestra informacion sobre el torrent */
 	void showInfo(Torrent *t);
+
 
 };
 

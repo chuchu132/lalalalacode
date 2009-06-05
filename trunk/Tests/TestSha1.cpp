@@ -9,14 +9,9 @@
 #include "../src/Sha1.h"
 #include <string.h>
 
-TestSha1::TestSha1() {
-	// TODO Auto-generated constructor stub
+TestSha1::TestSha1() {}
 
-}
-
-TestSha1::~TestSha1() {
-	// TODO Auto-generated destructor stub
-}
+TestSha1::~TestSha1() {}
 
 void MostrarSalidaSha(unsigned *mensajeDigerido)
 {

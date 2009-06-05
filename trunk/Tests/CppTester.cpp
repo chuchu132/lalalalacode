@@ -7,10 +7,7 @@
 
 #include "CppTester.h"
 #include <iostream>
-CppTester::CppTester() {
-	// TODO Auto-generated constructor stub
-
-}
+CppTester::CppTester() {}
 
 CppTester::~CppTester() {
 	std::list<Test*>::iterator it;

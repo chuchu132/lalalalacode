@@ -7,14 +7,9 @@
 
 #include "TestVista.h"
 
-TestVista::TestVista() {
-	// TODO Auto-generated constructor stub
+TestVista::TestVista() {}
 
-}
-
-TestVista::~TestVista() {
-	// TODO Auto-generated destructor stub
-}
+TestVista::~TestVista() {}
 
 void TestVista::run(){
 		Gtk::Main kit(0, 0);

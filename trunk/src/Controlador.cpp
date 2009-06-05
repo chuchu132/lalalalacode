@@ -7,15 +7,9 @@
 
 #include "Controlador.h"
 
-Controlador::Controlador(ClienteTorrent& c):cliente(c)
-{
-	// TODO Auto-generated constructor stub
-}
+Controlador::Controlador(ClienteTorrent& c):cliente(c){}
 
-Controlador::~Controlador()
-{
-	// TODO Auto-generated destructor stub
-}
+Controlador::~Controlador(){}
 
 void Controlador::setVentana(Ventana *ventana)
 {
@@ -57,8 +51,18 @@ void Controlador::agregarTorrentEnVista(Torrent *t)
 	ventana->addTorrent(t);
 }
 
-void Controlador::cerrar()
+void Controlador::cerrarCliente()
 {
 	cliente.finalizar();
+}
+
+void Controlador::refrescarPeers(Torrent *t)
+{
+	t->refrescarPeers();
+}
+
+void Controlador::notificarVista(std::string notificacion)
+{
+	//ventana->mostrar(notificacion);
 }
 
