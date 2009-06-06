@@ -43,6 +43,9 @@ public:
 
 	bool verificarHashPieza(int index);
 
+	/* todo: necesito ver info sobre los archivos desde la vista */
+	//const std::list<Archivo*> getListaArchivos();
+
 private:
 	/*TODO
 	 * Los archivos se manejan como uno del tamaño total

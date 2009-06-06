@@ -34,8 +34,7 @@ private:
 
 
 	Gtk::Notebook *page;
-	//GtkNotebookPage *selected_page;
-	guint num_selected; //conectar señal.. que llama a showinfo
+	guint num_selected; //numero de pagina seleccionada
 
 	Gtk::Label lurl;
 	Gtk::Label lhash;
