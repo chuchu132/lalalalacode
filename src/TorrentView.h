@@ -73,6 +73,7 @@ private:
 
 	/* muestra las filas ocultas */
 	void showHidden();
+
 	/* oculta los que no tienen este estado */
 	void hideRows(std::string);
 
