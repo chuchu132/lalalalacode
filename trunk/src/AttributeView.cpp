@@ -12,12 +12,11 @@
 #define PESTANIAS "Pestanias"
 //#define labels
 
-#define COL_NAME_PEER "Nombre"
 
 AttributesView::AttributesView()
 {
 	// TODO Auto-generated constructor stub
-	num_selected = 0;
+	page_selected = 0;
 	torrent = NULL;
 }
 
@@ -39,13 +38,17 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 
 void AttributesView::setPeersView()
 {
+	columns_peers.add(col_name_peers);
+	list_peers =  Gtk::ListStore::create(columns_peers);
+	view_peers->set_model(list_peers);
 
-//	Gtk::TreeViewColumn* pColumn;
-//	int cols_count;
-
-	//agrego columnas al Tree View
-	//this->view_torrents->append_column(COL_NAME_PEER, col_name_peers);
-
+	int cols_count = this->view_peers->append_column("Nombre del Peer", col_name_peers);
+	Gtk::TreeViewColumn* pColumn;
+	for (int i=0; i<cols_count; i++)
+	{
+		pColumn = this->view_peers->get_column(i);
+		pColumn->set_resizable(true);
+	}
 }
 
 void AttributesView::setStatusView()
@@ -57,13 +60,26 @@ void AttributesView::setFilesView()
 {
 	columns_files.add(col_name_files);
 	columns_files.add(col_size_files);
+	columns_files.add(col_path_files);
 	list_files = Gtk::ListStore::create(columns_files);
+	view_files->set_model(list_files);
+
+	this->view_files->append_column("Nombre del Archivo", col_name_files);
+	this->view_files->append_column("Tamaño", col_size_files);
+	int cols_count = this->view_files->append_column("Ruta del Archivo", col_path_files);
+
+	Gtk::TreeViewColumn* pColumn;
+	for (int i=0; i<cols_count; i++)
+	{
+		pColumn = this->view_files->get_column(i);
+		pColumn->set_resizable(true);
+	}
 
 }
 void AttributesView::showInfo(Torrent *t)
 {
 	torrent = t;
-	switch (num_selected)
+	switch (page_selected)
 	{
 	case 0:
 		showStatus();
@@ -81,6 +97,7 @@ void AttributesView::showPeers()
 {
 	//muestra la lista de peers de este torrent
 	std::cout<<"mostrar peers"<<std::endl;
+	//implementar hacer lo mismo que en show files
 }
 
 void AttributesView::showStatus()
@@ -93,14 +110,23 @@ void AttributesView::showFiles()
 {
 	//muestra los archivos del torrent
 	std::cout<<"mostrar archivos"<<std::endl;
-//	Gtk::TreeModel::Row row = (* list_torrents->append());
-
-	//row[col_name_files] = torrent->getFileManager()->archivos;
+/* todo descomentar
+	std::list<Archivo*>::iterator it = torrent->getFileManager()->getIteratorArchivos();
+	Gtk::TreeModel::Row row;
+	while (torrent->getFileManager()->getEndArchivos())
+	{
+		Gtk::TreeModel::Row row = (* list_torrents->append());
+		row[col_size_file] = (*it)->getTamanio();//show bytes!!!
+		row[col_name_file] = (*it)->getNombre();
+		row[col_path_file] = (*it)->getPath();
+		it++;
+	}
+*/
 }
 
 void AttributesView::on_page_selected(GtkNotebookPage* page, guint page_num)
 {
-	num_selected = page_num;
+	page_selected = page_num;
 	if (this->torrent != NULL)
 		this->showInfo(this->torrent);
 }
