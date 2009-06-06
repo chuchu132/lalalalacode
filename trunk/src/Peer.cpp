@@ -7,31 +7,10 @@
 #include <arpa/inet.h>
 #include <ctime>
 #include <cstring>
+#include <list>
 #include "Constantes.h"
 #include "Peer.h"
 #include "ParserMensaje.h"
-
-//void* Peer::run() {
-//	int length;
-//	int cantidad;
-//	bool error = true; // error puede ser en la conexion, en lo recibido o al procesar
-//	while (torrent->estaActivo() && conexionOK) {
-//		cantidad = peerRemoto->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
-//		if (cantidad > 0) {
-//			length = ntohl(length);
-//			char* buffer = new char[length];
-//			cantidad = peerRemoto->receive(buffer, length);
-//			if (cantidad > 0) {
-//				error = !procesar(buffer, length);
-//			}
-//			delete[] buffer;
-//		}
-//		if (error) {
-//			//TODO error marcar peer como desactivado para eliminarlo de la lista
-//		}
-//	}
-//	return NULL;
-//}
 
 
 Peer::Peer(Socket* peerRemoto, Torrent* torrent) {
@@ -110,30 +89,48 @@ bool Peer::procesar(char* buffer, int length) {
 bool Peer::sendHandshake() {
 	ParserMensaje parser;
 	char buffer[LEN_HANDSHAKE];
+	bool retorno;
 	parser.crearHandshake(torrent->getInfoHash().c_str(),
 			torrent->getPeerId().c_str(), buffer);
-	return (peerRemoto->send(buffer, LEN_HANDSHAKE) != ERROR);
+	llaveEnvio.lock();
+	retorno = (peerRemoto->send(buffer, LEN_HANDSHAKE) != ERROR);
+	llaveEnvio.unlock();
+	return retorno;
 }
 
 bool Peer::sendKeepAlive() {
-	return (peerRemoto->send(LEN_MSJ_KEEPALIVE, sizeof(int)) != ERROR);
+	bool retorno;
+	llaveEnvio.lock();
+	retorno = (peerRemoto->send(LEN_MSJ_KEEPALIVE, sizeof(int)) != ERROR);
+	llaveEnvio.unlock();
+	return retorno;
 }
 
 /*Formato mensaje: <len=0001><Id=id>*/
 bool Peer::sendMsg(const char id) {
+	bool retorno;
 	ParserMensaje parser;
 	char buffer[FIXED_LENGTH_COMMON];
 	parser.crearMensajeId(id, buffer);
-	return (peerRemoto->send(buffer, FIXED_LENGTH_COMMON) != ERROR);
+	llaveEnvio.lock();
+	retorno = (peerRemoto->send(buffer, FIXED_LENGTH_COMMON) != ERROR);
+	llaveEnvio.unlock();
+	return retorno;
 }
 ;
 
 /*Formato mensaje Have: <len=0005><Id=4><piece index> */
 bool Peer::sendHave(int index) {
-	ParserMensaje parser;
-	char buffer[FIXED_LENGTH_HAVE];
-	parser.crearMensajeHave(index, buffer);
-	return (peerRemoto->send(buffer, FIXED_LENGTH_HAVE) != ERROR);
+	bool retorno = true;
+	if(!bitmap.estaMarcada(index)){
+		ParserMensaje parser;
+		char buffer[FIXED_LENGTH_HAVE];
+		parser.crearMensajeHave(index, buffer);
+		llaveEnvio.lock();
+		retorno = (peerRemoto->send(buffer, FIXED_LENGTH_HAVE) != ERROR);
+		llaveEnvio.unlock();
+	}
+	return retorno;
 }
 /*Formato mensaje Bitfiel: <len=0001 + X><Id=5><bitfield>  X = longitud en bytes de bitfield*/
 bool Peer::sendBitfield() {
@@ -148,9 +145,9 @@ bool Peer::sendBitfield() {
 	char* buffer = new char[tamBuffer];
 
 	parser.crearMensajeBitfield(map, longitud, buffer);
-
+	llaveEnvio.lock();
 	retorno = (peerRemoto->send(buffer, tamBuffer) != ERROR);
-
+	llaveEnvio.unlock();
 	delete[] buffer;
 	return retorno;
 }
@@ -158,9 +155,13 @@ bool Peer::sendBitfield() {
 /*Formato mensaje Request: <len=0013><Id=6><index><begin><length> */
 bool Peer::sendRequest(int index, int block, int length) {
 	ParserMensaje parser;
+	bool retorno;
 	char buffer[FIXED_LENGTH_REQUEST];
 	parser.crearMensajeRequest(index, block, length, buffer);
-	return (peerRemoto->send(buffer, FIXED_LENGTH_REQUEST) != ERROR);
+	llaveEnvio.lock();
+	retorno = (peerRemoto->send(buffer, FIXED_LENGTH_REQUEST) != ERROR);
+	llaveEnvio.unlock();
+	return retorno;
 }
 
 /*Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block */
@@ -174,7 +175,9 @@ bool Peer::sendPiece(int index, int begin, int lenght) {
 		int tamBuffer = (LEN_BASE_MSJ_PIECE + lenght + 1);
 		char* buffer = new char[tamBuffer];
 		parser.crearMensajePiece(index, begin, lenght, data, buffer);
+		llaveEnvio.lock();
 		retorno = (peerRemoto->send(buffer, tamBuffer) != ERROR);
+		llaveEnvio.unlock();
 		delete[] data;
 		delete[] buffer;
 		return retorno;
@@ -185,10 +188,14 @@ bool Peer::sendPiece(int index, int begin, int lenght) {
 }
 /* Formato mensaje Piece: <len=0013><Id=8><index><begin><length>  */
 bool Peer::sendCancel(int index, int block, int length) {
+	bool retorno;
 	ParserMensaje parser;
 	char buffer[FIXED_LENGTH_CANCEL];
 	parser.crearMensajeCancel(index, block, length, buffer);
-	return (peerRemoto->send(buffer, FIXED_LENGTH_CANCEL) != ERROR);
+	llaveEnvio.lock();
+	retorno = (peerRemoto->send(buffer, FIXED_LENGTH_CANCEL) != ERROR);
+	llaveEnvio.unlock();
+	return retorno;
 }
 
 void Peer::procesarHave(int index){
@@ -222,6 +229,28 @@ void Peer::procesarCancel(int index,int begin,int length){
 	//TODO preguntar que hace...
 }
 
+
 void Peer::repartirHave(int index){
-	//TODO implementar manda un have index a todos los peers
+	std::list<Peer*>* listaPeers = torrent->getListaPeers();
+	std::list<Peer*>::iterator it;
+	it = listaPeers->begin();
+	while(it != listaPeers->end()){
+		if((*it) != this){
+			(*it)->sendHave(index);}
+	}
+}
+
+bool Peer::recvMsj(char** buffer,int& length){
+	int cantidad = peerRemoto->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
+	if (cantidad > 0) {
+		length = ntohl(length);
+		*buffer = new char[length];
+		cantidad = peerRemoto->receive(*buffer, length);
+		if (cantidad > 0) {
+			return true;
+		}
+		delete[] (*buffer);
+		buffer = NULL;
+	}
+	return false;
 }

@@ -93,3 +93,13 @@ Bitmap Bitmap::nuevoPorFusion(Bitmap& otro){
 	}
 	return resultado;
 }
+
+bool Bitmap::estaVacio(){
+	bool vacio = true;
+	int i = 0;
+	while(vacio && i < tamanio){
+		vacio = ((bitmap[i] & 0xFF) == 0);
+		i++;
+	}
+	return vacio;
+}

@@ -102,6 +102,8 @@ public:
 
 	FileManager* getFileManager();
 
+	std::list<Peer*>* getListaPeers();
+
 	void setControlador(Controlador* ctrl);
 
 
@@ -111,7 +113,7 @@ private:
 	Tracker* tracker;
 	Mutex llaveListaPeers;
 	std::list<Peer*> peers;
-	FileManager archivos;
+	FileManager fileManager;
 	std::string info_hash;
 	std::string nombre;
 	int port; // puerto donde esta escuchando el Cliente.
