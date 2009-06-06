@@ -85,3 +85,13 @@ bool FileManager::verificarHashPieza(int index){
 //	return (hashOriginal.compare(hashObtenido) == 0);
 	return true;
 }
+
+std::list<Archivo*>::iterator FileManager::getIteratorArchivos()
+{
+	return archivos.begin();
+}
+
+std::list<Archivo*>::iterator FileManager::getEndArchivos()
+{
+	return archivos.end();
+}

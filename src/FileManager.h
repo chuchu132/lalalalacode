@@ -43,8 +43,11 @@ public:
 
 	bool verificarHashPieza(int index);
 
-	/* todo: necesito ver info sobre los archivos desde la vista */
-	//const std::list<Archivo*> getListaArchivos();
+	/* devuelve un iterador sobre los archivos. Ver si poner const */
+	std::list<Archivo*>::iterator getIteratorArchivos();
+
+	/* devuelve un iterador al ultimo elemento */
+	std::list<Archivo*>::iterator getEndArchivos();
 
 private:
 	/*TODO

@@ -15,7 +15,7 @@ public:
 	Archivo();
 	virtual ~Archivo();
 	std::fstream* getArchivo();
-	int getTamanio();
+	int getTamanio();//todo... no deberia ser un unsigned int??
 	std::string getNombre();
 	std::string getPath();
 

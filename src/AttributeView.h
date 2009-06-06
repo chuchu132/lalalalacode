@@ -29,12 +29,13 @@ private:
 	Gtk::TreeModelColumn<Glib::ustring> col_name_peers;
 	Gtk::TreeModelColumn<Glib::ustring> col_name_files;
 	Gtk::TreeModelColumn<Glib::ustring> col_size_files;
+	Gtk::TreeModelColumn<Glib::ustring> col_path_files;
 	//Gtk::TreeModelColumn<Glib::ustring> col_progress_peers;
 	//TODO ver que columnas tiene que tener esta seccion
 
 
 	Gtk::Notebook *page;
-	guint num_selected; //numero de pagina seleccionada
+	guint page_selected; //numero de pagina seleccionada
 
 	Gtk::Label lurl;
 	Gtk::Label lhash;
