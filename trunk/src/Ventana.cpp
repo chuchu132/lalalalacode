@@ -40,18 +40,7 @@ Ventana::Ventana()
 
 		this->getWindows();
 		this->getMenues();
-
-		//obtengo el tree view de torrents
-		Gtk::TreeView *view_torrents = 0;
-		builder->get_widget(VIEW_TORRENTS,view_torrents);
-		torrents->setTreeView(view_torrents);
-
-		Gtk::TreeView *view_cat = 0;
-		builder->get_widget(VIEW_CATEGORIES,view_cat);
-		torrents->setCategoriesView(view_cat);
-		std::cout<<"view torrents cargado"<<std::endl;
-
-		attr->setAttributesView(builder);
+		this->getViews();
 
 		//obtengo los botones
 		this->getButtons();
@@ -92,7 +81,7 @@ void Ventana::getWindows()
 	about_window = 0;
 	builder->get_widget(ABOUT_WINDOW, about_window);
 	std::cout<<"ventana acerca de cargada"<<std::endl;
-	//about_window->show();
+	about_window->show();
 
 	//obtengo la ventana de seleccion de archivo
 	select_window = 0;
@@ -105,6 +94,21 @@ void Ventana::getWindows()
 	select_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	select_window->add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
 	std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
+}
+
+void Ventana::getViews()
+{
+	//obtengo el tree view de torrents
+	Gtk::TreeView *view_torrents = 0;
+	builder->get_widget(VIEW_TORRENTS,view_torrents);
+	torrents->setTreeView(view_torrents);
+
+	Gtk::TreeView *view_cat = 0;
+	builder->get_widget(VIEW_CATEGORIES,view_cat);
+	torrents->setCategoriesView(view_cat);
+	std::cout<<"view torrents cargado"<<std::endl;
+
+	attr->setAttributesView(builder);
 }
 
 void Ventana::getMenues()
@@ -232,7 +236,10 @@ void Ventana::button_accept_clicked()
      select_window->hide();
      controlador->agregarTorrent(filename);
      //Torrent *t = controlador->agregarTorrent(filename);
-     //it t!= null torrents->addRow(t);
+     /*
+      if (t != NULL)
+		  torrents->addRow(t);
+     */
      torrents->addRow(tor);
 }
 

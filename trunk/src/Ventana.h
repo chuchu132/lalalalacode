@@ -26,7 +26,7 @@ class Torrent;
 class Ventana {
 
 private:
-	Glib::RefPtr<Gtk::Builder> builder;//builder que obtiene datos del archivo de la vista
+	Glib::RefPtr<Gtk::Builder> builder;//obtiene datos del archivo de la vista
 
 	/* ventanas */
 	Gtk::Window *main_window; //ventana principal de la aplicacion
@@ -66,6 +66,9 @@ private:
 	void on_button_peers_clicked();
 	void on_menu_about();
 
+	void button_accept_clicked();
+	void button_cancel_clicked();
+
 	//obtiene los botones desde el archivo
 	void getButtons();
 
@@ -75,11 +78,12 @@ private:
 	//obtiene los menues desde el archivo
 	void getMenues();
 
+	//obtiene los tree view desde el archivo
+	void getViews();
+
 	//conecta las señales con los signal handlers
 	void connectSignals();
 
-	void button_accept_clicked();
-	void button_cancel_clicked();
 
 public:
 
@@ -92,6 +96,7 @@ public:
 	/* devuelve una referencia a la ventana principal */
 	Gtk::Window& getVentana();
 
+	/* setea el controlador */
 	void setControlador(Controlador *c);
 
 	/* actualiza el estado del torrent */
