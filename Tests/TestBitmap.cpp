@@ -8,6 +8,7 @@
 #include "../src/Bitmap.h"
 #include "TestBitmap.h"
 #include <string>
+#include <string.h>
 
 TestBitmap::TestBitmap() {
 	// TODO Auto-generated constructor stub

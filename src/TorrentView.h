@@ -27,7 +27,7 @@ private:
 	Gtk::TreeView *view_torrents; //vista de la lista
 	Gtk::TreeView *view_categories; //vista del selector
 
-	/* columnas */ //todo: cambiar tipos
+	/* columnas */ //todo: tipos
 	Gtk::TreeModelColumnRecord columns;
 	Gtk::TreeModelColumnRecord columns_categories;
 
@@ -51,7 +51,6 @@ private:
 	/* lista */
 	Glib::RefPtr<Gtk::ListStore> list_torrents;
 	Glib::RefPtr<Gtk::ListStore> list_categories;
-	//Glib::RefPtr<Gtk::ListStore> list_hidden; //guarda las filas que no estan siendo mostradas
 
 	/* fila seleccionada */
 	Glib::RefPtr<Gtk::TreeSelection> selection;
@@ -66,9 +65,10 @@ private:
 	/* Signal handler para fila del tree view seleccionada */
 	void on_row_selected();
 
+	/* actualiza la fila con los datos del torrent */
 	void updateRowValues(Gtk::TreeModel::Row &, Torrent*);
 
-	/* transforma bytes en un string para mostrar por pantalla */
+	/* transforma un tamaño enn bytes en un string */
 	std::string showBytes(float bytes);
 
 	/* muestra las filas ocultas */

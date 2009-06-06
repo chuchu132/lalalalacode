@@ -15,14 +15,12 @@
 
 AttributesView::AttributesView()
 {
-	// TODO Auto-generated constructor stub
 	page_selected = 0;
 	torrent = NULL;
 }
 
 AttributesView::~AttributesView()
 {
-	// TODO Auto-generated destructor stub
 }
 
 void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
@@ -33,6 +31,7 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 	setPeersView();
 	setStatusView();
 	setFilesView();
+	// me conecto a la señal de pagina cambiada para refrescar la vista
 	page->signal_switch_page().connect(sigc::mem_fun (*this,&AttributesView::on_page_selected));
 }
 

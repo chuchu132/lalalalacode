@@ -26,8 +26,6 @@ public:
 	ClienteTorrent();
 	virtual ~ClienteTorrent();
 
-	//TODO Hay que implementar la interfaz que necesite Lucia.
-
 private:
 	/*Hay un Torrent por cada archivo .torrent que ingresa el usuario. */
 	std::list<Torrent*> torrents;

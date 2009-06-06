@@ -47,7 +47,6 @@ private:
 	void showStatus();
 	void showFiles();
 
-
 	void setPeersView();
 	void setStatusView();
 	void setFilesView();
@@ -60,12 +59,11 @@ public:
 
 	~AttributesView();
 
-	/* toma lo que necesita del archivo */
+	/* toma lo que necesita del archivo de la vista */
 	void setAttributesView(Glib::RefPtr<Gtk::Builder>);
 
 	/* muestra informacion sobre el torrent */
 	void showInfo(Torrent *t);
-
 
 };
 
