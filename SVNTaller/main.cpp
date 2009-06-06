@@ -14,8 +14,12 @@
 /*
  * 
  */
+using namespace std;
+
+void obtenerInfoHash(datosParser*datos, SHA1 sha);
 void ProcesarHash(char*hash, SHA1 sha);
 void MostrarSalidaSha(unsigned *message_digest);
+void mostrarInfoHash(unsigned *hash);
 FILE* menuInicio();
 
 int main(int argc, char** argv) {
@@ -52,14 +56,67 @@ int main(int argc, char** argv) {
 
     std::cout << " --- Fin del Parser --- " << std::endl;
 
+    obtenerInfoHash(datos, sha);
+
     delete datos;
     return (EXIT_SUCCESS);
+}
+
+void obtenerInfoHash(datosParser*datos, SHA1 sha) {
+
+
+    //Se obtiene el info hash calculando el valor de sha1 de la cadena del torrent perteneciente al diccionario "info"
+    string buffer; 
+    int salida = 1;
+    unsigned mensajeDigerido[5];
+    
+    char *hashBinario;
+    datos->primero();
+    while (datos->final()) {
+
+        if (!strcmp(datos->obtenerDato(), "info")) {
+            datos->siguiente();
+            do {
+                if (strcmp(datos->obtenerDato(), "pieces")) {
+                    buffer = buffer + datos->obtenerDato();
+                } else {
+                    datos->siguiente();
+                    buffer = buffer + datos->obtenerDato();
+                    break;
+                }
+                datos->siguiente();
+            } while (salida != 0);
+        }
+        datos->siguiente();
+    }
+
+    char *bufferAux = new char [buffer.size() + 1];
+    int it;
+    for (it = 0; it <= buffer.size(); it++)
+        bufferAux[it] = buffer[it];
+
+    sha.inicializacion();
+    sha.entrada(bufferAux, strlen(bufferAux));
+    sha.salida(mensajeDigerido);
+
+    std::cout << " --- Info Hash del archivo .torrent ---" << std::endl;
+    mostrarInfoHash(mensajeDigerido);
+    std::cout << std::endl;
+    
+    // Pasaje de la salida del sha1 a string y luego a binario 
+    hashBinario=sha.sha1Abinario(sha.salidaAstring(mensajeDigerido));
+    std::cout<<hashBinario<<std::endl;
+    
+    delete []hashBinario;
+    delete []bufferAux;
+
+
 }
 
 FILE* menuInicio() {
 
     char bufferTorrent[512];
-    int seleccion;
+    int seleccion = 0;
     FILE*fp;
 
     std::cout << std::endl << " --- Se utilizara el archivo defaut ( PSP.torrent ) \n --- Si desea ingresar otro .torrent presionar 1---" << std::endl;
@@ -83,8 +140,8 @@ FILE* menuInicio() {
 
 void ProcesarHash(char * datos, SHA1 sha) {
 
-// Particiona el string con los hash de cada piece en cadenas de 20 bytes y los muestra por pantalla
-// Al ser datos binarios los que se envian del hash los caracteres que se muestran no son legibles 
+    // Particiona el string con los hash de cada piece en cadenas de 20 bytes y los muestra por pantalla
+    // Al ser datos binarios los que se envian del hash los caracteres que se muestran no son legibles 
     char hash[20];
     int pos;
     unsigned aux;
@@ -96,44 +153,27 @@ void ProcesarHash(char * datos, SHA1 sha) {
             aux++;
         }
         aux--;
-        std::cout<< hash <<std::endl;
-        
-        //   Test para verificar la correcta conversion a binario 
-        //   descomentando este codigo, el resultado deveria ser el que se encuentra continuacion
-
-        /*   strcpy(hash,"This is a test");
-             std::cout << hash << std::endl;
-         */
-        /*
-         *
-         01010100  T
-         01101000  h
-         01101001  i
-         01110011  s
-         00100000
-         01101001  i
-         01110011  s
-         00100000
-         01100001  a
-         00100000
-         01110100  t
-         01100101  e
-         01110011  s
-         01110100  t
-         *
-         */
-
-        //    char *cadena = new char [20 * sizeof (char) ];
-
-        //Pasa los caracteres de sha1 a binario
-        //   cadena = sha.sha1Abinario(hash);
-        //Imprime la cadena binaria correspondiente al sha1
-        //   sha.imprimirShaBinario(cadena);
-
-        //   std::cout << std::endl << std::endl;
-        //    delete []cadena;
+        std::cout << hash << std::endl;
     }
 
 }
 
+void mostrarInfoHash(unsigned *hash) {
+    ios::fmtflags flags;
+
+    flags = cout.setf(ios::hex | ios::uppercase, ios::basefield);
+    cout.setf(ios::uppercase);
+
+    for (int i = 0; i < 5; i++) {
+        cout << hash[i] << ' ';
+    }
+
+    cout << endl;
+
+    cout.setf(flags);
+
+
+
+
+}
 

@@ -199,11 +199,12 @@ unsigned SHA1::circularShift(int cantBits, unsigned bloque) {
 
 char* SHA1::salidaAstring(unsigned *salidaSha1) {
     int i;
-    char *hash = new char [20 * sizeof (char) ];
+    char *hash = new char [20 * CHAR_BIT];
+    hash[0]='\0';
     
     for (i = 0; i < 5; i++)
         sprintf(hash, "%s%u", hash, salidaSha1[i]);
-    
+
     //retorna la salida del sha1 en forma de una cadena 
     return hash;
 }
@@ -212,8 +213,8 @@ char* SHA1::sha1Abinario(string hash) {
 
     unsigned int n_bits, it, i, LEN_SHA1 = 20;
 
-    char *cadenaBinaria = new char [LEN_SHA1 * sizeof (char) ];
-
+    char *cadenaBinaria = new char [LEN_SHA1 * sizeof(char) ];
+    
     char ret, val;
 
     if (hash.size() == 20)LEN_SHA1 = hash.size();
