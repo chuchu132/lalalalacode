@@ -18,29 +18,41 @@ class AttributesView {
 
 private:
 	Gtk::TreeView *view_peers;
-	Gtk::ListStore *list_peers;
+	Glib::RefPtr<Gtk::ListStore> list_peers;
 
-	Gtk::TreeModelColumnRecord columns;
+	Gtk::TreeView *view_files;
+	Glib::RefPtr<Gtk::ListStore> list_files;
+
+	Gtk::TreeModelColumnRecord columns_peers;
+	Gtk::TreeModelColumnRecord columns_files;
+
 	Gtk::TreeModelColumn<Glib::ustring> col_name_peers;
+	Gtk::TreeModelColumn<Glib::ustring> col_name_files;
+	Gtk::TreeModelColumn<Glib::ustring> col_size_files;
 	//Gtk::TreeModelColumn<Glib::ustring> col_progress_peers;
 	//TODO ver que columnas tiene que tener esta seccion
 
 
-	GtkNotebookPage *selected_page;
+	Gtk::Notebook *page;
+	//GtkNotebookPage *selected_page;
 	guint num_selected; //conectar señal.. que llama a showinfo
 
 	Gtk::Label lurl;
 	Gtk::Label lhash;
 	Gtk::Label lparts;
 
-	void showPeers(Torrent *t);
-	void showStatus(Torrent *t);
-	void showFiles(Torrent *t);
+	Torrent *torrent;//torrent seleccionado
+
+	void showPeers();
+	void showStatus();
+	void showFiles();
 
 
 	void setPeersView();
 	void setStatusView();
 	void setFilesView();
+
+	void on_page_selected(GtkNotebookPage* , guint);
 
 public:
 
