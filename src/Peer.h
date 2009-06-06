@@ -15,6 +15,7 @@
  * Cada Peer se ejecuta en un hilo aparte y se va a encargar de
  * pedir y enviar partes a otros Peers remotos.
  */
+#include "Mutex.h"
 #include "Socket.h"
 #include "Thread.h"
 #include "Torrent.h"
@@ -60,8 +61,9 @@ public:
 	bool sendMsg(const char id);
 
 	/*
-	 *Formato mensaje have: <len=0005><Id=4><piece index>
-	 *have: Información a un Peer de que una parte ha sido completada
+	 * Formato mensaje have: <len=0005><Id=4><piece index>
+	 * have: Información a un Peer de que una parte ha sido completada
+	 * El mensaje se envia solo si el peer remoto no tiene la pieza.
 	 */
 	bool sendHave(int index);
 	/*
@@ -102,7 +104,19 @@ public:
 	 * */
 	bool procesar(char* buffer,int length);
 
+	/* Recibe un mensaje desde el peer remoto.
+	 * en el buffer guarda el mensaje
+	 * y en length su longitud.
+	 * En caso de devolver true,el buffer debe ser liberado.
+	 * */
+	bool recvMsj(char** buffer,int& length);
+
 private:
+	/*
+	 * La llave de envio se bloquea antes de cualquier envio al peer remoto
+	 * y se desbloquea inmediatamente despues de completarse el envio.
+	 */
+	Mutex llaveEnvio;
 	Socket* peerRemoto;
 	bool conexionOK;
 	Torrent* torrent;
@@ -114,13 +128,19 @@ private:
 	Bitmap bitmap;
 
 	/*Metodos utilizados para procesar los mensajes que llegan desde el peer remoto*/
-	//TODO Implementar
+	/*Marca en el Bitmap la pieza indicada por index*/
 	void procesarHave(int index);
+	/*Guarda en el Bitmap el Bitfield recibido*/
 	void procesarBitfield(const char* bitfield, int length );
+	/*Busca y envia el bloque indicado por index y begin*/
 	void procesarRequest(int index,int begin,int length);
+	/*Guarda en disco el bloque de datos recibidos en la posicion correspondiente*/
 	void procesarPiece(int index,int begin,int longitud,char* data );
+	/*TODO no se q hace*/
 	void procesarCancel(int index,int begin,int length);
+	/*Envia un mensaje de Have a los peers que no tienen la pieza indicada por index*/
 	void repartirHave(int index);
+
 };
 
 #endif /* PEER_H_ */

@@ -52,7 +52,7 @@ std::string Torrent::getNombre() {
 }
 
 unsigned int  Torrent::left(){
-	return (archivos.getTamanio() - downloaded);
+	return (fileManager.getTamanio() - downloaded);
 }
 
 
@@ -66,9 +66,12 @@ std::string Torrent::getPeerId(){
 
 
 FileManager* Torrent::getFileManager(){
-	return &archivos;
+	return &fileManager;
 }
 
+std::list<Peer*>* Torrent::getListaPeers(){
+	return &peers;
+}
 
 //implementar
 void Torrent::continuar() {

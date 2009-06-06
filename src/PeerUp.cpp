@@ -20,8 +20,22 @@ PeerUp::~PeerUp() {
  * necesaria para linkearlo con un Torrent determinado.
  */
 void* PeerUp::run(){
-	sendHandshake();
-	//TODO Poner a recibir / procesar los mensajes entrantes
+//	sendHandshake();
+//	sendBitfield();
+//	while(conexionOK){
+//		if(am_choking){
+//			sendMsg(ID_MSJ_CHOKE);
+//			esperarUnchoke.lock();
+//			esperarUnchoke.unlock();
+//			//TODO cuanto am_chiking est en true CPU se va a ir a 100%
+//		}else{
+//			sendMsg(ID_MSJ_UNCHOKE);
+//
+//
+//			}
+//
+//		}
 		return NULL;
 
+//	}
 }
