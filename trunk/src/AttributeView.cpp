@@ -93,6 +93,9 @@ void AttributesView::showFiles()
 {
 	//muestra los archivos del torrent
 	std::cout<<"mostrar archivos"<<std::endl;
+//	Gtk::TreeModel::Row row = (* list_torrents->append());
+
+	//row[col_name_files] = torrent->getFileManager()->archivos;
 }
 
 void AttributesView::on_page_selected(GtkNotebookPage* page, guint page_num)

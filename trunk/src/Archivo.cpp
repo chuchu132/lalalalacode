@@ -21,3 +21,13 @@ int Archivo::getTamanio(){
 std::fstream* Archivo::getArchivo(){
 	return &file;
 }
+
+std::string Archivo::getNombre()
+{
+	return name;
+}
+
+std::string Archivo::getPath()
+{
+	return path;
+}

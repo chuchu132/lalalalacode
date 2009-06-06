@@ -16,6 +16,9 @@ public:
 	virtual ~Archivo();
 	std::fstream* getArchivo();
 	int getTamanio();
+	std::string getNombre();
+	std::string getPath();
+
 private:
 	//FILE* o lo que corresponda en C++
 	std::fstream file; // Esta abierto mientras viva Archivo.
