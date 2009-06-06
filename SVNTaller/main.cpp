@@ -3,6 +3,10 @@
  *
  * Created on 30 de mayo de 2009, 23:25
  */
+#include <iomanip>
+#include <ios>
+#include <sstream>
+#include <iostream>
 
 #include <stdlib.h>
 #include "BencodeParser.h"
@@ -79,7 +83,8 @@ FILE* menuInicio() {
 
 void ProcesarHash(char * datos, SHA1 sha) {
 
-
+// Particiona el string con los hash de cada piece en cadenas de 20 bytes y los muestra por pantalla
+// Al ser datos binarios los que se envian del hash los caracteres que se muestran no son legibles 
     char hash[20];
     int pos;
     unsigned aux;
@@ -91,6 +96,8 @@ void ProcesarHash(char * datos, SHA1 sha) {
             aux++;
         }
         aux--;
+        std::cout<< hash <<std::endl;
+        
         //   Test para verificar la correcta conversion a binario 
         //   descomentando este codigo, el resultado deveria ser el que se encuentra continuacion
 
@@ -116,15 +123,15 @@ void ProcesarHash(char * datos, SHA1 sha) {
          *
          */
 
-        char *cadena = new char [20 * sizeof (char) ];
+        //    char *cadena = new char [20 * sizeof (char) ];
 
         //Pasa los caracteres de sha1 a binario
-        cadena = sha.sha1Abinario(hash);
+        //   cadena = sha.sha1Abinario(hash);
         //Imprime la cadena binaria correspondiente al sha1
-        sha.imprimirShaBinario(cadena);
-        
-        std::cout << std::endl << std::endl;
-        delete []cadena;
+        //   sha.imprimirShaBinario(cadena);
+
+        //   std::cout << std::endl << std::endl;
+        //    delete []cadena;
     }
 
 }
