@@ -9,13 +9,17 @@
 #include <cstring>
 #include <cmath>
 
+#include <iostream> //TODO borrar
+
 Bitmap::Bitmap() {
 	bitmap = NULL;
 	tamanio = 0;
 	inicializado =  false;
 }
 
-Bitmap::Bitmap(Bitmap& original){
+Bitmap::Bitmap(const Bitmap& original){
+
+	std::cout<<"COPIA de BITMAP"<<std::endl;
 	if(original.inicializado){
 	bitmap = new char[original.tamanio];
 	tamanio = original.tamanio;
@@ -80,15 +84,15 @@ bool Bitmap::estaOk(){
 	return inicializado;
 }
 
-Bitmap Bitmap::nuevoPorFusion(Bitmap& otro){
-	Bitmap resultado;
+Bitmap* Bitmap::nuevoPorFusion(Bitmap& otro){
+	Bitmap* resultado = new Bitmap();
 
 	if(tamanio == otro.tamanio){
 		char* bitmap = new char[tamanio];
 		for (int i = 0; i < tamanio; ++i) {
-			bitmap[i] = ~(bitmap[i] | (~(otro.bitmap[i])));
+			bitmap[i] = ~(this->bitmap[i] | (~(otro.bitmap[i])));
 		}
-		resultado.inicializarBitmap(bitmap,tamanio);
+		resultado->inicializarBitmap(bitmap,tamanio);
 		delete[] bitmap;
 	}
 	return resultado;

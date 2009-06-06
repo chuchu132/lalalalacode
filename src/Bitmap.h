@@ -13,7 +13,7 @@ public:
 	/*Crea un Bitmap vacio*/
 	Bitmap();
 	/*Constructor copia*/
-	Bitmap(Bitmap& original);
+	Bitmap(const Bitmap& original);
 	virtual ~Bitmap();
 	/*Inicializa un bitmap con los datos pasados*/
 	void inicializarBitmap(const char* unBitmap,int tamanioBytes);
@@ -43,12 +43,14 @@ public:
 	 *  0 | 1 | 1
 	 *  1 | 0 | 0
 	 *  1 | 1 | 0
-	 * Devuelve un Bitmap con el resultado.
+	 * Devuelve un new Bitmap con el resultado.
 	 * Si los bits en 1 representan partes de un archivo que poseo,
 	 * el resultado me indicaria con un 1 la parte que B tiene y a A
 	 * le falta.
+	 *
+	 * Hay que liberar el nuevo Bitmap.
 	 */
-	Bitmap nuevoPorFusion(Bitmap& otro);
+	Bitmap* nuevoPorFusion(Bitmap& otro);
 
 private:
 	char* bitmap;
