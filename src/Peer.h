@@ -120,7 +120,7 @@ private:
 	Socket* peerRemoto;
 	bool conexionOK;
 	Torrent* torrent;
-	/*choked e interested guardan informacion sobre el estado del peer remoto*/
+
 	bool am_choking;
 	bool am_interested;
 	bool peer_choking;
