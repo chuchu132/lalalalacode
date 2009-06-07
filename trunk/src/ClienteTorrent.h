@@ -21,10 +21,8 @@
  **********************************************************************/
 class Torrent;
 class Controlador;
+
 class ClienteTorrent : public Thread {
-public:
-	ClienteTorrent();
-	virtual ~ClienteTorrent();
 
 private:
 	/*Hay un Torrent por cada archivo .torrent que ingresa el usuario. */
@@ -39,11 +37,16 @@ private:
 	 * Opciones: usar Pocess ID, time stamp.
 	 */
 	char peer_id[20];
-	Socket peerListener;
+	Socket peerListener; //socket para escuchar conexiones de peers
+	unsigned int puerto; //puerto en el que escucha conexiones
 	bool activo; // TODO sirve para dejar de escuchar conexiones
 	Controlador *controlador;
 
 public:
+
+	ClienteTorrent();
+
+	~ClienteTorrent();
 
 	/* recibe la ruta del archivo .torrent
 	 * devuelve un puntero al objeto torrent o NULL en caso de error */
@@ -54,12 +57,12 @@ public:
 	void borrarTorrent(Torrent*);
 
 	/*
-	 * En el run el ClienteTorrent recibe conexiones de Peers remotos y los
-	 * linkea con el Torrent correspondiente
+	 * El ClienteTorrent recibe conexiones de Peers remotos y los
+	 * linkea con el Torrent correspondiente.
 	 */
 	void* run();
 
-	/* realiza todo lo necesario para cerrar el programa
+	/* Realiza todo lo necesario para cerrar el programa
 	 * por ej: cerrar todas las conexiones y guardar info sobre los torrents
 	 * se llama al cerrar la ventana*/
 	void finalizar();

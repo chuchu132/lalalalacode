@@ -10,13 +10,23 @@
 #include "Peer.h"
 #include "PeerUp.h"
 
+#define PORT 33333
+#define CANT_CLIENTES 5
+
 ClienteTorrent::ClienteTorrent() {
-	// TODO Auto-generated constructor stub
+	// TODO
+	//crear el peer_id
+	//sacar los datos del archivo de configuracion
+	puerto = PORT;
+	peerListener.listen(puerto,CANT_CLIENTES);
 
 }
 
 ClienteTorrent::~ClienteTorrent() {
-	// TODO Auto-generated destructor stub
+	// TODO
+	if (activo)
+		finalizar();
+	peerListener.close();
 }
 
 void* ClienteTorrent::run() {
@@ -24,6 +34,7 @@ void* ClienteTorrent::run() {
 	Socket* conexionPeerNuevo;
 	int cantidad, length;
 	char* handshake;
+	activo = true;
 
 	while (activo) {
 		conexionPeerNuevo = peerListener.accept();
@@ -55,8 +66,7 @@ void* ClienteTorrent::run() {
 }
 
 Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
-	std::list<Torrent*>::iterator it;
-	it = torrents.begin();
+	std::list<Torrent*>::iterator it = torrents.begin();
 	while (it != torrents.end()) {
 		if ((*it)->getInfoHash().compare(hashTorrent) == 0) {
 			return (*it);
@@ -67,10 +77,18 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 
 void ClienteTorrent::finalizar()
 {
-	//implementar: yo lo hago esto ;) LU
-	//activo = false;
-	//cerrar todas las conexiones
-	//guardar info sobre los torrents
+	//implementar: yo hago esto ;) LU
+
+	activo = false;
+	//this->join();
+
+	std::list<Torrent*>::iterator it = torrents.begin();
+	while (it != torrents.end()) {
+		(*it)->detener();//join??
+		//guardar info sobre el torrent
+		delete (*it);
+	}
+	//guardar info del cliente
 }
 
 bool ClienteTorrent::estaActivo() {
@@ -84,12 +102,34 @@ std::string ClienteTorrent::getPeerId() {
 
 Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 	//implementar!
-	//a cada nuevo torrent le tiene que pasar como parametro el controlador
-	return NULL;
+
+	Torrent *t = new Torrent();
+	if (false /* t->inicializarTorrent(parser)*/ )
+	{
+		t->setControlador(controlador);
+		torrents.push_back(t); //agrego el torrent a la lista de torrents
+		//TODO ver como comenzar la descarga del torrent
+		//t->conectarTracker();
+	}
+	else
+	{
+		delete t;
+		t = NULL;
+	}
+
+	return t;
 }
 
 void ClienteTorrent::borrarTorrent(Torrent *t) {
-	//implementar!
+	std::list<Torrent*>::iterator it = torrents.begin();
+	while (it != torrents.end()) {
+		if ( (*it) == t)
+		{
+			t->detener();//join??
+			delete t;
+			return;
+		}
+	}
 }
 
 void ClienteTorrent::setControlador(Controlador *ctrl) {

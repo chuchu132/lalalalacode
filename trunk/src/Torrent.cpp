@@ -12,7 +12,9 @@
 
 Torrent::Torrent() {
 	// TODO Auto-generated constructor stub
-
+	uploaded = 0;
+	downloaded = 0;
+	estado = T_DETENIDO;
 }
 
 Torrent::~Torrent() {
@@ -73,33 +75,35 @@ std::list<Peer*>* Torrent::getListaPeers(){
 	return &peers;
 }
 
-//implementar
+//implementar.. los valores estan para probar
 void Torrent::continuar() {
-
+	estado = T_ACTIVO;
 }
 
 void Torrent::detener() {
-
+	estado = T_DETENIDO;
 }
 
 void Torrent::pausar() {
-
+	estado = T_PAUSADO;
 }
 
 std::string Torrent::getEstado() {
-	return T_DETENIDO;
+	return estado;
 }
 
 unsigned int Torrent::getTamanio() {
 	return 40000;
+	//return fileManager.getTamanio();
 }
 
 unsigned int Torrent::getTamanioDescargado() {
 	return 1000;
+	//return downloaded;
 }
 
 int Torrent::getVelocidadSubida() {
-	return 2;
+	return 2;//todo.. ver ocmo calcular la velocidad
 }
 
 int Torrent::getVelocidadBajada() {

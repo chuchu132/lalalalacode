@@ -9,9 +9,9 @@
 #define FILEMANAGER_H_
 
 /*
- * Este objeto va a ser el encargado de llevar el control
+ * Este objeto es el encargado de llevar el control
  * de las partes descargadas y de las que falten descargar.
- * Tambien va a coordinar, el acceso al archivo que se
+ * Tambien coordina el acceso al archivo que se
  * esta descargando.
  */
 
@@ -43,7 +43,7 @@ public:
 
 	bool verificarHashPieza(int index);
 
-	/* devuelve un iterador sobre los archivos. Ver si poner const */
+	/* devuelve un iterador sobre los archivos. VER si poner const */
 	std::list<Archivo*>::iterator getIteratorArchivos();
 
 	/* devuelve un iterador al ultimo elemento */
@@ -61,7 +61,7 @@ private:
 	std::list<Archivo*> archivos;
 	int tamanioPieza;
 	int bloquesXPieza;
-	int bytesTotales; //tamnio total de los archivos a descargar
+	int bytesTotales; //tamnio total de los archivos a descargar VER no convendria que sea unsigned??????
 	std::fstream descarga; // file del tamanio del total de la descarga.
 	std::string hashPiezas;
 };
