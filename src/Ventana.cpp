@@ -236,7 +236,7 @@ void Ventana::button_accept_clicked()
      select_window->hide();
      controlador->agregarTorrent(filename);
      //Torrent *t = controlador->agregarTorrent(filename);
-     /*
+     /* VER descomentar!
       if (t != NULL)
 		  torrents->addRow(t);
      */

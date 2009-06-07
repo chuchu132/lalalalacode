@@ -30,14 +30,18 @@ class Tracker;
 class Controlador;
 class ClienteTorrent;
 
-class Torrent{
+class Torrent {
+
 public:
+
 	Torrent();
-	virtual ~Torrent();
+
+	~Torrent();
 
 	/*
-	 * Inicializa los atributos de Torent con la informacion que levanto el parser del
+	 * Inicializa los atributos de Torrent con la informacion que levanto el parser del
 	 * archivo .torrent
+	 * devuelve true en caso de exito
 	 */
 	bool inicializarTorrent(BencodeParser* parser);
 
@@ -72,7 +76,7 @@ public:
 	/* pausa el trafico del torrent */
 	void pausar();
 
-	/* refresca la lista de peers del torrent */
+	/* refresca la lista de peers del torrent. Pide peers al Tracker */
 	void refrescarPeers();
 
 
@@ -116,6 +120,7 @@ private:
 	FileManager fileManager;
 	std::string info_hash;
 	std::string nombre;
+	std::string estado;
 	int port; // puerto donde esta escuchando el Cliente.
 	unsigned int uploaded;
 	unsigned int downloaded;
