@@ -41,6 +41,13 @@ void BencodeParser::parserDiccionario(FILE *fp) {
 
     compararCaracter('d');
     ident = 0;
+    char *inicioDic=new char[7];
+    char *finDic=new char[4];
+    //Seteo las cadena que sirven de identificadores de inicio y fin de un diccionario
+    strcpy(inicioDic,"Inicio");
+    strcpy(finDic,"Fin");
+    
+    datos->agregarDato(inicioDic);      
     while (verCaracterSiguiente() != 'e') {
 
         parserCadena(fp);
@@ -49,7 +56,8 @@ void BencodeParser::parserDiccionario(FILE *fp) {
     }
    
     compararCaracter('e');
-
+    datos->agregarDato(finDic);
+   
 }
 
 void BencodeParser::parserLista(FILE*fp) {
@@ -74,7 +82,7 @@ void BencodeParser::parserNumerico(FILE *fp) {
     char *cadena=new char[BUFSIZE];
     sprintf (cadena,"%ld",val);
     datos->agregarDato(cadena);
-
+   
 }
 
 void BencodeParser::parserCadena(FILE *fp) {

@@ -43,7 +43,10 @@ int main(int argc, char** argv) {
     //Imprime por pantalla los resultados del parser
     datos->primero();
     while (datos->final()) {
-        std::cout << datos->obtenerDato() << std::endl;
+        //Verifico antes de imprimir que el proximo dato no sea uno de los flags de inicio o fin de diccionario
+        if (strcmp(datos->obtenerDato(), "Fin") && strcmp(datos->obtenerDato(), "Inicio"))
+            std::cout << datos->obtenerDato() << std::endl;
+        //Verifico el campo pieces para obtener los hash de cada piece
         if (!strcmp(datos->obtenerDato(), "pieces")) {
             datos->siguiente();
 
@@ -66,26 +69,34 @@ void obtenerInfoHash(datosParser*datos, SHA1 sha) {
 
 
     //Se obtiene el info hash calculando el valor de sha1 de la cadena del torrent perteneciente al diccionario "info"
-    string buffer; 
-    int salida = 1;
+    string buffer;
+    int salida = 1, contador = 1;
     unsigned mensajeDigerido[5];
-    
+
     char *hashBinario;
     datos->primero();
+    //Recorro la lista de datos desde el comienzo hasta el final
     while (datos->final()) {
-
+        // Verifico si el campo actual es de campo clave "info"
         if (!strcmp(datos->obtenerDato(), "info")) {
             datos->siguiente();
+            //Proceso todo el diccionario "info" en un string para luego aplicarle el sha1
             do {
-                if (strcmp(datos->obtenerDato(), "pieces")) {
-                    buffer = buffer + datos->obtenerDato();
+                if (!strcmp(datos->obtenerDato(), "Inicio")) {
+                    contador++;
                 } else {
-                    datos->siguiente();
-                    buffer = buffer + datos->obtenerDato();
-                    break;
+                    if (!strcmp(datos->obtenerDato(), "Fin")) {
+                        contador--;
+                    } else {
+                        buffer = buffer + datos->obtenerDato();
+                    }
                 }
                 datos->siguiente();
-            } while (salida != 0);
+                //Verifico que la lista no este en el final
+                if (!datos->final())
+                    break;
+            } while (contador != 1);
+            break;
         }
         datos->siguiente();
     }
@@ -95,25 +106,30 @@ void obtenerInfoHash(datosParser*datos, SHA1 sha) {
     for (it = 0; it <= buffer.size(); it++)
         bufferAux[it] = buffer[it];
 
+    //Inicializo el sha1
     sha.inicializacion();
+    //Ingreso la cadena a calcularle el sha1
     sha.entrada(bufferAux, strlen(bufferAux));
+    //Obtengo la salida del sha1 en el mensajeDigerido 
     sha.salida(mensajeDigerido);
 
     std::cout << " --- Info Hash del archivo .torrent ---" << std::endl;
+    //Muestro por pantalla el hash tal cual sale del algoritmo 
     mostrarInfoHash(mensajeDigerido);
     std::cout << std::endl;
-    
-    // Pasaje de la salida del sha1 a string y luego a binario 
-    hashBinario=sha.sha1Abinario(sha.salidaAstring(mensajeDigerido));
-    std::cout<<hashBinario<<std::endl;
-    
+
+    //Pasa de la salida del sha1 a string y luego a su correspondiente binario 
+    hashBinario = sha.sha1Abinario(sha.salidaAstring(mensajeDigerido));
+    //Imprime por pantalla el binario del sha1 
+    std::cout << hashBinario << std::endl;
+
     delete []hashBinario;
     delete []bufferAux;
 
 
 }
 
-FILE* menuInicio() {
+FILE * menuInicio() {
 
     char bufferTorrent[512];
     int seleccion = 0;
@@ -171,9 +187,5 @@ void mostrarInfoHash(unsigned *hash) {
     cout << endl;
 
     cout.setf(flags);
-
-
-
-
 }
 
