@@ -18,7 +18,7 @@ ClienteTorrent::ClienteTorrent() {
 	//crear el peer_id
 	//sacar los datos del archivo de configuracion
 	puerto = PORT;
-	peerListener.listen(puerto,CANT_CLIENTES);
+	peerListener.listen(puerto, CANT_CLIENTES);
 
 }
 
@@ -53,7 +53,7 @@ void* ClienteTorrent::run() {
 								new PeerUp(conexionPeerNuevo, torrent);
 						if (peerNuevo != NULL) {
 							torrent->agregarPeer(peerNuevo);
-							//TODO peerNuevo->run(); o algo asi
+							peerNuevo->run();
 						}
 					}
 					//delete[] handshake;
@@ -75,8 +75,7 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 	return NULL;
 }
 
-void ClienteTorrent::finalizar()
-{
+void ClienteTorrent::finalizar() {
 	//implementar: yo hago esto ;) LU
 
 	activo = false;
@@ -101,30 +100,29 @@ std::string ClienteTorrent::getPeerId() {
 }
 
 Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
-	//implementar!
+	FILE* fpTorrent;
 
-	Torrent *t = new Torrent();
-	if (false /* t->inicializarTorrent(parser)*/ )
-	{
-		t->setControlador(controlador);
-		torrents.push_back(t); //agrego el torrent a la lista de torrents
-		//TODO ver como comenzar la descarga del torrent
-		//t->conectarTracker();
+	if ((fpTorrent = fopen(ruta.c_str(), "r")) == NULL) {
+		return NULL;
+	} else {
+		BencodeParser parserTorrent(fpTorrent);
+		Torrent *t = new Torrent();
+		if ( t->inicializarTorrent(&parserTorrent)){
+			t->setControlador(controlador);
+			torrents.push_back(t); //agrego el torrent a la lista de torrents
+			t->run();
+		} else {
+			delete t;
+			t = NULL;
+		}
+		return t;
 	}
-	else
-	{
-		delete t;
-		t = NULL;
-	}
-
-	return t;
 }
 
 void ClienteTorrent::borrarTorrent(Torrent *t) {
 	std::list<Torrent*>::iterator it = torrents.begin();
 	while (it != torrents.end()) {
-		if ( (*it) == t)
-		{
+		if ((*it) == t) {
 			t->detener();//join??
 			delete t;
 			return;

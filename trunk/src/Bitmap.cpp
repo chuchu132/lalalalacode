@@ -9,7 +9,7 @@
 #include <cstring>
 #include <cmath>
 
-#include <iostream> //TODO borrar
+
 
 Bitmap::Bitmap() {
 	bitmap = NULL;
@@ -18,8 +18,6 @@ Bitmap::Bitmap() {
 }
 
 Bitmap::Bitmap(const Bitmap& original){
-
-	std::cout<<"COPIA de BITMAP"<<std::endl;
 	if(original.inicializado){
 	bitmap = new char[original.tamanio];
 	tamanio = original.tamanio;

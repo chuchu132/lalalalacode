@@ -28,6 +28,11 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 	return true;
 }
 
+void Torrent::run(){
+
+
+}
+
 bool Torrent::conectarTracker(std::string url, int port) {
 	return tracker->connect(url, port);
 }
@@ -78,18 +83,25 @@ std::list<Peer*>* Torrent::getListaPeers(){
 //implementar.. los valores estan para probar
 void Torrent::continuar() {
 	estado = T_ACTIVO;
+	activo = true;
 }
 
 void Torrent::detener() {
 	estado = T_DETENIDO;
+	activo = false;
 }
 
 void Torrent::pausar() {
 	estado = T_PAUSADO;
+	activo = false;
 }
 
 std::string Torrent::getEstado() {
 	return estado;
+}
+
+bool Torrent::estaActivo(){
+	return activo;
 }
 
 unsigned int Torrent::getTamanio() {
@@ -119,3 +131,5 @@ void Torrent::refrescarPeers()
 {
 	//todo implementar
 }
+
+

@@ -14,59 +14,61 @@ using namespace std;
 class Sha1 {
 private:
 
-    unsigned constanteSha1[5]; // Constantes que utiliza el algoritmo Sha1
+	unsigned constanteSha1[5]; // Constantes que utiliza el algoritmo Sha1
 
-    unsigned bufferMensaje[5]; // Buffers para el mensaje a ser digerido
-    unsigned longitudInferior; // Longitud en bits del mensaje
-    unsigned longitudSuperior; // Longitud en bits del mensaje
+	unsigned bufferMensaje[5]; // Buffers para el mensaje a ser digerido
+	unsigned longitudInferior; // Longitud en bits del mensaje
+	unsigned longitudSuperior; // Longitud en bits del mensaje
 
-    bool error; // Atributo para verificar si hubo un error en el mensaje
+	bool error; // Atributo para verificar si hubo un error en el mensaje
 
-    unsigned char bloquesMensaje[64]; // bloques de mensaje de 512 bits 512-bit
-    int IndiceArrayBloques; // Indice para el array de bloques del mensaje
+	unsigned char bloquesMensaje[64]; // bloques de mensaje de 512 bits 512-bit
+	int IndiceArrayBloques; // Indice para el array de bloques del mensaje
 
-//Metodos de la clase SHA1
+	//Metodos de la clase SHA1
 
 public:
 
-    // Constructor
+	// Constructor
 	Sha1();
 
-    // Destructor
-    virtual ~Sha1();
+	// Destructor
+	virtual ~Sha1();
 
-    // Inicializa los atributos de la clase para el ingreso de un nuevo mensaje a procesar
-    void inicializacion();
+	// Inicializa los atributos de la clase para el ingreso de un nuevo mensaje a procesar
+	void inicializacion();
 
-    // Devuelve el mensaje procesado en el parametro mensajeDigerido.
-    // Si hubo un error devuelve false , en caso contrario true
-    bool salida(unsigned *mensajeDigerido);
+	// Devuelve el mensaje procesado en el parametro mensajeDigerido.
+	// Si hubo un error devuelve false , en caso contrario true
+	bool salida(unsigned *mensajeDigerido);
 
-    // Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
-    void entrada(const char *mensaje, unsigned longitud);
+	// Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
+	void entrada(const char *mensaje, unsigned longitud);
 
-    //TODO Implementar
-    static std::string hashAstring(char* hashBinario);
+	// Recibe como parametros la salida del sha1 y la pasa a una cadena que se devuelve finalizado el metodo
+	std::string salidaAstring(unsigned *salidaSha1);
+
+	std::string codificar(const char* mensaje,int longitud);
 
 private:
 
-    //  Procesa los bloques del mensaje
-    void procesarBloques();
+	//  Procesa los bloques del mensaje
+	void procesarBloques();
 
-    //  Setea los primeros 16 bits del bloque
-    void setearBloque(unsigned Aux[], unsigned bufferTemp[]);
+	//  Setea los primeros 16 bits del bloque
+	void setearBloque(unsigned Aux[], unsigned bufferTemp[]);
 
-    //  Asigna los valores parciales procesados
-    void asignacionParcial(unsigned & temp, unsigned bufferTemp[]);
+	//  Asigna los valores parciales procesados
+	void asignacionParcial(unsigned & temp, unsigned bufferTemp[]);
 
-    //  Realiza el padding de bloque actual a 512 bits
-    void rellenado();
+	//  Realiza el padding de bloque actual a 512 bits
+	void rellenado();
 
-    //  Rellena con ceros hasta el valor del limite que se le envia como parametro
-    void rellenadoParcial(int limite);
+	//  Rellena con ceros hasta el valor del limite que se le envia como parametro
+	void rellenadoParcial(int limite);
 
-    //  Realiza la operacion de  shift del algoritmo
-    inline unsigned circularShift(int cantBits, unsigned bloque);
+	//  Realiza la operacion de  shift del algoritmo
+	inline unsigned circularShift(int cantBits, unsigned bloque);
 
 
 };

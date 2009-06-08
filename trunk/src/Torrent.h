@@ -45,6 +45,11 @@ public:
 	 */
 	bool inicializarTorrent(BencodeParser* parser);
 
+	/*No confundir con el run de Threads, este metodo se llama
+	 * una vez que el torrent esta inicializado, y pone a descargar/compartir el archivo
+	 * TODO Implementar*/
+	void run();
+
 	bool conectarTracker(std::string url,int port);
 
 	/* Se envia un GET con la siguiente informacion:
@@ -79,8 +84,6 @@ public:
 	/* refresca la lista de peers del torrent. Pide peers al Tracker */
 	void refrescarPeers();
 
-
-
 	/* Calcula cuantos bytes faltan descargar */
 	unsigned int left();
 
@@ -110,6 +113,7 @@ public:
 
 	void setControlador(Controlador* ctrl);
 
+	bool estaActivo();
 
 private:
 
@@ -121,6 +125,7 @@ private:
 	std::string info_hash;
 	std::string nombre;
 	std::string estado;
+	bool activo;
 	int port; // puerto donde esta escuchando el Cliente.
 	unsigned int uploaded;
 	unsigned int downloaded;

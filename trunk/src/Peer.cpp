@@ -83,7 +83,7 @@ bool Peer::procesar(char* buffer, int length) {
 
 	}
 	return true;
-	//TODO implementar
+
 }
 
 bool Peer::sendHandshake() {
@@ -182,7 +182,7 @@ bool Peer::sendPiece(int index, int begin, int lenght) {
 		delete[] buffer;
 		return retorno;
 	} else {
-		//TODO error cerrar conexion/dar de baja
+		peerRemoto->close();
 	}
 	return false;
 }
@@ -220,7 +220,6 @@ void Peer::procesarPiece(int index,int begin,int longitud,char* data ){
 	torrent->getFileManager()->writeBlock(index,begin,longitud,data);
 	if(torrent->getFileManager()->getBitmap().estaMarcada(index)){
 		repartirHave(index);
-		//TODO ver si hace falta desmarcar
 		bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
 	}
 }
