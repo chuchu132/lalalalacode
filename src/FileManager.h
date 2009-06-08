@@ -57,8 +57,7 @@ private:
 	 * obtenida del .torrent.
 	 * */
 	Bitmap bitmap;
-	//TODO agregar una lista de mutex y bloquear escritura por archivo.
-	std::list<Archivo*> archivos;
+	std::list<Archivo*> archivos; //informacion sobre los distintos archivos, sirve para partir la descarga al final.
 	int tamanioPieza;
 	int bloquesXPieza;
 	int bytesTotales; //tamnio total de los archivos a descargar VER no convendria que sea unsigned??????

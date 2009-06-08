@@ -108,11 +108,12 @@ std::string ParserMensaje::crearGetConNumwant(std::string info_hash,
 }
 
 std::string ParserMensaje::getHash(char* handshakeMsj) {
+	Sha1 sha;
 	int saltoHastaHash;
 	char hashBinario[20];
 	memcpy(&saltoHastaHash, handshakeMsj, sizeof(int));
 	memcpy(hashBinario, (handshakeMsj + saltoHastaHash), LEN_SHA1);
-	return Sha1::hashAstring(hashBinario);
+	return sha.salidaAstring((unsigned int *)hashBinario);
 }
 
 char ParserMensaje::decodificarId(char* buffer){

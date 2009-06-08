@@ -1,5 +1,6 @@
 
 #include "Sha1.h"
+#include <sstream>
 
 Sha1::Sha1() {
 
@@ -199,9 +200,20 @@ unsigned Sha1::circularShift(int cantBits, unsigned bloque) {
     return ((bloque << cantBits) & 0xFFFFFFFF) | ((bloque & 0xFFFFFFFF) >> (32 - cantBits));
 }
 
-//TODO implementar
-std::string Sha1::hashAstring(char* hashBinario){
-	std::string nada;
-	return nada;
+std::string Sha1::salidaAstring(unsigned *salidaSha1) {
+	std::stringstream buffer;
+	int i;
+    for (i = 0; i < 5; i++)
+        buffer<< hex<< salidaSha1[i];
+         //retorna la salida del sha1 en forma de una cadena
+    return buffer.str();
+}
+
+std::string Sha1::codificar(const char* mensaje, int longitud){
+	unsigned int mensajeDigerido[5];
+	inicializacion();
+	entrada(mensaje,longitud);
+	salida(mensajeDigerido);
+	return salidaAstring(mensajeDigerido);
 }
 

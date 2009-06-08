@@ -11,8 +11,6 @@ BencodeParser::BencodeParser(FILE*fp) {
 }
 
 BencodeParser::~BencodeParser() {
-
-    fclose(fp);
 }
 
 void BencodeParser::procesar() {

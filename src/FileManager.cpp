@@ -7,6 +7,8 @@
 
 #include "FileManager.h"
 #include <fstream>
+#include "Sha1.h"
+
 
 FileManager::FileManager() {
 
@@ -72,18 +74,17 @@ void FileManager::writeBlock(int index,int begin,int longitud,char* block){
 		}
 	}
 }
-//TODO descomentar cuando este sha1
+
 bool FileManager::verificarHashPieza(int index){
-//	char pieza[tamanioPieza];
-//	int offset = (index * tamanioPieza);
-//	descarga->seekg(offset);
-//	descarga->get(pieza,tamanioPieza);
-//	Sha1 sha1Encoder;
-//	std::string hashObtenido = sha1Encoder.codificar(pieza,tamanioPieza);
-//	std::string hashOriginal;
-//	hashOriginal.assign(hashPiezas,index*LEN_SHA1_ASCII,LEN_SHA1_ASCII);
-//	return (hashOriginal.compare(hashObtenido) == 0);
-	return true;
+	char pieza[tamanioPieza];
+	int offset = (index * tamanioPieza);
+	descarga.seekg(offset);
+	descarga.get(pieza,tamanioPieza);
+	Sha1 sha1Encoder;
+	std::string hashObtenido = sha1Encoder.codificar(pieza,tamanioPieza);
+	std::string hashOriginal;
+	hashOriginal.assign(hashPiezas,index*LEN_SHA1_ASCII,LEN_SHA1_ASCII);//TODO probar que el 2do arg sea correcto y no vaya un blbla-1
+	return (hashOriginal.compare(hashObtenido) == 0);
 }
 
 std::list<Archivo*>::iterator FileManager::getIteratorArchivos()
