@@ -1,8 +1,7 @@
 
 #include "Sha1.h"
-#include <sstream>
 
-Sha1::Sha1() {
+SHA1::SHA1() {
 
     constanteSha1[0] = 0x5A827999;
     constanteSha1[1] = 0x6ED9EBA1;
@@ -12,11 +11,11 @@ Sha1::Sha1() {
     inicializacion();
 }
 
-Sha1::~Sha1() {
+SHA1::~SHA1() {
     // The destructor does nothing
 }
 
-void Sha1::inicializacion() {
+void SHA1::inicializacion() {
 
     //Inicializo los atributos para procesar un nuevo mensaje
     error = false;
@@ -32,22 +31,21 @@ void Sha1::inicializacion() {
     bufferMensaje[4] = 0xC3D2E1F0;
 }
 
-
-void Sha1::entrada(const char *mensaje, unsigned longitud) {
+void SHA1::entrada(const char *mensaje, unsigned longitud) {
 
     //Verifico que no hay ningun error y que no se encuentre procesado el mensaje
     if ((!longitud) || (error)) {
         error = true;
     } else {
 
-        //Coloco el mensaje de entrad en el buffer
+        //Coloco el mensaje de entrad en el buffer 
         while (longitud-- && !error) {
             bloquesMensaje[IndiceArrayBloques++] = (*mensaje & 0xFF);
 
             longitudSuperior += 8;
-            //Fuerzo a que sea 32 bits
+            //Fuerzo a que sea 32 bits 
             longitudSuperior &= 0xFFFFFFFF;
-            //Proceso los bloques
+            //Proceso los bloques 
             if (IndiceArrayBloques == 64) {
                 procesarBloques();
             }
@@ -57,7 +55,7 @@ void Sha1::entrada(const char *mensaje, unsigned longitud) {
     }
 }
 
-bool Sha1::salida(unsigned *mensajeSalida) {
+bool SHA1::salida(unsigned *mensajeSalida) {
 
     int contador;
 
@@ -75,31 +73,30 @@ bool Sha1::salida(unsigned *mensajeSalida) {
     return true;
 }
 
-
-void Sha1::procesarBloques() {
+void SHA1::procesarBloques() {
 
     int cont;
     unsigned temp;
     unsigned Aux[100];
     unsigned bufferTemp[5];
 
-    //Inicializo el array
+    //Inicializo el array 
     setearBloque(Aux, bufferTemp);
 
-     //Proceso del algoritmo Sha1
+    //Proceso del algoritmo Sha1
     for (cont = 0; cont < 80; cont++) {
 
-        if (cont>=0 && cont <20)
-                temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | ((~bufferTemp[1]) & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[0];
+        if (cont >= 0 && cont < 20)
+            temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | ((~bufferTemp[1]) & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[0];
 
-        if (cont>=20 && cont <40)
-                temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[1];
+        if (cont >= 20 && cont < 40)
+            temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[1];
 
-        if (cont>=40 && cont <60)
-                temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | (bufferTemp[1] & bufferTemp[3]) | (bufferTemp[2] & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[2];
+        if (cont >= 40 && cont < 60)
+            temp = circularShift(5, bufferTemp[0]) + ((bufferTemp[1] & bufferTemp[2]) | (bufferTemp[1] & bufferTemp[3]) | (bufferTemp[2] & bufferTemp[3])) + bufferTemp[4] + Aux[cont] + constanteSha1[2];
 
-        if (cont>=60 && cont<80)
-                temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[3];
+        if (cont >= 60 && cont < 80)
+            temp = circularShift(5, bufferTemp[0]) + (bufferTemp[1] ^ bufferTemp[2] ^ bufferTemp[3]) + bufferTemp[4] + Aux[cont] + constanteSha1[3];
 
         asignacionParcial(temp, bufferTemp);
     }
@@ -113,7 +110,7 @@ void Sha1::procesarBloques() {
     IndiceArrayBloques = 0;
 }
 
-void Sha1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
+void SHA1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
 
     int cont;
 
@@ -135,7 +132,7 @@ void Sha1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
 
 }
 
-void Sha1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
+void SHA1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 
     int aux = 4;
 
@@ -155,7 +152,7 @@ void Sha1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 
 }
 
-void Sha1::rellenado() {
+void SHA1::rellenado() {
 
 
     //Se realiza el padding como establece el estandar, debe realizarse el padding a 512bits
@@ -188,7 +185,7 @@ void Sha1::rellenado() {
 
 }
 
-void Sha1::rellenadoParcial(int limite) {
+void SHA1::rellenadoParcial(int limite) {
 
     while (IndiceArrayBloques < limite) {
         bloquesMensaje[IndiceArrayBloques++] = 0;
@@ -196,24 +193,66 @@ void Sha1::rellenadoParcial(int limite) {
 
 }
 
-unsigned Sha1::circularShift(int cantBits, unsigned bloque) {
+unsigned SHA1::circularShift(int cantBits, unsigned bloque) {
     return ((bloque << cantBits) & 0xFFFFFFFF) | ((bloque & 0xFFFFFFFF) >> (32 - cantBits));
 }
 
-std::string Sha1::salidaAstring(unsigned *salidaSha1) {
-	std::stringstream buffer;
-	int i;
+char* SHA1::salidaAstring(unsigned *salidaSha1) {
+    int i;
+    char *hash = new char [20 * CHAR_BIT];
+    hash[0] = '\0';
+
     for (i = 0; i < 5; i++)
-        buffer<< hex<< salidaSha1[i];
-         //retorna la salida del sha1 en forma de una cadena
-    return buffer.str();
+        sprintf(hash, "%s%u", hash, salidaSha1[i]);
+
+    //retorna la salida del sha1 en forma de una cadena 
+    return hash;
 }
 
-std::string Sha1::codificar(const char* mensaje, int longitud){
-	unsigned int mensajeDigerido[5];
-	inicializacion();
-	entrada(mensaje,longitud);
-	salida(mensajeDigerido);
-	return salidaAstring(mensajeDigerido);
+char* SHA1::sha1Abinario(string hash) {
+
+    unsigned int n_bits, it, i, LEN_SHA1 = 20;
+
+    char *cadenaBinaria = new char [LEN_SHA1 * sizeof (char) ];
+
+    char ret, val;
+
+    if (hash.size() == 20)LEN_SHA1 = hash.size();
+
+    for (it = 0; it < LEN_SHA1; it++) {
+
+        ret = 0;
+        val = hash[it];
+        n_bits = sizeof ( char) * CHAR_BIT;
+
+        for (i = 0; i < n_bits; ++i) {
+            ret = (ret << 1) | (val & 1);
+            val >>= 1;
+        }
+
+        cadenaBinaria[it] = ret;
+    }
+    return cadenaBinaria;
 }
+
+void SHA1::imprimirShaBinario(string hash) {
+
+    unsigned int n_bits, i, it, LEN_SHA1 = 20;
+    char val;
+
+    if (hash.size() < 20) LEN_SHA1 = hash.size();
+
+    for (it = 0; it < LEN_SHA1; it++) {
+        val = hash[it];
+        n_bits = sizeof ( char) * CHAR_BIT;
+
+        for (i = 0; i < n_bits; ++i) {
+            std::cout << !!(val & 1);
+            val >>= 1;
+        }
+    }
+
+
+}
+
 
