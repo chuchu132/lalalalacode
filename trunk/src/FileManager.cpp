@@ -84,7 +84,7 @@ bool FileManager::verificarHashPieza(int index){
 	Sha1 sha1Encoder;
 	std::string hashObtenido = sha1Encoder.codificar(pieza,tamanioPieza);
 	std::string hashOriginal;
-	hashOriginal.assign(hashPiezas,index*LEN_SHA1_ASCII,LEN_SHA1_ASCII);//TODO probar que el 2do arg sea correcto y no vaya un blbla-1
+	//hashOriginal.assign(hashPiezas,index*LEN_SHA1_ASCII,LEN_SHA1_ASCII);//TODO probar que el 2do arg sea correcto y no vaya un blbla-1
 	return (hashOriginal.compare(hashObtenido) == 0);
 }
 

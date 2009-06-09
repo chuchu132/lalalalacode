@@ -62,7 +62,7 @@ private:
 	int bloquesXPieza;
 	int bytesTotales; //tamnio total de los archivos a descargar VER no convendria que sea unsigned??????
 	std::fstream descarga; // file del tamanio del total de la descarga.
-	std::string hashPiezas;
+	unsigned int*  hashPiezas;
 };
 
 #endif /* FILEMANAGER_H_ */
