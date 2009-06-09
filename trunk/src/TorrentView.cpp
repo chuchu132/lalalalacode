@@ -208,9 +208,10 @@ void TorrentView::eraseSelectedRow()
 	if(iter) //si hay algo seleccionado
 	{
 	  iter = list_torrents->erase(iter); //borro y obtengo un iter a la sgte fila
-	  if(iter)						//si existe la fila
-		  selection->select(iter);	//selecciono la fila
+	  if (iter)	//si existe la fila
+		 selection->select(iter);	//selecciono la fila
 	}
+
 }
 
 void TorrentView::selectNext()
@@ -250,19 +251,24 @@ void TorrentView::empty()
 
 void TorrentView::updateRow(Torrent *t)
 {
+	std::cout<<"__actualizar fila "<<std::endl;
+
 	//busco la fila
 	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+	std::cout<<"iter "<<std::endl;
 	Gtk::TreeModel::Row row;
 	while (iter != list_torrents->children().end())
 	{
 		row = *iter;
 		if (row[col_torrent] == t)
 		{
+			std::cout<<"_____ update "<<std::endl;
 			this->updateRowValues(row,t);
 			break;
 		}
 		iter++;
 	}
+	std::cout<<"__fin actualizar "<<std::endl;
 }
 
 std::string TorrentView::showBytes(float bytes)

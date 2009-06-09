@@ -28,6 +28,7 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 	builder->get_widget(PESTANIAS,page);
 	builder->get_widget(VIEW_PEERS,view_peers);
 	builder->get_widget(VIEW_FILES,view_files);
+	//builder->get_widget(VIEW_NOTIF,view_notif);
 	setPeersView();
 	setStatusView();
 	setFilesView();
@@ -75,6 +76,19 @@ void AttributesView::setFilesView()
 	}
 
 }
+
+void AttributesView::setNotificationsView()
+{
+	columns_notif.add(col_notif);
+	list_notif = Gtk::ListStore::create(columns_notif);
+/*	view_notif->set_model(list_notif);
+
+	int i = this->view_notif->append_column("Notificaciones", col_notif);
+	Gtk::TreeViewColumn* pColumn = this->view_files->get_column(i);
+	pColumn->set_resizable(true);
+*/
+}
+
 void AttributesView::showInfo(Torrent *t)
 {
 	torrent = t;
@@ -109,12 +123,13 @@ void AttributesView::showFiles()
 {
 	//muestra los archivos del torrent
 	std::cout<<"mostrar archivos"<<std::endl;
+	list_files->clear();
 /* todo descomentar
 	std::list<Archivo*>::iterator it = torrent->getFileManager()->getIteratorArchivos();
 	Gtk::TreeModel::Row row;
 	while (torrent->getFileManager()->getEndArchivos())
 	{
-		Gtk::TreeModel::Row row = (* list_torrents->append());
+		Gtk::TreeModel::Row row = (* list_files->append());
 		row[col_size_file] = (*it)->getTamanio();//show bytes!!!
 		row[col_name_file] = (*it)->getNombre();
 		row[col_path_file] = (*it)->getPath();
@@ -128,4 +143,10 @@ void AttributesView::on_page_selected(GtkNotebookPage* page, guint page_num)
 	page_selected = page_num;
 	if (this->torrent != NULL)
 		this->showInfo(this->torrent);
+}
+
+void AttributesView::addNotification(std::string notif)
+{
+	Gtk::TreeModel::Row row = (* list_notif->append());
+	row[col_notif] = notif;
 }

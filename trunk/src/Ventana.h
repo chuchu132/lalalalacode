@@ -75,9 +75,6 @@ private:
 	//obtiene las ventanas desde el archivo
 	void getWindows();
 
-	//obtiene los menues desde el archivo
-	void getMenues();
-
 	//obtiene los tree view desde el archivo
 	void getViews();
 
@@ -104,6 +101,8 @@ public:
 
 	/* agrega el torrent a la vista */
 	void addTorrent(Torrent*);
+
+	void mostrarNotificacion(std::string);
 
 };
 

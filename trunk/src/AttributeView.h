@@ -23,13 +23,18 @@ private:
 	Gtk::TreeView *view_files;
 	Glib::RefPtr<Gtk::ListStore> list_files;
 
+	Gtk::TreeView *view_notif;
+	Glib::RefPtr<Gtk::ListStore> list_notif;
+
 	Gtk::TreeModelColumnRecord columns_peers;
 	Gtk::TreeModelColumnRecord columns_files;
+	Gtk::TreeModelColumnRecord columns_notif;
 
 	Gtk::TreeModelColumn<Glib::ustring> col_name_peers;
 	Gtk::TreeModelColumn<Glib::ustring> col_name_files;
 	Gtk::TreeModelColumn<Glib::ustring> col_size_files;
 	Gtk::TreeModelColumn<Glib::ustring> col_path_files;
+	Gtk::TreeModelColumn<std::string> col_notif;
 	//Gtk::TreeModelColumn<Glib::ustring> col_progress_peers;
 	//TODO ver que columnas tiene que tener esta seccion
 
@@ -50,6 +55,7 @@ private:
 	void setPeersView();
 	void setStatusView();
 	void setFilesView();
+	void setNotificationsView();
 
 	void on_page_selected(GtkNotebookPage* , guint);
 
@@ -64,6 +70,9 @@ public:
 
 	/* muestra informacion sobre el torrent */
 	void showInfo(Torrent *t);
+
+	/* agrega una notificacion en la vista */
+	void addNotification(std::string);
 
 };
 
