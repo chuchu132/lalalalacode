@@ -1,6 +1,6 @@
-/*
- * File:   BencodeParser.h
- * Author:
+/* 
+ * File:   BencodeParser.h 
+ *
  * Created on 30 de mayo de 2009, 23:25
  */
 
@@ -10,32 +10,25 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string>
-#include <string.h>
 #include <iostream>
-#include "Archivo.h"
-#include "Constantes.h"
+#include <list>
+#include "datosParser.h"
 
-/*
- * TODO
- * Crear Lista de Archivos con la info del .torrent
- * Ver metodos que no tiene sentido llamar desde afuera del objeto, ponerlos private.
- */
+#define BUFSIZE 1000
 
+using namespace std;
 
 class BencodeParser {
 private:
 
-    char buf[BUFSIZE]; //Almacena las cadenas temporarias
+    char buf[BUFSIZE]; //Almacena las cadenas temporarias 
     int pos; //posicion dentro del buffer
     int buf_lim; //limite del buffer
 
     FILE *fp; //File pointer al archivo .torrent que se esta parseando
     int ident; //Atributo para visualizacion por pantalla
-    int salida; //Atributo para la salida del parser
 
-    std::list<Archivo*> listaArchivos; // TODO agregado por ale.
-    int tamanioPiezas; // el tamanio de las piezas es comun para todos los archivos del .torrent
-                       //TODO agregado por ale.
+    datosParser *datos; //objeto que almacena los datos obtenidos del parser
 
 public:
 
@@ -60,11 +53,7 @@ public:
     //Parser para las cadenas de caracteres
     void parserCadena(FILE *fp);
 
-    //Funcion que se encarga de realizar una tabulacion cuando se imprime
-    //es una funcion temporal solo para la visualizacion por pantalla
-    void identacion(int indent);
-
-    //Realiza la Carga del buffer
+    //Realiza la Carga del buffer 
     void cargarBuffer();
 
     //Verifica si el buffer esta listo
@@ -79,8 +68,10 @@ public:
     //Verifica que el caracter sea un match con el que se le pasa como parametro
     void compararCaracter(char c);
 
-    std::list<Archivo*> getListaArchivos(); // TODO ver bien este metodo
-    int getTamanioPiezas();
+    //Retorna la salida del parser
+    datosParser* salidaParser();
+
+
 };
 
 #endif	/* _BENCODEPARSER_H */
