@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   sha1.h
  *
  * Created on 27 de mayo de 2009, 11:04
@@ -38,21 +38,24 @@ public:
     void inicializacion();
 
     // Devuelve el mensaje procesado en el parametro mensajeDigerido.
-    // Si hubo un error devuelve false , en caso contrario true 
+    // Si hubo un error devuelve false , en caso contrario true
     bool salida(unsigned *mensajeDigerido);
 
     // Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
     void entrada(const char *mensaje, unsigned longitud);
 
     // Recibe como parametros la salida del sha1 y la pasa a una cadena que se devuelve finalizado el metodo
-    char* salidaAstring(unsigned *salidaSha1);
+    std::string salidaAstring(unsigned *salidaSha1);
 
     // Recibe como entrada el string que representa al sha1 y lo convierte en su correspondiente binario
-    // devuelve el resultado en una cadena 
+    // devuelve el resultado en una cadena
     char* sha1Abinario(string hash);
 
     // Imprime por pantalla la cadena sha1 binario que se obtuvo con el metodo Sha1Abinario()
     void imprimirShaBinario(string hash);
+
+    std::string codificar(const char* mensaje, int longitud);
+
 
 private:
 
@@ -62,7 +65,7 @@ private:
     //  Setea los primeros 16 bits del bloque
     void setearBloque(unsigned Aux[], unsigned bufferTemp[]);
 
-    //  Asigna los valores parciales procesados 
+    //  Asigna los valores parciales procesados
     void asignacionParcial(unsigned & temp, unsigned bufferTemp[]);
 
     //  Realiza el padding de bloque actual a 512 bits

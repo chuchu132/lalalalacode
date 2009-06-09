@@ -1,5 +1,5 @@
-/* 
- * File:   BencodeParser.h 
+/*
+ * File:   BencodeParser.h
  *
  * Created on 30 de mayo de 2009, 23:25
  */
@@ -13,15 +13,14 @@
 #include <iostream>
 #include <list>
 #include "datosParser.h"
-
-#define BUFSIZE 1000
+#include "Constantes.h"
 
 using namespace std;
 
 class BencodeParser {
 private:
 
-    char buf[BUFSIZE]; //Almacena las cadenas temporarias 
+    char buf[BUFSIZE]; //Almacena las cadenas temporarias
     int pos; //posicion dentro del buffer
     int buf_lim; //limite del buffer
 
@@ -53,7 +52,7 @@ public:
     //Parser para las cadenas de caracteres
     void parserCadena(FILE *fp);
 
-    //Realiza la Carga del buffer 
+    //Realiza la Carga del buffer
     void cargarBuffer();
 
     //Verifica si el buffer esta listo

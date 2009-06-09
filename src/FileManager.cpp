@@ -6,6 +6,7 @@
  */
 
 #include "FileManager.h"
+#include "Constantes.h"
 #include <fstream>
 #include "Sha1.h"
 
@@ -27,20 +28,20 @@ FileManager::~FileManager() {
  * info obtenida del .torrent y del archivo descargado parcialmente.
  * */
 void FileManager::inicializar(BencodeParser* parser) {
-	archivos = parser->getListaArchivos(); //TODO ojo quedan apuntando los mismos Archivo*
-	std::list<Archivo*>::iterator it;
-	int acum = 0;
-	for (it = archivos.begin(); it != archivos.end(); ++it) {
-		acum += (*it)->getTamanio();
-	}
-	bytesTotales = acum;
-	tamanioPieza = parser->getTamanioPiezas();
-	bloquesXPieza = (tamanioPieza > TAM_BLOQUES) ? (tamanioPieza / TAM_BLOQUES)
-			: 1; // division entre potencias de 2
-
-	int tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0
-			: 1);
-	bitmap.inicializarBitmap(tamBitmapBytes);
+//	archivos = parser->getListaArchivos(); //TODO ojo quedan apuntando los mismos Archivo*
+//	std::list<Archivo*>::iterator it;
+//	int acum = 0;
+//	for (it = archivos.begin(); it != archivos.end(); ++it) {
+//		acum += (*it)->getTamanio();
+//	}
+//	bytesTotales = acum;
+//	tamanioPieza = parser->getTamanioPiezas();
+//	bloquesXPieza = (tamanioPieza > TAM_BLOQUES) ? (tamanioPieza / TAM_BLOQUES)
+//			: 1; // division entre potencias de 2
+//
+//	int tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0
+//			: 1);
+//	bitmap.inicializarBitmap(tamBitmapBytes);
 
 }
 

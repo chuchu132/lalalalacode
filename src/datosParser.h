@@ -2,8 +2,7 @@
 #include <list>
 #include <iostream>
 #include <string>
-#define TRUE 0
-#define FALSE 1
+
 
 using namespace std;
 
@@ -11,7 +10,7 @@ class datosParser {
 private:
 
     list <char*> datos; // Lista con las cadenas de datos del .torrent
-    list <char*>::iterator it; //iterador para recorrer la lista 	
+    list <char*>::iterator it; //iterador para recorrer la lista
 
 public:
 
