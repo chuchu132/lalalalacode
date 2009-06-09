@@ -8,7 +8,7 @@
 #include "TestBencodeParser.h"
 #include "../src/BencodeParser.h"
 #include "../src/DatosParser.h"
-#include <string>
+#include <cstring>
 #include <cstdio>
 
 TestBencodeParser::TestBencodeParser() {
