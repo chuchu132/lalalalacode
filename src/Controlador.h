@@ -56,7 +56,7 @@ public:
 	/* agrega el torrent en la vista */
 	void agregarTorrentEnVista(Torrent*);
 
-	/* muestra un mensaje en la barra de estado */
+	/* muestra un mensaje en la pestaña de notificaciones */
 	void notificarVista(std::string);
 
 };

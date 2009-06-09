@@ -63,6 +63,6 @@ void Controlador::refrescarPeers(Torrent *t)
 
 void Controlador::notificarVista(std::string notificacion)
 {
-	//ventana->mostrar(notificacion);
+	ventana->mostrarNotificacion(notificacion);
 }
 

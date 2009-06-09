@@ -5,6 +5,7 @@
  *      Author: teddy
  */
 
+//TODO.. DESCOMENTAR !
 #include "Ventana.h"
 
 #define WINDOW_FILE "res/wind.vista"
@@ -39,7 +40,6 @@ Ventana::Ventana()
 		std::cout<<"archivo cargado"<<std::endl;
 
 		this->getWindows();
-		this->getMenues();
 		this->getViews();
 
 		//obtengo los botones
@@ -81,7 +81,7 @@ void Ventana::getWindows()
 	about_window = 0;
 	builder->get_widget(ABOUT_WINDOW, about_window);
 	std::cout<<"ventana acerca de cargada"<<std::endl;
-	about_window->show();
+	//about_window->show();
 
 	//obtengo la ventana de seleccion de archivo
 	select_window = 0;
@@ -106,16 +106,9 @@ void Ventana::getViews()
 	Gtk::TreeView *view_cat = 0;
 	builder->get_widget(VIEW_CATEGORIES,view_cat);
 	torrents->setCategoriesView(view_cat);
+	attr->setAttributesView(builder);
 	std::cout<<"view torrents cargado"<<std::endl;
 
-	attr->setAttributesView(builder);
-}
-
-void Ventana::getMenues()
-{
-	//builder->add_from_file(MENU_ABOUT, menu_about);
-	//builder->get_widget(MENU_ABOUT, menu_about);
-	//	builder->get_widget_derived(MENU_ABOUT, menu_about);
 }
 
 void Ventana::getButtons()
@@ -141,7 +134,6 @@ void Ventana::connectSignals()
 	button_down->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_down_clicked) );
 	button_peers->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_peers_clicked) );
 
-//	menu_about->signal_activate().connect(sigc::mem_fun(*this,&Ventana::on_menu_about));
 }
 
 void Ventana::on_button_add_clicked()
@@ -161,13 +153,13 @@ void Ventana::on_button_add_clicked()
 
 void Ventana::on_button_erase_clicked()
 {
-	//tal vez deberia desabilitar las señales de row selected!!!!!!!!!!
+	//tal vez deberia desabilitar las señales de row selected
 	std::cout<<"borrar clickeado"<<std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
 		torrents->eraseSelectedRow();
-		controlador->borrarTorrent(t);
+		//controlador->borrarTorrent(t);
 	}
 }
 
@@ -260,3 +252,7 @@ void Ventana::addTorrent(Torrent *t)
 	torrents->addRow(t);
 }
 
+void Ventana::mostrarNotificacion(std::string notificacion)
+{
+	attr->addNotification(notificacion);
+}

@@ -85,19 +85,19 @@ std::list<Peer*>* Torrent::getListaPeers(){
 void Torrent::continuar() {
 	estado = T_ACTIVO;
 	activo = true;
-	//controlador->actualizarEstado(this);
+	controlador->actualizarEstado(this);
 }
 
 void Torrent::detener() {
 	estado = T_DETENIDO;
 	activo = false;
-	//controlador->actualizarEstado(this);
+	controlador->actualizarEstado(this);
 }
 
 void Torrent::pausar() {
 	estado = T_PAUSADO;
 	activo = false;
-	//controlador->actualizarEstado(this);
+	controlador->actualizarEstado(this);
 }
 
 std::string Torrent::getEstado() {
