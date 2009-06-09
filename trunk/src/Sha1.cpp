@@ -1,5 +1,6 @@
 
 #include "Sha1.h"
+#include "Constantes.h"
 
 Sha1::Sha1() {
 
@@ -38,14 +39,14 @@ void Sha1::entrada(const char *mensaje, unsigned longitud) {
         error = true;
     } else {
 
-        //Coloco el mensaje de entrad en el buffer 
+        //Coloco el mensaje de entrad en el buffer
         while (longitud-- && !error) {
             bloquesMensaje[IndiceArrayBloques++] = (*mensaje & 0xFF);
 
             longitudSuperior += 8;
-            //Fuerzo a que sea 32 bits 
+            //Fuerzo a que sea 32 bits
             longitudSuperior &= 0xFFFFFFFF;
-            //Proceso los bloques 
+            //Proceso los bloques
             if (IndiceArrayBloques == 64) {
                 procesarBloques();
             }
@@ -80,7 +81,7 @@ void Sha1::procesarBloques() {
     unsigned Aux[100];
     unsigned bufferTemp[5];
 
-    //Inicializo el array 
+    //Inicializo el array
     setearBloque(Aux, bufferTemp);
 
     //Proceso del algoritmo Sha1
@@ -197,7 +198,7 @@ unsigned Sha1::circularShift(int cantBits, unsigned bloque) {
     return ((bloque << cantBits) & 0xFFFFFFFF) | ((bloque & 0xFFFFFFFF) >> (32 - cantBits));
 }
 
-char* Sha1::salidaAstring(unsigned *salidaSha1) {
+std::string Sha1::salidaAstring(unsigned *salidaSha1) {
     int i;
     char *hash = new char [20 * CHAR_BIT];
     hash[0] = '\0';
@@ -205,19 +206,19 @@ char* Sha1::salidaAstring(unsigned *salidaSha1) {
     for (i = 0; i < 5; i++)
         sprintf(hash, "%s%u", hash, salidaSha1[i]);
 
-    //retorna la salida del sha1 en forma de una cadena 
-    return hash;
+    std::string salida = hash;
+    delete[] hash;
+    //retorna la salida del sha1 en forma de una cadena
+    return salida;
 }
 
 char* Sha1::sha1Abinario(string hash) {
 
-    unsigned int n_bits, it, i, LEN_SHA1 = 20;
+    int n_bits, it, i;
 
     char *cadenaBinaria = new char [LEN_SHA1 * sizeof (char) ];
 
     char ret, val;
-
-    if (hash.size() == 20)LEN_SHA1 = hash.size();
 
     for (it = 0; it < LEN_SHA1; it++) {
 
@@ -237,12 +238,10 @@ char* Sha1::sha1Abinario(string hash) {
 
 void Sha1::imprimirShaBinario(string hash) {
 
-    unsigned int n_bits, i, it, LEN_SHA1 = 20;
+    int n_bits, i, it;
     char val;
 
-    if (hash.size() < 20) LEN_SHA1 = hash.size();
-
-    for (it = 0; it < LEN_SHA1; it++) {
+     for (it = 0; it < LEN_SHA1; it++) {
         val = hash[it];
         n_bits = sizeof ( char) * CHAR_BIT;
 
@@ -255,4 +254,10 @@ void Sha1::imprimirShaBinario(string hash) {
 
 }
 
-
+std::string Sha1::codificar(const char* mensaje, int longitud){
+	unsigned int mensajeDigerido[5];
+	inicializacion();
+	entrada(mensaje,longitud);
+	salida(mensajeDigerido);
+	return salidaAstring(mensajeDigerido);
+}

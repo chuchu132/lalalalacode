@@ -45,9 +45,9 @@ void datosParser::anterior() {
 bool datosParser::final() {
 
     if (it != datos.end())
-        return FALSE;
+        return false;
     else
-        return TRUE;
+        return true;
 
 }
 
