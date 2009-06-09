@@ -54,7 +54,7 @@ bool DatosParser::final(){
 	return (it == datos.end());
 }
 
-bool DatosParser::obtenerDatoPorNombre(std::string nombre, char* dato ,int& longitud){
+bool DatosParser::obtenerDatoPorNombre(std::string nombre, char** dato ,int& longitud){
 	 list <char*>::iterator unit;
 	 list<int>::iterator unitLongitudes;
 	 unit = datos.begin();
@@ -70,8 +70,8 @@ bool DatosParser::obtenerDatoPorNombre(std::string nombre, char* dato ,int& long
 				 unit++;
 				 unitLongitudes++;
 				 longitud = (*unitLongitudes);
-				 dato = new char[longitud];
-				 memcpy(dato,(*unit),longitud);
+				 *dato = new char[longitud];
+				 memcpy(*dato,(*unit),longitud);
 				 encontro = true;
 			 }
 		 }

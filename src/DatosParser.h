@@ -46,7 +46,7 @@ public:
    bool final();
 
    // Dado un nombre, devuelve en "dato" una copia del dato. Hay que liberar la memoria de "dato"
-   bool obtenerDatoPorNombre(std::string nombre, char* dato,int& longitud);
+   bool obtenerDatoPorNombre(std::string nombre, char** dato,int& longitud);
 
 };
 
