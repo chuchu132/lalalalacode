@@ -52,6 +52,7 @@ void Torrent::agregarPeer(Peer* peerNuevo){
 	llaveListaPeers.lock();
 	peers.insert(peers.end(), peerNuevo);
 	llaveListaPeers.unlock();
+	//controlador->actualizarEstado(this);
 }
 
 std::string Torrent::getNombre() {
@@ -84,16 +85,19 @@ std::list<Peer*>* Torrent::getListaPeers(){
 void Torrent::continuar() {
 	estado = T_ACTIVO;
 	activo = true;
+	//controlador->actualizarEstado(this);
 }
 
 void Torrent::detener() {
 	estado = T_DETENIDO;
 	activo = false;
+	//controlador->actualizarEstado(this);
 }
 
 void Torrent::pausar() {
 	estado = T_PAUSADO;
 	activo = false;
+	//controlador->actualizarEstado(this);
 }
 
 std::string Torrent::getEstado() {
@@ -130,6 +134,7 @@ void Torrent::setControlador(Controlador* ctrl)
 void Torrent::refrescarPeers()
 {
 	//todo implementar
+	//controlador->actualizarEstado(this);
 }
 
 
