@@ -10,7 +10,7 @@ BencodeParser::BencodeParser(FILE*fp) {
     }
 
 BencodeParser::~BencodeParser() {
-    fclose(fp);
+
  }
 
 void BencodeParser::procesar() {
@@ -68,9 +68,7 @@ void BencodeParser::parserNumerico(FILE *fp) {
     compararCaracter('e');
     std::stringstream cadena;
     cadena<<val;
-    char* dato =  new char[cadena.str().length()+1];
-    memcpy(dato,cadena.str().c_str(),cadena.str().length()+1);
-    datos.agregarDato(dato,cadena.str().length());
+    datos.agregarDato(cadena.str().c_str(),cadena.str().length() + 1);
 
 }
 
@@ -88,8 +86,8 @@ void BencodeParser::parserCadena(FILE *fp) {
            s[i] = obtenerCaracter();
     }
     s[len] = '\0';
-    datos.agregarDato(s,len);
-
+    datos.agregarDato(s,len + 1);
+    delete[] s;
 }
 
 void BencodeParser::cargarBuffer() {
@@ -124,14 +122,9 @@ void BencodeParser::compararCaracter(char c) {
 DatosParser* BencodeParser::salidaParser(){
 	   DatosParser* salida = new DatosParser();
 	   datos.primero();
-
 	   while (!datos.final()){
-
-	   	char *cadena= new char [datos.obtenerLongitudDato()+1];
-	        memcpy(cadena,datos.obtenerDato(),datos.obtenerLongitudDato() +1);
-		salida->agregarDato(cadena,datos.obtenerLongitudDato());
-	        datos.siguiente();
-
+		  salida->agregarDato(datos.obtenerDato(),datos.obtenerLongitudDato());
+        datos.siguiente();
 	   }
 	   return salida;
 }

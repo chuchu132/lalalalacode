@@ -9,7 +9,7 @@ DatosParser::DatosParser(){
 DatosParser::~DatosParser(){
 
    for (it=datos.begin();it!=datos.end();it++)
-	delete [] *it;
+	delete[] *it;
 }
 
 void DatosParser::agregarDato(const char *cadena,int longitud){

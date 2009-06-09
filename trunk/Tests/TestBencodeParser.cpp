@@ -27,9 +27,14 @@ void TestBencodeParser::run() {
 		DatosParser* datos = parser.salidaParser();
 		datos->primero();
 		while (!datos->final()) {
+			if(memcmp("pieces",datos->obtenerDato(),datos->obtenerLongitudDato())==0){
+				datos->siguiente();
+				datos->siguiente();
+			}
 			std::cout << datos->obtenerDato() << std::endl;
 			datos->siguiente();
 		}
+		delete datos;
 		fclose(fp);
 	} else {
 		assert(false, "ERROR AL ABRIR EL ARCHIVO");
