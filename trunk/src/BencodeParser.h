@@ -12,7 +12,7 @@
 #include <string>
 #include <iostream>
 #include <list>
-#include "datosParser.h"
+#include "DatosParser.h"
 #include "Constantes.h"
 
 using namespace std;
@@ -27,7 +27,7 @@ private:
     FILE *fp; //File pointer al archivo .torrent que se esta parseando
     int ident; //Atributo para visualizacion por pantalla
 
-    datosParser *datos; //objeto que almacena los datos obtenidos del parser
+    DatosParser datos;//objeto que almacena los datos obtenidos del parser
 
 public:
 
@@ -68,7 +68,7 @@ public:
     void compararCaracter(char c);
 
     //Retorna la salida del parser
-    datosParser* salidaParser();
+    DatosParser* salidaParser ();
 
 
 };

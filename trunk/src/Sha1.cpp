@@ -1,6 +1,9 @@
 
 #include "Sha1.h"
+#include <sstream>
 #include "Constantes.h"
+#include <limits.h>
+#include "ParserCgi.h"
 
 Sha1::Sha1() {
 
@@ -199,59 +202,12 @@ unsigned Sha1::circularShift(int cantBits, unsigned bloque) {
 }
 
 std::string Sha1::salidaAstring(unsigned *salidaSha1) {
-    int i;
-    char *hash = new char [20 * CHAR_BIT];
-    hash[0] = '\0';
-
+	std::stringstream buffer;
+	int i;
     for (i = 0; i < 5; i++)
-        sprintf(hash, "%s%u", hash, salidaSha1[i]);
-
-    std::string salida = hash;
-    delete[] hash;
-    //retorna la salida del sha1 en forma de una cadena
-    return salida;
-}
-
-char* Sha1::sha1Abinario(string hash) {
-
-    int n_bits, it, i;
-
-    char *cadenaBinaria = new char [LEN_SHA1 * sizeof (char) ];
-
-    char ret, val;
-
-    for (it = 0; it < LEN_SHA1; it++) {
-
-        ret = 0;
-        val = hash[it];
-        n_bits = sizeof ( char) * CHAR_BIT;
-
-        for (i = 0; i < n_bits; ++i) {
-            ret = (ret << 1) | (val & 1);
-            val >>= 1;
-        }
-
-        cadenaBinaria[it] = ret;
-    }
-    return cadenaBinaria;
-}
-
-void Sha1::imprimirShaBinario(string hash) {
-
-    int n_bits, i, it;
-    char val;
-
-     for (it = 0; it < LEN_SHA1; it++) {
-        val = hash[it];
-        n_bits = sizeof ( char) * CHAR_BIT;
-
-        for (i = 0; i < n_bits; ++i) {
-            std::cout << !!(val & 1);
-            val >>= 1;
-        }
-    }
-
-
+        buffer<< hex<< salidaSha1[i];
+         //retorna la salida del sha1 en forma de una cadena
+    return buffer.str();
 }
 
 std::string Sha1::codificar(const char* mensaje, int longitud){
