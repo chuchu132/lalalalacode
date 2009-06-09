@@ -1,4 +1,7 @@
 
+#ifndef DATOSPARSER_H_
+#define DATOSPARSER_H_
+
 #include <list>
 #include <iostream>
 #include <string>
@@ -22,7 +25,7 @@ public:
    ~DatosParser();
 
    //Agrega un dato al fin de la lista
-   void agregarDato(char * cadena,int longitud);
+   void agregarDato(const char * cadena,int longitud);
 
    //Retorna el valor al que se encuentre apuntando el iterador
    char* obtenerDato();
@@ -42,4 +45,9 @@ public:
    //Verifica si se llego al final de la lista, devuelve FALSE si aun no llego y TRUE si esta en el final
    bool final();
 
+   // Dado un nombre, devuelve en "dato" una copia del dato. Hay que liberar la memoria de "dato"
+   bool obtenerDatoPorNombre(std::string nombre, char* dato,int& longitud);
+
 };
+
+#endif
