@@ -46,7 +46,7 @@ int main(int argc, char** argv) {
         //Verifico antes de imprimir que el proximo dato no sea uno de los flags de inicio o fin de diccionario
         if (strcmp(datos->obtenerDato(), "Fin") && strcmp(datos->obtenerDato(), "Inicio"))
             std::cout << datos->obtenerDato() << std::endl;
-        //Verifico el campo pieces para obtener los hash de cada piece
+      //  Verifico el campo pieces para obtener los hash de cada piece
         if (!strcmp(datos->obtenerDato(), "pieces")) {
             datos->siguiente();
 
@@ -70,7 +70,7 @@ void obtenerInfoHash(datosParser*datos, SHA1 sha) {
 
     //Se obtiene el info hash calculando el valor de sha1 de la cadena del torrent perteneciente al diccionario "info"
     string buffer;
-    int salida = 1, contador = 1;
+    int salida = 1, contador = 0;
     unsigned mensajeDigerido[5];
 
     char *hashBinario;
@@ -79,7 +79,7 @@ void obtenerInfoHash(datosParser*datos, SHA1 sha) {
     while (datos->final()) {
         // Verifico si el campo actual es de campo clave "info"
         if (!strcmp(datos->obtenerDato(), "info")) {
-            datos->siguiente();
+            datos->siguiente(); 
             //Proceso todo el diccionario "info" en un string para luego aplicarle el sha1
             do {
                 if (!strcmp(datos->obtenerDato(), "Inicio")) {
@@ -88,14 +88,14 @@ void obtenerInfoHash(datosParser*datos, SHA1 sha) {
                     if (!strcmp(datos->obtenerDato(), "Fin")) {
                         contador--;
                     } else {
-                        buffer = buffer + datos->obtenerDato();
+                        buffer = buffer + datos->obtenerDato(); 
                     }
                 }
                 datos->siguiente();
                 //Verifico que la lista no este en el final
                 if (!datos->final())
                     break;
-            } while (contador != 1);
+            } while (contador != 0);
             break;
         }
         datos->siguiente();
