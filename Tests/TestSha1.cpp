@@ -29,23 +29,21 @@ void MostrarSalidaSha(unsigned *mensajeDigerido)
 
 void TestSha1::run(){
 	Sha1		sha;
-	unsigned	mensajeDigerido[5];
 	const char* prueba1 = "abc";
 	const char* prueba2 = "abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq";
 
-	sha.inicializacion();
-	sha.entrada(prueba1,strlen(prueba1));
-	Test::assert(sha.salida(mensajeDigerido),"Se puede procesar prueba 1");
-	std::cout<<"SHA1 obtenido = ";
-	MostrarSalidaSha(mensajeDigerido);
+	std::string salida;
+	salida = sha.codificar(prueba1,strlen(prueba1));
+	Test::assert(true,"Se puede procesar prueba 1");
+	std::cout<<"SHA1 obtenido = "<<salida<<std::endl;
 	std::cout<<"SHA1 esperado = "<<"A9993E36 4706816A BA3E2571 7850C26C 9CD0D89D"<<std::endl;
 
-	sha.inicializacion();
-	sha.entrada(prueba2,strlen(prueba2));
-	Test::assert(sha.salida(mensajeDigerido),"Se puede procesar prueba 2");
-	std::cout<<"SHA1 obtenido = ";
-	MostrarSalidaSha(mensajeDigerido);
+
+	salida = sha.codificar(prueba2,strlen(prueba2));
+	Test::assert(true,"Se puede procesar prueba 2");
+	std::cout<<"SHA1 obtenido = "<<salida<<std::endl;
 	std::cout<<"SHA1 esperado = "<<"84983E44 1C3BD26E BAAE4AA1 F95129E5 E54670F1"<<std::endl;
+
 }
 
 

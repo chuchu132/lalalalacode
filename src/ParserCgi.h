@@ -16,7 +16,6 @@ public:
 	virtual ~ParserCgi();
 	std::string codificar(std::string original);
 	std::string decodificar(std::string codificado);
-private:
 	bool hayQueCodificarlo(char caracter);
 	char intAhexaChar(int numero);
 	int hexaCharAint(char hexa);
