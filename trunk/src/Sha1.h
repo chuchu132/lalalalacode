@@ -10,7 +10,7 @@ using namespace std;
 #ifndef _SHA1_H_
 #define _SHA1_H_
 
-class SHA1 {
+class Sha1 {
 private:
 
     unsigned constanteSha1[5]; // Constantes que utiliza el algoritmo Sha1
@@ -29,10 +29,10 @@ private:
 public:
 
     // Constructor
-    SHA1();
+    Sha1();
 
     // Destructor
-    virtual ~SHA1();
+    virtual ~Sha1();
 
     // Inicializa los atributos de la clase para el ingreso de un nuevo mensaje a procesar
     void inicializacion();

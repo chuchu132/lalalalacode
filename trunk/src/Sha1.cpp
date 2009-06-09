@@ -1,7 +1,7 @@
 
 #include "Sha1.h"
 
-SHA1::SHA1() {
+Sha1::Sha1() {
 
     constanteSha1[0] = 0x5A827999;
     constanteSha1[1] = 0x6ED9EBA1;
@@ -11,11 +11,11 @@ SHA1::SHA1() {
     inicializacion();
 }
 
-SHA1::~SHA1() {
+Sha1::~Sha1() {
     // The destructor does nothing
 }
 
-void SHA1::inicializacion() {
+void Sha1::inicializacion() {
 
     //Inicializo los atributos para procesar un nuevo mensaje
     error = false;
@@ -31,7 +31,7 @@ void SHA1::inicializacion() {
     bufferMensaje[4] = 0xC3D2E1F0;
 }
 
-void SHA1::entrada(const char *mensaje, unsigned longitud) {
+void Sha1::entrada(const char *mensaje, unsigned longitud) {
 
     //Verifico que no hay ningun error y que no se encuentre procesado el mensaje
     if ((!longitud) || (error)) {
@@ -55,7 +55,7 @@ void SHA1::entrada(const char *mensaje, unsigned longitud) {
     }
 }
 
-bool SHA1::salida(unsigned *mensajeSalida) {
+bool Sha1::salida(unsigned *mensajeSalida) {
 
     int contador;
 
@@ -73,7 +73,7 @@ bool SHA1::salida(unsigned *mensajeSalida) {
     return true;
 }
 
-void SHA1::procesarBloques() {
+void Sha1::procesarBloques() {
 
     int cont;
     unsigned temp;
@@ -110,7 +110,7 @@ void SHA1::procesarBloques() {
     IndiceArrayBloques = 0;
 }
 
-void SHA1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
+void Sha1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
 
     int cont;
 
@@ -132,7 +132,7 @@ void SHA1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
 
 }
 
-void SHA1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
+void Sha1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 
     int aux = 4;
 
@@ -152,7 +152,7 @@ void SHA1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 
 }
 
-void SHA1::rellenado() {
+void Sha1::rellenado() {
 
 
     //Se realiza el padding como establece el estandar, debe realizarse el padding a 512bits
@@ -185,7 +185,7 @@ void SHA1::rellenado() {
 
 }
 
-void SHA1::rellenadoParcial(int limite) {
+void Sha1::rellenadoParcial(int limite) {
 
     while (IndiceArrayBloques < limite) {
         bloquesMensaje[IndiceArrayBloques++] = 0;
@@ -193,11 +193,11 @@ void SHA1::rellenadoParcial(int limite) {
 
 }
 
-unsigned SHA1::circularShift(int cantBits, unsigned bloque) {
+unsigned Sha1::circularShift(int cantBits, unsigned bloque) {
     return ((bloque << cantBits) & 0xFFFFFFFF) | ((bloque & 0xFFFFFFFF) >> (32 - cantBits));
 }
 
-char* SHA1::salidaAstring(unsigned *salidaSha1) {
+char* Sha1::salidaAstring(unsigned *salidaSha1) {
     int i;
     char *hash = new char [20 * CHAR_BIT];
     hash[0] = '\0';
@@ -209,7 +209,7 @@ char* SHA1::salidaAstring(unsigned *salidaSha1) {
     return hash;
 }
 
-char* SHA1::sha1Abinario(string hash) {
+char* Sha1::sha1Abinario(string hash) {
 
     unsigned int n_bits, it, i, LEN_SHA1 = 20;
 
@@ -235,7 +235,7 @@ char* SHA1::sha1Abinario(string hash) {
     return cadenaBinaria;
 }
 
-void SHA1::imprimirShaBinario(string hash) {
+void Sha1::imprimirShaBinario(string hash) {
 
     unsigned int n_bits, i, it, LEN_SHA1 = 20;
     char val;
