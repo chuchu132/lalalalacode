@@ -1,4 +1,4 @@
-/* 
+/*
  * File:   main.cpp
  *
  * Created on 30 de mayo de 2009, 23:25
@@ -12,7 +12,7 @@
 #include "BencodeParser.h"
 #include "sha1.h"
 /*
- * 
+ *
  */
 using namespace std;
 
@@ -39,7 +39,7 @@ int main(int argc, char** argv) {
 
     //Se obtienen los resultados del parser
     datos = parser.salidaParser();
-     
+
     //Imprime por pantalla los resultados del parser
     datos->primero();
     while (!datos->final()) {
@@ -69,69 +69,70 @@ void obtenerInfoHash(DatosParser*datos, SHA1 sha,FILE *fp) {
 
 
     //Se obtiene el info hash calculando el valor de sha1 de la cadena del torrent perteneciente al diccionario "info"
-   
-    int salida = 1, contador = 0;
+
+
     unsigned mensajeDigerido[5];
 
-    
-    int i=0;
+
+ unsigned   int i=0;
     fseek(fp,0,SEEK_END);
-    int fin=ftell(fp);
-    
-    
+    unsigned   int fin=ftell(fp);
+
+
     fseek(fp,0,SEEK_SET);
-    
+
     //Imprimo por completo el archivo .torrent
     do{
-        
+
         char c=fgetc(fp);
-        printf("%c",c>32?c:'.'); 
+        printf("%c",c>32?c:'.');
         i++;
     }while (i<fin);
-    
+
     fseek(fp,datos->getOffsetInfoHash(),SEEK_SET);
     i=ftell(fp);
     char* buffer=new char[fin];
-    
+
     int pos=0;
     do{
-        
-        buffer[pos]=fgetc(fp);        
+
+        buffer[pos]=fgetc(fp);
         i++;pos++;
     }while (i<datos->getOffsetFin()-1);
-   
-    
+
+
     std::cout<< std::endl<<std::endl;
    // fread(buffer,1,fin-datos->getOffsetInfoHash(),fp);
-    
-  //  printf("%d\n",(fin-datos->getOffsetInfoHash()));
-    for (int pos=0;pos<datos->getOffsetFin()-datos->getOffsetInfoHash(); pos++){
+
+
+    printf("%d\n",datos->getOffsetFin()-datos->getOffsetInfoHash());
+    for (unsigned int pos=0;pos<(datos->getOffsetFin()-datos->getOffsetInfoHash()); pos++){
         char c=buffer[pos];
         printf("%c",c>32?c:'.');
     }
-    
+
    // std::cout<< " fin archivo "<< fin<<" actual "<< i<<std::endl;
     //printf("chau");
     //std::cout<<buffer<<std::endl;
     //Inicializo el sha1
     sha.inicializacion();
-    
+
     //Ingreso la cadena a calcularle el sha1
-    sha.entrada(buffer,datos->getOffsetFin()-datos->getOffsetInfoHash()+2);
-    //Obtengo la salida del sha1 en el mensajeDigerido 
+    sha.entrada(buffer,datos->getOffsetFin()-datos->getOffsetInfoHash()-1);
+    //Obtengo la salida del sha1 en el mensajeDigerido
     sha.salida(mensajeDigerido);
 
     std::cout<<std::endl << " --- Info Hash del archivo .torrent ---" << std::endl;
-    //Muestro por pantalla el hash tal cual sale del algoritmo 
+    //Muestro por pantalla el hash tal cual sale del algoritmo
     mostrarInfoHash(mensajeDigerido);
     std::cout << std::endl;
-    
+
     sha.entrada(sha.salidaAstring(mensajeDigerido),strlen(sha.salidaAstring(mensajeDigerido)));
     sha.salida(mensajeDigerido);
-    
+
     mostrarInfoHash(mensajeDigerido);
-    
-    
+
+
 }
 
 FILE * menuInicio() {
@@ -162,7 +163,7 @@ FILE * menuInicio() {
 void ProcesarHash(char * datos, SHA1 sha) {
 
     // Particiona el string con los hash de cada piece en cadenas de 20 bytes y los muestra por pantalla
-    // Al ser datos binarios los que se envian del hash los caracteres que se muestran no son legibles 
+    // Al ser datos binarios los que se envian del hash los caracteres que se muestran no son legibles
     char hash[20];
     int pos;
     unsigned aux;
@@ -183,7 +184,7 @@ void mostrarInfoHash(unsigned *hash) {
     ios::fmtflags flags;
 
     flags = cout.setf(ios::hex , ios::basefield);
- 
+
     for (int i = 0; i < 5; i++) {
         cout << hash[i] ;
     }
