@@ -70,14 +70,15 @@ void obtenerInfoHash(DatosParser*datos, SHA1 sha,FILE *fp) {
 
     //Se obtiene el info hash calculando el valor de sha1 de la cadena del torrent perteneciente al diccionario "info"
 
-
     unsigned mensajeDigerido[5];
 
+    
+    unsigned int i=0;
 
- unsigned   int i=0;
     fseek(fp,0,SEEK_END);
-    unsigned   int fin=ftell(fp);
 
+    unsigned int fin=ftell(fp);
+    
 
     fseek(fp,0,SEEK_SET);
 
@@ -102,37 +103,29 @@ void obtenerInfoHash(DatosParser*datos, SHA1 sha,FILE *fp) {
 
 
     std::cout<< std::endl<<std::endl;
-   // fread(buffer,1,fin-datos->getOffsetInfoHash(),fp);
-
-
-    printf("%d\n",datos->getOffsetFin()-datos->getOffsetInfoHash());
+  
+  //  printf("%d\n",datos->getOffsetFin()-datos->getOffsetInfoHash());
     for (unsigned int pos=0;pos<(datos->getOffsetFin()-datos->getOffsetInfoHash()); pos++){
+
         char c=buffer[pos];
         printf("%c",c>32?c:'.');
     }
 
-   // std::cout<< " fin archivo "<< fin<<" actual "<< i<<std::endl;
-    //printf("chau");
-    //std::cout<<buffer<<std::endl;
     //Inicializo el sha1
     sha.inicializacion();
 
     //Ingreso la cadena a calcularle el sha1
+
     sha.entrada(buffer,datos->getOffsetFin()-datos->getOffsetInfoHash()-1);
+   
     //Obtengo la salida del sha1 en el mensajeDigerido
+
     sha.salida(mensajeDigerido);
 
     std::cout<<std::endl << " --- Info Hash del archivo .torrent ---" << std::endl;
     //Muestro por pantalla el hash tal cual sale del algoritmo
     mostrarInfoHash(mensajeDigerido);
-    std::cout << std::endl;
-
-    sha.entrada(sha.salidaAstring(mensajeDigerido),strlen(sha.salidaAstring(mensajeDigerido)));
-    sha.salida(mensajeDigerido);
-
-    mostrarInfoHash(mensajeDigerido);
-
-
+ 
 }
 
 FILE * menuInicio() {
