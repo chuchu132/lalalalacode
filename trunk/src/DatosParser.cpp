@@ -82,6 +82,27 @@ bool DatosParser::obtenerDatoPorNombre(std::string nombre, char** dato ,int& lon
 }
 
 
+void DatosParser::setOffsetInfoHash(unsigned offset){
+    
+  offsetInfoHash=offset;   
+
+}
 
 
+unsigned DatosParser::getOffsetInfoHash(){
+    
+    return offsetInfoHash;
+}
+
+void DatosParser::setOffsetFin(unsigned offset){
+    
+  offsetFin=offset;   
+
+}
+
+
+unsigned DatosParser::getOffsetFin(){
+    
+    return offsetFin;
+}
 

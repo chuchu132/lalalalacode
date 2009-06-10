@@ -16,6 +16,10 @@ private:
    list <char*> datos;// Lista con las cadenas de datos del .torrent
    list <char*>::iterator it;//iterador para recorrer la lista
    list<int>::iterator itLongitudes;
+   
+   unsigned offsetInfoHash;//Marca el offset inicial del diccionario info
+   unsigned offsetFin;//Marca el final del diccionario info
+   
 public:
 
    //Constructor
@@ -48,6 +52,19 @@ public:
    // Dado un nombre, devuelve en "dato" una copia del dato. Hay que liberar la memoria de "dato"
    bool obtenerDatoPorNombre(std::string nombre, char** dato,int& longitud);
 
+   // Setea el offset inicial del diccionario "info"
+   void setOffsetInfoHash( unsigned offset);
+   
+   //Obtiene el offset inicial del diccionario "info"
+   unsigned getOffsetInfoHash();
+   
+   //Setea el offset final del diccionario "info"
+   void setOffsetFin( unsigned offset);
+   
+   //Obtiene el offset final del diccionario "info"
+   unsigned getOffsetFin();
+   
+   
 };
 
 #endif
