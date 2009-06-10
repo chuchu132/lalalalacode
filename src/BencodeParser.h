@@ -29,6 +29,9 @@ private:
 
     DatosParser datos;//objeto que almacena los datos obtenidos del parser
 
+    int contador;
+    int diccionario;
+    
 public:
 
     //Constructor
