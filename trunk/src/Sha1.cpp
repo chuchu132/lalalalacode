@@ -79,8 +79,8 @@ bool Sha1::salida(unsigned *mensajeSalida) {
 
 void Sha1::procesarBloques() {
 
-    int cont;
-    unsigned temp;
+    int cont = 0;
+    unsigned temp = 0;
     unsigned Aux[100];
     unsigned bufferTemp[5];
 
