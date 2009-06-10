@@ -16,7 +16,7 @@
  */
 using namespace std;
 
-void obtenerInfoHash(datosParser*datos, SHA1 sha);
+void obtenerInfoHash(DatosParser*datos, SHA1 sha,FILE *fp);
 void ProcesarHash(char*hash, SHA1 sha);
 void MostrarSalidaSha(unsigned *message_digest);
 void mostrarInfoHash(unsigned *hash);
@@ -26,7 +26,7 @@ int main(int argc, char** argv) {
 
 
     FILE *fp;
-    datosParser *datos;
+    DatosParser *datos;
     SHA1 sha;
 
     if ((fp = menuInicio()) == NULL) return 1;
@@ -39,10 +39,10 @@ int main(int argc, char** argv) {
 
     //Se obtienen los resultados del parser
     datos = parser.salidaParser();
-
+     
     //Imprime por pantalla los resultados del parser
     datos->primero();
-    while (datos->final()) {
+    while (!datos->final()) {
         //Verifico antes de imprimir que el proximo dato no sea uno de los flags de inicio o fin de diccionario
         if (strcmp(datos->obtenerDato(), "Fin") && strcmp(datos->obtenerDato(), "Inicio"))
             std::cout << datos->obtenerDato() << std::endl;
@@ -50,7 +50,7 @@ int main(int argc, char** argv) {
         if (!strcmp(datos->obtenerDato(), "pieces")) {
             datos->siguiente();
 
-            ProcesarHash(datos->obtenerDato(), sha);
+      //      ProcesarHash(datos->obtenerDato(), sha);
 
         }
         datos->siguiente();
@@ -59,74 +59,79 @@ int main(int argc, char** argv) {
 
     std::cout << " --- Fin del Parser --- " << std::endl;
 
-    obtenerInfoHash(datos, sha);
+    obtenerInfoHash(datos, sha,fp);
 
     delete datos;
     return (EXIT_SUCCESS);
 }
 
-void obtenerInfoHash(datosParser*datos, SHA1 sha) {
+void obtenerInfoHash(DatosParser*datos, SHA1 sha,FILE *fp) {
 
 
     //Se obtiene el info hash calculando el valor de sha1 de la cadena del torrent perteneciente al diccionario "info"
-    string buffer;
+   
     int salida = 1, contador = 0;
     unsigned mensajeDigerido[5];
 
-    char *hashBinario;
-    datos->primero();
-    //Recorro la lista de datos desde el comienzo hasta el final
-    while (datos->final()) {
-        // Verifico si el campo actual es de campo clave "info"
-        if (!strcmp(datos->obtenerDato(), "info")) {
-            datos->siguiente(); 
-            //Proceso todo el diccionario "info" en un string para luego aplicarle el sha1
-            do {
-                if (!strcmp(datos->obtenerDato(), "Inicio")) {
-                    contador++;
-                } else {
-                    if (!strcmp(datos->obtenerDato(), "Fin")) {
-                        contador--;
-                    } else {
-                        buffer = buffer + datos->obtenerDato(); 
-                    }
-                }
-                datos->siguiente();
-                //Verifico que la lista no este en el final
-                if (!datos->final())
-                    break;
-            } while (contador != 0);
-            break;
-        }
-        datos->siguiente();
+    
+    int i=0;
+    fseek(fp,0,SEEK_END);
+    int fin=ftell(fp);
+    
+    
+    fseek(fp,0,SEEK_SET);
+    
+    //Imprimo por completo el archivo .torrent
+    do{
+        
+        char c=fgetc(fp);
+        printf("%c",c>32?c:'.'); 
+        i++;
+    }while (i<fin);
+    
+    fseek(fp,datos->getOffsetInfoHash(),SEEK_SET);
+    i=ftell(fp);
+    char* buffer=new char[fin];
+    
+    int pos=0;
+    do{
+        
+        buffer[pos]=fgetc(fp);        
+        i++;pos++;
+    }while (i<datos->getOffsetFin()-1);
+   
+    
+    std::cout<< std::endl<<std::endl;
+   // fread(buffer,1,fin-datos->getOffsetInfoHash(),fp);
+    
+  //  printf("%d\n",(fin-datos->getOffsetInfoHash()));
+    for (int pos=0;pos<datos->getOffsetFin()-datos->getOffsetInfoHash(); pos++){
+        char c=buffer[pos];
+        printf("%c",c>32?c:'.');
     }
-
-    char *bufferAux = new char [buffer.size() + 1];
-    int it;
-    for (it = 0; it <= buffer.size(); it++)
-        bufferAux[it] = buffer[it];
-
+    
+   // std::cout<< " fin archivo "<< fin<<" actual "<< i<<std::endl;
+    //printf("chau");
+    //std::cout<<buffer<<std::endl;
     //Inicializo el sha1
     sha.inicializacion();
+    
     //Ingreso la cadena a calcularle el sha1
-    sha.entrada(bufferAux, strlen(bufferAux));
+    sha.entrada(buffer,datos->getOffsetFin()-datos->getOffsetInfoHash()+2);
     //Obtengo la salida del sha1 en el mensajeDigerido 
     sha.salida(mensajeDigerido);
 
-    std::cout << " --- Info Hash del archivo .torrent ---" << std::endl;
+    std::cout<<std::endl << " --- Info Hash del archivo .torrent ---" << std::endl;
     //Muestro por pantalla el hash tal cual sale del algoritmo 
     mostrarInfoHash(mensajeDigerido);
     std::cout << std::endl;
-
-    //Pasa de la salida del sha1 a string y luego a su correspondiente binario 
-    hashBinario = sha.sha1Abinario(sha.salidaAstring(mensajeDigerido));
-    //Imprime por pantalla el binario del sha1 
-    std::cout << hashBinario << std::endl;
-
-    delete []hashBinario;
-    delete []bufferAux;
-
-
+    
+    sha.entrada(sha.salidaAstring(mensajeDigerido),strlen(sha.salidaAstring(mensajeDigerido)));
+    sha.salida(mensajeDigerido);
+    
+    mostrarInfoHash(mensajeDigerido);
+    
+    
 }
 
 FILE * menuInicio() {
@@ -147,7 +152,7 @@ FILE * menuInicio() {
         fp = fopen(bufferTorrent, "rb");
 
     } else {
-        fp = fopen("PSP.torrent", "rb");
+        fp = fopen("Naruto.torrent", "rb");
     }
 
     return fp;
@@ -177,11 +182,10 @@ void ProcesarHash(char * datos, SHA1 sha) {
 void mostrarInfoHash(unsigned *hash) {
     ios::fmtflags flags;
 
-    flags = cout.setf(ios::hex | ios::uppercase, ios::basefield);
-    cout.setf(ios::uppercase);
-
+    flags = cout.setf(ios::hex , ios::basefield);
+ 
     for (int i = 0; i < 5; i++) {
-        cout << hash[i] << ' ';
+        cout << hash[i] ;
     }
 
     cout << endl;

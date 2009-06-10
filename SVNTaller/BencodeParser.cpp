@@ -1,4 +1,5 @@
 
+#include <sstream>
 #include "BencodeParser.h"
 
 BencodeParser::BencodeParser(FILE*fp) {
@@ -7,14 +8,13 @@ BencodeParser::BencodeParser(FILE*fp) {
     pos = 0;
     buf_lim = 0;
     ident = 0;
-    datos=new datosParser();
+
+    diccionario = 0;
+    contador = 1;
 }
 
 BencodeParser::~BencodeParser() {
 
-    fclose(fp);
-    delete datos;
-   
 }
 
 void BencodeParser::procesar() {
@@ -41,32 +41,40 @@ void BencodeParser::parserDiccionario(FILE *fp) {
 
     compararCaracter('d');
     ident = 0;
-    char *inicioDic=new char[7];
-    char *finDic=new char[4];
-    //Seteo las cadena que sirven de identificadores de inicio y fin de un diccionario
-    strcpy(inicioDic,"Inicio");
-    strcpy(finDic,"Fin");
-    
-    datos->agregarDato(inicioDic);      
+
+    if (contador == 0) {
+        diccionario++;
+    }
+
     while (verCaracterSiguiente() != 'e') {
 
         parserCadena(fp);
-       
+
         procesar();
     }
-   
+
     compararCaracter('e');
-    datos->agregarDato(finDic);
-   
+
+    if (contador == 0) {
+        diccionario--;
+    }
+
+    if (diccionario == 0) {
+        std::cout<< " archivo "<<ftell(fp)<< " bufersize "<<BUFSIZE<< " posicion "<<pos<<std::endl;
+       
+        datos.setOffsetFin(ftell(fp) );//- BUFSIZE + pos);
+        contador = 1;
+        diccionario = -1;
+    }
 }
 
 void BencodeParser::parserLista(FILE*fp) {
 
     compararCaracter('l');
     ident = 1;
-    while (verCaracterSiguiente() != 'e') 
+    while (verCaracterSiguiente() != 'e')
         procesar();
-    
+
     compararCaracter('e');
 
 }
@@ -78,36 +86,34 @@ void BencodeParser::parserNumerico(FILE *fp) {
     while (isdigit(verCaracterSiguiente()))
         val = val * 10 + (obtenerCaracter() - '0');
     compararCaracter('e');
-   
-    char *cadena=new char[BUFSIZE];
-    sprintf (cadena,"%ld",val);
-    datos->agregarDato(cadena);
-   
+    std::stringstream cadena;
+    cadena << val;
+    datos.agregarDato(cadena.str().c_str(), cadena.str().length() + 1);
+
 }
 
 void BencodeParser::parserCadena(FILE *fp) {
-
-
     int len = 0;
-    
+
     while (isdigit(verCaracterSiguiente()))
         len = len * 10 + (obtenerCaracter() - '0');
 
-    
     compararCaracter(':');
     char *s = new char[len + 1];
     int i;
 
-    for (i = 0; i < len; ++i)
-           s[i] = obtenerCaracter();
-    s[len] = 0;
-   
-    datos->agregarDato(s);
-  
+    for (i = 0; i < len; ++i) {
+        s[i] = obtenerCaracter();
+    }
+    s[len] = '\0';
+    datos.agregarDato(s, len + 1);
+
+    if (!strcmp(s, "info")) {
+        datos.setOffsetInfoHash(pos);
+        contador = 0;
+    }
+    delete[] s;
 }
-
-
-
 
 void BencodeParser::cargarBuffer() {
     buf_lim = fread(buf, 1, BUFSIZE, fp);
@@ -132,27 +138,22 @@ char BencodeParser::obtenerCaracter() {
 
 void BencodeParser::compararCaracter(char c) {
     if (obtenerCaracter() != c) {
-        std::cout << "ERROR " << std::endl;
+        std::cerr << "ERROR AL PARSEAR .torrent " << std::endl;
         exit(1);
     }
 }
 
+DatosParser* BencodeParser::salidaParser() {
+    DatosParser* salida = new DatosParser();
+    datos.primero();
+    while (!datos.final()) {
+        salida->agregarDato(datos.obtenerDato(), datos.obtenerLongitudDato());
+        datos.siguiente();
+    }
 
-datosParser* BencodeParser::salidaParser(){
-
-   datosParser* salida=new datosParser();
-   datos->primero();
-   
-   while (datos->final()){  
-	
-   	char *cadena= new char [datos->obtenerLongitudDato()+1];
-        strcpy(cadena,datos->obtenerDato());
-	salida->agregarDato(cadena);
-        datos->siguiente();
-   
-   }
-   return salida; 
+    salida->setOffsetInfoHash(datos.getOffsetInfoHash());
+    salida->setOffsetFin(datos.getOffsetFin());
+    return salida;
 }
-
 
 

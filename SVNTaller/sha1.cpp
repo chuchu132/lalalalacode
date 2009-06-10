@@ -12,7 +12,7 @@ SHA1::SHA1() {
 }
 
 SHA1::~SHA1() {
-    // The destructor does nothing
+    
 }
 
 void SHA1::inicializacion() {
@@ -37,7 +37,7 @@ void SHA1::entrada(const char *mensaje, unsigned longitud) {
     if ((!longitud) || (error)) {
         error = true;
     } else {
-
+        
         //Coloco el mensaje de entrad en el buffer 
         while (longitud-- && !error) {
             bloquesMensaje[IndiceArrayBloques++] = (*mensaje & 0xFF);
@@ -115,7 +115,7 @@ void SHA1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
     int cont;
 
     for (cont = 0; cont < 16; cont++) {
-        Aux[cont] = ((unsigned) bloquesMensaje[cont * 4]) << 24;
+        Aux[cont]  = ((unsigned) bloquesMensaje[cont * 4]) << 24;
         Aux[cont] |= ((unsigned) bloquesMensaje[cont * 4 + 1]) << 16;
         Aux[cont] |= ((unsigned) bloquesMensaje[cont * 4 + 2]) << 8;
         Aux[cont] |= ((unsigned) bloquesMensaje[cont * 4 + 3]);
@@ -199,12 +199,18 @@ unsigned SHA1::circularShift(int cantBits, unsigned bloque) {
 
 char* SHA1::salidaAstring(unsigned *salidaSha1) {
     int i;
-    char *hash = new char [20 * CHAR_BIT];
-    hash[0]='\0';
+    char *hash = new char [20 * CHAR_BIT ];
+  
+    int inicio=0;
     
-    for (i = 0; i < 5; i++)
+    for (i = 0; i < 5; i++){
+        if (inicio!=0)
         sprintf(hash, "%s%u", hash, salidaSha1[i]);
-
+        else 
+            sprintf(hash, "%u", salidaSha1[i]);
+        
+    }
+    
     //retorna la salida del sha1 en forma de una cadena 
     return hash;
 }
