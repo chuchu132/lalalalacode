@@ -7,11 +7,14 @@ BencodeParser::BencodeParser(FILE*fp) {
     pos = 0;
     buf_lim = 0;
     ident = 0;
-    }
+
+    diccionario = 0;
+    contador = 1;
+}
 
 BencodeParser::~BencodeParser() {
 
- }
+}
 
 void BencodeParser::procesar() {
 
@@ -37,6 +40,11 @@ void BencodeParser::parserDiccionario(FILE *fp) {
 
     compararCaracter('d');
     ident = 0;
+
+    if (contador == 0) {
+        diccionario++;
+    }
+
     while (verCaracterSiguiente() != 'e') {
 
         parserCadena(fp);
@@ -46,6 +54,16 @@ void BencodeParser::parserDiccionario(FILE *fp) {
 
     compararCaracter('e');
 
+    if (contador == 0) {
+        diccionario--;
+    }
+
+    if (diccionario == 0) {
+
+        datos.setOffsetFin(ftell(fp) - BUFSIZE + pos + 1);
+        contador = 1;
+        diccionario = -1;
+    }
 }
 
 void BencodeParser::parserLista(FILE*fp) {
@@ -67,8 +85,8 @@ void BencodeParser::parserNumerico(FILE *fp) {
         val = val * 10 + (obtenerCaracter() - '0');
     compararCaracter('e');
     std::stringstream cadena;
-    cadena<<val;
-    datos.agregarDato(cadena.str().c_str(),cadena.str().length() + 1);
+    cadena << val;
+    datos.agregarDato(cadena.str().c_str(), cadena.str().length() + 1);
 
 }
 
@@ -79,14 +97,19 @@ void BencodeParser::parserCadena(FILE *fp) {
         len = len * 10 + (obtenerCaracter() - '0');
 
     compararCaracter(':');
-    char *s = new char[len+1];
+    char *s = new char[len + 1];
     int i;
 
-    for (i = 0; i < len; ++i){
-           s[i] = obtenerCaracter();
+    for (i = 0; i < len; ++i) {
+        s[i] = obtenerCaracter();
     }
     s[len] = '\0';
-    datos.agregarDato(s,len + 1);
+    datos.agregarDato(s, len + 1);
+
+    if (!strcmp(s, "info")) {
+        datos.setOffsetInfoHash(pos);
+        contador = 0;
+    }
     delete[] s;
 }
 
@@ -118,15 +141,17 @@ void BencodeParser::compararCaracter(char c) {
     }
 }
 
-
-DatosParser* BencodeParser::salidaParser(){
-	   DatosParser* salida = new DatosParser();
-	   datos.primero();
-	   while (!datos.final()){
-		  salida->agregarDato(datos.obtenerDato(),datos.obtenerLongitudDato());
+DatosParser* BencodeParser::salidaParser() {
+    DatosParser* salida = new DatosParser();
+    datos.primero();
+    while (!datos.final()) {
+        salida->agregarDato(datos.obtenerDato(), datos.obtenerLongitudDato());
         datos.siguiente();
-	   }
-	   return salida;
+    }
+
+    salida->setOffsetInfoHash(datos.getOffsetInfoHash());
+    salida->setOffsetFin(datos.getOffsetFin());
+    return salida;
 }
 
 
