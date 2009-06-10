@@ -9,7 +9,7 @@ BencodeParser::BencodeParser(FILE*fp) {
     ident = 0;
 
     diccionario = 0;
-    contador = 1;   
+    contador = 1;
 }
 
 BencodeParser::~BencodeParser() {
@@ -55,12 +55,13 @@ void BencodeParser::parserDiccionario(FILE *fp) {
     compararCaracter('e');
 
     if (contador == 0) {
-        diccionario--;       
+        diccionario--;
     }
 
     if (diccionario == 0) {
-       
-        datos.setOffsetFin(ftell(fp)-buf_lim+pos+1 );
+
+        datos.setOffsetFin(ftell(fp) - buf_lim + pos + 1);
+        procesarInfoHash();
         contador = 1;
         diccionario = -1;
     }
@@ -82,7 +83,7 @@ void BencodeParser::parserNumerico(FILE *fp) {
     compararCaracter('i');
     long val = 0;
     while (isdigit(verCaracterSiguiente()))
-        val = val * 10 + (obtenerCaracter() - '0');          
+        val = val * 10 + (obtenerCaracter() - '0');
     compararCaracter('e');
     std::stringstream cadena;
     cadena << val;
@@ -95,13 +96,13 @@ void BencodeParser::parserCadena(FILE *fp) {
 
     while (isdigit(verCaracterSiguiente()))
         len = len * 10 + (obtenerCaracter() - '0');
-    
+
     compararCaracter(':');
     char *s = new char[len + 1];
     int i;
 
     for (i = 0; i < len; ++i) {
-        s[i] = obtenerCaracter();        
+        s[i] = obtenerCaracter();
     }
     s[len] = '\0';
     datos.agregarDato(s, len + 1);
@@ -114,7 +115,7 @@ void BencodeParser::parserCadena(FILE *fp) {
 }
 
 void BencodeParser::cargarBuffer() {
-    buf_lim = fread(buf, 1, BUFSIZE, fp); 
+    buf_lim = fread(buf, 1, BUFSIZE, fp);
     pos = 0;
 }
 
@@ -148,11 +149,54 @@ DatosParser* BencodeParser::salidaParser() {
         salida->agregarDato(datos.obtenerDato(), datos.obtenerLongitudDato());
         datos.siguiente();
     }
-    
+
     salida->setOffsetInfoHash(datos.getOffsetInfoHash());
     salida->setOffsetFin(datos.getOffsetFin());
     return salida;
 }
 
+void BencodeParser::procesarInfoHash() {
 
+    SHA1 sha;
+    unsigned int i, pos = 0;
+    unsigned int vuelta=ftell(fp);
+    fseek(fp, datos.getOffsetInfoHash(), SEEK_SET);
+    i = ftell(fp);
+    char* buffer = new char[datos.getOffsetFin() - datos.getOffsetInfoHash() + 1];
+
+    do {
+        buffer[pos] = fgetc(fp);
+        i++;
+        pos++;
+    } while (i < datos.getOffsetFin() - 1);
+
+    //Inicializo el sha1
+    sha.inicializacion();
+
+    //Ingreso la cadena a calcularle el sha1
+    sha.entrada(buffer, datos.getOffsetFin() - datos.getOffsetInfoHash() - 1);
+
+    //Obtengo la salida del sha1 en el mensajeDigerido
+    sha.salida(mensajeInfoHash);
+
+    fseek(fp, vuelta , SEEK_SET);
+    std::cout<<ftell(fp)<<std::endl;
+    strcpy(info_hash, sha.sha1Abinario(sha.salidaAstring(mensajeInfoHash)));
+  
+    delete []buffer;
+}
+
+void BencodeParser::obtenerInfoHash(unsigned *mensaje) {
+
+    for (int i = 0; i < 5; i++)
+        mensaje[i] = mensajeInfoHash[i];
+}
+
+char* BencodeParser::getInfoHashBinario(){
+    
+    char *hash=new char[20*8];
+    strcpy(hash,info_hash);
+    
+    return hash;  
+}
 
