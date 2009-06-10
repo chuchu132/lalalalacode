@@ -100,12 +100,11 @@ std::string ClienteTorrent::getPeerId() {
 }
 
 Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
-	FILE* fpTorrent;
 
-	if ((fpTorrent = fopen(ruta.c_str(), "r")) == NULL) {
+	BencodeParser parserTorrent(ruta.c_str());
+	if (!parserTorrent.procesar()) {
 		return NULL;
 	} else {
-		BencodeParser parserTorrent(fpTorrent);
 		Torrent *t = new Torrent();
 		if ( t->inicializarTorrent(&parserTorrent)){
 			t->setControlador(controlador);
