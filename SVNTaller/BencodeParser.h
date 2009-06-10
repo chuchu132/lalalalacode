@@ -14,7 +14,7 @@
 #include <list>
 #include "DatosParser.h"
 #include "Constantes.h"
-
+#include "sha1.h"
 using namespace std;
 
 class BencodeParser {
@@ -30,7 +30,10 @@ private:
     DatosParser datos;//objeto que almacena los datos obtenidos del parser
 
     int contador;
-    int diccionario; 
+    int diccionario;
+    
+    unsigned mensajeInfoHash[5]; //Mensaje digerido del info_hash como lo devuelve el sha1
+    char info_hash[20 * 8];//info_hash devuelto por el sha1 en cadena binaria
     
 public:
 
@@ -73,7 +76,14 @@ public:
     //Retorna la salida del parser
     DatosParser* salidaParser ();
 
-
+    //Obtiene el info_hash del .torrent y lo guarda en mensajeInfoHash
+    void procesarInfoHash();
+    
+    //Devuelve el info hash como array de unsigned , como lo devuelve el sha1
+    void obtenerInfoHash(unsigned *);
+    
+    //Devuelve el info hash en su forma binaria
+    char* getInfoHashBinario ();
 };
 
 #endif	/* _BENCODEPARSER_H */

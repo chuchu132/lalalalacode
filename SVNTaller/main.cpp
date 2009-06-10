@@ -1,3 +1,6 @@
+
+#include "BencodeParser.h"
+
 /*
  * File:   main.cpp
  *
@@ -56,10 +59,13 @@ int main(int argc, char** argv) {
         datos->siguiente();
     }
     //Fin de la impresion de los datos obtenidos
-
-    std::cout << " --- Fin del Parser --- " << std::endl;
-
-    obtenerInfoHash(datos, sha,fp);
+    
+    std::cout << " --- Fin del Parser --- " << std::endl<<std::endl;
+    
+    unsigned mensaje[5];
+    parser.obtenerInfoHash(mensaje);
+    mostrarInfoHash(mensaje);
+  //  obtenerInfoHash(datos, sha,fp);
 
     delete datos;
     return (EXIT_SUCCESS);
