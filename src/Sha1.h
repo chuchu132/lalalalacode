@@ -42,6 +42,13 @@ public:
 	// Recibe como parametros la salida del sha1 y la pasa a una cadena que se devuelve finalizado el metodo
 	std::string salidaAstring(unsigned *salidaSha1);
 
+	// Devuelve el mensaje procesado en el parametro mensajeDigerido.
+	// Si hubo un error devuelve false , en caso contrario true
+	bool salida(unsigned *mensajeDigerido);
+
+	// Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
+	void entrada(const char *mensaje, unsigned longitud);
+
 private:
 
 	//  Procesa los bloques del mensaje
@@ -61,14 +68,6 @@ private:
 
 	//  Realiza la operacion de  shift del algoritmo
 	inline unsigned circularShift(int cantBits, unsigned bloque);
-
-	// Devuelve el mensaje procesado en el parametro mensajeDigerido.
-	// Si hubo un error devuelve false , en caso contrario true
-	bool salida(unsigned *mensajeDigerido);
-
-	// Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
-	void entrada(const char *mensaje, unsigned longitud);
-
 
 };
 #endif

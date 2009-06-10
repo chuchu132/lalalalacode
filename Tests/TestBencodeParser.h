@@ -15,6 +15,7 @@ public:
 	TestBencodeParser();
 	virtual ~TestBencodeParser();
 	void run();
+	void test(const char* url);
 };
 
 #endif /* TESTBENCODEPARSER_H_ */
