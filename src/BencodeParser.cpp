@@ -9,7 +9,7 @@ BencodeParser::BencodeParser(FILE*fp) {
     ident = 0;
 
     diccionario = 0;
-    contador = 1;
+    contador = 1;   
 }
 
 BencodeParser::~BencodeParser() {
@@ -55,12 +55,12 @@ void BencodeParser::parserDiccionario(FILE *fp) {
     compararCaracter('e');
 
     if (contador == 0) {
-        diccionario--;
+        diccionario--;       
     }
 
     if (diccionario == 0) {
-
-        datos.setOffsetFin(ftell(fp));
+       
+        datos.setOffsetFin(ftell(fp)-buf_lim+pos+1 );
         contador = 1;
         diccionario = -1;
     }
@@ -82,7 +82,7 @@ void BencodeParser::parserNumerico(FILE *fp) {
     compararCaracter('i');
     long val = 0;
     while (isdigit(verCaracterSiguiente()))
-        val = val * 10 + (obtenerCaracter() - '0');
+        val = val * 10 + (obtenerCaracter() - '0');          
     compararCaracter('e');
     std::stringstream cadena;
     cadena << val;
@@ -95,13 +95,13 @@ void BencodeParser::parserCadena(FILE *fp) {
 
     while (isdigit(verCaracterSiguiente()))
         len = len * 10 + (obtenerCaracter() - '0');
-
+    
     compararCaracter(':');
     char *s = new char[len + 1];
     int i;
 
     for (i = 0; i < len; ++i) {
-        s[i] = obtenerCaracter();
+        s[i] = obtenerCaracter();        
     }
     s[len] = '\0';
     datos.agregarDato(s, len + 1);
@@ -114,7 +114,7 @@ void BencodeParser::parserCadena(FILE *fp) {
 }
 
 void BencodeParser::cargarBuffer() {
-    buf_lim = fread(buf, 1, BUFSIZE, fp);
+    buf_lim = fread(buf, 1, BUFSIZE, fp); 
     pos = 0;
 }
 
@@ -148,7 +148,7 @@ DatosParser* BencodeParser::salidaParser() {
         salida->agregarDato(datos.obtenerDato(), datos.obtenerLongitudDato());
         datos.siguiente();
     }
-
+    
     salida->setOffsetInfoHash(datos.getOffsetInfoHash());
     salida->setOffsetFin(datos.getOffsetFin());
     return salida;
