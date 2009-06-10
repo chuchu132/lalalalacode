@@ -60,7 +60,7 @@ void BencodeParser::parserDiccionario(FILE *fp) {
 
     if (diccionario == 0) {
 
-        datos.setOffsetFin(ftell(fp) - BUFSIZE + pos + 1);
+        datos.setOffsetFin(ftell(fp));
         contador = 1;
         diccionario = -1;
     }
