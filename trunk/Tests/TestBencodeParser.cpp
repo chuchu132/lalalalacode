@@ -20,10 +20,8 @@ TestBencodeParser::~TestBencodeParser() {
 }
 
 void TestBencodeParser::run() {
-	FILE* fp = NULL;
-	if ((fp = fopen("../Tests/PSP.torrent", "r")) != NULL) {
-		BencodeParser parser(fp);
-		parser.procesar();
+		BencodeParser parser("../Tests/PSP.torrent");
+		if(	parser.procesar()){
 		DatosParser* datos = parser.salidaParser();
 		datos->primero();
 		while (!datos->final()) {
@@ -35,9 +33,8 @@ void TestBencodeParser::run() {
 			datos->siguiente();
 		}
 		delete datos;
-		fclose(fp);
 	} else {
-		assert(false, "ERROR AL ABRIR EL ARCHIVO");
+		assert(false, "ERROR AL PROCESAR EL ARCHIVO");
 	}
 
 }
