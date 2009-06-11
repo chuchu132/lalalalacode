@@ -14,6 +14,7 @@ class ParserCgi {
 public:
 	ParserCgi();
 	virtual ~ParserCgi();
+	//TODO cambiar por codificar(char* original,int tam)
 	std::string codificar(std::string original);
 	std::string decodificar(std::string codificado);
 	bool hayQueCodificarlo(char caracter);
