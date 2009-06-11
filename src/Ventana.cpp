@@ -45,10 +45,16 @@ Ventana::Ventana()
 		this->getButtons();
 		this->connectSignals();
 
-	}catch(Glib::FileError& ex)
+	}catch(Glib::FileError& ex1)
 	{
 		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
-		//todo faltan excepciones
+		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		//todo ver excepciones
+	}
+	catch (Glib::MarkupError& ex2)
+	{
+		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
+		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
 	}
 }
 
@@ -105,6 +111,7 @@ void Ventana::getViews()
 	Gtk::TreeView *view_cat = 0;
 	builder->get_widget(VIEW_CATEGORIES,view_cat);
 	torrents->setCategoriesView(view_cat);
+
 	attr->setAttributesView(builder);
 	std::cout<<"view torrents cargado"<<std::endl;
 
@@ -243,7 +250,9 @@ void Ventana::button_cancel_clicked()
 
 void Ventana::actualizarEstado(Torrent* t)
 {
+	std::cout<<"__update row "<<std::endl;
 	torrents->updateRow(t);
+	std::cout<<"__updated "<<std::endl;
 	if ( t == torrents->getSelectedTorrent())
 		attr->showInfo(t);
 }

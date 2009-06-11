@@ -254,21 +254,21 @@ void TorrentView::updateRow(Torrent *t)
 	std::cout<<"__actualizar fila "<<std::endl;
 
 	//busco la fila ERROR!
-//	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
-//	std::cout<<"iter "<<std::endl;
-//	Gtk::TreeModel::Row row;
-//	while (iter != list_torrents->children().end())
-//	{
-//		row = *iter;
-//		if (row[col_torrent] == t)
-//		{
-//			std::cout<<"_____ update "<<std::endl;
-//			this->updateRowValues(row,t);
-//			break;
-//		}
-//		iter++;
-//	}
-//	std::cout<<"__fin actualizar "<<std::endl;
+	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+	std::cout<<"iter "<<std::endl;
+	Gtk::TreeModel::Row row;
+	while (iter != list_torrents->children().end())
+	{
+		row = *iter;
+		if (row[col_torrent] == t)
+		{
+			std::cout<<"_____ update "<<std::endl;
+			this->updateRowValues(row,t);
+			break;
+		}
+		iter++;
+	}
+	std::cout<<"__fin actualizar "<<std::endl;
 
 }
 

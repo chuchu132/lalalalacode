@@ -95,6 +95,7 @@ void Torrent::detener() {
 }
 
 void Torrent::pausar() {
+	std::cout<<"__t = pausar "<<std::endl;
 	estado = T_PAUSADO;
 	activo = false;
 	controlador->actualizarEstado(this);

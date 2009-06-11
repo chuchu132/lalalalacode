@@ -3,11 +3,8 @@
   <requires lib="gtk+" version="2.14"/>
   <!-- interface-naming-policy toplevel-contextual -->
   <object class="GtkUIManager" id="uimanager1"/>
-  <object class="GtkListStore" id="lista_torrents"/>
-  <object class="GtkTreeModelFilter" id="treemodelfilter1">
-    <property name="child_model">lista_torrents</property>
-  </object>
   <object class="GtkWindow" id="main_wind">
+    <property name="width_request">600</property>
     <property name="title">&#x3C6;Torrent 1.0</property>
     <property name="default_width">600</property>
     <property name="default_height">400</property>
