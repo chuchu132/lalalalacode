@@ -8,25 +8,20 @@
 #ifndef ARCHIVO_H_
 #define ARCHIVO_H_
 
-#include <fstream>
+#include <string>
 
 class Archivo {
 public:
 	Archivo();
 	virtual ~Archivo();
-	std::fstream* getArchivo();
-	int getTamanio();//todo... no deberia ser un unsigned int??
-	std::string getNombre();
+	unsigned int getTamanio();
 	std::string getPath();
+	void setTamanio(unsigned int tam);
+	void setPath(std::string path);
 
 private:
-	//FILE* o lo que corresponda en C++
-	std::fstream file; // Esta abierto mientras viva Archivo.
 	std::string path;
-	std::string name;
-	int tamanio;
-
-
+	unsigned int tamanio;
 };
 
 #endif /* ARCHIVO_H_ */

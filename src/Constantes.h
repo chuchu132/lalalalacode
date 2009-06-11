@@ -97,4 +97,6 @@ const int TAM_BUFFER = 100; //TODO redefinir
 #define T_DETENIDO "Detenido";
 #define T_COMPLETO "Completo";
 
+#define URL_CARPETA_TEMP "./incompletos/"
+
 #endif /* CONSTANTES_H_ */

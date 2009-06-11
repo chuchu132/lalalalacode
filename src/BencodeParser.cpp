@@ -88,7 +88,7 @@ void BencodeParser::parserLista() {
 void BencodeParser::parserNumerico() {
 
 	compararCaracter('i');
-	long val = 0;
+	unsigned int val = 0;
 	while (isdigit(verCaracterSiguiente()))
 		val = val * 10 + (obtenerCaracter() - '0');
 	compararCaracter('e');
