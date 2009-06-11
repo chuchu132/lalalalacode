@@ -97,7 +97,7 @@ bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 	descarga.open(path.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
 	if (descarga.is_open()) {
 		char cero = '\0';
-		for (unsigned int i = 0; i < bytesTotales; ++i) {
+		for (unsigned int i = 0; i < tamanio; ++i) {
 			descarga.put(cero);
 		}
 		return true;
