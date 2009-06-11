@@ -10,11 +10,14 @@
 #include "ParserMensaje.h"
 #include "Torrent.h"
 
-Torrent::Torrent() {
-	// TODO Auto-generated constructor stub
+Torrent::Torrent(ClienteTorrent* clienteTorrent):fileManager(clienteTorrent) {
+	tracker = new Tracker();
 	uploaded = 0;
 	downloaded = 0;
 	estado = T_DETENIDO;
+	activo = true;
+	this->clienteTorrent = clienteTorrent;
+	port = clienteTorrent->getPuerto();
 }
 
 Torrent::~Torrent() {
@@ -22,8 +25,25 @@ Torrent::~Torrent() {
 }
 
 bool Torrent::inicializarTorrent(BencodeParser* parser){
-	// TODO implementar despues de tener el bencodeparser
+	DatosParser* datos = parser->salidaParser();
+	char* datoTemp;
+	int tamTemp;
 
+	if(!datos->obtenerDatoPorNombre("info_hash",&datoTemp,tamTemp)){
+		return false;
+	}
+	memcpy(info_hash,datoTemp,LEN_SHA1);
+	delete[] datoTemp;
+
+	if(!datos->obtenerDatoPorNombre("name",&datoTemp,tamTemp)){
+		return false;
+	}
+	nombre = datoTemp;
+	delete[] datoTemp;
+
+	fileManager.inicializar(datos);
+
+	delete datos;
 
 	return true;
 }
@@ -64,7 +84,7 @@ unsigned int  Torrent::left(){
 }
 
 
-std::string Torrent::getInfoHash(){
+unsigned int* Torrent::getInfoHash(){
 	return info_hash;
 }
 

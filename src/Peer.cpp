@@ -90,8 +90,7 @@ bool Peer::sendHandshake() {
 	ParserMensaje parser;
 	char buffer[LEN_HANDSHAKE];
 	bool retorno;
-	parser.crearHandshake(torrent->getInfoHash().c_str(),
-			torrent->getPeerId().c_str(), buffer);
+	parser.crearHandshake(torrent->getInfoHash(),torrent->getPeerId().c_str(), buffer);
 	llaveEnvio.lock();
 	retorno = (peerRemoto->send(buffer, LEN_HANDSHAKE) != ERROR);
 	llaveEnvio.unlock();

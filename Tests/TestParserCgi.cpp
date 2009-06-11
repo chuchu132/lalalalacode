@@ -20,8 +20,14 @@ void TestParserCgi::run(){
 	TestDecodificar();
 }
 void TestParserCgi::TestCodificar(){
-	Test::assert(codificado.compare(parser.codificar(original))==0,"El codificado con el ParserCgi debe ser igual al Harcodeado.");
+	std::string aux = original;
+	assert(codificado.compare(parser.codificar(original.c_str(),original.length()))==0,"El codificado con el ParserCgi debe ser igual al Harcodeado.");
 }
 void TestParserCgi::TestDecodificar(){
-	Test::assert(original.compare(parser.decodificar(codificado))==0,"El decodificado con el ParserCgi debe ser igual al Harcodeado.");
+	char* salida = NULL;
+	int tamanio = 0;
+	parser.decodificar(codificado,&salida,tamanio);
+	assert(memcmp(original.c_str(),salida,tamanio)==0,"El decodificado con el ParserCgi debe ser igual al Harcodeado.");
+	delete[] salida;
+
 }

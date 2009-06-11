@@ -21,7 +21,7 @@ ParserMensaje::~ParserMensaje() {
 	// TODO Auto-generated destructor stub
 }
 
-void ParserMensaje::crearHandshake(const char* info_hash, const char* peer_id,
+void ParserMensaje::crearHandshake(unsigned int* info_hash, const char* peer_id,
 		char* buffer) {
 	buffer[OFFSET_PSTRLEN] = PSTRLEN;
 	memcpy((buffer + OFFSET_PROTOCOL), PROTOCOL, PSTRLEN);
@@ -76,18 +76,18 @@ void ParserMensaje::crearMensajeCancel(int index, int block, int length,
 	(*((int*) (buffer + OFFSET_ARG_3))) = htonl(length); //seteo length
 }
 
-std::string ParserMensaje::crearGetBase(std::string info_hash,
+std::string ParserMensaje::crearGetBase(unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left) {
 	ParserCgi parserCgi;
 	std::stringstream buffer;
-	buffer << "GET /?info_hash=" << parserCgi.codificar(info_hash)
-	<< "& peer_id=" << parserCgi.codificar(peer_id) << "&port=" << port
+	buffer << "GET /?info_hash=" << parserCgi.codificar((char*)info_hash,LEN_SHA1)
+	<< "& peer_id=" << parserCgi.codificar(peer_id.c_str(),LEN_SHA1) << "&port=" << port
 	<< "&uploaded=" << uploaded << "&downloaded=" << downloaded
 	<< "&left=" << left;
 	return buffer.str();
 }
 
-std::string ParserMensaje::crearGetConEvento(std::string info_hash,
+std::string ParserMensaje::crearGetConEvento(unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left,
 		std::string event) {
 	std::string base = crearGetBase(info_hash, peer_id, port, uploaded,
@@ -97,7 +97,7 @@ std::string ParserMensaje::crearGetConEvento(std::string info_hash,
 	return buffer.str();
 }
 
-std::string ParserMensaje::crearGetConNumwant(std::string info_hash,
+std::string ParserMensaje::crearGetConNumwant(unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left,
 		int numwant) {
 	std::string base = crearGetBase(info_hash, peer_id, port, uploaded,

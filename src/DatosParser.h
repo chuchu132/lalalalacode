@@ -44,6 +44,11 @@ public:
 	//Verifica si se llego al final de la lista, devuelve FALSE si aun no llego y TRUE si esta en el final
 	bool final();
 
+	/* Dado un nombre, devuelve true si encontro el nombre y  deja el iterador en esa posicion
+	 * de no encontrarlo, el iterador queda al inicio de la lista de datos.
+	 */
+	bool irAetiqueta(std::string nombre);
+
 	// Dado un nombre, devuelve en "dato" una copia del dato. Hay que liberar la memoria de "dato"
 	bool obtenerDatoPorNombre(std::string nombre, char** dato, int& longitud);
 

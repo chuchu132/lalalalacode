@@ -43,7 +43,7 @@ void TestBencodeParser::test(const char* url) {
 					datos->siguiente();
 				}
 			} else {
-				std::cout << datos->obtenerDato() << std::endl;
+				//std::cout << datos->obtenerDato() << std::endl;
 				datos->siguiente();
 			}
 		}

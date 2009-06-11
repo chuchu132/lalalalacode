@@ -4,15 +4,19 @@
  *  Created on: 28/05/2009
  *      Author: ale
  */
-
+#include "ClienteTorrent.h"
 #include "FileManager.h"
 #include "Constantes.h"
 #include <fstream>
 #include "Sha1.h"
 
 
-FileManager::FileManager() {
-
+FileManager::FileManager(ClienteTorrent* cliente) {
+	this->clienteTorrent = cliente;
+	tamanioPieza= 0;
+	bloquesXPieza = 0;
+	bytesTotales = 0;
+	hashPiezas = NULL;
 }
 
 FileManager::~FileManager() {
@@ -27,9 +31,18 @@ FileManager::~FileManager() {
  * Inicializar el resto de los campos segun corresponda con la
  * info obtenida del .torrent y del archivo descargado parcialmente.
  * */
-void FileManager::inicializar(BencodeParser* parser) {
-//	archivos = parser->getListaArchivos(); //TODO ojo quedan apuntando los mismos Archivo*
-//	std::list<Archivo*>::iterator it;
+bool FileManager::inicializar(DatosParser* datos) {
+	int tamanio;
+	char* datoTemp;
+
+	if(!datos->obtenerDatoPorNombre("name",&datoTemp,tamanio)){
+		return false;
+	}
+	nombreCarpeta = datoTemp;
+	delete[] datoTemp;
+
+	if(datos->obtenerDatoPorNombre("files",&datoTemp,tamanio)){}
+
 //	int acum = 0;
 //	for (it = archivos.begin(); it != archivos.end(); ++it) {
 //		acum += (*it)->getTamanio();
@@ -42,7 +55,7 @@ void FileManager::inicializar(BencodeParser* parser) {
 //	int tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0
 //			: 1);
 //	bitmap.inicializarBitmap(tamBitmapBytes);
-
+return true;
 }
 
 int FileManager::getTamanio() {
