@@ -224,7 +224,7 @@ void Peer::procesarPiece(int index,int begin,int longitud,char* data ){
 }
 
 void Peer::procesarCancel(int index,int begin,int length){
-	//TODO preguntar que hace...
+	//TODO de momento se ignora.
 }
 
 

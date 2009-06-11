@@ -4,23 +4,22 @@
  *  Created on: 28/05/2009
  *      Author: ale
  */
-#include "ClienteTorrent.h"
-#include "FileManager.h"
-#include "Constantes.h"
-#include <fstream>
-#include "Sha1.h"
 
+#include "ClienteTorrent.h"
+#include "Constantes.h"
+#include "FileManager.h"
+#include "Sha1.h"
+#include <fstream>
 
 FileManager::FileManager(ClienteTorrent* cliente) {
 	this->clienteTorrent = cliente;
-	tamanioPieza= 0;
-	bloquesXPieza = 0;
+	tamanioPieza = 0;
 	bytesTotales = 0;
 	hashPiezas = NULL;
 }
 
 FileManager::~FileManager() {
-	// TODO Auto-generated destructor stub
+	//TODO limpiar lista archivos guardar datos admin
 }
 
 /*TODO Pedir info_hash tratar de abrir un archivo con ese nombre
@@ -35,30 +34,87 @@ bool FileManager::inicializar(DatosParser* datos) {
 	int tamanio;
 	char* datoTemp;
 
-	if(!datos->obtenerDatoPorNombre("name",&datoTemp,tamanio)){
+	if (!datos->obtenerDatoPorNombre("piece length", &datoTemp, tamanio)) {
+		return false;
+	}
+	tamanioPieza = (unsigned int) atol(datoTemp);
+	delete[] datoTemp;
+
+	if (!datos->obtenerDatoPorNombre("pieces",&datoTemp, tamanio)) {
+		return false;
+	}
+	memcpy(hashPiezas,datoTemp,tamanio);
+	delete[] datoTemp;
+
+	if (!datos->obtenerDatoPorNombre("name", &datoTemp, tamanio)) {
 		return false;
 	}
 	nombreCarpeta = datoTemp;
 	delete[] datoTemp;
 
-	if(datos->obtenerDatoPorNombre("files",&datoTemp,tamanio)){}
+	if (!datos->irAetiqueta("files")) {
+		if (!datos->obtenerDatoPorNombre("length", &datoTemp, tamanio)) {
+			return false;
+		}
+		bytesTotales = (unsigned int) atol(datoTemp);
+		delete[] datoTemp;
+	} else {
+		while (datos->obtenerDatoPorNombre("length", &datoTemp, tamanio)) {
+			bytesTotales = (unsigned int) atol(datoTemp);
+			delete[] datoTemp;
+			datos->obtenerDatoPorNombre("path", &datoTemp, tamanio);
+			Archivo* file = new Archivo();
+			file->setTamanio(bytesTotales);
+			file->setPath(datoTemp);
+			archivos.push_back(file);
+			delete[] datoTemp;
+		}
+	}
 
-//	int acum = 0;
-//	for (it = archivos.begin(); it != archivos.end(); ++it) {
-//		acum += (*it)->getTamanio();
-//	}
-//	bytesTotales = acum;
-//	tamanioPieza = parser->getTamanioPiezas();
-//	bloquesXPieza = (tamanioPieza > TAM_BLOQUES) ? (tamanioPieza / TAM_BLOQUES)
-//			: 1; // division entre potencias de 2
-//
-//	int tamBitmapBytes = (bytesTotales / 8) + (((bytesTotales % 8) == 0) ? 0
-//			: 1);
-//	bitmap.inicializarBitmap(tamBitmapBytes);
-return true;
+	int cantidadPiezasMod8 = (int)(bytesTotales / 8 ) + (bytesTotales % 8 == 0 )?0:1;
+	bitmap.inicializarBitmap(cantidadPiezasMod8);
+
+	if (!datos->obtenerDatoPorNombre("info_hash", &datoTemp, tamanio)) {
+		return false;
+	}
+
+	Sha1 sha;
+	std::string hash = URL_CARPETA_TEMP;
+	hash += sha.salidaAstring((unsigned int*) datoTemp);
+	delete[] datoTemp;
+	descarga.open(hash.c_str(), ios::in | ios::out | ios::binary);
+	if (!descarga.is_open()) {
+		crearArchivo(hash, bytesTotales);
+	} else {
+		inicializarBitmap();
+	}
+
+	return true;
 }
 
-int FileManager::getTamanio() {
+//TODO ver de optimizar el llenado del archivo
+bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
+	descarga.open(path.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
+	if (descarga.is_open()) {
+		char cero = '\0';
+		for (unsigned int i = 0; i < bytesTotales; ++i) {
+			descarga.put(cero);
+		}
+		return true;
+	}
+	return false;
+}
+
+void FileManager::inicializarBitmap() {
+	int cantidadPiezas = (int)(cantidadPiezas / tamanioPieza) + ((cantidadPiezas % tamanioPieza)==0)?0:1;
+	for (int i = 0; i< cantidadPiezas;++i) {
+		if(verificarHashPieza(i)){
+			bitmap.marcarBit(i);
+		}
+	}
+}
+
+unsigned int FileManager::getTamanio() {
 	return bytesTotales;
 }
 
@@ -69,7 +125,7 @@ Bitmap& FileManager::getBitmap() {
 char* FileManager::readBlock(int index, int begin, int longitud) {
 	if (bitmap.estaMarcada(index)) {
 		char* data = new char[longitud + 1];
-		int offset = (index * tamanioPieza + begin );
+		int offset = (index * tamanioPieza + begin);
 		descarga.seekg(offset); // se para en el offset inicial
 		descarga.get(data, longitud); // lee
 		return data;
@@ -78,35 +134,34 @@ char* FileManager::readBlock(int index, int begin, int longitud) {
 	}
 }
 
-void FileManager::writeBlock(int index,int begin,int longitud,char* block){
+void FileManager::writeBlock(int index, int begin, int longitud, char* block) {
 	if (!bitmap.estaMarcada(index)) {
-		int offset = (index * tamanioPieza + begin );
+		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
-		if(verificarHashPieza(index)){
+		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
 		}
 	}
 }
-
-bool FileManager::verificarHashPieza(int index){
-	char pieza[tamanioPieza];
+//TODO testear
+bool FileManager::verificarHashPieza(int index) {
+	char* pieza = new char[tamanioPieza];
 	int offset = (index * tamanioPieza);
 	descarga.seekg(offset);
-	descarga.get(pieza,tamanioPieza);
+	descarga.get(pieza, tamanioPieza);
 	Sha1 sha1Encoder;
-	std::string hashObtenido = sha1Encoder.codificar(pieza,tamanioPieza);
-	std::string hashOriginal;
-	//hashOriginal.assign(hashPiezas,index*LEN_SHA1_ASCII,LEN_SHA1_ASCII);//TODO probar que el 2do arg sea correcto y no vaya un blbla-1
+	std::string hashObtenido = sha1Encoder.codificar(pieza, tamanioPieza);
+	std::string hashOriginal = sha1Encoder.codificar(((char*) hashPiezas)
+			+ (index * LEN_SHA1), LEN_SHA1);
+	delete[] pieza;
 	return (hashOriginal.compare(hashObtenido) == 0);
 }
 
-std::list<Archivo*>::iterator FileManager::getIteratorArchivos()
-{
+std::list<Archivo*>::iterator FileManager::getIteratorArchivos() {
 	return archivos.begin();
 }
 
-std::list<Archivo*>::iterator FileManager::getEndArchivos()
-{
+std::list<Archivo*>::iterator FileManager::getEndArchivos() {
 	return archivos.end();
 }

@@ -15,19 +15,20 @@ Archivo::Archivo() {
 Archivo::~Archivo() {
 	// TODO Auto-generated destructor stub
 }
-int Archivo::getTamanio(){
-	return tamanio;
-}
-std::fstream* Archivo::getArchivo(){
-	return &file;
-}
 
-std::string Archivo::getNombre()
-{
-	return name;
+unsigned int Archivo::getTamanio(){
+	return tamanio;
 }
 
 std::string Archivo::getPath()
 {
 	return path;
+}
+
+void Archivo::setTamanio(unsigned int tam){
+	this->tamanio = tam;
+}
+
+void Archivo::setPath(std::string path){
+	this->path = path;
 }

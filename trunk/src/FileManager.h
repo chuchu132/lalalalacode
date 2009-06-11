@@ -16,9 +16,9 @@
  */
 
 #include <list>
+#include <fstream>
 #include "Archivo.h"
 #include "Bitmap.h"
-
 #include "DatosParser.h"
 
 class ClienteTorrent;
@@ -30,7 +30,7 @@ public:
 
 	virtual ~FileManager();
 
-	int getTamanio();
+	unsigned int getTamanio();
 
 	Bitmap& getBitmap();
 
@@ -62,11 +62,13 @@ private:
 	Bitmap bitmap;
 	std::string nombreCarpeta;
 	std::list<Archivo*> archivos; //informacion sobre los distintos archivos, sirve para partir la descarga al final.
-	int tamanioPieza;
-	int bloquesXPieza;
-	int bytesTotales; //tamnio total de los archivos a descargar VER no convendria que sea unsigned??????
+	unsigned int tamanioPieza;
+	unsigned int bytesTotales; //tamnio total de los archivos a descargar
 	std::fstream descarga; // file del tamanio del total de la descarga.
 	unsigned int*  hashPiezas;
+
+	bool crearArchivo(std::string path,unsigned int tamanio);
+	void inicializarBitmap();
 };
 
 #endif /* FILEMANAGER_H_ */
