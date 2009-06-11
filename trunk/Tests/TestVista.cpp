@@ -18,13 +18,14 @@ void TestVista::run(){
 		Ventana ventana;
 		ventana.tor = &t;
 		Controlador controlador(cliente);
+		t.setControlador(&controlador);
 
 		ventana.setControlador(&controlador);
 		controlador.setVentana(&ventana);
 
 		kit.run(ventana.getVentana());
 
-		assert(true,"No message.");
+		assert(true,"Ventana cerrada.");
 }
 
 

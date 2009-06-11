@@ -38,11 +38,13 @@ void Controlador::detenerTorrent(Torrent *t)
 
 void Controlador::pausarTorrent(Torrent *t)
 {
+	std::cout<<"__ctrl pausar "<<std::endl;
 	t->pausar();
 }
 
 void Controlador::actualizarEstado(Torrent *t)
 {
+	std::cout<<"__actualizar estado "<<std::endl;
 	ventana->actualizarEstado(t);
 }
 
