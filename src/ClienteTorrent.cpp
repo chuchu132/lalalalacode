@@ -107,7 +107,11 @@ unsigned int ClienteTorrent::getPuerto(){
 Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 
 	BencodeParser parserTorrent(ruta.c_str());
+	std::string notif;
 	if (!parserTorrent.procesar()) {
+		notif = "Error al examinar el archivo ";
+		notif += ruta;
+		controlador->notificarVista(notif);
 		return NULL;
 	} else {
 		Torrent *t = new Torrent(this);
@@ -115,21 +119,29 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 			t->setControlador(controlador);
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
 			t->run();
+			notif = "Se ha agregado el Torrent ";
+			notif += t->getNombre();
 		} else {
 			delete t;
 			t = NULL;
+			notif = "Error al decodificar el archivo ";
+			notif += ruta;
 		}
+		controlador->notificarVista(notif);
 		return t;
 	}
 }
 
 void ClienteTorrent::borrarTorrent(Torrent *t) {
 	std::list<Torrent*>::iterator it = torrents.begin();
+	std::string notif = "Se ha borrado el Torrent ";
 	while (it != torrents.end()) {
 		if ((*it) == t) {
-			t->detener();//join??
+			t->detener();
+			notif += t->getNombre();
 			delete t;
-			return;
+			controlador->notificarVista(notif);
+			break;
 		}
 	}
 }

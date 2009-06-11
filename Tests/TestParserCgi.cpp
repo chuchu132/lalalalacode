@@ -7,6 +7,7 @@
 
 #include "TestParserCgi.h"
 #include <iostream>
+#include <cstring>
 
 TestParserCgi::TestParserCgi() {
 	original = "Hola como estas?. Todo Bien!!! Igual = Rango [3;6]";

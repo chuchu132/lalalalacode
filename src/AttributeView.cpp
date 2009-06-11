@@ -61,15 +61,13 @@ void AttributesView::setStatusView()
 
 void AttributesView::setFilesView()
 {
-	columns_files.add(col_name_files);
 	columns_files.add(col_size_files);
 	columns_files.add(col_path_files);
 	list_files = Gtk::ListStore::create(columns_files);
 	view_files->set_model(list_files);
 
-	this->view_files->append_column("Nombre del Archivo", col_name_files);
-	this->view_files->append_column("Tamaño", col_size_files);
-	int cols_count = this->view_files->append_column("Ruta del Archivo", col_path_files);
+	this->view_files->append_column("Ruta del Archivo", col_path_files);
+	int cols_count = this->view_files->append_column("Tamaño", col_size_files);
 
 	Gtk::TreeViewColumn* pColumn;
 	for (int i=0; i<cols_count; i++)
@@ -77,7 +75,6 @@ void AttributesView::setFilesView()
 		pColumn = this->view_files->get_column(i);
 		pColumn->set_resizable(true);
 	}
-
 }
 
 void AttributesView::setNotificationsView()
@@ -127,18 +124,18 @@ void AttributesView::showFiles()
 	//muestra los archivos del torrent
 	std::cout<<"mostrar archivos"<<std::endl;
 	list_files->clear();
-/* todo descomentar
+
 	std::list<Archivo*>::iterator it = torrent->getFileManager()->getIteratorArchivos();
+	std::list<Archivo*>::iterator end = torrent->getFileManager()->getEndArchivos();
 	Gtk::TreeModel::Row row;
-	while (torrent->getFileManager()->getEndArchivos())
+	while (it != end)
 	{
 		Gtk::TreeModel::Row row = (* list_files->append());
-		row[col_size_file] = (*it)->getTamanio();//show bytes!!!
-		row[col_name_file] = (*it)->getNombre();
-		row[col_path_file] = (*it)->getPath();
+		//row[col_size_file] = (*it)->getTamanio();//show bytes!!!
+		row[col_path_files] = (*it)->getPath();
 		it++;
 	}
-*/
+
 }
 
 void AttributesView::on_page_selected(GtkNotebookPage* page, guint page_num)
@@ -152,6 +149,8 @@ void AttributesView::addNotification(std::string notif)
 {
 	Gtk::TreeModel::Row row = (* list_notif->append());
 	row[col_notif] = notif;
+	Gtk::TreePath::TreePath path(row);
+	view_notif->scroll_to_row(path);
 }
 
 void AttributesView::clearNotifications()
