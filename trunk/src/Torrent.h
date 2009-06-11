@@ -29,12 +29,13 @@ class Peer;
 class Tracker;
 class Controlador;
 class ClienteTorrent;
+class FileManager;
 
 class Torrent {
 
 public:
 
-	Torrent();
+	Torrent(ClienteTorrent* clienteTorrent);
 
 	~Torrent();
 
@@ -87,7 +88,7 @@ public:
 	/* Calcula cuantos bytes faltan descargar */
 	unsigned int left();
 
-	std::string getInfoHash();
+	unsigned int* getInfoHash();
 
 	std::string getPeerId();
 
@@ -122,11 +123,11 @@ private:
 	Mutex llaveListaPeers;
 	std::list<Peer*> peers;
 	FileManager fileManager;
-	std::string info_hash;
+	unsigned int info_hash[5];
 	std::string nombre;
 	std::string estado;
 	bool activo;
-	int port; // puerto donde esta escuchando el Cliente.
+	unsigned int port; // puerto donde esta escuchando el Cliente.
 	unsigned int uploaded;
 	unsigned int downloaded;
 

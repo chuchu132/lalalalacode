@@ -17,14 +17,16 @@
 
 #include <list>
 #include "Archivo.h"
-#include "BencodeParser.h"
 #include "Bitmap.h"
 
+#include "DatosParser.h"
+
+class ClienteTorrent;
 class FileManager {
 
 public:
 
-	FileManager();
+	FileManager(ClienteTorrent* cliente);
 
 	virtual ~FileManager();
 
@@ -35,8 +37,8 @@ public:
 	/* Devuelve un arreglo con el bloque pedido, quien lo solicita debe liberarlo*/
 	char* readBlock(int index,int begin,int longitud);
 
-	/*Recibe un Parser con la info del archivo .torrent y con el, inicializa el bitmap.*/
-	void inicializar(BencodeParser* parser);
+	/*Recibe los Datos del Parser con la info del archivo .torrent y con el, inicializa el bitmap.*/
+	bool inicializar(DatosParser* datos);
 
 	/* Escribe en disco el bloque */
 	void writeBlock(int index,int begin,int longitud,char* block);
@@ -56,7 +58,9 @@ private:
 	 * archivos y carpetas correspondientes con la info
 	 * obtenida del .torrent.
 	 * */
+	ClienteTorrent* clienteTorrent;
 	Bitmap bitmap;
+	std::string nombreCarpeta;
 	std::list<Archivo*> archivos; //informacion sobre los distintos archivos, sirve para partir la descarga al final.
 	int tamanioPieza;
 	int bloquesXPieza;

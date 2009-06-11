@@ -81,11 +81,6 @@ public:
 	//Obtiene el info_hash del .torrent y lo guarda en mensajeInfoHash
 	void procesarInfoHash();
 
-	//Devuelve el info hash como array de unsigned , como lo devuelve el sha1
-	void obtenerInfoHash(unsigned *);
-
-	//Devuelve el info hash en su forma binaria
-	char* getInfoHashBinario();
 };
 
 #endif	/* _BENCODEPARSER_H */

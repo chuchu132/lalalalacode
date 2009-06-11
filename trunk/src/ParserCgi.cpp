@@ -13,37 +13,39 @@ ParserCgi::ParserCgi() {}
 ParserCgi::~ParserCgi() {}
 
 /*Codifica un string en URL Encoding */
-std::string ParserCgi::codificar(const std::string original){
+std::string ParserCgi::codificar(const char* original,int tam){
 	std::string codificado = "";
-	for (unsigned int i = 0; i < original.length(); ++i) {
-		if (hayQueCodificarlo(original.c_str()[i])){
-			codificado += intAhexaNN(original.c_str()[i]);
+	for (int i = 0; i < tam; ++i) {
+		if (hayQueCodificarlo(original[i])){
+			codificado += intAhexaNN(original[i]);
 		}else{
-			codificado += original.c_str()[i];
+			codificado += original[i];
 		}
 	}
 	return codificado;
 }
 
 /*Deodifica un string en URL Encoding y lo pasa a ASCII*/
-//TODO ver que pasa si llega un \0 codificado
-std::string ParserCgi::decodificar(const std::string codificado){
-	std::string decodificado = "";
-	char aux[3];
-	memset(aux,0,3);
-	for (unsigned int i = 0; i < codificado.length(); i++) {
-		if(codificado.c_str()[i] == '%'){
-			codificado.copy(aux,2,i+1);
-			i+=2;
-			decodificado += hexaNNaChar(aux);
+void ParserCgi::decodificar(std::string codificado,char** salida, int& tamanio){
+	*salida = new char[codificado.length()];
+	memset(*salida,0,codificado.length());
+		int index = 0;
+		char aux[3];
+		memset(aux,0,3);
+		for (unsigned int i = 0; i < codificado.length(); i++) {
+			if(codificado.c_str()[i] == '%'){
+				codificado.copy(aux,2,i+1);
+				i+=2;
+				(*salida)[index] = hexaNNaChar(aux);
+			}
+			else{
+				(*salida)[index] = codificado.c_str()[i];
+			}
+			index++;
 		}
-		else{
-			decodificado += codificado.c_str()[i];
-		}
-	}
-	return decodificado;
-}
 
+		tamanio = index;
+}
 
 
 bool ParserCgi::hayQueCodificarlo(const char caracter){

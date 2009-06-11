@@ -14,9 +14,9 @@ class ParserCgi {
 public:
 	ParserCgi();
 	virtual ~ParserCgi();
-	//TODO cambiar por codificar(char* original,int tam)
-	std::string codificar(std::string original);
+	std::string codificar(const char* original,int tam);
 	std::string decodificar(std::string codificado);
+	void decodificar(std::string codificado,char** salida,int& tamanio);
 	bool hayQueCodificarlo(char caracter);
 	char intAhexaChar(int numero);
 	int hexaCharAint(char hexa);

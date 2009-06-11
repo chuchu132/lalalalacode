@@ -21,6 +21,7 @@
  **********************************************************************/
 class Torrent;
 class Controlador;
+class FileManager;
 
 class ClienteTorrent : public Thread {
 
@@ -67,13 +68,17 @@ public:
 	 * se llama al cerrar la ventana*/
 	void finalizar();
 
-	/* Devuelve el Torrent asociado al hash pasado por parametro o NULL si no lo
-	 * encuentra*/
-	Torrent* buscarTorrent(std::string hashTorrent);
+	/*
+	 *  Devuelve el Torrent asociado al hash pasado por parametro o NULL si no lo
+	 * encuentra
+	 */
+	Torrent* buscarTorrent(std::string  hashTorrent);
 
 	bool estaActivo();
 
 	std::string getPeerId();
+
+	unsigned int getPuerto();
 
 	void setControlador(Controlador *ctrl);
 };

@@ -67,8 +67,9 @@ void* ClienteTorrent::run() {
 
 Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 	std::list<Torrent*>::iterator it = torrents.begin();
+	Sha1 sha;
 	while (it != torrents.end()) {
-		if ((*it)->getInfoHash().compare(hashTorrent) == 0) {
+		if (sha.salidaAstring((*it)->getInfoHash()).compare(hashTorrent) == 0) {
 			return (*it);
 		}
 	}
@@ -99,13 +100,17 @@ std::string ClienteTorrent::getPeerId() {
 	return temp;
 }
 
+unsigned int ClienteTorrent::getPuerto(){
+	return puerto;
+}
+
 Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 
 	BencodeParser parserTorrent(ruta.c_str());
 	if (!parserTorrent.procesar()) {
 		return NULL;
 	} else {
-		Torrent *t = new Torrent();
+		Torrent *t = new Torrent(this);
 		if ( t->inicializarTorrent(&parserTorrent)){
 			t->setControlador(controlador);
 			torrents.push_back(t); //agrego el torrent a la lista de torrents

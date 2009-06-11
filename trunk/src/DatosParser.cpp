@@ -51,32 +51,32 @@ bool DatosParser::final() {
 	return (it == datos.end());
 }
 
-bool DatosParser::obtenerDatoPorNombre(std::string nombre, char** dato,
-		int& longitud) {
-	list<char*>::iterator unit;
-	list<int>::iterator unitLongitudes;
-	unit = datos.begin();
-	unitLongitudes = len.begin();
-	bool encontro = false;
-
+bool DatosParser::irAetiqueta(std::string nombre){
 	int lonConsulta = nombre.length();
-
-	while (!encontro && (unit != datos.end())) {
-		std::cout << "longitud del elemento de la lista " << *unitLongitudes
-				<< std::endl;
-		if ((lonConsulta + 1) == *unitLongitudes) {
-			if (nombre.compare((*unit)) == 0) {
-				unit++;
-				unitLongitudes++;
-				longitud = (*unitLongitudes);
-				*dato = new char[longitud];
-				memcpy(*dato, (*unit), longitud);
-				encontro = true;
+	while (it != datos.end()) {
+		if ((lonConsulta + 1) == *itLongitudes) {
+			if (nombre.compare((*it)) == 0) {
+				return true;
 			}
 		}
-		unit++;
-		unitLongitudes++;
+		it++;
+		itLongitudes++;
 	}
-	return encontro;
+	primero();
+	return false;
+}
+
+bool DatosParser::obtenerDatoPorNombre(std::string nombre, char** dato,
+		int& longitud) {
+
+	if (irAetiqueta(nombre)) {
+		it++;
+		itLongitudes++;
+		longitud = (*itLongitudes);
+		*dato = new char[longitud];
+		memcpy(*dato, (*it), longitud);
+		return true;
+	}
+	return false;
 }
 

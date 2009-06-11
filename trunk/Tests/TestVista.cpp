@@ -14,7 +14,7 @@ TestVista::~TestVista() {}
 void TestVista::run(){
 		Gtk::Main kit(0, 0);
 		ClienteTorrent cliente;
-		Torrent t;//para probar la vista
+		Torrent t(&cliente);//para probar la vista
 		Ventana ventana;
 		ventana.tor = &t;
 		Controlador controlador(cliente);

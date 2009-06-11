@@ -14,7 +14,7 @@ public:
 	virtual ~ParserMensaje();
 
 	/*Formato mensaje: <pstrlen><pstr><reserved><info_hash><peer_id>*/
-	void crearHandshake(const char* info_hash,const char* peer_id,char* buffer);
+	void crearHandshake(unsigned int* info_hash,const char* peer_id,char* buffer);
 
 	/*Formato mensaje: <len=0001><Id=id>*/
 	void crearMensajeId(const char id,char* buffer);
@@ -34,11 +34,11 @@ public:
 	/* Formato mensaje Piece: <len=0013><Id=8><index><begin><length>  */
 	void crearMensajeCancel(int index, int block, int length,char* buffer);
 
-	std::string crearGetBase(std::string info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left);
+	std::string crearGetBase(unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left);
 
-	std::string crearGetConEvento(std::string info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,std::string event);
+	std::string crearGetConEvento(unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,std::string event);
 
-	std::string crearGetConNumwant(std::string info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
+	std::string crearGetConNumwant(unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
 
 	std::string getHash(char* handshakeMsj);
 
