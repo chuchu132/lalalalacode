@@ -9,6 +9,7 @@
 #include "ParserCgi.h"
 #include "ParserMensaje.h"
 #include "Torrent.h"
+#include <cstring>
 
 Torrent::Torrent(ClienteTorrent* clienteTorrent):fileManager(clienteTorrent) {
 	tracker = new Tracker();
@@ -72,7 +73,7 @@ void Torrent::agregarPeer(Peer* peerNuevo){
 	llaveListaPeers.lock();
 	peers.insert(peers.end(), peerNuevo);
 	llaveListaPeers.unlock();
-	//controlador->actualizarEstado(this);
+	controlador->actualizarEstado(this);
 }
 
 std::string Torrent::getNombre() {
@@ -155,7 +156,8 @@ void Torrent::setControlador(Controlador* ctrl)
 void Torrent::refrescarPeers()
 {
 	//todo implementar
-	//controlador->actualizarEstado(this);
+
+	controlador->actualizarEstado(this);
 }
 
 

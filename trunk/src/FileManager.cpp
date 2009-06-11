@@ -10,6 +10,7 @@
 #include "FileManager.h"
 #include "Sha1.h"
 #include <fstream>
+#include <cstring>
 
 FileManager::FileManager(ClienteTorrent* cliente) {
 	this->clienteTorrent = cliente;

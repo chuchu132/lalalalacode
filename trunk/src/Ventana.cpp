@@ -234,12 +234,12 @@ void Ventana::button_accept_clicked()
      std::cout << "archivo seleccionado: " << filename << std::endl;
 
      select_window->hide();
-     controlador->agregarTorrent(filename);
-     //Torrent *t = controlador->agregarTorrent(filename);
-     /* VER descomentar!
-      if (t != NULL)
-		  torrents->addRow(t);
-     */
+//     controlador->agregarTorrent(filename);
+//     Torrent *t = controlador->agregarTorrent(filename);
+//
+//      if (t != NULL)
+//		  torrents->addRow(t);
+//VER sacar!!
      torrents->addRow(tor);
 }
 
@@ -250,9 +250,8 @@ void Ventana::button_cancel_clicked()
 
 void Ventana::actualizarEstado(Torrent* t)
 {
-	std::cout<<"__update row "<<std::endl;
+	std::cout<<"actualizar fila "<<std::endl;
 	torrents->updateRow(t);
-	std::cout<<"__updated "<<std::endl;
 	if ( t == torrents->getSelectedTorrent())
 		attr->showInfo(t);
 }
