@@ -8,7 +8,7 @@
 //TODO.. DESCOMENTAR !
 #include "Ventana.h"
 
-#define WINDOW_FILE "res/wind.vista"
+#define WINDOW_FILE "res/wind.glade"
 
 #define MAIN_WINDOW "main_wind"
 #define ABOUT_WINDOW "about_wind"
@@ -22,8 +22,7 @@
 #define BUTTON_UP 	"boton_subir"
 #define BUTTON_DOWN	"boton_bajar"
 #define BUTTON_PEERS "boton_peers"
-
-#define MENU_ABOUT "about"
+#define BUTTON_NOTIF "boton_notificaciones"
 
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
@@ -49,6 +48,7 @@ Ventana::Ventana()
 	}catch(Glib::FileError& ex)
 	{
 		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
+		//todo faltan excepciones
 	}
 }
 
@@ -56,7 +56,7 @@ Ventana::~Ventana()
 {
 	delete torrents;
 	delete attr;
-	controlador->cerrarCliente();
+	//controlador->cerrarCliente();
 	std::cout<<"fin"<<std::endl;
 }
 
@@ -81,7 +81,6 @@ void Ventana::getWindows()
 	about_window = 0;
 	builder->get_widget(ABOUT_WINDOW, about_window);
 	std::cout<<"ventana acerca de cargada"<<std::endl;
-	//about_window->show();
 
 	//obtengo la ventana de seleccion de archivo
 	select_window = 0;
@@ -121,6 +120,7 @@ void Ventana::getButtons()
 	builder->get_widget(BUTTON_UP, button_up);
 	builder->get_widget(BUTTON_DOWN, button_down);
 	builder->get_widget(BUTTON_PEERS, button_peers);
+	builder->get_widget(BUTTON_NOTIF, button_notif);
 }
 
 void Ventana::connectSignals()
@@ -133,6 +133,7 @@ void Ventana::connectSignals()
 	button_up->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_up_clicked) );
 	button_down->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_down_clicked) );
 	button_peers->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_peers_clicked) );
+	button_notif->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_notifications_clicked) );
 
 }
 
@@ -214,10 +215,10 @@ void Ventana::on_button_down_clicked()
 	torrents->selectNext();
 }
 
-void Ventana::on_menu_about()
+void Ventana::on_button_notifications_clicked()
 {
-	std::cout<<"about clickeado"<<std::endl;
-	about_window->show();
+	std::cout<<"borrar notificaciones clickeado"<<std::endl;
+	attr->clearNotifications();
 }
 
 void Ventana::button_accept_clicked()
@@ -255,4 +256,10 @@ void Ventana::addTorrent(Torrent *t)
 void Ventana::mostrarNotificacion(std::string notificacion)
 {
 	attr->addNotification(notificacion);
+}
+
+void Ventana::on_menu_about()
+{
+	about_window->run();
+	about_window->hide();
 }

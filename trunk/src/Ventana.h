@@ -44,9 +44,8 @@ private:
 	Gtk::ToolButton *button_up;
 	Gtk::ToolButton *button_down;
 	Gtk::ToolButton *button_peers;
+	Gtk::ToolButton *button_notif;
 
-	/* menu */
-	//Gtk::ImageMenuItem *menu_about;
 
 	/* lista de torrents */
 	TorrentView *torrents;
@@ -64,10 +63,13 @@ private:
 	void on_button_up_clicked();
 	void on_button_down_clicked();
 	void on_button_peers_clicked();
+	void on_button_notifications_clicked();
+
 	void on_menu_about();
 
 	void button_accept_clicked();
 	void button_cancel_clicked();
+
 
 	//obtiene los botones desde el archivo
 	void getButtons();
