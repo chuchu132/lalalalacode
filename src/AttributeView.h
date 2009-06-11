@@ -74,6 +74,9 @@ public:
 	/* agrega una notificacion en la vista */
 	void addNotification(std::string);
 
+	/* borra las notificaciones de la vista */
+	void clearNotifications();
+
 };
 
 #endif /* ATTRIBUTESVIEW_H_ */

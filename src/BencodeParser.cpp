@@ -1,4 +1,5 @@
 #include <sstream>
+#include <cstring>
 #include "BencodeParser.h"
 
 BencodeParser::BencodeParser(const char* url) {

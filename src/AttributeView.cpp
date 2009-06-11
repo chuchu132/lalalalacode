@@ -9,6 +9,8 @@
 
 #define VIEW_PEERS "peers"
 #define VIEW_FILES "archivos"
+#define VIEW_NOTIF "notificaciones"
+
 #define PESTANIAS "Pestanias"
 //#define labels
 
@@ -28,10 +30,11 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 	builder->get_widget(PESTANIAS,page);
 	builder->get_widget(VIEW_PEERS,view_peers);
 	builder->get_widget(VIEW_FILES,view_files);
-	//builder->get_widget(VIEW_NOTIF,view_notif);
+	builder->get_widget(VIEW_NOTIF,view_notif);
 	setPeersView();
 	setStatusView();
 	setFilesView();
+	setNotificationsView();
 	// me conecto a la señal de pagina cambiada para refrescar la vista
 	page->signal_switch_page().connect(sigc::mem_fun (*this,&AttributesView::on_page_selected));
 }
@@ -81,12 +84,12 @@ void AttributesView::setNotificationsView()
 {
 	columns_notif.add(col_notif);
 	list_notif = Gtk::ListStore::create(columns_notif);
-/*	view_notif->set_model(list_notif);
+	view_notif->set_model(list_notif);
 
 	int i = this->view_notif->append_column("Notificaciones", col_notif);
 	Gtk::TreeViewColumn* pColumn = this->view_files->get_column(i);
 	pColumn->set_resizable(true);
-*/
+
 }
 
 void AttributesView::showInfo(Torrent *t)
@@ -94,13 +97,13 @@ void AttributesView::showInfo(Torrent *t)
 	torrent = t;
 	switch (page_selected)
 	{
-	case 0:
+	case 1:
 		showStatus();
 		break;
-	case 1:
+	case 2:
 		showPeers();
 		break;
-	case 2:
+	case 3:
 		showFiles();
 		break;
 	}
@@ -149,4 +152,9 @@ void AttributesView::addNotification(std::string notif)
 {
 	Gtk::TreeModel::Row row = (* list_notif->append());
 	row[col_notif] = notif;
+}
+
+void AttributesView::clearNotifications()
+{
+	list_notif->clear();
 }
