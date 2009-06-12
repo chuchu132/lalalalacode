@@ -29,11 +29,20 @@ public:
 	 * procesa y luego continua recibiendo
 	 */
 	void procesar(std::string mensajeRecibido);
+
+	/* Recibe una url por ejemplo: http://open.tracker.thepiratebay.org/announce
+	 * y luego de extraer el nombre del host y el path para el GET
+	 * intenta conectarse
+	 */
 	bool connect(std::string url,int port);
 	bool send(const char* stream,unsigned int size);
+	std::string getPath();
+	void setPath(std::string path);
+
 private:
 	Torrent* torrent;
 	Socket trackerRemoto; // Conexion con el tracker remoto.
+	std::string path;
 };
 
 #endif /* TRACKER_H_ */

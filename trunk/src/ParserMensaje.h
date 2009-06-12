@@ -34,11 +34,11 @@ public:
 	/* Formato mensaje Piece: <len=0013><Id=8><index><begin><length>  */
 	void crearMensajeCancel(int index, int block, int length,char* buffer);
 
-	std::string crearGetBase(unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left);
+	std::string crearGetBase(std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left);
 
-	std::string crearGetConEvento(unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,std::string event);
+	std::string crearGetConEvento(std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,std::string event);
 
-	std::string crearGetConNumwant(unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
+	std::string crearGetConNumwant(std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
 
 	std::string getHash(char* handshakeMsj);
 

@@ -22,6 +22,7 @@ private:
 	ParserCgi parser;
 	std::string original;
 	std::string codificado;
+	std::string codificadoEntero;
 };
 
 #endif /* TESTPARSERCGI_H_ */

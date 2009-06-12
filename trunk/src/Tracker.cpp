@@ -14,8 +14,7 @@ Tracker::Tracker() {
 }
 
 Tracker::~Tracker() {
-	trackerRemoto.close();
-	join();
+
 }
 //TODO re implementar
 void* Tracker::run(){
@@ -33,7 +32,16 @@ void* Tracker::run(){
 			return NULL;
 }
 
+void Tracker::setPath(std::string path){
+	this->path = path;
+}
+
+std::string Tracker::getPath(){
+	return path;
+}
+
 bool Tracker::connect(std::string url,int port){
+	//TODO parsear la url e inicializar campo path
 	return (trackerRemoto.connect(url,port) == OK);
 }
 

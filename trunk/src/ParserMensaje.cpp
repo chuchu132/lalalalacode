@@ -76,34 +76,35 @@ void ParserMensaje::crearMensajeCancel(int index, int block, int length,
 	(*((int*) (buffer + OFFSET_ARG_3))) = htonl(length); //seteo length
 }
 
-std::string ParserMensaje::crearGetBase(unsigned int* info_hash,
+std::string ParserMensaje::crearGetBase(std::string path,unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left) {
 	ParserCgi parserCgi;
 	std::stringstream buffer;
-	buffer << "GET /?info_hash=" << parserCgi.codificar((char*)info_hash,LEN_SHA1)
-	<< "& peer_id=" << parserCgi.codificar(peer_id.c_str(),LEN_SHA1) << "&port=" << port
+	buffer << "GET /"<<path<<"?info_hash=" << parserCgi.codificar((char*)info_hash,LEN_SHA1)
+	<< "&peer_id=" << parserCgi.codificar(peer_id.c_str(),LEN_SHA1) << "&port=" << port
 	<< "&uploaded=" << uploaded << "&downloaded=" << downloaded
 	<< "&left=" << left;
 	return buffer.str();
 }
 
-std::string ParserMensaje::crearGetConEvento(unsigned int* info_hash,
+std::string ParserMensaje::crearGetConEvento(std::string path,unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left,
 		std::string event) {
-	std::string base = crearGetBase(info_hash, peer_id, port, uploaded,
+	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
 			downloaded, left);
 	std::stringstream buffer;
-	buffer << base << "&event=" << event;
+	buffer << base << "&event=" << event<<"\r\n\r\n";
+
 	return buffer.str();
 }
 
-std::string ParserMensaje::crearGetConNumwant(unsigned int* info_hash,
+std::string ParserMensaje::crearGetConNumwant(std::string path,unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left,
 		int numwant) {
-	std::string base = crearGetBase(info_hash, peer_id, port, uploaded,
+	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
 			downloaded, left);
 	std::stringstream buffer;
-	buffer << base << "&numwant=" << numwant;
+	buffer << base << "&numwant=" << numwant<<"\r\n\r\n";
 	return buffer.str();
 }
 

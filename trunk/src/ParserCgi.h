@@ -18,10 +18,10 @@ public:
 	std::string decodificar(std::string codificado);
 	void decodificar(std::string codificado,char** salida,int& tamanio);
 	bool hayQueCodificarlo(char caracter);
-	char intAhexaChar(int numero);
-	int hexaCharAint(char hexa);
-	std::string  intAhexaNN(int numero);
-	char hexaNNaChar(std::string NN);
+	unsigned char intAhexaChar(unsigned char numero);
+	char hexaCharAint(char hexa);
+	std::string  intAhexaNN(const unsigned char numero);
+	unsigned char hexaNNaChar(std::string NN);
 };
 
 #endif /* PARSERCGI_H_ */
