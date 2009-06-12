@@ -9,12 +9,27 @@
 #include "Tracker.h"
 
 Tracker::Tracker() {
-	// TODO Auto-generated constructor stub
 
 }
 
 Tracker::~Tracker() {
-	// TODO Auto-generated destructor stub
+	trackerRemoto.close();
+	join();
+}
+//TODO re implementar
+void* Tracker::run(){
+	int cantidad;
+	std::string buffer;
+	char bufferTemp[1000];
+	memset(bufferTemp,0,1000);
+	while(trackerRemoto.is_valid()){
+	if( (cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0){
+				bufferTemp[cantidad] = '\0';
+					buffer = bufferTemp;
+					std::cout<<"\nReciev: \n"<<buffer<<std::endl;
+				}
+			}
+			return NULL;
 }
 
 bool Tracker::connect(std::string url,int port){

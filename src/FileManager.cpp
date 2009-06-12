@@ -41,10 +41,10 @@ bool FileManager::inicializar(DatosParser* datos) {
 	tamanioPieza = (unsigned int) atol(datoTemp);
 	delete[] datoTemp;
 
-	if (!datos->obtenerDatoPorNombre("pieces",&datoTemp, tamanio)) {
+	if (!datos->obtenerDatoPorNombre("pieces", &datoTemp, tamanio)) {
 		return false;
 	}
-	memcpy(hashPiezas,datoTemp,tamanio);
+	memcpy(hashPiezas, datoTemp, tamanio);
 	delete[] datoTemp;
 
 	if (!datos->obtenerDatoPorNombre("name", &datoTemp, tamanio)) {
@@ -60,19 +60,22 @@ bool FileManager::inicializar(DatosParser* datos) {
 		bytesTotales = (unsigned int) atol(datoTemp);
 		delete[] datoTemp;
 	} else {
+		unsigned int tamTemp;
 		while (datos->obtenerDatoPorNombre("length", &datoTemp, tamanio)) {
-			bytesTotales = (unsigned int) atol(datoTemp);
+			tamTemp = (unsigned int) atol(datoTemp);
+			bytesTotales += tamTemp;
 			delete[] datoTemp;
 			datos->obtenerDatoPorNombre("path", &datoTemp, tamanio);
 			Archivo* file = new Archivo();
-			file->setTamanio(bytesTotales);
+			file->setTamanio(tamTemp);
 			file->setPath(datoTemp);
 			archivos.push_back(file);
 			delete[] datoTemp;
 		}
 	}
 
-	int cantidadPiezasMod8 = (int)(bytesTotales / 8 ) + (bytesTotales % 8 == 0 )?0:1;
+	int cantidadPiezasMod8 =
+			(int) (bytesTotales / 8) + (bytesTotales % 8 == 0) ? 0 : 1;
 	bitmap.inicializarBitmap(cantidadPiezasMod8);
 
 	if (!datos->obtenerDatoPorNombre("info_hash", &datoTemp, tamanio)) {
@@ -107,9 +110,10 @@ bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 }
 
 void FileManager::inicializarBitmap() {
-	int cantidadPiezas = (int)(cantidadPiezas / tamanioPieza) + ((cantidadPiezas % tamanioPieza)==0)?0:1;
-	for (int i = 0; i< cantidadPiezas;++i) {
-		if(verificarHashPieza(i)){
+	int cantidadPiezas = (int) (cantidadPiezas / tamanioPieza)
+			+ ((cantidadPiezas % tamanioPieza) == 0) ? 0 : 1;
+	for (int i = 0; i < cantidadPiezas; ++i) {
+		if (verificarHashPieza(i)) {
 			bitmap.marcarBit(i);
 		}
 	}

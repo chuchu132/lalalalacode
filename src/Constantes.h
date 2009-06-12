@@ -90,6 +90,8 @@ const int OK = 0;
 const int TAM_BLOQUES = 16384; //ver http://wiki.theory.org/BitTorrentSpecification#Messages
 const int TAM_BUFFER = 100; //TODO redefinir
 
+const int PUERTO_DEFAULT_TRACKER = 80;
+
 /* Estados del Torrent */
 //ver!!
 #define T_ACTIVO "Activo";
