@@ -24,6 +24,8 @@
 #define BUTTON_PEERS "boton_peers"
 #define BUTTON_NOTIF "boton_notificaciones"
 
+#define MENU_VBOX "vbox1"
+
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
 
@@ -43,26 +45,29 @@ Ventana::Ventana()
 
 		this->getWindows();
 		this->getViews();
-
 		this->getButtons();
+		this->setMenu();
 		this->connectSignals();
 
 	}catch(Glib::FileError& ex1)
 	{
-		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
-		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		std::cerr<<"error al cargar el archivo de la vista"<<std::endl;
+		std::cerr<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		std::cerr<<ex1.what()<<std::endl;
 		error = true;
 	}
 	catch (Glib::MarkupError& ex2)
 	{
-		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
-		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		std::cerr<<"error al cargar el archivo de la vista"<<std::endl;
+		std::cerr<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		std::cerr<<ex2.what()<<std::endl;
 		error = true;
 	}
 	catch (Gtk::BuilderError& ex3)
 	{
-		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
-		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		std::cerr<<"error al cargar el archivo de la vista"<<std::endl;
+		std::cerr<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		std::cerr<<ex3.what()<<std::endl;
 		error = true;
 	}
 }
@@ -122,6 +127,90 @@ void Ventana::getViews()
 
 	attr->setAttributesView(builder);
 	std::cout<<"view torrents cargado"<<std::endl;
+
+}
+
+void Ventana::setMenu()
+{
+	menu_archivo = Gtk::ActionGroup::create();
+	menu_editar = Gtk::ActionGroup::create();
+	menu_ayuda = Gtk::ActionGroup::create();
+
+	menu_archivo->add(Gtk::Action::create("FileMenu", "Archivo"));
+	menu_archivo->add(Gtk::Action::create("FileQuit", Gtk::Stock::QUIT),
+						sigc::mem_fun(*this, &Ventana::on_menu_quit));
+	menu_archivo->add(Gtk::Action::create("FileAdd", Gtk::Stock::ADD, "_Agregar", "Agrega un archivo .torrent para descargar"),
+						sigc::mem_fun(*this, &Ventana::on_button_add_clicked));
+	menu_archivo->add(Gtk::Action::create("FileDelete", Gtk::Stock::DELETE, "_Borrar", "Borra el Torrent seleccionado"),
+						sigc::mem_fun(*this, &Ventana::on_button_erase_clicked));
+	menu_archivo->add(Gtk::Action::create("FileStop", Gtk::Stock::MEDIA_STOP, "_Detener", "Detiene el Torrent seleccionado"),
+						sigc::mem_fun(*this, &Ventana::on_button_stop_clicked));
+	menu_archivo->add(Gtk::Action::create("FileContinue", Gtk::Stock::MEDIA_PLAY),
+						sigc::mem_fun(*this, &Ventana::on_button_continue_clicked));
+	menu_archivo->add(Gtk::Action::create("FilePause", Gtk::Stock::MEDIA_PAUSE),
+						sigc::mem_fun(*this, &Ventana::on_button_pause_clicked));
+
+	menu_editar->add(Gtk::Action::create("EditMenu", "Editar"));
+	menu_editar->add(Gtk::Action::create("EditPref", Gtk::Stock::PREFERENCES, "_Preferencias", "Configurar puertos, conexiones, etc."),
+						sigc::mem_fun(*this, &Ventana::on_menu_preferences));
+
+	menu_ayuda->add(Gtk::Action::create("HelpMenu", "Ayuda"));
+	menu_ayuda->add(Gtk::Action::create("HelpAbout", Gtk::Stock::ABOUT),
+						sigc::mem_fun(*this, &Ventana::on_menu_about));
+
+	menu_UIManager = Gtk::UIManager::create();
+	menu_UIManager->insert_action_group(menu_archivo);
+	menu_UIManager->insert_action_group(menu_editar);
+	menu_UIManager->insert_action_group(menu_ayuda);
+
+	main_window->add_accel_group(menu_UIManager->get_accel_group());
+
+	//layout
+
+	 Glib::ustring ui_info =
+	        "<ui>"
+	        "  <menubar name='MenuBar'>"
+	        "    <menu action='FileMenu'>"
+	        "      <menuitem action='FileAdd'/>"
+	        "      <menuitem action='FileDelete'/>"
+			"	   <separator/>"
+	        "      <menuitem action='FileStop'/>"
+	        "      <menuitem action='FilePause'/>"
+	        "      <menuitem action='FileContinue'/>"
+	        "      <separator/>"
+	        "      <menuitem action='FileQuit'/>"
+	        "    </menu>"
+	        "    <menu action='EditMenu'>"
+	        "      <menuitem action='EditPref'/>"
+	        "    </menu>"
+	        "    <menu action='HelpMenu'>"
+	        "      <menuitem action='HelpAbout'/>"
+	        "    </menu>"
+	        "  </menubar>"
+	        "</ui>";
+
+#ifdef GLIBMM_EXCEPTIONS_ENABLED
+  try
+  {
+    menu_UIManager->add_ui_from_string(ui_info);
+  }
+  catch(const Glib::Error& ex)
+  {
+    std::cerr << "building menus failed: " <<  ex.what();
+  }
+#else
+  std::auto_ptr<Glib::Error> ex;
+  menu_UIManager->add_ui_from_string(ui_info, ex);
+  if(ex.get())
+  {
+    std::cerr << "building menus failed: " <<  ex->what();
+  }
+#endif //GLIBMM_EXCEPTIONS_ENABLED
+
+	menu = menu_UIManager->get_widget("/MenuBar");
+	Gtk::Box *box;
+	builder->get_widget(MENU_VBOX, box);
+	box->pack_end(*menu, Gtk::PACK_SHRINK);
 
 }
 
@@ -278,6 +367,16 @@ void Ventana::on_menu_about()
 {
 	about_window->run();
 	about_window->hide();
+}
+
+void Ventana::on_menu_quit()
+{
+	main_window->hide();
+}
+
+void Ventana::on_menu_preferences()
+{
+	//implementar
 }
 
 int Ventana::run()

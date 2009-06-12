@@ -46,8 +46,14 @@ private:
 	Gtk::ToolButton *button_peers;
 	Gtk::ToolButton *button_notif;
 
+	/* menu */
+	Glib::RefPtr<Gtk::ActionGroup> menu_archivo;
+	Glib::RefPtr<Gtk::ActionGroup> menu_editar;
+	Glib::RefPtr<Gtk::ActionGroup> menu_ayuda;
+	Glib::RefPtr<Gtk::UIManager> menu_UIManager;
+	Gtk::Widget* menu;
 
-	/* lista de torrents */
+	/* clases para mostrar la lista de torrents */
 	TorrentView *torrents;
 	AttributesView *attr;
 
@@ -68,6 +74,8 @@ private:
 	void on_button_notifications_clicked();
 
 	void on_menu_about();
+	void on_menu_quit();
+	void on_menu_preferences();
 
 	void button_accept_clicked();
 	void button_cancel_clicked();
@@ -81,6 +89,8 @@ private:
 
 	//obtiene los tree view desde el archivo
 	void getViews();
+
+	void setMenu();
 
 	//conecta las señales con los signal handlers
 	void connectSignals();
