@@ -2,9 +2,7 @@
 #include <cstring>
 
 
-DatosParser::DatosParser() {
-	primero();
-}
+DatosParser::DatosParser() {}
 
 DatosParser::~DatosParser() {
 

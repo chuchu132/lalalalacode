@@ -16,7 +16,6 @@ public:
 	TestTracker();
 	virtual ~TestTracker();
 	void run();
-	void setup();
 
 private:
 	DatosParser* datos;

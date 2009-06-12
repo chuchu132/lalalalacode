@@ -25,7 +25,7 @@ Torrent::~Torrent() {
 	// TODO Auto-generated destructor stub
 	if (activo)
 		detener();
-//	delete tracker;
+	delete tracker;
 }
 
 bool Torrent::inicializarTorrent(BencodeParser* parser){
@@ -65,9 +65,9 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 	ParserMensaje parser;
 	std::string envio;
 	if (numwant < 0) {
-		envio += parser.crearGetConEvento(info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),event);
+		envio += parser.crearGetConEvento(tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),event);
 	} else {
-		envio = parser.crearGetConNumwant(info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),numwant);
+		envio = parser.crearGetConNumwant(tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),numwant);
 	}
 	return (tracker->send(envio.c_str(), envio.length()));
 }

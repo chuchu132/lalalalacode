@@ -7,6 +7,7 @@
 #include "ParserCgi.h"
 #include <string>
 #include <string.h>
+#include <iostream>
 
 ParserCgi::ParserCgi() {}
 
@@ -16,12 +17,13 @@ ParserCgi::~ParserCgi() {}
 std::string ParserCgi::codificar(const char* original,int tam){
 	std::string codificado = "";
 	for (int i = 0; i < tam; ++i) {
-		if (hayQueCodificarlo(original[i])){
+		//if (hayQueCodificarlo(original[i])){ //TODO ver si es lo mismo q codifique todos los caracteres
 			codificado += intAhexaNN(original[i]);
-		}else{
-			codificado += original[i];
-		}
+		//}else{
+			//codificado += original[i];
+		//}
 	}
+
 	return codificado;
 }
 
@@ -57,8 +59,8 @@ bool ParserCgi::hayQueCodificarlo(const char caracter){
 			caracter=='_');
 }
 /*El numero ingresado debe estar en el rango [0,15]*/
-char ParserCgi::intAhexaChar(const int numero){
-	if(0 <= numero && numero<=9){
+unsigned char ParserCgi::intAhexaChar(const unsigned char numero){
+	if( numero<=9 ){
 		return (numero + 48);
 	}
 	if(10<=numero && numero<=15){
@@ -67,16 +69,17 @@ char ParserCgi::intAhexaChar(const int numero){
 	return 0;
 }
 /*Convierte un numero [0,255] a %nn */
-std::string ParserCgi::intAhexaNN(const int numero){
-	int primero = (int)(numero / 16);
-	int segundo = (numero % 16);
+std::string ParserCgi::intAhexaNN(const unsigned char numero){
+	unsigned char primero = (unsigned char)(numero / 16);
+	unsigned char segundo = (numero % 16);
 	std::string resultado = "%";
 	resultado += intAhexaChar(primero);
 	resultado += intAhexaChar(segundo);
+
 	return resultado;
 }
 
-int ParserCgi::hexaCharAint(char hexa){
+char ParserCgi::hexaCharAint(char hexa){
 	if('0'<=hexa && hexa<='9'){
 		return (hexa - 48);
 	}
@@ -89,12 +92,8 @@ int ParserCgi::hexaCharAint(char hexa){
 	return 0;
 }
 
-char ParserCgi::hexaNNaChar(std::string nn){
-	int resultado = 16 * hexaCharAint(nn[0]);
+unsigned char ParserCgi::hexaNNaChar(std::string nn){
+	unsigned char resultado = 16 * hexaCharAint(nn[0]);
 	resultado += hexaCharAint(nn[1]);
 	return resultado;
 }
-
-//std::string ParserCgi::getHash(char* handshakeMsj,int longitud){
-//	handshakeMsg.find()
-//TODO implementar}
