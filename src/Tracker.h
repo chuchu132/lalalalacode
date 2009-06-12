@@ -30,23 +30,27 @@ public:
 	 */
 	void procesar(std::string mensajeRecibido);
 
-	/* Recibe una url por ejemplo: http://open.tracker.thepiratebay.org/announce
-	 * y luego de extraer el nombre del host y el path para el GET
-	 * intenta conectarse
+	/* Recibe una url por ejemplo: http://open.tracker.thepiratebay.org:80/announce
+	 * De la url extrae la direccion del host, el puerto (sino usa el default) y
+	 * el path. Luego intenta conectarse y devuelve el resultado de dicho intento.
 	 */
-	bool connect(std::string url,int port);
+	bool connect(std::string url);
 
 	bool send(const char* stream,unsigned int size);
 
 	void cerrarConexion();
 
 	std::string getPath();
-	void setPath(std::string path);
+
+	//TODO tal vez va privado
+	void inicilizar(std::string url);
 
 private:
 	Torrent* torrent;
 	Socket trackerRemoto; // Conexion con el tracker remoto.
 	std::string path;
+	std::string url;
+	unsigned int puerto;
 };
 
 #endif /* TRACKER_H_ */

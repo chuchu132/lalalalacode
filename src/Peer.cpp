@@ -239,11 +239,11 @@ void Peer::repartirHave(int index){
 }
 
 bool Peer::recvMsj(char** buffer,int& length){
-	int cantidad = peerRemoto->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
+	int cantidad = peerRemoto->receiveExact((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 	if (cantidad > 0) {
 		length = ntohl(length);
 		*buffer = new char[length];
-		cantidad = peerRemoto->receive(*buffer, length);
+		cantidad = peerRemoto->receiveExact(*buffer, length);
 		if (cantidad > 0) {
 			return true;
 		}
