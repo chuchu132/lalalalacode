@@ -10,6 +10,7 @@
 #include "../src/Tracker.h"
 #include "TestTracker.h"
 
+#include <cstring>
 
 TestTracker::TestTracker() {
 	datos = NULL;

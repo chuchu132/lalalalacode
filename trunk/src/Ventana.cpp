@@ -5,7 +5,6 @@
  *      Author: teddy
  */
 
-//TODO.. DESCOMENTAR !
 #include "Ventana.h"
 
 #define WINDOW_FILE "res/wind.glade"
@@ -78,7 +77,7 @@ Ventana::~Ventana()
 	{
 		delete torrents;
 		delete attr;
-		//controlador->cerrarCliente();
+		controlador->cerrarCliente();
 	}
 
 	std::cout<<"fin"<<std::endl;
@@ -238,7 +237,6 @@ void Ventana::connectSignals()
 	button_down->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_down_clicked) );
 	button_peers->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_peers_clicked) );
 	button_notif->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_notifications_clicked) );
-
 }
 
 void Ventana::on_button_add_clicked()
@@ -264,7 +262,7 @@ void Ventana::on_button_erase_clicked()
 	if (t != NULL)
 	{
 		torrents->eraseSelectedRow();
-		//controlador->borrarTorrent(t);
+		controlador->borrarTorrent(t);
 	}
 }
 
@@ -331,13 +329,11 @@ void Ventana::button_accept_clicked()
      std::cout << "archivo seleccionado: " << filename << std::endl;
 
      select_window->hide();
-//     controlador->agregarTorrent(filename);
-//     Torrent *t = controlador->agregarTorrent(filename);
-//
-//      if (t != NULL)
-//		  torrents->addRow(t);
-//VER sacar!!
-     torrents->addRow(tor);
+     controlador->agregarTorrent(filename);
+     Torrent *t = controlador->agregarTorrent(filename);
+
+      if (t != NULL)
+		  torrents->addRow(t);
 }
 
 void Ventana::button_cancel_clicked()

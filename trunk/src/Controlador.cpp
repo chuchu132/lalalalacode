@@ -67,3 +67,8 @@ void Controlador::notificarVista(std::string notificacion)
 	ventana->mostrarNotificacion(notificacion);
 }
 
+int Controlador::correrVista()
+{
+	return ventana->run();
+}
+

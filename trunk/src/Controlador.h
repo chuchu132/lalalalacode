@@ -59,6 +59,9 @@ public:
 	/* muestra un mensaje en la pestaña de notificaciones */
 	void notificarVista(std::string);
 
+	/* inicia la vista */
+	int correrVista();
+
 };
 
 #endif /* CONTROLADOR_H_ */
