@@ -23,7 +23,7 @@ void* Tracker::run(){
 	char bufferTemp[1000];
 	memset(bufferTemp,0,1000);
 	while(trackerRemoto.is_valid()){
-	if( (cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0){
+	if( (cantidad = this->trackerRemoto.receive(bufferTemp, 4)) > 0){
 				bufferTemp[cantidad] = '\0';
 					buffer = bufferTemp;
 					std::cout<<"\nReciev: \n"<<buffer<<std::endl;

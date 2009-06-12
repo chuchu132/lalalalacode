@@ -74,6 +74,7 @@ int Socket::listen(unsigned int port, unsigned int numClientesEspera) {
 
 int Socket::close() {
 	shutdown(fd,2);
+	valido = false;
 	return ::close(fd);
 }
 
