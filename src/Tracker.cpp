@@ -48,3 +48,7 @@ bool Tracker::connect(std::string url,int port){
 bool Tracker::send(const char* stream,unsigned int size){
 	return ((unsigned int)trackerRemoto.send(stream,size) == size);
 }
+
+void Tracker::cerrarConexion(){
+	trackerRemoto.close();
+}
