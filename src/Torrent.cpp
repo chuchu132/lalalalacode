@@ -23,6 +23,9 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent):fileManager(clienteTorrent) {
 
 Torrent::~Torrent() {
 	// TODO Auto-generated destructor stub
+	if (activo)
+		detener();
+	delete tracker;
 }
 
 bool Torrent::inicializarTorrent(BencodeParser* parser){
@@ -116,7 +119,6 @@ void Torrent::detener() {
 }
 
 void Torrent::pausar() {
-	std::cout<<"__t = pausar "<<std::endl;
 	estado = T_PAUSADO;
 	activo = false;
 	controlador->actualizarEstado(this);
