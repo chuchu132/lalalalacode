@@ -40,11 +40,11 @@ void* ClienteTorrent::run() {
 	while (activo) {
 		conexionPeerNuevo = peerListener.accept();
 		if (conexionPeerNuevo != NULL) {
-			cantidad = conexionPeerNuevo->receive((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
+			cantidad = conexionPeerNuevo->receiveExact((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 			if (cantidad > 0) {
 				length = ntohl(length);// pasa a de big endian al endian local
 				handshake = new char[length];
-				cantidad = conexionPeerNuevo->receive(handshake, length);
+				cantidad = conexionPeerNuevo->receiveExact(handshake, length);
 				if (cantidad > 0) {
 					ParserMensaje parser;
 					std::string hash = parser.getHash(handshake);

@@ -51,7 +51,7 @@ public:
 	 * TODO Implementar*/
 	void run();
 
-	bool conectarTracker(std::string url,int port);
+	bool conectarTracker(std::string url);
 
 	/* Se envia un GET con la siguiente informacion:
 	 * info_hash

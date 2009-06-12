@@ -30,14 +30,14 @@ void TestTracker::run() {
 		char* datoTemp;
 		int tam;
 		datos->primero();
+		/*Obtengo la url del tracker */
 		datos->obtenerDatoPorNombre("announce",&datoTemp,tam);
 		url = datoTemp;
 		delete[] datoTemp;
-
-
-		//assert(tracker.connect("open.tracker.thepiratebay.org",80),"Se conecto al tracker");
-		assert(tracker.connect("localhost",9999),"Se conecto al tracker");
-
+		/*Intento conectarme*/
+		if( tracker.connect(url) ){
+		assert(true,"Se conecto al tracker");
+		/*Lanzo un hilo a escuchar lo que manda el tracker*/
 		tracker.execute();
 
 		ParserMensaje parser;
@@ -53,6 +53,7 @@ void TestTracker::run() {
 		memcpy(info_hash,datoTemp,LEN_SHA1);
 		}
 		delete[] datoTemp;
+		/*Creo un mensaje para enviar el GET al tracker*/
 		std::string get = parser.crearGetConEvento("annonunce",info_hash,peer_id.c_str(),puerto,0,0,left,EVENT_STARTED);
 
 		tracker.send(get.c_str(),get.length());
@@ -61,7 +62,9 @@ void TestTracker::run() {
 		sleep(10);
 		tracker.cerrarConexion();
 		tracker.join();
-
+		}else{
+			assert(false,"Se conecto al tracker");
+		}
 
 	} else {
 		assert(false, "No se pudo parsear el archivo");

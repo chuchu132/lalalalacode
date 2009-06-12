@@ -57,8 +57,8 @@ void Torrent::run(){
 
 }
 
-bool Torrent::conectarTracker(std::string url, int port) {
-	return tracker->connect(url, port);
+bool Torrent::conectarTracker(std::string url) {
+	return tracker->connect(url);
 }
 
 bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {

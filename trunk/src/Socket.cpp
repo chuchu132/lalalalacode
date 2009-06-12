@@ -96,7 +96,11 @@ int Socket::send(const char* stream, unsigned int size) {
 	return size;
 }
 
-int Socket::receive(char* stream, unsigned int size) {
+int Socket::receive(char* stream,unsigned int size){
+	return recv(fd, stream, size, 0);
+}
+
+int Socket::receiveExact(char* stream, unsigned int size) {
 	unsigned int recibido = 0;
 	int aux = 0;
 	while (recibido < size ) {
@@ -105,7 +109,8 @@ int Socket::receive(char* stream, unsigned int size) {
 			recibido += aux;
 			if(recibido == size){return size;}
 		} else {
-			return ERROR;
+			if(aux < 0){return ERROR;}
+			return recibido;
 		}
 	}
 	return ERROR;
