@@ -18,7 +18,7 @@ ClienteTorrent::ClienteTorrent() {
 	//crear el peer_id
 	//sacar los datos del archivo de configuracion
 	puerto = PORT;
-	peerListener.listen(puerto, CANT_CLIENTES);
+
 
 }
 
@@ -26,10 +26,11 @@ ClienteTorrent::~ClienteTorrent() {
 	// TODO
 	if (activo)
 		finalizar();
-	peerListener.close();
 }
 
 void* ClienteTorrent::run() {
+
+	peerListener.listen(puerto, CANT_CLIENTES);
 
 	Socket* conexionPeerNuevo;
 	int cantidad, length;
@@ -62,6 +63,8 @@ void* ClienteTorrent::run() {
 			}
 		}
 	}
+
+	peerListener.close();
 	return NULL;
 }
 
@@ -80,11 +83,11 @@ void ClienteTorrent::finalizar() {
 	//implementar: yo hago esto ;) LU
 
 	activo = false;
-	//this->join();
+	this->join();
 
 	std::list<Torrent*>::iterator it = torrents.begin();
 	while (it != torrents.end()) {
-		(*it)->detener();//join??
+		(*it)->detener();
 		//guardar info sobre el torrent
 		delete (*it);
 	}
