@@ -35,7 +35,11 @@ public:
 	 * intenta conectarse
 	 */
 	bool connect(std::string url,int port);
+
 	bool send(const char* stream,unsigned int size);
+
+	void cerrarConexion();
+
 	std::string getPath();
 	void setPath(std::string path);
 

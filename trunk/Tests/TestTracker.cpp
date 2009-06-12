@@ -34,8 +34,10 @@ void TestTracker::run() {
 		url = datoTemp;
 		delete[] datoTemp;
 
-		std::cout<<"http://open.tracker.thepiratebay.org"<<std::endl;
+
 		assert(tracker.connect("open.tracker.thepiratebay.org",80),"Se conecto al tracker");
+
+		tracker.run();
 
 		ParserMensaje parser;
 		unsigned int info_hash[5];
@@ -55,6 +57,11 @@ void TestTracker::run() {
 		tracker.send(get.c_str(),get.length());
 
 		assert(true,"Paso del send");
+		std::cin>>puerto;
+		tracker.cerrarConexion();
+		tracker.join();
+
+
 	} else {
 		assert(false, "No se pudo parsear el archivo");
 	}
