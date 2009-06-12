@@ -280,15 +280,22 @@ void Ventana::on_menu_about()
 	about_window->hide();
 }
 
-void Ventana::run()
+int Ventana::run()
 {
 	if (!error)
 	{
 		Gtk::Main* kit = Gtk::Main::instance();
 		kit->run(*main_window);
+		return 0;
 	}
 	else
 	{
 		std::cout<<"No se puede cargar la ventana "<<std::endl;
+		return 1;
 	}
+}
+
+bool Ventana::huboError()
+{
+	return error;
 }

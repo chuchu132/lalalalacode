@@ -25,7 +25,7 @@ Torrent::~Torrent() {
 	// TODO Auto-generated destructor stub
 	if (activo)
 		detener();
-	delete tracker;
+//	delete tracker;
 }
 
 bool Torrent::inicializarTorrent(BencodeParser* parser){
