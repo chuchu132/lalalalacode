@@ -29,19 +29,21 @@
 
 Ventana::Ventana()
 {
+	error = false;
 	std::cout<<"comienzo ventana"<<std::endl;
-	torrents = new TorrentView();
-	attr = new AttributesView();
-	torrents->setAttributesView(attr);
+
 	try
 	{
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
 		std::cout<<"archivo cargado"<<std::endl;
 
+		attr = new AttributesView();
+		torrents = new TorrentView();
+		torrents->setAttributesView(attr);
+
 		this->getWindows();
 		this->getViews();
 
-		//obtengo los botones
 		this->getButtons();
 		this->connectSignals();
 
@@ -49,26 +51,32 @@ Ventana::Ventana()
 	{
 		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
 		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
-		//todo ver excepciones
+		error = true;
 	}
 	catch (Glib::MarkupError& ex2)
 	{
 		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
 		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		error = true;
+	}
+	catch (Gtk::BuilderError& ex3)
+	{
+		std::cout<<"error al cargar el archivo de la vista"<<std::endl;
+		std::cout<<"falta el archivo "<< WINDOW_FILE<<std::endl;
+		error = true;
 	}
 }
 
 Ventana::~Ventana()
 {
-	delete torrents;
-	delete attr;
-	//controlador->cerrarCliente();
-	std::cout<<"fin"<<std::endl;
-}
+	if (!error)
+	{
+		delete torrents;
+		delete attr;
+		//controlador->cerrarCliente();
+	}
 
-Gtk::Window& Ventana::getVentana()
-{
-	return (*main_window);
+	std::cout<<"fin"<<std::endl;
 }
 
 void Ventana::setControlador(Controlador *c)
@@ -270,4 +278,17 @@ void Ventana::on_menu_about()
 {
 	about_window->run();
 	about_window->hide();
+}
+
+void Ventana::run()
+{
+	if (!error)
+	{
+		Gtk::Main* kit = Gtk::Main::instance();
+		kit->run(*main_window);
+	}
+	else
+	{
+		std::cout<<"No se puede cargar la ventana "<<std::endl;
+	}
 }

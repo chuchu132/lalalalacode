@@ -7,6 +7,7 @@
 
 #include "Constantes.h"
 #include "Tracker.h"
+#include <cstring>
 
 Tracker::Tracker() {
 
