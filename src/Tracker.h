@@ -45,6 +45,13 @@ public:
 	//TODO tal vez va privado
 	void inicilizar(std::string url);
 
+	void procesarResponse(std::string buffer);
+
+	void archivoTracker (std::string buffer);
+
+	void decodificarPeers(char* cadena,unsigned int longitudCadena);
+
+
 private:
 	Torrent* torrent;
 	Socket trackerRemoto; // Conexion con el tracker remoto.

@@ -8,7 +8,8 @@
 #include "Constantes.h"
 #include "Tracker.h"
 #include <cstring>
-
+#include <arpa/inet.h>
+#include <sstream>
 Tracker::Tracker() {
 	puerto = PUERTO_DEFAULT_TRACKER;
 }
@@ -27,7 +28,8 @@ void* Tracker::run() {
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
 			bufferTemp[cantidad] = '\0';
 			buffer = bufferTemp;
-			std::cout << "\nReciev: \n" << buffer << std::endl;
+			std::cout <<"\nReciev: \n" << buffer << std::endl;
+			procesarResponse(buffer);
 		}
 		seCerro = true;
 	}
@@ -70,3 +72,76 @@ void Tracker::inicilizar(std::string url) {
 		this->url.assign(url, ini + 2, fin - (ini + 2));
 	}
 }
+
+//TODO falta testeo
+void Tracker::procesarResponse (std::string buffer){
+	archivoTracker(buffer);
+	BencodeParser parser("responseTracker.bin");
+    DatosParser* datos;
+    char *aux;
+    int tam;
+    if (parser.procesar()) {
+    		datos = parser.salidaParser();
+    		datos->primero();
+    		datos->obtenerDatoPorNombre("peers",&aux,tam);
+    		//while (!datos->final()){
+				decodificarPeers(datos->obtenerDato(),datos->obtenerLongitudDato());
+			//	datos->siguiente();
+			//}
+	   }
+       delete[]aux;
+}
+
+void Tracker::archivoTracker(std::string buffer){
+
+    int inicio=0,lonInicial,lonTotal,i=0,marca;
+    inicio=buffer.find("Content-Length: ",inicio);
+    lonInicial=buffer.find(" ",inicio);
+    lonTotal=buffer.find("\n",lonInicial);
+    marca=buffer.find("d",lonTotal);
+
+    //Obtengo la longitud total del archivo bencode
+    char longitudBencode[lonTotal-lonInicial+1];
+    for (inicio=lonInicial+1;inicio<lonTotal-1;inicio++){
+    	longitudBencode[i]=buffer[inicio];
+    	i++;
+    }longitudBencode[i]='\0';
+    char aux[atoi(longitudBencode)+1];
+
+    FILE*fp=fopen("responseTracker.bin","w");i=0;
+	for (int pos=marca;pos<(atoi(longitudBencode)+marca);pos++){
+		aux[i]=buffer[pos]; i++;
+	}	aux[i]='\0';
+
+	for (int pos=0;pos<atoi(longitudBencode);pos++){
+			fputc(aux[pos],fp);
+		}
+	fclose(fp);
+
+}
+
+void Tracker::decodificarPeers( char * cadena,unsigned int longitudCadena ){
+	unsigned ip=0;
+	unsigned port=0;
+	unsigned int i,j,pos=0;
+	//Tomar cadenas de cada 6 bytes
+	do{
+		for ( i=pos;i<pos+6;i++){
+			j=0;
+			if (i<pos+4){
+				ip= cadena[i];
+				std::cout<<ntohl(ip)<<".";
+				if(i==pos+3) std::cout<<std::endl;
+			}
+			else{
+		        port=cadena[i];
+		        std::cout<<ntohl(port);
+			}
+		}
+		pos=i;
+		std::cout<<std::endl;
+		//Crear peer
+	}while (i<longitudCadena-1);
+
+}
+
