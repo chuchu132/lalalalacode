@@ -15,16 +15,21 @@ void TestVista::run(){
 
 		Gtk::Main kit(0,0);
 		ClienteTorrent cliente;
-		//Torrent t(&cliente);//para probar la vista
+
 		Ventana ventana;
-		//ventana.tor = &t;
+
 		Controlador controlador(cliente);
-	//	t.setControlador(&controlador);
 
 		ventana.setControlador(&controlador);
 		controlador.setVentana(&ventana);
 
-		ventana.run();
+		if (!ventana.huboError())
+		{
+			Torrent t(&cliente);
+			ventana.tor = &t;
+			t.setControlador(&controlador);
+			ventana.run();
+		}
 
 		assert(true,"Ventana cerrada.");
 }
