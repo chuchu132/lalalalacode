@@ -1,8 +1,9 @@
 #include "DatosParser.h"
 #include <cstring>
 
-DatosParser::DatosParser() {
 
+DatosParser::DatosParser() {
+	primero();
 }
 
 DatosParser::~DatosParser() {
@@ -52,6 +53,7 @@ bool DatosParser::final() {
 }
 
 bool DatosParser::irAetiqueta(std::string nombre){
+
 	int lonConsulta = nombre.length();
 	while (it != datos.end()) {
 		if ((lonConsulta + 1) == *itLongitudes) {
