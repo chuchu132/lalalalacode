@@ -20,7 +20,9 @@ public:
 	virtual ~Tracker();
 
 	/*En el run el tracker va a estar escuchando al tracker remoto*/
-	void* run(){return NULL;}; //TODO implementar
+	void* run();
+
+	//TODO falta un setTorrent();
 
 	/*
 	 * Cada vez que llega un mensaje desde el tracker remoto se lo

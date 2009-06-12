@@ -13,6 +13,7 @@
 #include "TestSha1.h"
 #include "TestDatosParser.h"
 #include "TestBencodeParser.h"
+#include "TestTracker.h"
 
 int main (int argc, char* argv[])
 {
@@ -26,7 +27,7 @@ int main (int argc, char* argv[])
 	tester.agregarTest(new TestBitmap(),"Test Bitmap");
 	tester.agregarTest(new TestDatosParser(),"Test DatosParser");
 	tester.agregarTest(new TestBencodeParser(),"Test BencodeParser");
-
+	//tester.agregarTest(new TestTracker(),"Test Tracker");
 
 	tester.correrTests();
 
