@@ -54,6 +54,8 @@ private:
 	/* controlador de la vista */
 	Controlador *controlador;
 
+	bool error; //indica si hubo un error
+
 	//Signal handlers:
 	void on_button_add_clicked();
   	void on_button_erase_clicked();
@@ -92,9 +94,6 @@ public:
 
 	~Ventana();
 
-	/* devuelve una referencia a la ventana principal */
-	Gtk::Window& getVentana();
-
 	/* setea el controlador */
 	void setControlador(Controlador *c);
 
@@ -105,6 +104,9 @@ public:
 	void addTorrent(Torrent*);
 
 	void mostrarNotificacion(std::string);
+
+	/* abre la ventana principal */
+	void run();
 
 };
 

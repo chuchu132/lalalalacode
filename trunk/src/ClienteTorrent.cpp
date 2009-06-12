@@ -18,7 +18,7 @@ ClienteTorrent::ClienteTorrent() {
 	//crear el peer_id
 	//sacar los datos del archivo de configuracion
 	puerto = PORT;
-
+	activo = false;
 
 }
 
@@ -82,9 +82,11 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 void ClienteTorrent::finalizar() {
 	//implementar: yo hago esto ;) LU
 
-	activo = false;
-	this->join();
-
+	if (activo)
+	{
+		activo = false;
+		this->join();
+	}
 	std::list<Torrent*>::iterator it = torrents.begin();
 	while (it != torrents.end()) {
 		(*it)->detener();
