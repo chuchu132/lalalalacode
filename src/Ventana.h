@@ -98,8 +98,6 @@ private:
 
 public:
 
-	Torrent *tor;//temporal, solo para probar la vista
-
 	Ventana();
 
 	~Ventana();
