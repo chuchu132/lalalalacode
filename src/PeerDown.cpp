@@ -16,16 +16,19 @@ PeerDown::~PeerDown() {
 }
 
 void* PeerDown::run() {
-//	sendHandshake();
-//	sendBitfield();
-//	bool error = true; // error puede ser en la conexion, en lo recibido o al procesar
-//	while (torrent->estaActivo() && conexionOK) {
-//		int length;
-//		char* buffer;
-//		error = recvMsj(buffer,length);
-//		if (!error) {
-//
-//		}
-//	}
+	sendHandshake();
+	sendBitfield();
+	bool error = true; // error puede ser en la conexion, en lo recibido o al procesar
+	while (getTorrent()->estaActivo() &&  conexionEstaOK() ) {
+		int length;
+		char* buffer;
+		if(recvMsj(&buffer,length)){
+		procesar(buffer,length);
+
+		}
+		if (!error) {
+
+		}
+	}
 	return NULL;
 }

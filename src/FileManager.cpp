@@ -13,13 +13,19 @@
 #include <cstring>
 
 FileManager::FileManager(ClienteTorrent* cliente) {
-	this->clienteTorrent = cliente;
+	this->clienteTorrent = cliente; //TODO no se esta usando q ondaaa?
 	tamanioPieza = 0;
 	bytesTotales = 0;
 	hashPiezas = NULL;
 }
 
 FileManager::~FileManager() {
+	if(hashPiezas != NULL){delete[] hashPiezas;}
+	std::list<Archivo*>::iterator it;
+	it = archivos.begin();
+	while(it != archivos.end() ){
+		delete (*it);
+	}
 	//TODO limpiar lista archivos guardar datos admin
 }
 
@@ -44,6 +50,7 @@ bool FileManager::inicializar(DatosParser* datos) {
 	if (!datos->obtenerDatoPorNombre("pieces", &datoTemp, tamanio)) {
 		return false;
 	}
+	hashPiezas = (unsigned int*) new char[tamanio];
 	memcpy(hashPiezas, datoTemp, tamanio);
 	delete[] datoTemp;
 
@@ -139,7 +146,7 @@ char* FileManager::readBlock(int index, int begin, int longitud) {
 	}
 }
 
-void FileManager::writeBlock(int index, int begin, int longitud, char* block) {
+void FileManager::writeBlock(int index, int begin, int longitud, const char* block) {
 	if (!bitmap.estaMarcada(index)) {
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial

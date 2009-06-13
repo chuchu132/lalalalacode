@@ -252,3 +252,11 @@ bool Peer::recvMsj(char** buffer,int& length){
 	}
 	return false;
 }
+
+bool Peer::conexionEstaOK(){
+	return conexionOK;
+}
+
+Torrent* Peer::getTorrent(){
+	return torrent;
+}
