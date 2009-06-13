@@ -23,15 +23,8 @@ TestTracker::~TestTracker() {
 }
 
 void TestTracker::run() {
-	FILE*fp = fopen("./Tests/AngelsAndDemons.torrent", "r");
-	fseek(fp,0,SEEK_END);
-	int longitud=ftell(fp);
-	char * aux=new char[longitud+1];
-	fseek(fp,0,SEEK_SET);
-	fread(aux,1,longitud,fp);
-	fclose (fp);
 
-	BencodeParser parser(aux,longitud);
+	BencodeParser parser("./Tests/AngelsAndDemons.torrent");
 	if (parser.procesar()) {
 		datos = parser.salidaParser();
 		Tracker tracker;
