@@ -7,8 +7,8 @@
 
 #include "Configuracion.h"
 
-#define TAG_DESCARGAS "[descargas] "
-#define TAG_PUERTO "[puerto] "
+#define TAG_DESCARGAS "[descargas]"
+#define TAG_PUERTO "[puerto]"
 
 Configuracion::Configuracion() {
 
@@ -27,7 +27,6 @@ Configuracion::Configuracion() {
 Configuracion::~Configuracion() {
 	if (huboCambios)
 		guardarConfiguracion();
-	std::cout<<"fin" <<std::endl;
 }
 
 void Configuracion::crearArchivo(){
@@ -39,7 +38,6 @@ void Configuracion::crearArchivo(){
 }
 
 void Configuracion::cargarConfiguracionDefault() {
-	std::cout<< "Configuracion por Default"<<std::endl;
 	puerto = PUERTO_DEFAULT;
 	rutaDescargas = RUTA_DESCARGAS;
 }
@@ -48,13 +46,8 @@ void Configuracion::cargarConfiguracion() {
 
 	std::cout<<"Cargando config desde archivo" <<std::endl;
 	std::string linea;
-	std::string opc;
-	std::string::size_type pos;
 
 	if (!archivo.eof()) {
-		//leerLinea();
-		archivo >>linea;
-		archivo >>linea;
 		archivo >>linea;
 	}
 	else {
@@ -63,28 +56,17 @@ void Configuracion::cargarConfiguracion() {
 
 	while (!archivo.eof())
 	{
-		//linea = leerLinea();
 		archivo >>linea;
-		std::cout<<linea<<std::endl;
-		pos = linea.find_first_of(' ');
 
-		if (pos == std::string::npos) {
-			continue;
-			huboCambios = true;
-		}
-
-		opc = linea.substr(0, pos);
-
-		if (opc == TAG_DESCARGAS) {
-			rutaDescargas = linea.substr(pos + 1);
-			std::cout<<"Descargas: "<< rutaDescargas<<std::endl;
+		if (linea == TAG_DESCARGAS) {
+			rutaDescargas = leerRuta();
 		}
 		else {
-			if (opc == TAG_PUERTO){
+			if (linea == TAG_PUERTO){
 				std::stringstream buffer;
-				buffer << linea.substr(pos + 1);
+				archivo >>linea;
+				buffer << linea;
 				buffer >> puerto;
-				std::cout<<"Puerto: "<<puerto <<std::endl;
 			}
 			else {
 				huboCambios = true;
@@ -96,9 +78,9 @@ void Configuracion::cargarConfiguracion() {
 void Configuracion::guardarConfiguracion() {
 	std::cout<< "guardando config"<<std::endl;
 	crearArchivo();
-	archivo << ".: FiTorrent :."<<std::endl;
-	archivo << TAG_DESCARGAS << rutaDescargas << std::endl;
-	archivo << TAG_PUERTO << puerto << std::endl;
+	archivo << "[FiTorrent]"<<std::endl;
+	archivo << TAG_DESCARGAS<<" <"<< rutaDescargas <<'>'<< std::endl;
+	archivo << TAG_PUERTO<<' '<< puerto << std::endl;
 	archivo.close();
 }
 
@@ -120,18 +102,16 @@ unsigned int Configuracion::getPuerto() {
 	return puerto;
 }
 
-std::string Configuracion::leerLinea() {
-	std::string linea;
-	bool fin;
+std::string Configuracion::leerRuta() {
+	std::string ruta;
 	char aux;
-	archivo.get(aux);
-	fin = (aux == '\n');
+	archivo.get(aux);//\n
+	archivo.get(aux); //'<'
+	archivo.get(aux);//primer caracter
 
-	while (!fin) {
-		linea += aux;
+	while (aux != '>') {
+		ruta += aux;
 		archivo.get(aux);
-		fin = (aux == '\n');
 	}
-	//archivo.putback(aux);
-	return linea;
+	return ruta;
 }
