@@ -13,6 +13,7 @@
 #include "Controlador.h"
 #include "Socket.h"
 #include "Thread.h"
+#include "Configuracion.h"
 
 /* ********************************************************************
  * TODO Completar Comentario                                          *
@@ -42,6 +43,7 @@ private:
 	unsigned int puerto; //puerto en el que escucha conexiones
 	bool activo; // TODO sirve para dejar de escuchar conexiones
 	Controlador *controlador;
+	Configuracion config;
 
 public:
 
