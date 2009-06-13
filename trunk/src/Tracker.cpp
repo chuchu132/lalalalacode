@@ -121,27 +121,25 @@ void Tracker::archivoTracker(std::string buffer){
 }
 
 void Tracker::decodificarPeers( char * cadena,unsigned int longitudCadena ){
-	unsigned ip=0;
-	unsigned port=0;
-	unsigned int i,j,pos=0;
-	//Tomar cadenas de cada 6 bytes
-	do{
-		for ( i=pos;i<pos+6;i++){
-			j=0;
-			if (i<pos+4){
-				ip= cadena[i];
-				std::cout<<ntohl(ip)<<".";
-				if(i==pos+3) std::cout<<std::endl;
-			}
-			else{
-		        port=cadena[i];
-		        std::cout<<ntohl(port);
-			}
-		}
-		pos=i;
-		std::cout<<std::endl;
-		//Crear peer
-	}while (i<longitudCadena-1);
+	int cantIps = (int)(longitudCadena / 6);
+	unsigned short int puerto;
+	for(int i=0; i < cantIps; i++){
+	std::stringstream ip;
+	int index = (i * 6);
+	unsigned char temp = (unsigned char)cadena[index];
+	ip<<(int)temp<<".";
+	temp = (unsigned char)cadena[index+1];
+	ip<<(int)temp<<".";
+	temp = (unsigned char)cadena[index+2];
+	ip<<(int)temp<<".";
+	temp = (unsigned char)cadena[index+3];
+	ip<<(int)temp;
+	std::cout<<ip.str()<<std::endl;
+	memcpy(&puerto,cadena + index + 4, sizeof(unsigned short int));
+	puerto = ntohs(puerto);
+	std::cout<<":"<<puerto<<std::endl;
+
+	}
 
 }
 
