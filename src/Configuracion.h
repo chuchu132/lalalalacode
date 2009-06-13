@@ -31,6 +31,7 @@ private:
 	void guardarConfiguracion();
 
 	std::string leerLinea();
+	std::string leerRuta();
 
 public:
 
