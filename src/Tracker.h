@@ -51,7 +51,6 @@ public:
 
 	void decodificarPeers(char* cadena,unsigned int longitudCadena);
 
-
 private:
 	Torrent* torrent;
 	Socket trackerRemoto; // Conexion con el tracker remoto.

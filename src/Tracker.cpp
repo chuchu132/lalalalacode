@@ -76,7 +76,16 @@ void Tracker::inicilizar(std::string url) {
 //TODO falta testeo
 void Tracker::procesarResponse (std::string buffer){
 	archivoTracker(buffer);
-	BencodeParser parser("responseTracker.bin");
+
+	FILE*fp = fopen("responseTracker.bin", "r");
+	fseek(fp,0,SEEK_END);
+	int longitud=ftell(fp);
+	char * auxiliar=new char[longitud+1];
+	fseek(fp,0,SEEK_SET);
+	fread(auxiliar,1,longitud,fp);
+	fclose (fp);
+
+	BencodeParser parser(auxiliar,longitud);
     DatosParser* datos;
     char *aux;
     int tam;
@@ -106,7 +115,7 @@ void Tracker::archivoTracker(std::string buffer){
     	longitudBencode[i]=buffer[inicio];
     	i++;
     }longitudBencode[i]='\0';
-    char aux[atoi(longitudBencode)+1];
+    char *aux= new char[atoi(longitudBencode)+1];
 
     FILE*fp=fopen("responseTracker.bin","w");i=0;
 	for (int pos=marca;pos<(atoi(longitudBencode)+marca);pos++){
@@ -117,7 +126,7 @@ void Tracker::archivoTracker(std::string buffer){
 			fputc(aux[pos],fp);
 		}
 	fclose(fp);
-
+    delete []aux;
 }
 
 void Tracker::decodificarPeers( char * cadena,unsigned int longitudCadena ){

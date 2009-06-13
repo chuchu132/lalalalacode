@@ -109,7 +109,15 @@ unsigned int ClienteTorrent::getPuerto(){
 
 Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 
-	BencodeParser parserTorrent(ruta.c_str());
+	FILE*fp = fopen(ruta.c_str(), "r");
+	fseek(fp,0,SEEK_END);
+	int tam=ftell(fp);
+	char * aux=new char[tam+1];
+	fseek(fp,0,SEEK_SET);
+	fread(aux,1,tam,fp);
+	fclose (fp);
+
+	BencodeParser parserTorrent(aux,tam);//ruta.c_str());
 	std::string notif;
 	if (!parserTorrent.procesar()) {
 		notif = "Error al examinar el archivo ";
