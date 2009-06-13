@@ -10,14 +10,12 @@
 #include "Peer.h"
 #include "PeerUp.h"
 
-#define PORT 33333
 #define CANT_CLIENTES 5
 
 ClienteTorrent::ClienteTorrent() {
 	// TODO
 	//crear el peer_id
 	//sacar los datos del archivo de configuracion
-	puerto = PORT;
 	activo = false;
 
 }

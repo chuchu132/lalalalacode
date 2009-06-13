@@ -94,11 +94,16 @@ const int PUERTO_DEFAULT_TRACKER = 80;
 
 /* Estados del Torrent */
 //ver!!
-#define T_ACTIVO "Activo";
-#define T_PAUSADO "Pausado";
-#define T_DETENIDO "Detenido";
-#define T_COMPLETO "Completo";
+#define T_ACTIVO "Activo"
+#define T_PAUSADO "Pausado"
+#define T_DETENIDO "Detenido"
+#define T_COMPLETO "Completo"
 
 #define URL_CARPETA_TEMP "./incompletos/"
+
+/* Configuracion Default */
+#define RUTA_CONFIGURACION "FiTorrent.config"
+#define RUTA_DESCARGAS "./Downloads/"
+const unsigned int PUERTO_DEFAULT = 36277;
 
 #endif /* CONSTANTES_H_ */
