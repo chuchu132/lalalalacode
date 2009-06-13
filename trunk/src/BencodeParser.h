@@ -27,7 +27,7 @@ private:
 	int pos; //posicion dentro del buffer
 	int buf_lim; //limite del buffer
 
-	//FILE *fp; //File pointer al archivo .torrent que se esta parseando
+	FILE *fp; //File pointer al archivo .torrent que se esta parseando
 	int ident; //Atributo para visualizacion por pantalla
 
 	DatosParser datos;//objeto que almacena los datos obtenidos del parser
@@ -45,10 +45,16 @@ private:
 public:
 
 	//Constructor
-	BencodeParser(const char * cadena,unsigned longitud);
+	BencodeParser(const char * url);
+
+	//Constructor: parametros , Cadena a parsear y su longitud
+	BencodeParser(const char * cadena,int longitud);
 
 	//Destructor
 	~BencodeParser();
+
+	//Inicializa los atributos del bencode
+	void inicializar();
 
 	//Proceso del parser
 	bool procesar();
@@ -85,6 +91,8 @@ public:
 
 	//Obtiene el info_hash del .torrent y lo guarda en mensajeInfoHash
 	void procesarInfoHash();
+
+	char* archivoAString (const char *url,unsigned *longitud);
 
 };
 

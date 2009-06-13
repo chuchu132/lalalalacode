@@ -23,15 +23,7 @@ TestFileManager::~TestFileManager() {
 
 void TestFileManager::run(){
 
-	FILE*fp = fopen("../Tests/AngelsAndDemons.torrent", "r");
-	fseek(fp,0,SEEK_END);
-	int tam=ftell(fp);
-	char * aux=new char[tam+1];
-	fseek(fp,0,SEEK_SET);
-	fread(aux,1,tam,fp);
-	fclose (fp);
-
-	BencodeParser parser(aux,tam);
+	BencodeParser parser("../Tests/AngelsAndDemons.torrent");
 		if (parser.procesar()) {
 			FileManager filemanager(NULL);
 			DatosParser* datos =  parser.salidaParser();

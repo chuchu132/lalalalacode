@@ -1,23 +1,44 @@
 #include <sstream>
 #include <cstring>
 #include "BencodeParser.h"
-BencodeParser::BencodeParser(const char * cadena,unsigned longitud) {
+
+BencodeParser::BencodeParser(const char * url) {
+
+	char *cadena;
+    unsigned longitud;
+    cadena=archivoAString (url,&longitud);
 
 	is.sputn(cadena,longitud);
-	is.pubseekpos(0);
+	inicializar();
+	if (cadena!=NULL)
+	delete []cadena;
 
+}
+
+BencodeParser::BencodeParser(const char * cadena,int longitud) {
+
+	is.sputn(cadena,longitud);
+	inicializar();
+
+}
+
+
+BencodeParser::~BencodeParser() {
+	if (fp!=NULL)fclose(fp);
+}
+
+void BencodeParser::inicializar (){
+
+	is.pubseekpos(0);
 	pos = 0;
 	buf_lim = 0;
 	ident = 0;
 	diccionario = 0;
 	contador = 1;
 
-    offsetInfoHash=0;
+	offsetInfoHash=0;
 	offsetFin=0;
-    marcaFinHash=0;
-}
-
-BencodeParser::~BencodeParser() {
+	marcaFinHash=0;
 
 }
 
@@ -198,3 +219,21 @@ void BencodeParser::procesarInfoHash() {
 
 	delete[] buffer;
 }
+
+char* BencodeParser::archivoAString(const char *url,  unsigned *tam){
+
+    char *salida=NULL;
+
+	fp = fopen(url, "r");
+	if (fp!=NULL){
+
+		fseek(fp,0,SEEK_END);
+		*tam=ftell(fp);
+		salida=new char[*tam+1];
+		fseek(fp,0,SEEK_SET);
+		fread(salida,1,*tam,fp);
+
+	}
+    return salida;
+}
+
