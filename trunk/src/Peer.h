@@ -111,6 +111,10 @@ public:
 	 * */
 	bool recvMsj(char** buffer,int& length);
 
+	bool conexionEstaOK();
+
+	Torrent* getTorrent();
+
 private:
 	/*
 	 * La llave de envio se bloquea antes de cualquier envio al peer remoto

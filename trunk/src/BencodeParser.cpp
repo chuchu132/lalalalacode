@@ -156,6 +156,7 @@ DatosParser* BencodeParser::salidaParser() {
 		salida->agregarDato(datos.obtenerDato(), datos.obtenerLongitudDato());
 		datos.siguiente();
 	}
+	salida->primero();
 	return salida;
 }
 

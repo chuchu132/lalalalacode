@@ -41,7 +41,7 @@ public:
 	bool inicializar(DatosParser* datos);
 
 	/* Escribe en disco el bloque */
-	void writeBlock(int index,int begin,int longitud,char* block);
+	void writeBlock(int index,int begin,int longitud,const char* block);
 
 	bool verificarHashPieza(int index);
 
