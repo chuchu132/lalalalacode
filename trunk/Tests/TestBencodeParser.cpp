@@ -21,7 +21,16 @@ TestBencodeParser::~TestBencodeParser() {
 }
 
 void TestBencodeParser::test(const char* url) {
-	BencodeParser parser(url);
+
+	FILE*fp = fopen(url, "r");
+	fseek(fp,0,SEEK_END);
+	int tam=ftell(fp);
+	char * aux=new char[tam+1];
+	fseek(fp,0,SEEK_SET);
+	fread(aux,1,tam,fp);
+    fclose (fp);
+
+	BencodeParser parser(aux,tam);
 	if (parser.procesar()) {
 		DatosParser* datos = parser.salidaParser();
 		datos->primero();
@@ -52,10 +61,10 @@ void TestBencodeParser::test(const char* url) {
 }
 
 void TestBencodeParser::run() {
-	test("../Tests/AngelsAndDemons.torrent");
-//	test("../Tests/PSP.torrent");
-//  test("../Tests/PSP2.torrent");
-//	test("../Tests/PSP3.torrent");
-//	test("../Tests/Sec.torrent");
+	test("./Tests/AngelsAndDemons.torrent");
+//	test("./Tests/PSP.torrent");
+//  test("./Tests/PSP2.torrent");
+//	test("./Tests/PSP3.torrent");
+//	test("./Tests/Sec.torrent");
 
 }

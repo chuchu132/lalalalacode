@@ -11,10 +11,13 @@
 #include <stdlib.h>
 #include <string>
 #include <iostream>
-#include <list>
+#include <fstream>
 #include "DatosParser.h"
 #include "Constantes.h"
 #include "Sha1.h"
+#include <sstream>
+#include <string>
+
 using namespace std;
 
 class BencodeParser {
@@ -24,7 +27,7 @@ private:
 	int pos; //posicion dentro del buffer
 	int buf_lim; //limite del buffer
 
-	FILE *fp; //File pointer al archivo .torrent que se esta parseando
+	//FILE *fp; //File pointer al archivo .torrent que se esta parseando
 	int ident; //Atributo para visualizacion por pantalla
 
 	DatosParser datos;//objeto que almacena los datos obtenidos del parser
@@ -32,15 +35,17 @@ private:
 	int contador;
 	int diccionario;
 
-	unsigned offsetInfoHash;//Marca el offset inicial del diccionario info
-	unsigned offsetFin;//Marca el final del diccionario info
+	int offsetInfoHash;//Marca el offset inicial del diccionario info
+	int offsetFin;//Marca el final del diccionario info
 	unsigned info_hash[5]; //Mensaje digerido del info_hash como lo devuelve el sha1
 
+	unsigned int marcaFinHash;
+    std::stringbuf is;
 
 public:
 
 	//Constructor
-	BencodeParser(const char* url);
+	BencodeParser(const char * cadena,unsigned longitud);
 
 	//Destructor
 	~BencodeParser();

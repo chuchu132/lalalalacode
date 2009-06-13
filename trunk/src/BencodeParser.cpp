@@ -1,23 +1,28 @@
 #include <sstream>
 #include <cstring>
 #include "BencodeParser.h"
+BencodeParser::BencodeParser(const char * cadena,unsigned longitud) {
 
-BencodeParser::BencodeParser(const char* url) {
+	is.sputn(cadena,longitud);
+	is.pubseekpos(0);
 
-	this->fp = fopen(url, "r");
 	pos = 0;
 	buf_lim = 0;
 	ident = 0;
 	diccionario = 0;
 	contador = 1;
+
+    offsetInfoHash=0;
+	offsetFin=0;
+    marcaFinHash=0;
 }
 
 BencodeParser::~BencodeParser() {
-	fclose(fp);
+
 }
 
 bool BencodeParser::procesar() {
-	if (fp != NULL) {
+
 		char caracter = verCaracterSiguiente();
 
 		switch (caracter) {
@@ -38,10 +43,8 @@ bool BencodeParser::procesar() {
 			parserCadena();
 
 		}
-		return true;
-	} else {
-		return false;
-	}
+
+	return true;
 }
 void BencodeParser::parserDiccionario() {
 
@@ -67,7 +70,7 @@ void BencodeParser::parserDiccionario() {
 
 	if (diccionario == 0) {
 
-		offsetFin = (ftell(fp) - buf_lim + pos + 1);
+		offsetFin=  marcaFinHash-buf_lim+pos+1;
 		procesarInfoHash();
 		contador = 1;
 		diccionario = -1;
@@ -122,7 +125,8 @@ void BencodeParser::parserCadena() {
 }
 
 void BencodeParser::cargarBuffer() {
-	buf_lim = fread(buf, 1, BUFSIZE, fp);
+	buf_lim = is.sgetn(buf,BUFSIZE);
+	marcaFinHash+=buf_lim;
 	pos = 0;
 }
 
@@ -163,19 +167,21 @@ DatosParser* BencodeParser::salidaParser() {
 void BencodeParser::procesarInfoHash() {
 
 	Sha1 sha;
-	unsigned int i, pos = 0;
-	unsigned int vuelta = ftell(fp);
-	fseek(fp, offsetInfoHash, SEEK_SET);
-	i = ftell(fp);
+    int i, pos = 0;
+	int vuelta=marcaFinHash-buf_lim+pos+1;
+
+	is.pubseekoff(offsetInfoHash-1,ios_base::beg, ios_base::in | ios_base::out);
+
+	i=offsetInfoHash;
+
 	char* buffer = new char[offsetFin - offsetInfoHash
 			+ 1];
 
 	do {
-		buffer[pos] = fgetc(fp);
+		buffer[pos] = is.snextc();
 		i++;
 		pos++;
 	} while (i < offsetFin - 1);
-
 	//Inicializo el sha1
 	sha.inicializacion();
 
@@ -188,9 +194,7 @@ void BencodeParser::procesarInfoHash() {
 	datos.agregarDato("info_hash",10);
 	datos.agregarDato((char*)info_hash,LEN_SHA1);
 
-
-	fseek(fp, vuelta, SEEK_SET);
-
+    is.pubseekoff(vuelta,ios_base::beg, ios_base::in | ios_base::out);
 
 	delete[] buffer;
 }

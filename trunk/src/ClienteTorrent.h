@@ -43,12 +43,7 @@ private:
 	unsigned int puerto; //puerto en el que escucha conexiones
 	bool activo; // TODO sirve para dejar de escuchar conexiones
 	Controlador *controlador;
-<<<<<<< .mine
 	Configuracion config;
-
-=======
-	Configuracion config;
->>>>>>> .r132
 
 public:
 
