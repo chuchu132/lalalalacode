@@ -2,33 +2,36 @@
 #include <cstring>
 #include <cstdio>
 #include "BencodeParser.h"
+#include "ExcepcionCaracterInvalido.h"
 
 BencodeParser::BencodeParser(const char * url) {
 
 	char *cadena;
-    unsigned longitud;
-    cadena=archivoAString (url,&longitud);
-
-	is.sputn(cadena,longitud);
-	inicializar();
-	if (cadena!=NULL)
-	delete []cadena;
-
-}
-
-BencodeParser::BencodeParser(const char * cadena,int longitud) {
-
-	is.sputn(cadena,longitud);
-	inicializar();
+	unsigned longitud;
+	estado = true;
+	cadena = archivoAString(url, &longitud);
+	if (cadena != NULL) {
+		is.sputn(cadena, longitud);
+		inicializar();
+		delete[] cadena;
+	} else {
+		estado = false;
+	}
 
 }
 
+BencodeParser::BencodeParser(const char * cadena, int longitud) {
+	estado = true;
+	is.sputn(cadena, longitud);
+	inicializar();
+
+}
 
 BencodeParser::~BencodeParser() {
 
 }
 
-void BencodeParser::inicializar (){
+void BencodeParser::inicializar() {
 
 	is.pubseekpos(0);
 	pos = 0;
@@ -37,14 +40,17 @@ void BencodeParser::inicializar (){
 	diccionario = 0;
 	contador = 1;
 
-	offsetInfoHash=0;
-	offsetFin=0;
-	marcaFinHash=0;
+	offsetInfoHash = 0;
+	offsetFin = 0;
+	marcaFinHash = 0;
 
 }
 
 bool BencodeParser::procesar() {
-
+	if (!estado) {
+		return false;
+	}
+	try {
 		char caracter = verCaracterSiguiente();
 
 		switch (caracter) {
@@ -63,9 +69,10 @@ bool BencodeParser::procesar() {
 
 		default:
 			parserCadena();
-
 		}
-
+	} catch (ExcepcionCaracterInvalido e) {
+		return false;
+	}
 	return true;
 }
 void BencodeParser::parserDiccionario() {
@@ -81,7 +88,9 @@ void BencodeParser::parserDiccionario() {
 
 		parserCadena();
 
-		procesar();
+		if (!procesar()) {
+			throw ExcepcionCaracterInvalido();
+		}
 	}
 
 	compararCaracter('e');
@@ -92,7 +101,7 @@ void BencodeParser::parserDiccionario() {
 
 	if (diccionario == 0) {
 
-		offsetFin=  marcaFinHash-buf_lim+pos+1;
+		offsetFin = marcaFinHash - buf_lim + pos + 1;
 		procesarInfoHash();
 		contador = 1;
 		diccionario = -1;
@@ -103,9 +112,11 @@ void BencodeParser::parserLista() {
 
 	compararCaracter('l');
 	ident = 1;
-	while (verCaracterSiguiente() != 'e')
-		procesar();
-
+	while (verCaracterSiguiente() != 'e') {
+		if (!procesar()) {
+			throw ExcepcionCaracterInvalido();
+		}
+	}
 	compararCaracter('e');
 
 }
@@ -147,8 +158,8 @@ void BencodeParser::parserCadena() {
 }
 
 void BencodeParser::cargarBuffer() {
-	buf_lim = is.sgetn(buf,BUFSIZE);
-	marcaFinHash+=buf_lim;
+	buf_lim = is.sgetn(buf, BUFSIZE);
+	marcaFinHash += buf_lim;
 	pos = 0;
 }
 
@@ -171,7 +182,7 @@ char BencodeParser::obtenerCaracter() {
 void BencodeParser::compararCaracter(char c) {
 	if (obtenerCaracter() != c) {
 		std::cerr << "ERROR AL PARSEAR .torrent " << std::endl;
-		exit(1);
+		throw ExcepcionCaracterInvalido();
 	}
 }
 
@@ -189,15 +200,15 @@ DatosParser* BencodeParser::salidaParser() {
 void BencodeParser::procesarInfoHash() {
 
 	Sha1 sha;
-    int i, pos = 0;
-	int vuelta=marcaFinHash-buf_lim+pos+1;
+	int i, pos = 0;
+	int vuelta = marcaFinHash - buf_lim + pos + 1;
 
-	is.pubseekoff(offsetInfoHash-1,ios_base::beg, ios_base::in | ios_base::out);
+	is.pubseekoff(offsetInfoHash - 1, ios_base::beg, ios_base::in
+			| ios_base::out);
 
-	i=offsetInfoHash;
+	i = offsetInfoHash;
 
-	char* buffer = new char[offsetFin - offsetInfoHash
-			+ 1];
+	char* buffer = new char[offsetFin - offsetInfoHash + 1];
 
 	do {
 		buffer[pos] = is.snextc();
@@ -208,33 +219,33 @@ void BencodeParser::procesarInfoHash() {
 	sha.inicializacion();
 
 	//Ingreso la cadena a calcularle el sha1
-	sha.entrada(buffer,offsetFin - offsetInfoHash - 1);
+	sha.entrada(buffer, offsetFin - offsetInfoHash - 1);
 
 	//Obtengo la salida del sha1 en el mensajeDigerido
 	sha.salida(info_hash);
 
-	datos.agregarDato("info_hash",10);
-	datos.agregarDato((char*)info_hash,LEN_SHA1);
+	datos.agregarDato("info_hash", 10);
+	datos.agregarDato((char*) info_hash, LEN_SHA1);
 
-    is.pubseekoff(vuelta,ios_base::beg, ios_base::in | ios_base::out);
+	is.pubseekoff(vuelta, ios_base::beg, ios_base::in | ios_base::out);
 
 	delete[] buffer;
 }
 
-char* BencodeParser::archivoAString(const char *url,  unsigned *tam){
+char* BencodeParser::archivoAString(const char *url, unsigned *tam) {
 
-    char *salida=NULL;
+	char *salida = NULL;
 
-    FILE *fp = fopen(url, "r");
-	if (fp!=NULL){
+	FILE *fp = fopen(url, "r");
+	if (fp != NULL) {
 
-		fseek(fp,0,SEEK_END);
-		*tam=ftell(fp);
-		salida=new char[*tam+1];
-		fseek(fp,0,SEEK_SET);
-		fread(salida,1,*tam,fp);
+		fseek(fp, 0, SEEK_END);
+		*tam = ftell(fp);
+		salida = new char[*tam + 1];
+		fseek(fp, 0, SEEK_SET);
+		fread(salida, 1, *tam, fp);
 		fclose(fp);
 	}
-    return salida;
+	return salida;
 }
 

@@ -22,13 +22,13 @@ TestFileManager::~TestFileManager() {
 }
 
 void TestFileManager::run(){
-	test("../Tests/AngelsAndDemons.torrent"); // single file
-	test("../Tests/blues.torrent"); // multi file
+	test("./Tests/AngelsAndDemons.torrent"); // single file
+	test("./Tests/blues.torrent"); // multi file
 }
 
 void TestFileManager::test(std::string urlTorrent){
 	BencodeParser parser(urlTorrent.c_str());
-	//BencodeParser parser("../Tests/AngelsAndDemons.torrent");
+
 		if (parser.procesar()) {
 			FileManager filemanager(NULL);
 			DatosParser* datos =  parser.salidaParser();
@@ -55,6 +55,8 @@ void TestFileManager::test(std::string urlTorrent){
 			else{
 				assert(false,"NO se pudo inicializar el Filemanager.");
 			}
+}else{
+	assert(false,"El archivo "+urlTorrent + " no pudo se procesado.");
 }
 
 }

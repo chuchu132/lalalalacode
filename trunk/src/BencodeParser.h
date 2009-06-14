@@ -40,7 +40,7 @@ private:
 
 	unsigned int marcaFinHash;
     std::stringbuf is;
-
+    bool estado;
 public:
 
 	//Constructor
