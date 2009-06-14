@@ -61,7 +61,7 @@ void TestTracker::run() {
 		tracker.send(get.c_str(),get.length());
 
 		assert(true,"Paso del send");
-		sleep(10);
+		sleep(3);
 		tracker.cerrarConexion();
 		tracker.join();
 		}else{
