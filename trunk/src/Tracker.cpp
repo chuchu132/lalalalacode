@@ -21,16 +21,21 @@ Tracker::~Tracker() {
 void* Tracker::run() {
 	int cantidad;
 	bool seCerro = false;
+	bool respuestaCompleta =true;
 	std::string buffer;
 	char bufferTemp[1000];
 	memset(bufferTemp, 0, 1000);
 	while (trackerRemoto.is_valid() && !seCerro) {
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
 			bufferTemp[cantidad] = '\0';
-			buffer = bufferTemp;
+			//if (respuestaCompleta==true)
+			//	buffer = bufferTemp;
+			//else
+				buffer+=bufferTemp;
 			std::cout <<"\nReciev: \n" << buffer << std::endl;
-			procesarResponse(buffer);
+			respuestaCompleta=procesarResponse(buffer);
 		}
+		if (respuestaCompleta==true)
 		seCerro = true;
 	}
 	return NULL;
@@ -74,8 +79,9 @@ void Tracker::inicilizar(std::string url) {
 }
 
 //TODO falta testeo
-void Tracker::procesarResponse (std::string buffer){
+bool Tracker::procesarResponse (std::string buffer){
 	buffer=archivoTracker(buffer);
+	if (buffer!="Error"){
 	BencodeParser parser(buffer.c_str(),buffer.size());
     DatosParser* datos;
     char *aux;
@@ -90,33 +96,44 @@ void Tracker::procesarResponse (std::string buffer){
 			//}
 	   }
        delete[]aux;
+       return true;
+	}
+	else return false;
 }
 
 std::string Tracker::archivoTracker(std::string buffer){
 
-    int inicio=0,lonInicial,lonTotal,i=0,marca;
+    unsigned inicio=0,lonInicial,lonTotal,i=0,marca;
+    std::string salida;
+
     inicio=buffer.find("Content-Length: ",inicio);
     lonInicial=buffer.find(" ",inicio);
     lonTotal=buffer.find("\n",lonInicial);
     marca=buffer.find("d",lonTotal);
 
-    //Obtengo la longitud total del archivo bencode
-    char longitudBencode[lonTotal-lonInicial+1];
-    for (inicio=lonInicial+1;inicio<lonTotal-1;inicio++){
-    	longitudBencode[i]=buffer[inicio];
-    	i++;
-    }longitudBencode[i]='\0';
-    char *aux= new char[atoi(longitudBencode)+1];
+    if (inicio!=string::npos && lonInicial!=string::npos && lonTotal!=string::npos&& marca!=string::npos){
+		//Obtengo la longitud total del archivo bencode
+		char longitudBencode[lonTotal-lonInicial+1];
+		for (inicio=lonInicial+1;inicio<lonTotal-1;inicio++){
+			longitudBencode[i]=buffer[inicio];
+			i++;
+		}longitudBencode[i]='\0';
+		char *aux= new char[atoi(longitudBencode)+1];
 
-    i=0;
-	for (int pos=marca;pos<(atoi(longitudBencode)+marca);pos++){
-		aux[i]=buffer[pos]; i++;
-	}	aux[i]='\0';
+		if (buffer[atoi(longitudBencode)+marca-1]=='e') {
+			i=0;
+			for (unsigned pos=marca;pos<(atoi(longitudBencode)+marca);pos++){
+				aux[i]=buffer[pos]; i++;
+			}
+			aux[i]='\0';
+			buffer.erase(0);
+			salida.insert(0,aux,atoi(longitudBencode));
+		}
 
-	buffer.erase(0);
-	std::string salida;
-	salida.insert(0,aux,atoi(longitudBencode));
-    delete []aux;
+		delete []aux;
+    }
+    else salida.insert(0,"Error",5);
+
     return salida;
 }
 
