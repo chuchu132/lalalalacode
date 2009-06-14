@@ -25,6 +25,7 @@ FileManager::~FileManager() {
 	it = archivos.begin();
 	while(it != archivos.end() ){
 		delete (*it);
+		it++;
 	}
 	//TODO limpiar lista archivos guardar datos admin
 }
@@ -69,6 +70,7 @@ bool FileManager::inicializar(DatosParser* datos) {
 		Archivo* file = new Archivo();
 		file->setTamanio(bytesTotales);
 		file->setPath(nombreCarpeta);
+		archivos.push_back(file);
 		delete[] datoTemp;
 	} else {
 		unsigned int tamTemp;

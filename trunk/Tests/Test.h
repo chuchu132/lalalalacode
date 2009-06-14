@@ -23,6 +23,14 @@ public:
 	virtual void setup();
 	/*En el run se corre el test*/
 	virtual void run()=0;
+
+	void resumen();
+
+private:
+	int ok;
+	int mal;
+
+
 };
 
 #endif /* TEST_H_ */

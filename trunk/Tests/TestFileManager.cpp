@@ -22,8 +22,13 @@ TestFileManager::~TestFileManager() {
 }
 
 void TestFileManager::run(){
+	test("../Tests/AngelsAndDemons.torrent"); // single file
+	test("../Tests/blues.torrent"); // multi file
+}
 
-	BencodeParser parser("../Tests/AngelsAndDemons.torrent");
+void TestFileManager::test(std::string urlTorrent){
+	BencodeParser parser(urlTorrent.c_str());
+	//BencodeParser parser("../Tests/AngelsAndDemons.torrent");
 		if (parser.procesar()) {
 			FileManager filemanager(NULL);
 			DatosParser* datos =  parser.salidaParser();
@@ -38,6 +43,14 @@ void TestFileManager::run(){
 			assert(memcmp(datoRecuperado,"FiTorrent",10)==0,"El dato recuperado es igual al ingresado");
 			delete[] datoRecuperado;
 			delete datos;
+
+			std::list<Archivo*>::iterator itA = filemanager.getIteratorArchivos();
+			std::list<Archivo*>::iterator finListaArchivo = filemanager.getEndArchivos();
+			while(itA != finListaArchivo){
+				std::cout<<"Archivo: "<<(*itA)->getPath()<<" Tam: "<<(*itA)->getTamanio()<<std::endl;
+				itA++;
+			}
+
 			}
 			else{
 				assert(false,"NO se pudo inicializar el Filemanager.");
