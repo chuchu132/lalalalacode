@@ -66,6 +66,9 @@ bool FileManager::inicializar(DatosParser* datos) {
 			return false;
 		}
 		bytesTotales = (unsigned int) atol(datoTemp);
+		Archivo* file = new Archivo();
+		file->setTamanio(bytesTotales);
+		file->setPath(nombreCarpeta);
 		delete[] datoTemp;
 	} else {
 		unsigned int tamTemp;

@@ -37,6 +37,7 @@ void TestFileManager::run(){
 			char* datoRecuperado = 	filemanager.readBlock(1,10,10);
 			assert(memcmp(datoRecuperado,"FiTorrent",10)==0,"El dato recuperado es igual al ingresado");
 			delete[] datoRecuperado;
+			delete datos;
 			}
 			else{
 				assert(false,"NO se pudo inicializar el Filemanager.");

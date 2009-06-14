@@ -94,6 +94,7 @@ bool Tracker::procesarResponse (std::string buffer){
 				decodificarPeers(datos->obtenerDato(),datos->obtenerLongitudDato());
 			//	datos->siguiente();
 			//}
+			delete datos;
 	   }
        delete[]aux;
        return true;
