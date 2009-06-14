@@ -40,26 +40,27 @@ FileManager::~FileManager() {
 bool FileManager::inicializar(DatosParser* datos) {
 	int tamanio;
 	char* datoTemp;
-
+	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->obtenerDatoPorNombre("piece length", &datoTemp, tamanio)) {
 		return false;
 	}
 	tamanioPieza = (unsigned int) atol(datoTemp);
 	delete[] datoTemp;
-
+	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->obtenerDatoPorNombre("pieces", &datoTemp, tamanio)) {
 		return false;
 	}
 	hashPiezas = (unsigned int*) new char[tamanio];
 	memcpy(hashPiezas, datoTemp, tamanio);
 	delete[] datoTemp;
-
+	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->obtenerDatoPorNombre("name", &datoTemp, tamanio)) {
 		return false;
 	}
 	nombreCarpeta = datoTemp;
 	delete[] datoTemp;
 
+	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->irAetiqueta("files")) {
 		if (!datos->obtenerDatoPorNombre("length", &datoTemp, tamanio)) {
 			return false;
@@ -81,10 +82,10 @@ bool FileManager::inicializar(DatosParser* datos) {
 		}
 	}
 
-	int cantidadPiezasMod8 =
-			(int) (bytesTotales / 8) + (bytesTotales % 8 == 0) ? 0 : 1;
+	unsigned int cantidadPiezasMod8 =((unsigned int) (bytesTotales / 8) + ((bytesTotales % 8 == 0)? 0 : 1));
 	bitmap.inicializarBitmap(cantidadPiezasMod8);
 
+	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->obtenerDatoPorNombre("info_hash", &datoTemp, tamanio)) {
 		return false;
 	}
@@ -95,10 +96,11 @@ bool FileManager::inicializar(DatosParser* datos) {
 	delete[] datoTemp;
 	descarga.open(hash.c_str(), ios::in | ios::out | ios::binary);
 	if (!descarga.is_open()) {
-		crearArchivo(hash, bytesTotales);
-	} else {
-		inicializarBitmap();
+		if(!crearArchivo(hash, bytesTotales)){return false;}
 	}
+	//ver comentario en la implementacion del inicializar
+	//inicializarBitmap();
+
 
 	return true;
 }
@@ -115,14 +117,18 @@ bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 	}
 	return false;
 }
-
+/* TODO Muuuuuuuuuuuuuuuuuuy lento
+ * Solucion, guardar el bitmap antes de cerrar la aplicacion.
+ * Aunque al completar la descarga deberiamos verificar que este todo bien.
+ * */
 void FileManager::inicializarBitmap() {
-	int cantidadPiezas = (int) (cantidadPiezas / tamanioPieza)
-			+ ((cantidadPiezas % tamanioPieza) == 0) ? 0 : 1;
-	for (int i = 0; i < cantidadPiezas; ++i) {
+	unsigned int cantidadPiezas = (unsigned int) ((bytesTotales / tamanioPieza)
+			+( ((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
+	for (unsigned int i = 0; i < cantidadPiezas; ++i) {
 		if (verificarHashPieza(i)) {
 			bitmap.marcarBit(i);
 		}
+		std::cout<<i<<std::endl;
 	}
 }
 
@@ -133,7 +139,7 @@ unsigned int FileManager::getTamanio() {
 Bitmap& FileManager::getBitmap() {
 	return bitmap;
 }
-
+/*Solo se comparten piezas que estan enteras */
 char* FileManager::readBlock(int index, int begin, int longitud) {
 	if (bitmap.estaMarcada(index)) {
 		char* data = new char[longitud + 1];

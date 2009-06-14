@@ -29,10 +29,11 @@ void TestFileManager::run(){
 			DatosParser* datos =  parser.salidaParser();
 			datos->primero();
 			if(filemanager.inicializar(datos)){
-			assert(filemanager.getBitmap().estaVacio(),"El bitmap generado no tiene ninguna ieza marcada");
+			assert(filemanager.getBitmap().estaVacio(),"El bitmap generado no tiene ninguna pieza marcada");
 			std::cout<<"Tamaño Descarga: "<<filemanager.getTamanio()<<" bytes"<<std::endl;
 
-			filemanager.writeBlock(1,10,7,"FiTorrent");
+			filemanager.writeBlock(1,10,10,"FiTorrent");
+			filemanager.getBitmap().marcarBit(1); //marco la pieza como que esta completa para poder leer una parte
 			char* datoRecuperado = 	filemanager.readBlock(1,10,10);
 			assert(memcmp(datoRecuperado,"FiTorrent",10)==0,"El dato recuperado es igual al ingresado");
 			delete[] datoRecuperado;

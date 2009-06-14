@@ -27,7 +27,6 @@ private:
 	int pos; //posicion dentro del buffer
 	int buf_lim; //limite del buffer
 
-	FILE *fp; //File pointer al archivo .torrent que se esta parseando
 	int ident; //Atributo para visualizacion por pantalla
 
 	DatosParser datos;//objeto que almacena los datos obtenidos del parser

@@ -83,7 +83,7 @@ std::string ParserMensaje::crearGetBase(std::string path,unsigned int* info_hash
 	buffer << "GET /"<<path<<"?info_hash=" << parserCgi.codificar((char*)info_hash,LEN_SHA1)
 	<< "&peer_id=" << parserCgi.codificar(peer_id.c_str(),LEN_SHA1) << "&port=" << port
 	<< "&uploaded=" << uploaded << "&downloaded=" << downloaded
-	<< "&left=" << left;
+	<< "&left=" << left<<"&compact=1";
 	return buffer.str();
 }
 
