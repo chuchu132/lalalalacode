@@ -87,6 +87,8 @@ public:
 	void setControlador(Controlador *ctrl);
 
 	Configuracion* getConfiguracion();
+
+	void inicializarDirectorios();
 };
 
 #endif /* CLIENTETORRENT_H_ */
