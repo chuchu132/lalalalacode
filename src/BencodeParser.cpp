@@ -1,5 +1,6 @@
 #include <sstream>
 #include <cstring>
+#include <cstdio>
 #include "BencodeParser.h"
 
 BencodeParser::BencodeParser(const char * url) {
@@ -24,7 +25,7 @@ BencodeParser::BencodeParser(const char * cadena,int longitud) {
 
 
 BencodeParser::~BencodeParser() {
-	if (fp!=NULL)fclose(fp);
+
 }
 
 void BencodeParser::inicializar (){
@@ -224,7 +225,7 @@ char* BencodeParser::archivoAString(const char *url,  unsigned *tam){
 
     char *salida=NULL;
 
-	fp = fopen(url, "r");
+    FILE *fp = fopen(url, "r");
 	if (fp!=NULL){
 
 		fseek(fp,0,SEEK_END);
@@ -232,7 +233,7 @@ char* BencodeParser::archivoAString(const char *url,  unsigned *tam){
 		salida=new char[*tam+1];
 		fseek(fp,0,SEEK_SET);
 		fread(salida,1,*tam,fp);
-
+		fclose(fp);
 	}
     return salida;
 }
