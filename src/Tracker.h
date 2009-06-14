@@ -45,7 +45,7 @@ public:
 	//TODO tal vez va privado
 	void inicilizar(std::string url);
 
-	void procesarResponse(std::string buffer);
+	bool procesarResponse(std::string buffer);
 
 	std::string archivoTracker (std::string buffer);
 
