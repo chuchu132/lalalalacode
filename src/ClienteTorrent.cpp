@@ -15,7 +15,8 @@
 ClienteTorrent::ClienteTorrent() {
 	// TODO
 	//crear el peer_id
-	//sacar los datos del archivo de configuracion
+	puerto = config.getPuerto();
+	rutaDescargas = config.getRutaDescargas();
 	activo = false;
 
 }
@@ -91,7 +92,7 @@ void ClienteTorrent::finalizar() {
 		//guardar info sobre el torrent
 		delete (*it);
 	}
-	//guardar info del cliente
+
 }
 
 bool ClienteTorrent::estaActivo() {
@@ -120,6 +121,7 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		Torrent *t = new Torrent(this);
 		if ( t->inicializarTorrent(&parserTorrent)){
 			t->setControlador(controlador);
+			t->setCarpetaDescarga(rutaDescargas);
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
 			t->run();
 			notif = "Se ha agregado el Torrent ";
@@ -151,4 +153,8 @@ void ClienteTorrent::borrarTorrent(Torrent *t) {
 
 void ClienteTorrent::setControlador(Controlador *ctrl) {
 	this->controlador = ctrl;
+}
+
+Configuracion* ClienteTorrent::getConfiguracion() {
+	return &config;
 }

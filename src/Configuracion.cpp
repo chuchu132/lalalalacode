@@ -31,7 +31,7 @@ Configuracion::~Configuracion() {
 
 void Configuracion::crearArchivo(){
 
-	archivo.clear();//VER!
+	archivo.clear();
 
 	archivo.open(RUTA_CONFIGURACION,std::ios_base::out | std::ios_base::trunc);
 
@@ -44,7 +44,6 @@ void Configuracion::cargarConfiguracionDefault() {
 
 void Configuracion::cargarConfiguracion() {
 
-	std::cout<<"Cargando config desde archivo" <<std::endl;
 	std::string linea;
 
 	if (!archivo.eof()) {
@@ -76,7 +75,6 @@ void Configuracion::cargarConfiguracion() {
 }
 
 void Configuracion::guardarConfiguracion() {
-	std::cout<< "guardando config"<<std::endl;
 	crearArchivo();
 	archivo << "[FiTorrent]"<<std::endl;
 	archivo << TAG_DESCARGAS<<" <"<< rutaDescargas <<'>'<< std::endl;

@@ -16,6 +16,7 @@
 
 class Configuracion {
 	/* Guarda la configuracion del Cliente BitTorrent */
+	/* Los cambios de configuracion tienen efecto la proxima vez que se ejecute el programa */
 
 private:
 	std::fstream archivo; //archivo de configuracion

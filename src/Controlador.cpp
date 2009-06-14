@@ -72,3 +72,10 @@ int Controlador::correrVista()
 	return ventana->run();
 }
 
+void Controlador::guardarConfiguracion()
+{
+	Configuracion *config = cliente.getConfiguracion();
+//	config->guardarPuerto(ventana->getPuerto());
+//	config->guardarRutaDescargas(ventana->getRutaDescargas());
+}
+

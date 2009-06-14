@@ -45,6 +45,8 @@ private:
 	Controlador *controlador;
 	Configuracion config;
 
+	std::string rutaDescargas;//ruta donde se guardan los archivos
+
 public:
 
 	ClienteTorrent();
@@ -83,6 +85,8 @@ public:
 	unsigned int getPuerto();
 
 	void setControlador(Controlador *ctrl);
+
+	Configuracion* getConfiguracion();
 };
 
 #endif /* CLIENTETORRENT_H_ */

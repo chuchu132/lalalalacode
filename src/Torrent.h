@@ -116,6 +116,9 @@ public:
 
 	bool estaActivo();
 
+	/* setea la carpeta en la que se tiene que guardar el archivo descargado*/
+	void setCarpetaDescarga(std::string url);
+
 private:
 
 	ClienteTorrent* clienteTorrent;

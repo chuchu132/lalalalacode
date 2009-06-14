@@ -31,9 +31,9 @@ int main (int argc, char* argv[])
 //	tester.agregarTest(new TestBitmap(),"Test Bitmap");
 //	tester.agregarTest(new TestDatosParser(),"Test DatosParser");
 //	tester.agregarTest(new TestBencodeParser(),"Test BencodeParser");
-	tester.agregarTest(new TestTracker(),"Test Tracker");
-//	tester.agregarTest(new TestConfiguracion(),"Test Archivo Configuracion");
-	tester.agregarTest(new TestFileManager(),"Test Filemanager");
+//	tester.agregarTest(new TestTracker(),"Test Tracker");
+	tester.agregarTest(new TestConfiguracion(),"Test Archivo Configuracion");
+//	tester.agregarTest(new TestFileManager(),"Test Filemanager");
 
 	tester.correrTests();
 
