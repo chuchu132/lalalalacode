@@ -150,16 +150,16 @@ int Torrent::getVelocidadBajada() {
 	return 30;
 }
 
-void Torrent::setControlador(Controlador* ctrl)
-{
+void Torrent::setControlador(Controlador* ctrl) {
 	this->controlador = ctrl;
 }
 
-void Torrent::refrescarPeers()
-{
+void Torrent::refrescarPeers() {
 	//todo implementar
 
 	controlador->actualizarEstado(this);
 }
 
-
+void Torrent::setCarpetaDescarga(std::string url) {
+	//todo.. se la tiene qu epasar al file manager??
+}

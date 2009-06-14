@@ -62,6 +62,8 @@ public:
 	/* inicia la vista */
 	int correrVista();
 
+	void guardarConfiguracion();
+
 };
 
 #endif /* CONTROLADOR_H_ */
