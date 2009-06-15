@@ -5,11 +5,12 @@
  *      Author: ale
  */
 
-#include <cstdio>
+#include "AvisoDescargaCompleta.h"
 #include "ParserCgi.h"
 #include "ParserMensaje.h"
 #include "Torrent.h"
 #include <cstring>
+#include <cstdio>
 
 Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(clienteTorrent) {
 	tracker = new Tracker();
@@ -54,7 +55,12 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 }
 
 void Torrent::run(){
-
+try {
+	//blabla
+	//peer.procesar()
+} catch ( AvisoDescargaCompleta aviso) {
+	// TODO parar todo el aviso lo lanza el filemanager al verificar q se descargaron todas las piezas
+}
 
 }
 

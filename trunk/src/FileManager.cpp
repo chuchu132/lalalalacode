@@ -5,6 +5,7 @@
  *      Author: ale
  */
 
+#include "AvisoDescargaCompleta.h"
 #include "ClienteTorrent.h"
 #include "Constantes.h"
 #include "FileManager.h"
@@ -12,6 +13,8 @@
 #include <fstream>
 #include <cstring>
 #include <cmath>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 FileManager::FileManager(ClienteTorrent* cliente) {
 	this->clienteTorrent = cliente; //TODO no se esta usando q ondaaa?
@@ -21,10 +24,12 @@ FileManager::FileManager(ClienteTorrent* cliente) {
 }
 
 FileManager::~FileManager() {
-	if(hashPiezas != NULL){delete[] hashPiezas;}
+	if (hashPiezas != NULL) {
+		delete[] hashPiezas;
+	}
 	std::list<Archivo*>::iterator it;
 	it = archivos.begin();
-	while(it != archivos.end() ){
+	while (it != archivos.end()) {
 		delete (*it);
 		it++;
 	}
@@ -39,6 +44,17 @@ FileManager::~FileManager() {
  * info obtenida del .torrent y del archivo descargado parcialmente.
  * */
 bool FileManager::inicializar(DatosParser* datos) {
+	if (       inicializarTamaniosYpiezas(datos)
+			&& inicializarArchivosYdirectorios(datos)
+			&& inicializarDatosBitmap(datos))
+	{
+		return true;
+	} else {
+		return false;
+	}
+}
+
+bool FileManager::inicializarTamaniosYpiezas(DatosParser* datos) {
 	int tamanio;
 	char* datoTemp;
 	datos->primero(); //inicio la busqueda desde el principio
@@ -54,6 +70,13 @@ bool FileManager::inicializar(DatosParser* datos) {
 	hashPiezas = (unsigned int*) new char[tamanio];
 	memcpy(hashPiezas, datoTemp, tamanio);
 	delete[] datoTemp;
+
+	return true;
+}
+
+bool FileManager::inicializarArchivosYdirectorios(DatosParser* datos) {
+	int tamanio;
+	char* datoTemp;
 	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->obtenerDatoPorNombre("name", &datoTemp, tamanio)) {
 		return false;
@@ -69,7 +92,7 @@ bool FileManager::inicializar(DatosParser* datos) {
 		bytesTotales = (unsigned int) atol(datoTemp);
 		Archivo* file = new Archivo();
 		file->setTamanio(bytesTotales);
-		file->setPath(nombreCarpeta);
+		file->addPath(nombreCarpeta);
 		archivos.push_back(file);
 		delete[] datoTemp;
 	} else {
@@ -78,15 +101,38 @@ bool FileManager::inicializar(DatosParser* datos) {
 			tamTemp = (unsigned int) atol(datoTemp);
 			bytesTotales += tamTemp;
 			delete[] datoTemp;
-			datos->obtenerDatoPorNombre("path", &datoTemp, tamanio);
 			Archivo* file = new Archivo();
 			file->setTamanio(tamTemp);
-			file->setPath(datoTemp);
-			archivos.push_back(file);
+			std::string subdir;
+			datos->obtenerDatoPorNombre("path", &datoTemp, tamanio);
+			file->addPath(datoTemp);
 			delete[] datoTemp;
+
+			bool seguir = true;
+			do {
+				datos->siguiente();
+				subdir = datos->obtenerDato();
+				if ((subdir.compare("length") == 0) ||
+					(subdir.compare("piece length") == 0) ||
+					(subdir.compare("name") == 0)
+					)
+				{
+					seguir = false;
+				} else {
+					file->addPath(subdir);
+				}
+			} while (seguir);
+
+			archivos.push_back(file);
 		}
 	}
 
+	return true;
+}
+
+bool FileManager::inicializarDatosBitmap(DatosParser* datos) {
+	int tamanio;
+	char* datoTemp;
 	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->obtenerDatoPorNombre("info_hash", &datoTemp, tamanio)) {
 		return false;
@@ -99,26 +145,23 @@ bool FileManager::inicializar(DatosParser* datos) {
 	delete[] datoTemp;
 	descarga.open(url.c_str(), ios::in | ios::out | ios::binary);
 	if (!descarga.is_open()) {
-		if(!crearArchivo(url, bytesTotales)){return false;}
+		if (!crearArchivo(url, bytesTotales)) {
+			return false;
+		}
 	}
 
 	url += ".bitmap";
 	inicializarBitmap(url);
 
-
 	return true;
 }
 
-//TODO ver de optimizar el llenado del archivo
+
 bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 	descarga.open(path.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
 	if (descarga.is_open()) {
-		descarga.seekp(tamanio,std::ios::beg);
+		descarga.seekp(tamanio, std::ios::beg);
 		descarga.put(0);
-//		char cero = '\0';
-//		for (unsigned int i = 0; i < tamanio; ++i) {
-//			descarga.put(cero);
-//		}
 		return true;
 	}
 	return false;
@@ -126,30 +169,33 @@ bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 
 void FileManager::inicializarBitmap(std::string urlBitmap) {
 	std::ifstream archivoBitmap;
-	archivoBitmap.open(urlBitmap.c_str(),std::ios::in | std::ios::binary | std::ios::ate);
+	archivoBitmap.open(urlBitmap.c_str(), std::ios::in | std::ios::binary
+			| std::ios::ate);
 
-	if(archivoBitmap.is_open()){
-			int tam  = archivoBitmap.tellg();
-			archivoBitmap.seekg(0, std::ios::beg);
-			char* bitmapRecuperado = new char[tam];
-			archivoBitmap.read(bitmapRecuperado,tam);
-			bitmap.inicializarBitmap(bitmapRecuperado,tam);
-			delete[] bitmapRecuperado;
-	}
-	else{
-		unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)	+( ((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
-		unsigned int cantBytes = (unsigned int) ((cantPiezas / 8) + (((cantPiezas % 8) == 0)?0:1));
+	if (archivoBitmap.is_open()) {
+		int tam = archivoBitmap.tellg();
+		archivoBitmap.seekg(0, std::ios::beg);
+		char* bitmapRecuperado = new char[tam];
+		archivoBitmap.read(bitmapRecuperado, tam);
+		bitmap.inicializarBitmap(bitmapRecuperado, tam);
+		delete[] bitmapRecuperado;
+	} else {
+		unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)
+				+ (((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
+		unsigned int cantBytes = (unsigned int) ((cantPiezas / 8)
+				+ (((cantPiezas % 8) == 0) ? 0 : 1));
 		bitmap.inicializarBitmap(cantBytes);
 	}
 }
 
-void FileManager::guardarBitmap(std::string urlBitmap){
+void FileManager::guardarBitmap(std::string urlBitmap) {
 	std::ofstream archivoBitmap;
-	archivoBitmap.open(urlBitmap.c_str(),std::ios::out | std::ios::binary | std::ios::trunc);
-	if(archivoBitmap.is_open()){
+	archivoBitmap.open(urlBitmap.c_str(), std::ios::out | std::ios::binary
+			| std::ios::trunc);
+	if (archivoBitmap.is_open()) {
 		const char* bitmapAux = bitmap.getBitmap();
 		archivoBitmap.seekp(std::ios::beg);
-		archivoBitmap.write(bitmapAux,bitmap.getTamanioEnBytes());
+		archivoBitmap.write(bitmapAux, bitmap.getTamanioEnBytes());
 		archivoBitmap.close();
 	}
 }
@@ -174,20 +220,24 @@ char* FileManager::readBlock(int index, int begin, int longitud) {
 	}
 }
 
-void FileManager::writeBlock(int index, int begin, int longitud, const char* block) {
+void FileManager::writeBlock(int index, int begin, int longitud,
+		const char* block) {
 	if (!bitmap.estaMarcada(index)) {
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
 		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
+			if (descargaCompleta()) {
+				throw AvisoDescargaCompleta();
+			}
 		}
 	}
 }
 //TODO testear
 bool FileManager::verificarHashPieza(int index) {
 	char* pieza = new char[tamanioPieza];
-	memset(pieza,0,tamanioPieza);
+	memset(pieza, 0, tamanioPieza);
 	int offset = (index * tamanioPieza);
 	descarga.seekg(offset);
 	descarga.get(pieza, tamanioPieza);
@@ -207,28 +257,87 @@ std::list<Archivo*>::iterator FileManager::getEndArchivos() {
 	return archivos.end();
 }
 
-bool FileManager::descargaCompleta(){
-	unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)	+( ((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
+bool FileManager::descargaCompleta() {
+	unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)
+			+ (((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
 	unsigned int cantBytesCompletos = (unsigned int) (cantPiezas / 8);
 	unsigned int resto = (unsigned int) (cantPiezas % 8);
-	unsigned int tamBitmap = cantBytesCompletos + ((resto == 0)?0:1);
+	unsigned int tamBitmap = cantBytesCompletos + ((resto == 0) ? 0 : 1);
 	char* bitmapAux = new char[tamBitmap];
 	//creo un bitmap con 1 en los bits que corresponden a piezas
 	unsigned int i;
-	for( i =0; i<cantBytesCompletos; i++){
-		bitmapAux[i]= 0xFF;
+	for (i = 0; i < cantBytesCompletos; i++) {
+		bitmapAux[i] = 0xFF;
 	}
-	if(resto!=0){
-		bitmapAux[cantBytesCompletos] = (char) pow(2,8-resto);
+	if (resto != 0) {
+		bitmapAux[cantBytesCompletos] = (char) pow(2, 8 - resto);
 	}
 
 	const char* miBitmap = bitmap.getBitmap();
 	bool completo = true;
 	//comparo byte a byte mi bitmap con el completo hasta que haya una diferencia o se termine
-	while(completo && (i<tamBitmap) ){
+	while (completo && (i < tamBitmap)) {
 		completo = (bitmapAux[i] == (bitmapAux[i] & miBitmap[i]));
 		i++;
 	}
 	delete[] bitmapAux;
 	return completo;
+}
+
+void FileManager::descargaAarchivos() {
+
+	bool multifile = (archivos.size() != 1);
+	//TODO descomentar cuando este la configuracion.
+	//std::string urlbase = clienteTorrent->getConfiguracion()->getRutaDescargas();
+	std::string urlbase ="./descargas/";
+	urlbase += nombreCarpeta; //nombre de carpeta o nombre de archivo en caso de torrent single file
+
+	unsigned int acumulado = 0;
+	std::list<Archivo*>::iterator itA = archivos.begin();
+	unsigned int tamanio;
+	if(multifile){
+		mkdir(urlbase.c_str(),0755);
+		chdir(urlbase.c_str()); // el directorio ./ pasa a ser dentro de la carpeta donde copio losarchivos
+		while(itA != archivos.end()){
+			tamanio = (*itA)->getTamanio();
+			std::string restoUrl = "./";
+			std::list<std::string>::iterator itPath = (*itA)->getPathList()->begin();
+			std::list<std::string>::iterator archivo = --((*itA)->getPathList()->end());
+			while(itPath != archivo){
+				restoUrl += (*itPath);
+				restoUrl += "/";
+				mkdir(restoUrl.c_str(),0755); //creo cada subdirectorio
+				itPath++;
+			}
+			restoUrl += (*itPath);
+			copiar(acumulado,tamanio,restoUrl);
+			acumulado += tamanio;
+			itA++;
+		}
+
+	}
+	else{
+		unsigned int tamanio = (*itA)->getTamanio();
+		copiar(0,tamanio,urlbase);
+	}
+}
+
+
+void FileManager::copiar(unsigned int desde, unsigned int cantidad, std::string destino){
+	std::ofstream salida;
+	salida.open(destino.c_str(),std::ios::out | std::ios::trunc | std::ios::binary);
+	salida.seekp(0,std::ios::beg);
+	const unsigned int tamBuffer = UN_MEGA;
+	char buffer[tamBuffer];
+	unsigned int lecturasEnteras = (unsigned int )(cantidad / tamBuffer);
+	unsigned int resto = (unsigned int)(cantidad % tamBuffer);
+	descarga.seekg(desde,std::ios::beg);
+	for(unsigned int i = 0; i< lecturasEnteras; i++){
+		descarga.read(buffer,tamBuffer);
+		salida.write(buffer,tamBuffer);
+	}
+	descarga.read(buffer,resto);
+	salida.write(buffer,resto);
+
+	salida.close();
 }

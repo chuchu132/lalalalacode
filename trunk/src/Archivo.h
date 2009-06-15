@@ -9,18 +9,20 @@
 #define ARCHIVO_H_
 
 #include <string>
+#include <list>
 
 class Archivo {
 public:
 	Archivo();
 	virtual ~Archivo();
 	unsigned int getTamanio();
+	std::list<std::string>* getPathList();
 	std::string getPath();
 	void setTamanio(unsigned int tam);
-	void setPath(std::string path);
+	void addPath(std::string path);
 
 private:
-	std::string path;
+	std::list<std::string> path;
 	unsigned int tamanio;
 };
 

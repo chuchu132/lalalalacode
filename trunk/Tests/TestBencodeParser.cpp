@@ -53,8 +53,8 @@ void TestBencodeParser::test(const char* url) {
 }
 
 void TestBencodeParser::run() {
-	test("./Tests/AngelsAndDemons.torrent");
-//	test("./Tests/PSP.torrent");
+//	test("./Tests/AngelsAndDemons.torrent");
+	test("./Tests/disco.torrent");
 //  test("./Tests/PSP2.torrent");
 //	test("./Tests/PSP3.torrent");
 //	test("./Tests/Sec.torrent");
