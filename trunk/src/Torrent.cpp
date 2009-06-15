@@ -35,22 +35,25 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 	int tamTemp;
 
 	if(!datos->obtenerDatoPorNombre("info_hash",&datoTemp,tamTemp)){
+		delete datos;
 		return false;
 	}
 	memcpy(info_hash,datoTemp,LEN_SHA1);
 	delete[] datoTemp;
 
+	datos->primero();
 	if(!datos->obtenerDatoPorNombre("name",&datoTemp,tamTemp)){
+		delete datos;
 		return false;
 	}
+
+	bool result = fileManager.inicializar(datos);
+
 	nombre = datoTemp;
 	delete[] datoTemp;
-
-	fileManager.inicializar(datos);
-
 	delete datos;
 
-	return true;
+	return result;
 }
 
 void Torrent::run(){

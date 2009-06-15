@@ -17,6 +17,8 @@
 ClienteTorrent::ClienteTorrent() {
 	// TODO crear el peer_id
 
+	inicializarDirectorios();
+
 	std::string estado;
 	Torrent *t;
 
@@ -94,7 +96,7 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 }
 
 void ClienteTorrent::finalizar() {
-	//implementar
+	//ver
 	if (activo)
 	{
 		activo = false;
@@ -160,9 +162,11 @@ void ClienteTorrent::borrarTorrent(Torrent *t) {
 			t->detener();
 			notif += t->getNombre();
 			delete t;
+			torrents.erase(it);
 			controlador->notificarVista(notif);
 			break;
 		}
+		it++;
 	}
 }
 

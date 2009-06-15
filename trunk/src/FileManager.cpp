@@ -44,14 +44,9 @@ FileManager::~FileManager() {
  * info obtenida del .torrent y del archivo descargado parcialmente.
  * */
 bool FileManager::inicializar(DatosParser* datos) {
-	if (       inicializarTamaniosYpiezas(datos)
+	return (       inicializarTamaniosYpiezas(datos)
 			&& inicializarArchivosYdirectorios(datos)
-			&& inicializarDatosBitmap(datos))
-	{
-		return true;
-	} else {
-		return false;
-	}
+			&& inicializarDatosBitmap(datos));
 }
 
 bool FileManager::inicializarTamaniosYpiezas(DatosParser* datos) {
