@@ -131,8 +131,9 @@ void Configuracion::guardarTorrent(std::string estado, std::string ruta) {
 	std::string info;
 
 	info = estado + " <";
-	info = ruta + '>';
+	info += ruta + '>';
 	torrents.push_back(info);
+
 }
 
 std::string Configuracion::obtenerTorrent() {

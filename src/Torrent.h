@@ -138,8 +138,6 @@ private:
 	unsigned int downloaded;
 
 	Controlador *controlador;
-	/*torrent notifica a controlador por medio del metodo
-	 * controlador->actualizarEstado(this) */
 
 };
 

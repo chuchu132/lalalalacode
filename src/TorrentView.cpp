@@ -148,8 +148,6 @@ void TorrentView::on_category_selected()
 
 void TorrentView::on_row_selected()
 {
-	std::cout<<"fila seleccionada"<<std::endl;
-	//muestra informacion del torrent en la parte inferior de la pantalla
 	Torrent *t = getSelectedTorrent();
 	attr->showInfo(t);
 }
@@ -240,8 +238,6 @@ void TorrentView::empty()
 
 void TorrentView::updateRow(Torrent *t)
 {
-	std::cout<<"__actualizar fila "<<std::endl;
-
 	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
 	Gtk::TreeModel::Row row;
 	while (iter != list_torrents->children().end())

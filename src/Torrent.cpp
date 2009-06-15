@@ -20,6 +20,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(c
 	estado = T_DETENIDO;
 	activo = true;
 	this->clienteTorrent = clienteTorrent;
+	controlador = NULL;
 	port = clienteTorrent->getPuerto();
 }
 
@@ -118,19 +119,22 @@ std::list<Peer*>* Torrent::getListaPeers(){
 void Torrent::continuar() {
 	estado = T_ACTIVO;
 	activo = true;
-	controlador->actualizarEstado(this);
+	if (controlador != NULL)
+		controlador->actualizarEstado(this);
 }
 
 void Torrent::detener() {
 	estado = T_DETENIDO;
 	activo = false;
-	controlador->actualizarEstado(this);
+	if (controlador != NULL)
+		controlador->actualizarEstado(this);
 }
 
 void Torrent::pausar() {
 	estado = T_PAUSADO;
 	activo = false;
-	controlador->actualizarEstado(this);
+	if (controlador != NULL)
+		controlador->actualizarEstado(this);
 }
 
 std::string Torrent::getEstado() {

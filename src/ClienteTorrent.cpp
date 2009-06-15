@@ -18,25 +18,26 @@ ClienteTorrent::ClienteTorrent() {
 	// TODO crear el peer_id
 
 	inicializarDirectorios();
+	controlador = NULL;
+	activo = false;
 
 	std::string estado;
 	Torrent *t;
 
 	while (config.hayTorrents()) {
 		t = agregarTorrent(config.obtenerTorrent());
-		estado = config.getEstadoTorrent();
-
-		if (estado == T_DETENIDO) {
-			t->detener();
-		}
-		else {
-			if (estado == T_PAUSADO) {
-				t->pausar();
+		if (t != NULL) {
+			estado = config.getEstadoTorrent();
+			if (estado == T_DETENIDO) {
+				t->detener();
+			}
+			else {
+				if (estado == T_PAUSADO) {
+					t->pausar();
+				}
 			}
 		}
 	}
-
-	activo = false;
 }
 
 ClienteTorrent::~ClienteTorrent() {
@@ -108,6 +109,7 @@ void ClienteTorrent::finalizar() {
 		config.guardarTorrent((*it)->getEstado(), (*it)->getPath());
 		(*it)->detener();
 		delete (*it);
+		it++;
 	}
 }
 
@@ -128,14 +130,14 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 
 	BencodeParser parserTorrent(ruta.c_str());
 	std::string notif;
+	Torrent *t = NULL;
 	if (!parserTorrent.procesar()) {
 		notif = "Error al examinar el archivo ";
 		notif += ruta;
-		controlador->notificarVista(notif);
-		return NULL;
+		t = NULL;
 	} else {
-		Torrent *t = new Torrent(this, ruta);
-		t->setControlador(controlador);
+		t = new Torrent(this, ruta);
+		t->setControlador(controlador);//cuidado si controlador es null!!
 		if ( t->inicializarTorrent(&parserTorrent)){
 			t->setCarpetaDescarga(config.getRutaDescargas());
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
@@ -149,9 +151,15 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 			notif = "Error al decodificar el archivo ";
 			notif += ruta;
 		}
-		controlador->notificarVista(notif);
 		return t;
 	}
+
+	if (controlador != NULL)
+		controlador->notificarVista(notif);
+	else
+		std::cout<<notif<<std::endl;
+
+	return t;
 }
 
 void ClienteTorrent::borrarTorrent(Torrent *t) {
@@ -172,6 +180,13 @@ void ClienteTorrent::borrarTorrent(Torrent *t) {
 
 void ClienteTorrent::setControlador(Controlador *ctrl) {
 	this->controlador = ctrl;
+	//seteo el controlador a todos los torrents existentes
+	std::list<Torrent*>::iterator it = torrents.begin();
+	while (it != torrents.end()) {
+		(*it)->setControlador(ctrl);
+		it++;
+	}
+
 }
 
 Configuracion* ClienteTorrent::getConfiguracion() {
