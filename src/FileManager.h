@@ -46,7 +46,7 @@ public:
 
 	bool verificarHashPieza(int index);
 
-	/* devuelve un iterador sobre los archivos. VER si poner const */
+	/* devuelve un iterador sobre los archivos.  */
 	std::list<Archivo*>::iterator getIteratorArchivos();
 
 	/* devuelve un iterador al ultimo elemento */
@@ -57,7 +57,7 @@ public:
 	void descargaAarchivos();
 
 private:
-	/*TODO
+	/*
 	 * Los archivos se manejan como uno del tamaño total
 	 * una vez que se completa la descarga se generan los
 	 * archivos y carpetas correspondientes con la info

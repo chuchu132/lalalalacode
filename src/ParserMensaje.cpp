@@ -13,12 +13,9 @@
 #include "Sha1.h"
 
 ParserMensaje::ParserMensaje() {
-	// TODO Auto-generated constructor stub
-
 }
 
 ParserMensaje::~ParserMensaje() {
-	// TODO Auto-generated destructor stub
 }
 
 void ParserMensaje::crearHandshake(unsigned int* info_hash, const char* peer_id,
