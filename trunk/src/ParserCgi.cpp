@@ -17,11 +17,11 @@ ParserCgi::~ParserCgi() {}
 std::string ParserCgi::codificar(const char* original,int tam){
 	std::string codificado = "";
 	for (int i = 0; i < tam; ++i) {
-		//if (hayQueCodificarlo(original[i])){ //TODO ver si es lo mismo q codifique todos los caracteres
+		if (hayQueCodificarlo(original[i])){ //TODO ver si es lo mismo q codifique todos los caracteres
 			codificado += intAhexaNN(original[i]);
-		//}else{
-			//codificado += original[i];
-		//}
+		}else{
+			codificado += original[i];
+		}
 	}
 
 	return codificado;
