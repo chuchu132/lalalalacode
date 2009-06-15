@@ -133,14 +133,15 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		return NULL;
 	} else {
 		Torrent *t = new Torrent(this, ruta);
+		t->setControlador(controlador);
 		if ( t->inicializarTorrent(&parserTorrent)){
-			t->setControlador(controlador);
 			t->setCarpetaDescarga(config.getRutaDescargas());
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
 			t->run();
 			notif = "Se ha agregado el Torrent ";
 			notif += t->getNombre();
 		} else {
+			std::cout<<"error al inicializar el torrent "<<std::endl;
 			delete t;
 			t = NULL;
 			notif = "Error al decodificar el archivo ";

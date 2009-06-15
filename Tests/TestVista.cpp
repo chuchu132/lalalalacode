@@ -15,11 +15,12 @@ void TestVista::run(){
 
 		Gtk::Main kit(0,0);
 		ClienteTorrent cliente;
-
 		Controlador controlador(cliente);
 		Ventana ventana;
+
 		ventana.setControlador(&controlador);
 		controlador.setVentana(&ventana);
+		cliente.setControlador(&controlador);
 
 		if (!ventana.huboError())
 		{
