@@ -35,7 +35,7 @@ class Torrent {
 
 public:
 
-	Torrent(ClienteTorrent* clienteTorrent);
+	Torrent(ClienteTorrent* clienteTorrent, std::string path);
 
 	~Torrent();
 
@@ -119,6 +119,8 @@ public:
 	/* setea la carpeta en la que se tiene que guardar el archivo descargado*/
 	void setCarpetaDescarga(std::string url);
 
+	std::string getPath();
+
 private:
 
 	ClienteTorrent* clienteTorrent;
@@ -129,6 +131,7 @@ private:
 	unsigned int info_hash[5];
 	std::string nombre;
 	std::string estado;
+	std::string path; //ruta en la que esta guardado el archivo .torrent
 	bool activo;
 	unsigned int port; // puerto donde esta escuchando el Cliente.
 	unsigned int uploaded;

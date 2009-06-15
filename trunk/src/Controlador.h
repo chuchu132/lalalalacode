@@ -15,6 +15,7 @@
 class Ventana;
 class ClienteTorrent;
 class Torrent;
+class Configuracion;
 
 class Controlador {
 
