@@ -77,7 +77,7 @@ Ventana::~Ventana()
 		controlador->cerrarCliente();
 	}
 
-	std::cout<<"fin"<<std::endl;
+	std::cout<<"cerrando la vista"<<std::endl;
 }
 
 void Ventana::setControlador(Controlador *c)
@@ -112,7 +112,7 @@ void Ventana::getWindows()
 	std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
 
 	preferences_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
-	preferences_window->add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_APPLY);
+	preferences_window->add_button(Gtk::Stock::APPLY, Gtk::RESPONSE_APPLY);
 	std::cout<<"ventana de preferencias cargada"<<std::endl;
 
 }
@@ -169,7 +169,6 @@ void Ventana::setMenu()
 	main_window->add_accel_group(menu_UIManager->get_accel_group());
 
 	//layout
-
 	 Glib::ustring ui_info =
 	        "<ui>"
 	        "  <menubar name='MenuBar'>"
@@ -260,7 +259,6 @@ void Ventana::on_button_add_clicked()
 
 void Ventana::on_button_erase_clicked()
 {
-	//tal vez deberia desabilitar las señales de row selected
 	std::cout<<"borrar clickeado"<<std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
@@ -299,6 +297,7 @@ void Ventana::on_button_continue_clicked()
 		controlador->continuarTorrent(t);
 	}
 }
+
 void Ventana::on_button_peers_clicked()
 {
 	std::cout<<"refrescar peers clickeado"<<std::endl;
@@ -333,7 +332,6 @@ void Ventana::button_accept_clicked()
      std::cout << "archivo seleccionado: " << filename << std::endl;
 
      select_window->hide();
-     controlador->agregarTorrent(filename);
      Torrent *t = controlador->agregarTorrent(filename);
 
       if (t != NULL)
@@ -356,6 +354,8 @@ void Ventana::actualizarEstado(Torrent* t)
 void Ventana::addTorrent(Torrent *t)
 {
 	torrents->addRow(t);
+	std::cout<<"torrent agregado en vista "<<std::endl;
+
 }
 
 void Ventana::mostrarNotificacion(std::string notificacion)
@@ -395,7 +395,7 @@ int Ventana::run()
 	}
 	else
 	{
-		std::cout<<"No se puede cargar la ventana "<<std::endl;
+		std::cerr<<"No se puede cargar la ventana "<<std::endl;
 		return 1;
 	}
 }

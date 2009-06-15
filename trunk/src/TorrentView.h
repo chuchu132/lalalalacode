@@ -27,7 +27,7 @@ private:
 	Gtk::TreeView *view_torrents; //vista de la lista
 	Gtk::TreeView *view_categories; //vista del selector
 
-	/* columnas */ //todo: tipos
+	/* columnas */
 	Gtk::TreeModelColumnRecord columns;
 	Gtk::TreeModelColumnRecord columns_categories;
 
@@ -41,7 +41,6 @@ private:
 	Gtk::TreeModelColumn<int> col_upspeed; 	//velocidad de subida del torrent
 	Gtk::TreeModelColumn<Glib::ustring> col_time; 	//tiempo restante para completar descarga
 	Gtk::TreeModelColumn<Torrent*> col_torrent; 	//puntero al objeto torrent que se esta mostrando
-	Gtk::TreeModelColumn<bool> col_visible;//indica si la fila es visible o no
 
 	Gtk::TreeModelColumn<Glib::ustring> col_categories;
 	Gtk::TreeModelColumn<std::string> col_cat_status;
@@ -68,8 +67,8 @@ private:
 	/* transforma un tamaño enn bytes en un string */
 	std::string showBytes(float bytes);
 
-	/* muestra las filas ocultas */
-	void showHidden();
+	/* muestra todos los torrents */
+	void showAll();
 
 	/* oculta los que no tienen este estado */
 	void hideRows(std::string);
@@ -91,7 +90,6 @@ public:
 	/* agregar una fila para este torrent */
 	void addRow(Torrent *t);
 
-//	void updateList();
 	/* actualiza los datos del torrent en la vista */
 	void updateRow(Torrent*);
 

@@ -23,7 +23,6 @@
 
 TorrentView::TorrentView()
 {
-	//agrego las columnas
 	columns.add(col_name);
 	columns.add(col_size);
 	columns.add(col_status);
@@ -34,7 +33,6 @@ TorrentView::TorrentView()
 	columns.add(col_upspeed);
 	columns.add(col_time);
 	columns.add(col_torrent);
-	columns.add(col_visible);
 
 	columns_categories.add(col_categories);
 	columns_categories.add(col_cat_status);
@@ -141,8 +139,10 @@ void TorrentView::on_category_selected()
 	  Gtk::TreeModel::Row row = *iter;
 	  //veo que fila es y muestro solo los torrents en ese estado
 	  std::string type = row[col_cat_status];
-	  std::cout<<"categoria seleccionada: "<<type<<std::endl;
-	 // (type != SHOW_ALL) ? hideRows(type) : showHidden();
+
+	  showAll();
+	  if (type != SHOW_ALL)
+		 hideRows(type);
 	}
 }
 
@@ -172,7 +172,6 @@ void TorrentView::addRow(Torrent *t)
 	row[col_name] = t->getNombre();
 	row[col_size] = showBytes(t->getTamanio());
 	row[col_torrent] = t;
-	row[col_visible] = true;
 	row[col_name] = t->getNombre();
 
 	updateRowValues(row,t);
@@ -243,7 +242,6 @@ void TorrentView::updateRow(Torrent *t)
 {
 	std::cout<<"__actualizar fila "<<std::endl;
 
-	//busco la fila ERROR!
 	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
 	Gtk::TreeModel::Row row;
 	while (iter != list_torrents->children().end())
@@ -284,28 +282,26 @@ std::string TorrentView::showBytes(float bytes)
 void TorrentView::hideRows(std::string type)
 {
 	std::cout<<"mostrar "<<type<<"s"<<std::endl;
-	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
-	Gtk::TreeModel::Row row;
-	Torrent *t;
-	while (iter != list_torrents->children().end())
-	{
-		row = *iter;
-		t = row[col_torrent];
-		row[col_visible] = (type == t->getEstado());
-		iter++;
-	}
+//	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+//	Gtk::TreeModel::Row row;
+//	Torrent *t;
+//	while (iter != list_torrents->children().end())
+//	{
+//		row = *iter;
+//		t = row[col_torrent]; (type == t->getEstado());
+//		iter++;
+//	}
 }
 
-void TorrentView::showHidden()
+void TorrentView::showAll()
 {
 	std::cout<<"mostrar todos"<<std::endl;
-	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
-	Gtk::TreeModel::Row row;
-	while (iter != list_torrents->children().end())
-	{
-		row = *iter;
-		row[col_visible] = true;
-		iter++;
-	}
+//	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+//	Gtk::TreeModel::Row row;
+//	while (iter != list_torrents->children().end())
+//	{
+//		row = *iter;
+//		iter++;
+//	}
 }
 
