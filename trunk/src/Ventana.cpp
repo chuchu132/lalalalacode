@@ -35,7 +35,6 @@ Ventana::Ventana()
 	try
 	{
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
-		std::cout<<"archivo cargado"<<std::endl;
 
 		attr = new AttributesView();
 		torrents = new TorrentView();
@@ -109,12 +108,9 @@ void Ventana::getWindows()
 
 	select_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	select_window->add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
-	std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
 
 	preferences_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	preferences_window->add_button(Gtk::Stock::APPLY, Gtk::RESPONSE_APPLY);
-	std::cout<<"ventana de preferencias cargada"<<std::endl;
-
 }
 
 void Ventana::getViews()
@@ -129,8 +125,6 @@ void Ventana::getViews()
 	torrents->setCategoriesView(view_cat);
 
 	attr->setAttributesView(builder);
-	std::cout<<"view torrents cargado"<<std::endl;
-
 }
 
 void Ventana::setMenu()
@@ -244,7 +238,6 @@ void Ventana::connectSignals()
 
 void Ventana::on_button_add_clicked()
 {
-	std::cout<<"añadir clickeado"<<std::endl;
 	int result = select_window->run();
 
 	if (result == Gtk::RESPONSE_OK)
@@ -259,7 +252,6 @@ void Ventana::on_button_add_clicked()
 
 void Ventana::on_button_erase_clicked()
 {
-	std::cout<<"borrar clickeado"<<std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
@@ -270,7 +262,6 @@ void Ventana::on_button_erase_clicked()
 
 void Ventana::on_button_stop_clicked()
 {
-	std::cout<<"detener clickeado"<<std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
@@ -280,7 +271,6 @@ void Ventana::on_button_stop_clicked()
 
 void Ventana::on_button_pause_clicked()
 {
-	std::cout<<"pausar clickeado"<<std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
@@ -290,7 +280,6 @@ void Ventana::on_button_pause_clicked()
 
 void Ventana::on_button_continue_clicked()
 {
-	std::cout<<"continuar clickeado"<<std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
@@ -310,19 +299,16 @@ void Ventana::on_button_peers_clicked()
 
 void Ventana::on_button_up_clicked()
 {
-	std::cout<<"subir clickeado"<<std::endl;
 	torrents->selectPrevious();
 }
 
 void Ventana::on_button_down_clicked()
 {
-	std::cout<<"bajar clickeado"<<std::endl;
 	torrents->selectNext();
 }
 
 void Ventana::on_button_notifications_clicked()
 {
-	std::cout<<"borrar notificaciones clickeado"<<std::endl;
 	attr->clearNotifications();
 }
 
@@ -345,7 +331,6 @@ void Ventana::button_cancel_clicked()
 
 void Ventana::actualizarEstado(Torrent* t)
 {
-	std::cout<<"actualizar fila "<<std::endl;
 	torrents->updateRow(t);
 	if ( t == torrents->getSelectedTorrent())
 		attr->showInfo(t);
@@ -354,8 +339,6 @@ void Ventana::actualizarEstado(Torrent* t)
 void Ventana::addTorrent(Torrent *t)
 {
 	torrents->addRow(t);
-	std::cout<<"torrent agregado en vista "<<std::endl;
-
 }
 
 void Ventana::mostrarNotificacion(std::string notificacion)
@@ -395,7 +378,6 @@ int Ventana::run()
 	}
 	else
 	{
-		std::cerr<<"No se puede cargar la ventana "<<std::endl;
 		return 1;
 	}
 }
