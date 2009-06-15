@@ -94,7 +94,6 @@ const int TAM_BUFFER = 100; //TODO redefinir
 const int PUERTO_DEFAULT_TRACKER = 80;
 
 /* Estados del Torrent */
-//ver!!
 #define T_ACTIVO "Activo"
 #define T_PAUSADO "Pausado"
 #define T_DETENIDO "Detenido"
@@ -104,7 +103,7 @@ const int PUERTO_DEFAULT_TRACKER = 80;
 
 /* Configuracion Default */
 #define RUTA_CONFIGURACION "FiTorrent.config"
-#define RUTA_DESCARGAS "./Downloads/"
+#define RUTA_DESCARGAS "./Descargas/"
 const unsigned int PUERTO_DEFAULT = 36277;
 
 #endif /* CONSTANTES_H_ */
