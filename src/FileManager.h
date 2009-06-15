@@ -53,6 +53,8 @@ public:
 	std::list<Archivo*>::iterator getEndArchivos();
 
 	void guardarBitmap(std::string urlBitmap);
+	/*Hace el split del archivo descargas*/
+	void descargaAarchivos();
 
 private:
 	/*TODO
@@ -71,8 +73,16 @@ private:
 	unsigned int*  hashPiezas;
 
 	bool crearArchivo(std::string path,unsigned int tamanio);
+
+	bool inicializarTamaniosYpiezas(DatosParser* datos);
+	bool inicializarArchivosYdirectorios(DatosParser* datos);
+	bool inicializarDatosBitmap(DatosParser* datos);
 	void inicializarBitmap(std::string urlBitmap);
+
 	bool descargaCompleta();
+
+	void copiar(unsigned int desde, unsigned int cantidad, std::string destino);
+
 };
 
 #endif /* FILEMANAGER_H_ */

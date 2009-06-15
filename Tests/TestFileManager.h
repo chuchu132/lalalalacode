@@ -17,6 +17,7 @@ public:
 	virtual ~TestFileManager();
 	void run();
 	void test(std::string urlTorrent);
+	void testSplitFiles(std::string urlTorrent);
 };
 
 #endif /* TESTFILEMANAGER_H_ */
