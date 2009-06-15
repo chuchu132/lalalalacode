@@ -43,10 +43,6 @@ TorrentView::TorrentView()
 	list_torrents = Gtk::ListStore::create(columns);
 	list_categories = Gtk::ListStore::create(columns_categories);
 
-	filter = Gtk::TreeModelFilter::create(list_torrents);
-	filter->set_visible_column(col_visible);
-
-	i = 0;
 }
 
 TorrentView::~TorrentView()
@@ -146,7 +142,7 @@ void TorrentView::on_category_selected()
 	  //veo que fila es y muestro solo los torrents en ese estado
 	  std::string type = row[col_cat_status];
 	  std::cout<<"categoria seleccionada: "<<type<<std::endl;
-	  (type != SHOW_ALL) ? hideRows(type) : showHidden();
+	 // (type != SHOW_ALL) ? hideRows(type) : showHidden();
 	}
 }
 
@@ -160,17 +156,13 @@ void TorrentView::on_row_selected()
 
 void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)
 {
-	//todo sacar i!
 	row[col_status] = t->getEstado();
-	row[col_progress] = (t->getTamanioDescargado()+i) * 100 / t->getTamanio();
-	row[col_completed] = showBytes(t->getTamanioDescargado() + i);
-	//row[col_remaining] = showBytes(t->left());
-	row[col_remaining] =showBytes(t->getTamanio() - (t->getTamanioDescargado()+i));
+	row[col_progress] = t->getTamanioDescargado() * 100 / t->getTamanio();
+	row[col_completed] = showBytes(t->getTamanioDescargado());
+	row[col_remaining] =showBytes(t->getTamanio() - t->getTamanioDescargado());
 	row[col_downspeed] = t->getVelocidadBajada();
 	row[col_upspeed] = t->getVelocidadSubida();
 	//row[col_time] = t->getTiempoRestante();
-
-	row[col_time] = "1h 25m";
 }
 
 void TorrentView::addRow(Torrent *t)
@@ -181,11 +173,9 @@ void TorrentView::addRow(Torrent *t)
 	row[col_size] = showBytes(t->getTamanio());
 	row[col_torrent] = t;
 	row[col_visible] = true;
-	//row[col_name] = t->getNombre();
-	row[col_name] = "Nombre del Torrent";
+	row[col_name] = t->getNombre();
 
 	updateRowValues(row,t);
-	i += 1000;
 }
 
 Torrent* TorrentView::getSelectedTorrent()
@@ -266,7 +256,6 @@ void TorrentView::updateRow(Torrent *t)
 		}
 		iter++;
 	}
-
 }
 
 std::string TorrentView::showBytes(float bytes)
@@ -305,7 +294,6 @@ void TorrentView::hideRows(std::string type)
 		row[col_visible] = (type == t->getEstado());
 		iter++;
 	}
-	filter->refilter();//ver si es necesario
 }
 
 void TorrentView::showHidden()
@@ -319,6 +307,5 @@ void TorrentView::showHidden()
 		row[col_visible] = true;
 		iter++;
 	}
-	filter->refilter();//ver si es necesario
 }
 
