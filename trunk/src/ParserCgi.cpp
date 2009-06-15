@@ -53,10 +53,7 @@ void ParserCgi::decodificar(std::string codificado,char** salida, int& tamanio){
 bool ParserCgi::hayQueCodificarlo(const char caracter){
 	return !(('0'<=caracter && caracter<='9')||
 			('a'<=caracter && caracter<='z')||
-			('A'<=caracter && caracter<='Z')||
-			caracter==',' || caracter=='-' ||
-			caracter=='.' || caracter=='~' ||
-			caracter=='_');
+			('A'<=caracter && caracter<='Z'));
 }
 /*El numero ingresado debe estar en el rango [0,15]*/
 unsigned char ParserCgi::intAhexaChar(const unsigned char numero){

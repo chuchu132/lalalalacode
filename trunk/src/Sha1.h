@@ -49,6 +49,8 @@ public:
 	// Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
 	void entrada(const char *mensaje, unsigned longitud);
 
+	std::string binAUrlEncode(unsigned int* salidaSha1);
+
 private:
 
 	//  Procesa los bloques del mensaje
