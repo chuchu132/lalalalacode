@@ -76,8 +76,9 @@ void ParserMensaje::crearMensajeCancel(int index, int block, int length,
 std::string ParserMensaje::crearGetBase(std::string path,unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left) {
 	ParserCgi parserCgi;
+	Sha1 sha;
 	std::stringstream buffer;
-	buffer << "GET /"<<path<<"?info_hash=" << parserCgi.codificar((char*)info_hash,LEN_SHA1)
+	buffer << "GET /"<<path<<"?info_hash=" << sha.binAUrlEncode(info_hash)
 	<< "&peer_id=" << parserCgi.codificar(peer_id.c_str(),LEN_SHA1) << "&port=" << port
 	<< "&uploaded=" << uploaded << "&downloaded=" << downloaded
 	<< "&left=" << left<<"&compact=1";
