@@ -11,6 +11,7 @@
 #include "Sha1.h"
 #include <fstream>
 #include <cstring>
+#include <cmath>
 
 FileManager::FileManager(ClienteTorrent* cliente) {
 	this->clienteTorrent = cliente; //TODO no se esta usando q ondaaa?
@@ -114,10 +115,12 @@ bool FileManager::inicializar(DatosParser* datos) {
 bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 	descarga.open(path.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
 	if (descarga.is_open()) {
-		char cero = '\0';
-		for (unsigned int i = 0; i < tamanio; ++i) {
-			descarga.put(cero);
-		}
+		descarga.seekp(tamanio,std::ios::beg);
+		descarga.put(0);
+//		char cero = '\0';
+//		for (unsigned int i = 0; i < tamanio; ++i) {
+//			descarga.put(cero);
+//		}
 		return true;
 	}
 	return false;
@@ -126,14 +129,32 @@ bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
  * Solucion, guardar el bitmap antes de cerrar la aplicacion.
  * Aunque al completar la descarga deberiamos verificar que este todo bien.
  * */
-void FileManager::inicializarBitmap() {
-	unsigned int cantidadPiezas = (unsigned int) ((bytesTotales / tamanioPieza)
-			+( ((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
-	for (unsigned int i = 0; i < cantidadPiezas; ++i) {
-		if (verificarHashPieza(i)) {
-			bitmap.marcarBit(i);
-		}
-		std::cout<<i<<std::endl;
+void FileManager::inicializarBitmap(std::string urlBitmap) {
+	std::ifstream archivoBitmap;
+	archivoBitmap.open(urlBitmap.c_str(),std::ios::in | std::ios::binary | std::ios::ate);
+
+	if(archivoBitmap.is_open()){
+			int tam  = archivoBitmap.tellg();
+			archivoBitmap.seekg(0, std::ios::beg);
+			char* bitmapRecuperado = new char[tam];
+			bitmap.inicializarBitmap(bitmapRecuperado,tam);
+			delete[] bitmapRecuperado;
+	}
+	else{
+		unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)	+( ((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
+		unsigned int cantBytes = (unsigned int) ((cantPiezas / 8) + (((cantPiezas % 8) == 0)?0:1));
+		bitmap.inicializarBitmap(cantBytes);
+	}
+}
+
+void FileManager::guardarBitmap(std::string urlBitmap){
+	std::ofstream archivoBitmap;
+	archivoBitmap.open(urlBitmap.c_str(),std::ios::out | std::ios::binary | std::ios::trunc);
+	if(archivoBitmap.is_open()){
+		const char* bitmapAux = bitmap.getBitmap();
+		archivoBitmap.seekp(std::ios::beg);
+		archivoBitmap.write(bitmapAux,bitmap.getTamanioEnBytes());
+		archivoBitmap.close();
 	}
 }
 
@@ -187,4 +208,30 @@ std::list<Archivo*>::iterator FileManager::getIteratorArchivos() {
 
 std::list<Archivo*>::iterator FileManager::getEndArchivos() {
 	return archivos.end();
+}
+
+bool FileManager::descargaCompleta(){
+	unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)	+( ((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
+	unsigned int cantBytesCompletos = (unsigned int) (cantPiezas / 8);
+	unsigned int resto = (unsigned int) (cantPiezas % 8);
+	unsigned int tamBitmap = cantBytesCompletos + ((resto == 0)?0:1);
+	char* bitmapAux = new char[tamBitmap];
+	//creo un bitmap con 1 en los bits que corresponden a piezas
+	unsigned int i;
+	for( i =0; i<cantBytesCompletos; i++){
+		bitmapAux[i]= 0xFF;
+	}
+	if(resto!=0){
+		bitmapAux[cantBytesCompletos] = (char) pow(2,8-resto);
+	}
+
+	const char* miBitmap = bitmap.getBitmap();
+	bool completo = true;
+	//comparo byte a byte mi bitmap con el completo hasta que haya una diferencia o se termine
+	while(completo && (i<tamBitmap) ){
+		completo = (bitmapAux[i] == (bitmapAux[i] & miBitmap[i]));
+		i++;
+	}
+	delete[] bitmapAux;
+	return completo;
 }

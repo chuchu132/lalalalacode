@@ -17,6 +17,7 @@
 
 #include <list>
 #include <fstream>
+#include <string>
 #include "Archivo.h"
 #include "Bitmap.h"
 #include "DatosParser.h"
@@ -68,7 +69,9 @@ private:
 	unsigned int*  hashPiezas;
 
 	bool crearArchivo(std::string path,unsigned int tamanio);
-	void inicializarBitmap();
+	void inicializarBitmap(std::string urlBitmap);
+	void guardarBitmap(std::string urlBitmap);
+	bool descargaCompleta();
 };
 
 #endif /* FILEMANAGER_H_ */

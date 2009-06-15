@@ -52,10 +52,13 @@ public:
 	 */
 	Bitmap* nuevoPorFusion(Bitmap& otro);
 
+
+
 private:
 	char* bitmap;
 	int tamanio;
 	bool inicializado;
+
 };
 
 #endif /* BITMAP_H_ */
