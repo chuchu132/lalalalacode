@@ -187,6 +187,7 @@ void FileManager::writeBlock(int index, int begin, int longitud, const char* blo
 //TODO testear
 bool FileManager::verificarHashPieza(int index) {
 	char* pieza = new char[tamanioPieza];
+	memset(pieza,0,tamanioPieza);
 	int offset = (index * tamanioPieza);
 	descarga.seekg(offset);
 	descarga.get(pieza, tamanioPieza);
