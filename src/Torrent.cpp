@@ -24,7 +24,6 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(c
 }
 
 Torrent::~Torrent() {
-	// TODO Auto-generated destructor stub
 	if (activo)
 		detener();
 	delete tracker;
