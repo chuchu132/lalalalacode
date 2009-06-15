@@ -88,24 +88,23 @@ bool FileManager::inicializar(DatosParser* datos) {
 		}
 	}
 
-	unsigned int cantidadPiezasMod8 =((unsigned int) (bytesTotales / 8) + ((bytesTotales % 8 == 0)? 0 : 1));
-	bitmap.inicializarBitmap(cantidadPiezasMod8);
-
 	datos->primero(); //inicio la busqueda desde el principio
 	if (!datos->obtenerDatoPorNombre("info_hash", &datoTemp, tamanio)) {
 		return false;
 	}
 
 	Sha1 sha;
-	std::string hash = URL_CARPETA_TEMP;
-	hash += sha.salidaAstring((unsigned int*) datoTemp);
+	std::string url = URL_CARPETA_TEMP;
+	std::string hashString = sha.salidaAstring((unsigned int*) datoTemp);
+	url += hashString;
 	delete[] datoTemp;
-	descarga.open(hash.c_str(), ios::in | ios::out | ios::binary);
+	descarga.open(url.c_str(), ios::in | ios::out | ios::binary);
 	if (!descarga.is_open()) {
-		if(!crearArchivo(hash, bytesTotales)){return false;}
+		if(!crearArchivo(url, bytesTotales)){return false;}
 	}
-	//ver comentario en la implementacion del inicializar
-	//inicializarBitmap();
+
+	url += ".bitmap";
+	inicializarBitmap(url);
 
 
 	return true;
