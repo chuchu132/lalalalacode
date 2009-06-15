@@ -125,10 +125,7 @@ bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 	}
 	return false;
 }
-/* TODO Muuuuuuuuuuuuuuuuuuy lento
- * Solucion, guardar el bitmap antes de cerrar la aplicacion.
- * Aunque al completar la descarga deberiamos verificar que este todo bien.
- * */
+
 void FileManager::inicializarBitmap(std::string urlBitmap) {
 	std::ifstream archivoBitmap;
 	archivoBitmap.open(urlBitmap.c_str(),std::ios::in | std::ios::binary | std::ios::ate);
