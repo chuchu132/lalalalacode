@@ -9,12 +9,6 @@
 #include "ParserMensaje.h"
 #include "Peer.h"
 #include "PeerUp.h"
-#include <unistd.h>
-#include <dirent.h>
-#include <cstdio>
-#include <sys/stat.h>
-#include <sys/types.h>
-
 
 #define CANT_CLIENTES 5
 
@@ -41,11 +35,6 @@ ClienteTorrent::ClienteTorrent() {
 	}
 
 	activo = false;
-<<<<<<< .mine
-	rutaDescargas = URL_CARPETA_DESCARGAS; //carpeta default
-
-=======
->>>>>>> .r146
 }
 
 ClienteTorrent::~ClienteTorrent() {
@@ -179,17 +168,7 @@ void ClienteTorrent::borrarTorrent(Torrent *t) {
 void ClienteTorrent::setControlador(Controlador *ctrl) {
 	this->controlador = ctrl;
 }
-<<<<<<< .mine
-
-//TODO llamar despues de configurar el cliente con los datos del archivo de configuracion
-void ClienteTorrent::inicializarDirectorios(){
-		mkdir(rutaDescargas.c_str(),0755);
-		mkdir(URL_CARPETA_TEMP,0755);
-	return;
-}
-=======
 
 Configuracion* ClienteTorrent::getConfiguracion() {
 	return &config;
 }
->>>>>>> .r146
