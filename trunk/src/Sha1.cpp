@@ -217,12 +217,10 @@ std::string Sha1::binAUrlEncode(unsigned int *salidaSha1){
 	ParserCgi parser;
 	unsigned int invertidos[5];
 	unsigned int temp;
-
-	for(int i = 0; i < 4; i++ ){
+	std::cout<<salidaAstring(salidaSha1)<<std::endl;
+	for(int i = 0; i < 5; i++ ){
 		memcpy(&temp,salidaSha1 + i,sizeof(unsigned int));
-		std::cout<<temp<<std::endl;
 		temp = ntohl(temp);
-		std::cout<<temp<<std::endl;
 		memcpy(invertidos + i,&temp,sizeof(unsigned int));
 	}
 
