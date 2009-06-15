@@ -28,7 +28,6 @@ FileManager::~FileManager() {
 		delete (*it);
 		it++;
 	}
-	//TODO limpiar lista archivos guardar datos admin
 }
 
 /*TODO Pedir info_hash tratar de abrir un archivo con ese nombre
@@ -133,6 +132,7 @@ void FileManager::inicializarBitmap(std::string urlBitmap) {
 			int tam  = archivoBitmap.tellg();
 			archivoBitmap.seekg(0, std::ios::beg);
 			char* bitmapRecuperado = new char[tam];
+			archivoBitmap.read(bitmapRecuperado,tam);
 			bitmap.inicializarBitmap(bitmapRecuperado,tam);
 			delete[] bitmapRecuperado;
 	}

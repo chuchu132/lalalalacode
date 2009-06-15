@@ -34,6 +34,20 @@ void TestFileManager::test(std::string urlTorrent){
 			DatosParser* datos =  parser.salidaParser();
 			datos->primero();
 			if(filemanager.inicializar(datos)){
+				char* datoTemp = NULL;
+				int tam;
+				Sha1 sha;
+				datos->primero();
+				datos->obtenerDatoPorNombre("info_hash",&datoTemp,tam);
+				std::string url = URL_CARPETA_TEMP;
+				url += sha.salidaAstring((unsigned int*)datoTemp);
+				url += ".bitmap";
+				filemanager.guardarBitmap(url);
+				delete[] datoTemp;
+
+			/*OJO La primer vez que se corre el test esto da ok xq el bitmap se genera desde 0
+			 * si se vuelve a ejecutar el test da mal xq el bitmap se genera en base a lo guardado
+			 * en el test anterior y hay un bit marcado*/
 			assert(filemanager.getBitmap().estaVacio(),"El bitmap generado no tiene ninguna pieza marcada");
 			std::cout<<"Tamaño Descarga: "<<filemanager.getTamanio()<<" bytes"<<std::endl;
 
@@ -41,6 +55,7 @@ void TestFileManager::test(std::string urlTorrent){
 			filemanager.getBitmap().marcarBit(1); //marco la pieza como que esta completa para poder leer una parte
 			char* datoRecuperado = 	filemanager.readBlock(1,10,10);
 			assert(memcmp(datoRecuperado,"FiTorrent",10)==0,"El dato recuperado es igual al ingresado");
+			filemanager.guardarBitmap(url);
 			delete[] datoRecuperado;
 			delete datos;
 

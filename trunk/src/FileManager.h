@@ -52,6 +52,8 @@ public:
 	/* devuelve un iterador al ultimo elemento */
 	std::list<Archivo*>::iterator getEndArchivos();
 
+	void guardarBitmap(std::string urlBitmap);
+
 private:
 	/*TODO
 	 * Los archivos se manejan como uno del tamaño total
@@ -70,7 +72,6 @@ private:
 
 	bool crearArchivo(std::string path,unsigned int tamanio);
 	void inicializarBitmap(std::string urlBitmap);
-	void guardarBitmap(std::string urlBitmap);
 	bool descargaCompleta();
 };
 
