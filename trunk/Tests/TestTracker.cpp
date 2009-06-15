@@ -60,6 +60,10 @@ void TestTracker::run() {
 
 		tracker.send(get.c_str(),get.length());
 
+		get =parser.crearGetConNumwant("annonunce",info_hash,peer_id.c_str(),puerto,0,0,left,100);
+
+		tracker.send(get.c_str(),get.length());
+
 		assert(true,"Paso del send");
 		sleep(3);
 		tracker.cerrarConexion();
