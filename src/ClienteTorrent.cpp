@@ -13,16 +13,31 @@
 #define CANT_CLIENTES 5
 
 ClienteTorrent::ClienteTorrent() {
-	// TODO
-	//crear el peer_id
+	// TODO crear el peer_id
 	puerto = config.getPuerto();
 	rutaDescargas = config.getRutaDescargas();
-	activo = false;
 
+	std::string estado;
+	Torrent *t;
+
+	while (config.hayTorrents()) {
+		t = agregarTorrent(config.obtenerTorrent());
+		estado = config.getEstadoTorrent();
+
+		if (estado == T_DETENIDO) {
+			t->detener();
+		}
+		else {
+			if (estado == T_PAUSADO) {
+				t->pausar();
+			}
+		}
+	}
+
+	activo = false;
 }
 
 ClienteTorrent::~ClienteTorrent() {
-	// TODO
 	if (activo)
 		finalizar();
 }
@@ -79,8 +94,7 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 }
 
 void ClienteTorrent::finalizar() {
-	//implementar: yo hago esto ;) LU
-
+	//implementar
 	if (activo)
 	{
 		activo = false;
@@ -88,11 +102,11 @@ void ClienteTorrent::finalizar() {
 	}
 	std::list<Torrent*>::iterator it = torrents.begin();
 	while (it != torrents.end()) {
+		//guarda info sobre el torrent
+		config.guardarTorrent((*it)->getEstado(), (*it)->getPath());
 		(*it)->detener();
-		//guardar info sobre el torrent
 		delete (*it);
 	}
-
 }
 
 bool ClienteTorrent::estaActivo() {
@@ -118,7 +132,7 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		controlador->notificarVista(notif);
 		return NULL;
 	} else {
-		Torrent *t = new Torrent(this);
+		Torrent *t = new Torrent(this, ruta);
 		if ( t->inicializarTorrent(&parserTorrent)){
 			t->setControlador(controlador);
 			t->setCarpetaDescarga(rutaDescargas);

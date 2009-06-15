@@ -74,7 +74,7 @@ int Controlador::correrVista()
 
 void Controlador::guardarConfiguracion()
 {
-	Configuracion *config = cliente.getConfiguracion();
+//	Configuracion *config = cliente.getConfiguracion();
 //	config->guardarPuerto(ventana->getPuerto());
 //	config->guardarRutaDescargas(ventana->getRutaDescargas());
 }

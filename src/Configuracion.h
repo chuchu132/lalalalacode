@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <list>
 
 #include "Constantes.h"
 
@@ -23,34 +24,51 @@ private:
 
 	std::string rutaDescargas; //directorio en el que se guardan las descargas
 	unsigned int puerto; //puerto en el que el cliente escucha conexiones entrantes
+	std::list<std::string> torrents; // lista con los torrents abiertos en la ultima ejecucion
+									 // y su estado
 
-	bool huboCambios; //indica si hubo cambios en la configuracion
+	std::string estado;
 
 	void crearArchivo();
 
 	/* guarda la configuracion actual en el archivo */
 	void guardarConfiguracion();
 
-	std::string leerLinea();
 	std::string leerRuta();
-
-public:
-
-	Configuracion();
-	~Configuracion();
-
-	void guardarRutaDescargas(std::string);
-	void guardarPuerto(unsigned int);
-
-	std::string getRutaDescargas();
-
-	unsigned int getPuerto();
 
 	/* carga la configuracion desde el archivo */
 	void cargarConfiguracion();
 
+
+
+public:
+
+	/* obtiene los datos desde el archivo de configuracion */
+	Configuracion();
+
+	/* guarda los datos en el archivo de configuracion */
+	~Configuracion();
+
+	void guardarRutaDescargas(std::string);
+
+	void guardarPuerto(unsigned int);
+
+	void guardarTorrent(std::string estado, std::string ruta);
+
+	/* devuelve la ruta en la que se deben guardar los archivos descargados */
+	std::string getRutaDescargas();
+
+	unsigned int getPuerto();
+
+	std::string obtenerTorrent();
+
+	std::string getEstadoTorrent();
+
+	bool hayTorrents();
+
 	/* carga la configuracion por default */
 	void cargarConfiguracionDefault();
+
 };
 
 #endif /* CONFIGURACION_H_ */

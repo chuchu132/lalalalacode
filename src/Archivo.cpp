@@ -7,14 +7,9 @@
 
 #include "Archivo.h"
 
-Archivo::Archivo() {
-	// TODO Auto-generated constructor stub
+Archivo::Archivo() {}
 
-}
-
-Archivo::~Archivo() {
-	// TODO Auto-generated destructor stub
-}
+Archivo::~Archivo() {}
 
 unsigned int Archivo::getTamanio(){
 	return tamanio;

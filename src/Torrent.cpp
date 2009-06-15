@@ -11,10 +11,11 @@
 #include "Torrent.h"
 #include <cstring>
 
-Torrent::Torrent(ClienteTorrent* clienteTorrent):fileManager(clienteTorrent) {
+Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(clienteTorrent) {
 	tracker = new Tracker();
 	uploaded = 0;
 	downloaded = 0;
+	this->path = path;
 	estado = T_DETENIDO;
 	activo = true;
 	this->clienteTorrent = clienteTorrent;
@@ -162,4 +163,8 @@ void Torrent::refrescarPeers() {
 
 void Torrent::setCarpetaDescarga(std::string url) {
 	//todo.. se la tiene qu epasar al file manager??
+}
+
+std::string Torrent::getPath() {
+	return path;
 }
