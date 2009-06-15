@@ -24,7 +24,6 @@ Peer::Peer(Socket* peerRemoto, Torrent* torrent) {
 }
 
 Peer::~Peer() {
-	// TODO Auto-generated destructor stub
 }
 
 bool Peer::procesar(char* buffer, int length) {

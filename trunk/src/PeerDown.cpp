@@ -12,7 +12,6 @@ PeerDown::PeerDown(Socket* peerRemoto,Torrent* torrent):Peer(peerRemoto,torrent)
 }
 
 PeerDown::~PeerDown() {
-	// TODO Auto-generated destructor stub
 }
 
 void* PeerDown::run() {
