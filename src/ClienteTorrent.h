@@ -45,8 +45,6 @@ private:
 	Controlador *controlador;
 	Configuracion config;
 
-	std::string rutaDescargas;//ruta donde se guardan los archivos
-
 public:
 
 	ClienteTorrent();

@@ -9,13 +9,13 @@
 #include "ParserMensaje.h"
 #include "Peer.h"
 #include "PeerUp.h"
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #define CANT_CLIENTES 5
 
 ClienteTorrent::ClienteTorrent() {
 	// TODO crear el peer_id
-	puerto = config.getPuerto();
-	rutaDescargas = config.getRutaDescargas();
 
 	std::string estado;
 	Torrent *t;
@@ -44,7 +44,7 @@ ClienteTorrent::~ClienteTorrent() {
 
 void* ClienteTorrent::run() {
 
-	peerListener.listen(puerto, CANT_CLIENTES);
+	peerListener.listen(config.getPuerto(), CANT_CLIENTES);
 
 	Socket* conexionPeerNuevo;
 	int cantidad, length;
@@ -119,7 +119,7 @@ std::string ClienteTorrent::getPeerId() {
 }
 
 unsigned int ClienteTorrent::getPuerto(){
-	return puerto;
+	return config.getPuerto();
 }
 
 Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
@@ -135,7 +135,7 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		Torrent *t = new Torrent(this, ruta);
 		if ( t->inicializarTorrent(&parserTorrent)){
 			t->setControlador(controlador);
-			t->setCarpetaDescarga(rutaDescargas);
+			t->setCarpetaDescarga(config.getRutaDescargas());
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
 			t->run();
 			notif = "Se ha agregado el Torrent ";
@@ -171,4 +171,10 @@ void ClienteTorrent::setControlador(Controlador *ctrl) {
 
 Configuracion* ClienteTorrent::getConfiguracion() {
 	return &config;
+}
+
+void ClienteTorrent::inicializarDirectorios(){
+		mkdir(config.getRutaDescargas().c_str(),0755);
+		mkdir(URL_CARPETA_TEMP,0755);
+	return;
 }

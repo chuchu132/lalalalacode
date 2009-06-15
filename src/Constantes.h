@@ -100,7 +100,6 @@ const int PUERTO_DEFAULT_TRACKER = 80;
 #define T_COMPLETO "Completo"
 
 #define URL_CARPETA_TEMP "./incompletos/"
-#define URL_CARPETA_DESCARGAS "./descargas/";
 
 /* Configuracion Default */
 #define RUTA_CONFIGURACION "FiTorrent.config"
