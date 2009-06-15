@@ -41,6 +41,7 @@ public:
 	void cerrarConexion();
 
 	std::string getPath();
+	std::string getUrl();
 
 	//TODO tal vez va privado
 	void inicilizar(std::string url);

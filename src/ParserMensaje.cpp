@@ -84,24 +84,24 @@ std::string ParserMensaje::crearGetBase(std::string path,unsigned int* info_hash
 	return buffer.str();
 }
 
-std::string ParserMensaje::crearGetConEvento(std::string path,unsigned int* info_hash,
+std::string ParserMensaje::crearGetConEvento(std::string host,std::string path,unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left,
 		std::string event) {
 	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
 			downloaded, left);
 	std::stringstream buffer;
-	buffer << base << "&event=" << event<<" HTTP/1.0\r\n\r\n";
+	buffer << base << "&event=" << event<<" HTTP/1.0\r\n"<<"Host: "<<host<<"\r\n\r\n";
 
 	return buffer.str();
 }
 
-std::string ParserMensaje::crearGetConNumwant(std::string path,unsigned int* info_hash,
+std::string ParserMensaje::crearGetConNumwant(std::string host,std::string path,unsigned int* info_hash,
 		std::string peer_id, int port, int uploaded, int downloaded, int left,
 		int numwant) {
 	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
 			downloaded, left);
 	std::stringstream buffer;
-	buffer << base << "&numwant=" << numwant<<" HTTP/1.0\r\n\r\n";
+	buffer << base << "&numwant=" << numwant<<" HTTP/1.0\r\n"<<"Host: "<<host<<"\r\n\r\n";
 	return buffer.str();
 }
 

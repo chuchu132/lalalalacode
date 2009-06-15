@@ -74,9 +74,9 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 	ParserMensaje parser;
 	std::string envio;
 	if (numwant < 0) {
-		envio += parser.crearGetConEvento(tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),event);
+		envio += parser.crearGetConEvento(tracker->getUrl(),tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),event);
 	} else {
-		envio = parser.crearGetConNumwant(tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),numwant);
+		envio = parser.crearGetConNumwant(tracker->getUrl(),tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),numwant);
 	}
 	return (tracker->send(envio.c_str(), envio.length()));
 }

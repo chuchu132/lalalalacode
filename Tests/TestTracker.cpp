@@ -56,11 +56,9 @@ void TestTracker::run() {
 		}
 		delete[] datoTemp;
 		/*Creo un mensaje para enviar el GET al tracker*/
-		std::string get = parser.crearGetConEvento("annonunce",info_hash,peer_id.c_str(),puerto,0,0,left,EVENT_STARTED);
+		std::string get = parser.crearGetConEvento(tracker.getUrl(),"annonunce",info_hash,peer_id.c_str(),puerto,0,0,left,EVENT_STARTED);
 
-		tracker.send(get.c_str(),get.length());
-
-		get =parser.crearGetConNumwant("annonunce",info_hash,peer_id.c_str(),puerto,0,0,left,100);
+		std::cout<<get<<std::endl;
 
 		tracker.send(get.c_str(),get.length());
 

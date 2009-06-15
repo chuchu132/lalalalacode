@@ -45,6 +45,10 @@ std::string Tracker::getPath() {
 	return path;
 }
 
+std::string Tracker::getUrl(){
+	return url;
+}
+
 bool Tracker::connect(std::string url) {
 	inicilizar(url);
 	if (this->url.length() > 0) {
