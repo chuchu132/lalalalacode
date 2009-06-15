@@ -287,9 +287,7 @@ bool FileManager::descargaCompleta() {
 void FileManager::descargaAarchivos() {
 
 	bool multifile = (archivos.size() != 1);
-	//TODO descomentar cuando este la configuracion.
-	//std::string urlbase = clienteTorrent->getConfiguracion()->getRutaDescargas();
-	std::string urlbase ="./descargas/";
+	std::string urlbase = clienteTorrent->getConfiguracion()->getRutaDescargas();
 	urlbase += nombreCarpeta; //nombre de carpeta o nombre de archivo en caso de torrent single file
 
 	unsigned int acumulado = 0;
