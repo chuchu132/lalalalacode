@@ -106,7 +106,7 @@ std::list<Peer*>* Torrent::getListaPeers(){
 	return &peers;
 }
 
-//implementar.. los valores estan para probar
+//implementar
 void Torrent::continuar() {
 	estado = T_ACTIVO;
 	activo = true;
@@ -134,13 +134,11 @@ bool Torrent::estaActivo(){
 }
 
 unsigned int Torrent::getTamanio() {
-	return 40000;
-	//return fileManager.getTamanio();
+	return fileManager.getTamanio();
 }
 
 unsigned int Torrent::getTamanioDescargado() {
-	return 1000;
-	//return downloaded;
+	return downloaded;
 }
 
 int Torrent::getVelocidadSubida() {

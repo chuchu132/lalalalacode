@@ -43,8 +43,6 @@ private:
 	Gtk::TreeModelColumn<Torrent*> col_torrent; 	//puntero al objeto torrent que se esta mostrando
 	Gtk::TreeModelColumn<bool> col_visible;//indica si la fila es visible o no
 
-	Glib::RefPtr<Gtk::TreeModelFilter> filter;
-
 	Gtk::TreeModelColumn<Glib::ustring> col_categories;
 	Gtk::TreeModelColumn<std::string> col_cat_status;
 
@@ -57,7 +55,6 @@ private:
 	Glib::RefPtr<Gtk::TreeSelection> selection_categories;
 
 	AttributesView *attr;//muestra los atributos del torrent
-	int i;//sacar despues
 
 	/* Signal handler para fila del categories view seleccionada */
 	void on_category_selected();

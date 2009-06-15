@@ -135,7 +135,6 @@ void AttributesView::showFiles()
 		row[col_path_files] = (*it)->getPath();
 		it++;
 	}
-
 }
 
 void AttributesView::on_page_selected(GtkNotebookPage* page, guint page_num)

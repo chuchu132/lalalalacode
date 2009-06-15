@@ -30,7 +30,8 @@ private:
 
 	/* ventanas */
 	Gtk::Window *main_window; //ventana principal de la aplicacion
-	Gtk::AboutDialog *about_window; //ventana acerca de
+	Gtk::Dialog *preferences_window; //ventana de preferencias
+	Gtk::AboutDialog *about_window; //ventana "acerca de"
 	Gtk::FileChooserDialog *select_window; //ventana de seleccion de archivo
 
 	Gtk::FileFilter filter; //filtro para la seleccion de archivos
@@ -52,6 +53,9 @@ private:
 	Glib::RefPtr<Gtk::ActionGroup> menu_ayuda;
 	Glib::RefPtr<Gtk::UIManager> menu_UIManager;
 	Gtk::Widget* menu;
+
+	/* widgets */
+	Gtk::Entry *puerto;
 
 	/* clases para mostrar la lista de torrents */
 	TorrentView *torrents;

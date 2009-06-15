@@ -12,6 +12,7 @@
 #define MAIN_WINDOW "main_wind"
 #define ABOUT_WINDOW "about_wind"
 #define SELECT_WINDOW "select_wind"
+#define PREFERENCES_WINDOW "preferences_wind"
 
 #define BUTTON_ADD 	"boton_agregar"
 #define BUTTON_ERASE "boton_borrar"
@@ -31,8 +32,6 @@
 Ventana::Ventana()
 {
 	error = false;
-	std::cout<<"comienzo ventana"<<std::endl;
-
 	try
 	{
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
@@ -58,14 +57,12 @@ Ventana::Ventana()
 	catch (Glib::MarkupError& ex2)
 	{
 		std::cerr<<"error al cargar el archivo de la vista"<<std::endl;
-		std::cerr<<"falta el archivo "<< WINDOW_FILE<<std::endl;
 		std::cerr<<ex2.what()<<std::endl;
 		error = true;
 	}
 	catch (Gtk::BuilderError& ex3)
 	{
 		std::cerr<<"error al cargar el archivo de la vista"<<std::endl;
-		std::cerr<<"falta el archivo "<< WINDOW_FILE<<std::endl;
 		std::cerr<<ex3.what()<<std::endl;
 		error = true;
 	}
@@ -93,16 +90,18 @@ void Ventana::getWindows()
 	//obtengo la ventana principal
 	main_window = 0;
 	builder->get_widget(MAIN_WINDOW, main_window);
-	std::cout<<"ventana ppal cargada"<<std::endl;
 
 	//obtengo la ventana acerca de
 	about_window = 0;
 	builder->get_widget(ABOUT_WINDOW, about_window);
-	std::cout<<"ventana acerca de cargada"<<std::endl;
 
 	//obtengo la ventana de seleccion de archivo
 	select_window = 0;
 	builder->get_widget(SELECT_WINDOW, select_window);
+
+	//obtengo la ventana de preferencias
+	preferences_window = 0;
+	builder->get_widget(PREFERENCES_WINDOW, preferences_window);
 
 	filter.set_name("Archivos Torrent (*.torrent)");
 	filter.add_pattern("*.torrent");
@@ -111,6 +110,11 @@ void Ventana::getWindows()
 	select_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	select_window->add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_OK);
 	std::cout<<"ventana de seleccion de archivo cargada"<<std::endl;
+
+	preferences_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
+	preferences_window->add_button(Gtk::Stock::OPEN, Gtk::RESPONSE_APPLY);
+	std::cout<<"ventana de preferencias cargada"<<std::endl;
+
 }
 
 void Ventana::getViews()
@@ -372,7 +376,13 @@ void Ventana::on_menu_quit()
 
 void Ventana::on_menu_preferences()
 {
-	//implementar
+	int result = preferences_window->run();
+
+	if (result == Gtk::RESPONSE_APPLY)
+	{
+		controlador->guardarConfiguracion();
+	}
+	preferences_window->hide();
 }
 
 int Ventana::run()
