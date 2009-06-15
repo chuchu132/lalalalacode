@@ -13,12 +13,9 @@
 #include <string>
 
 TestFileManager::TestFileManager() {
-	// TODO Auto-generated constructor stub
-
 }
 
 TestFileManager::~TestFileManager() {
-	// TODO Auto-generated destructor stub
 }
 
 void TestFileManager::run(){

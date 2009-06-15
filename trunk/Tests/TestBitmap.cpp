@@ -11,12 +11,9 @@
 #include <string.h>
 
 TestBitmap::TestBitmap() {
-	// TODO Auto-generated constructor stub
-
 }
 
 TestBitmap::~TestBitmap() {
-	// TODO Auto-generated destructor stub
 }
 
 void TestBitmap::run(){
