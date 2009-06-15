@@ -36,9 +36,9 @@ public:
 
 	std::string crearGetBase(std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left);
 
-	std::string crearGetConEvento(std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,std::string event);
+	std::string crearGetConEvento(std::string host,std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,std::string event);
 
-	std::string crearGetConNumwant(std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
+	std::string crearGetConNumwant(std::string host,std::string path,unsigned int* info_hash,std::string peer_id,int port,int uploaded,int downloaded,int left,int numwant);
 
 	std::string getHash(char* handshakeMsj);
 
