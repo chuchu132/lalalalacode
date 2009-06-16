@@ -136,6 +136,7 @@ private:
 	bool conexionOK;
 	Torrent* torrent;
 
+	char tipo;
 	bool am_choking;
 	bool am_interested;
 	bool peer_choking;
@@ -155,6 +156,8 @@ private:
 	void procesarCancel(int index,int begin,int length);
 	/*Envia un mensaje de Have a los peers que no tienen la pieza indicada por index*/
 	void repartirHave(int index);
+
+	char getTipo();
 
 };
 
