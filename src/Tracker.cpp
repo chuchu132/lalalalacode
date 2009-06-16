@@ -147,6 +147,7 @@ std::string Tracker::archivoTracker(std::string buffer) {
 	return salida;
 }
 
+//TODO borrar couts
 void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 	int cantIps = (int) (longitudCadena / 6);
 	unsigned short int puerto;
@@ -165,6 +166,8 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
 		puerto = ntohs(puerto);
 		std::cout << ":" << puerto << std::endl;
+
+		torrent->agregarPeer(ip.str(),puerto);
 
 	}
 

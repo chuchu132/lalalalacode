@@ -17,7 +17,7 @@
 #include <sys/types.h>
 
 FileManager::FileManager(ClienteTorrent* cliente) {
-	this->clienteTorrent = cliente; //TODO no se esta usando q ondaaa?
+	this->clienteTorrent = cliente;
 	tamanioPieza = 0;
 	bytesTotales = 0;
 	hashPiezas = NULL;
