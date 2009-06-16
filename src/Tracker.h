@@ -48,7 +48,7 @@ public:
 
 	bool procesarResponse(std::string buffer);
 
-	std::string archivoTracker (std::string buffer);
+	std::string archivoTracker (std::string buffer,int *longitud);
 
 	void decodificarPeers(char* cadena,unsigned int longitudCadena);
 
