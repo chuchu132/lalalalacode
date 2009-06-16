@@ -9,6 +9,7 @@
 #include "ParserCgi.h"
 #include "ParserMensaje.h"
 #include "Torrent.h"
+#include "PeerDown.h"
 #include <cstring>
 #include <cstdio>
 
