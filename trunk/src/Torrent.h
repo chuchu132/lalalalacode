@@ -124,21 +124,19 @@ public:
 
 	bool estaActivo();
 
-	/* setea la carpeta en la que se tiene que guardar el archivo descargado*/
-	void setCarpetaDescarga(std::string url);
-
 	/* transforma bytes en un string */
 	std::string bytesToString(float bytes);
 
 	std::list<Peer*>::iterator getIterPeers();
 	std::list<Peer*>::iterator getEndIterPeers();
-
+	int getCantidadMaximaPeers();
 
 private:
 
 	ClienteTorrent* clienteTorrent;
 	Tracker* tracker;
 	Mutex llaveListaPeers;
+	int cantidadMaximaPeers;
 	std::list<Peer*> peers;
 	FileManager fileManager;
 	unsigned int info_hash[5];
@@ -152,7 +150,7 @@ private:
 
 	Controlador *controlador;
 
-	time_t horaSistema;
+	time_t horaInicial;
 
 	time_t horaAnterior;
 	unsigned int downAnterior;
