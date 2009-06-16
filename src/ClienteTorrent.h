@@ -16,7 +16,6 @@
 #include "Configuracion.h"
 
 /* ********************************************************************
- * TODO Completar Comentario                                          *
  * El cliente torrent es el encargado de agregar y sacar torrents.    *
  * El usuario accede a él a traves de la vista.                       *
  **********************************************************************/
