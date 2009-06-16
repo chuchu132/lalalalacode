@@ -10,9 +10,12 @@
 #include "ParserMensaje.h"
 #include "Torrent.h"
 #include "PeerDown.h"
+#include "Constantes.h"
 #include <cstring>
 #include <cstdio>
 #include <iomanip>
+#include <cstdio>
+#include <ctime>
 
 Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(clienteTorrent) {
 	tracker = new Tracker();
@@ -24,6 +27,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(c
 	this->clienteTorrent = clienteTorrent;
 	controlador = NULL;
 	port = clienteTorrent->getPuerto();
+	cantidadMaximaPeers = PEERS_MAX;
 }
 
 Torrent::~Torrent() {
@@ -62,10 +66,12 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 void Torrent::run(){
 try {
 
-	 horaSistema = time (NULL);//Obtiene los segundos que pasaron desde 1970
-	 horaAnterior = time(NULL);
+
+	 horaInicial= time (NULL);//Obtiene los segundos que pasaron desde 1970
+     horaAnterior = time(NULL);
 	 downAnterior = downloaded;
-     tracker->run();
+	 tracker->execute();
+
 } catch ( AvisoDescargaCompleta aviso) {
 	// TODO parar todo el aviso lo lanza el filemanager al verificar q se descargaron todas las piezas
 }
@@ -86,6 +92,7 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 	}
 	return (tracker->send(envio.c_str(), envio.length()));
 }
+
 void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 	Socket* conexion = new Socket();
 	if(conexion->connect(ip,puerto)==OK){
@@ -190,13 +197,13 @@ void Torrent::setControlador(Controlador* ctrl) {
 }
 
 void Torrent::refrescarPeers() {
-	//todo implementar
-
+	time_t horaActual = time(NULL);
+	unsigned int dif = (unsigned int) difftime(horaActual,horaInicial);
+	if(dif >= tracker->getMinInterval() ){
+		enviarEventoEstado(NULL,0);
+		horaInicial = horaActual;
+	}
 	controlador->actualizarEstado(this);
-}
-
-void Torrent::setCarpetaDescarga(std::string url) {
-	//todo.. se la tiene qu epasar al file manager??
 }
 
 std::string Torrent::getPath() {
@@ -245,4 +252,8 @@ std::list<Peer*>::iterator Torrent::getIterPeers() {
 
 std::list<Peer*>::iterator Torrent::getEndIterPeers() {
 	return peers.end();
+}
+
+int Torrent::getCantidadMaximaPeers(){
+	return cantidadMaximaPeers;
 }
