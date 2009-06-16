@@ -75,6 +75,8 @@ private:
 	 * */
 	ClienteTorrent* clienteTorrent;
 	Bitmap bitmap;
+	Bitmap mapaPedidos;
+	Mutex llavePedidos;
 	std::string nombreCarpeta;
 	std::list<Archivo*> archivos; //informacion sobre los distintos archivos, sirve para partir la descarga al final.
 	unsigned int tamanioPieza;
