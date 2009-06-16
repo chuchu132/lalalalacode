@@ -73,8 +73,10 @@ int Controlador::correrVista()
 
 void Controlador::guardarConfiguracion()
 {
-//	Configuracion *config = cliente.getConfiguracion();
-//	config->guardarPuerto(ventana->getPuerto());
+	Configuracion *config = cliente.getConfiguracion();
+	unsigned int puerto = ventana->getPuerto();
+	if (puerto != 0)
+		config->guardarPuerto(ventana->getPuerto());
 //	config->guardarRutaDescargas(ventana->getRutaDescargas());
 }
 

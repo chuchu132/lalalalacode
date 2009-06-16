@@ -23,6 +23,7 @@
 #define BUTTON_DOWN	"boton_bajar"
 #define BUTTON_PEERS "boton_peers"
 #define BUTTON_NOTIF "boton_notificaciones"
+#define ENTRY_PUERTO "entry1"
 
 #define MENU_VBOX "vbox1"
 
@@ -111,6 +112,10 @@ void Ventana::getWindows()
 
 	preferences_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	preferences_window->add_button(Gtk::Stock::APPLY, Gtk::RESPONSE_APPLY);
+	builder->get_widget(ENTRY_PUERTO, entry_puerto);
+	std::stringstream buf;
+	buf <<PUERTO_DEFAULT;
+	entry_puerto->set_text(buf.str());
 }
 
 void Ventana::getViews()
@@ -387,3 +392,14 @@ bool Ventana::huboError()
 {
 	return error;
 }
+
+unsigned int Ventana::getPuerto()
+{
+	std::stringstream buffer;
+	unsigned int puerto = 0;
+	buffer << entry_puerto->get_text();
+	buffer >> puerto;
+	std::cout<<puerto<<std::endl;
+	return puerto;
+}
+

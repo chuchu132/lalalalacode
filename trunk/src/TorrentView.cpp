@@ -6,7 +6,6 @@
  */
 
 #include "TorrentView.h"
-#include <iomanip>
 
 #define COL_NAME "Nombre del Torrent"
 #define COL_SIZE "Tamaño"
@@ -157,8 +156,8 @@ void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)
 {
 	row[col_status] = t->getEstado();
 	row[col_progress] = t->getTamanioDescargado() * 100 / t->getTamanio();
-	row[col_completed] = showBytes(t->getTamanioDescargado());
-	row[col_remaining] =showBytes(t->getTamanio() - t->getTamanioDescargado());
+	row[col_completed] =t->bytesToString(t->getTamanioDescargado());
+	row[col_remaining] =t->bytesToString(t->getTamanio() - t->getTamanioDescargado());
 	row[col_downspeed] = t->getVelocidadBajada();
 	row[col_upspeed] = t->getVelocidadSubida();
 	//row[col_time] = t->getTiempoRestante();
@@ -169,7 +168,7 @@ void TorrentView::addRow(Torrent *t)
 	Gtk::TreeModel::Row row = (* list_torrents->append());
 
 	row[col_name] = t->getNombre();
-	row[col_size] = showBytes(t->getTamanio());
+	row[col_size] = t->bytesToString(t->getTamanio());
 	row[col_torrent] = t;
 	row[col_name] = t->getNombre();
 
@@ -251,29 +250,6 @@ void TorrentView::updateRow(Torrent *t)
 		}
 		iter++;
 	}
-}
-
-std::string TorrentView::showBytes(float bytes)
-{
-	std::stringstream buffer;
-	if (bytes < 1024)
-	{
-		buffer << std::setprecision(3)<< bytes<<" bytes";
-	}
-	else
-	{
-		bytes /= 1024;
-		if (bytes < 1024)
-		{
-			buffer << std::setprecision(3)<<bytes<<" kb";
-		}
-		else
-		{
-			bytes /= 1024;
-			buffer << std::setprecision(3)<<bytes<<" Mb";
-		}
-	}
-	return buffer.str();
 }
 
 void TorrentView::hideRows(std::string type)

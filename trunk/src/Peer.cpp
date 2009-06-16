@@ -307,4 +307,7 @@ void Peer::setTipo(char estado){
     tipo=estado;
 }
 
+std::string Peer::getIp() {
+	return peerRemoto->getIp();
+}
 

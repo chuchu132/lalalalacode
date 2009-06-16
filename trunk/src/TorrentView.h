@@ -64,9 +64,6 @@ private:
 	/* actualiza la fila con los datos del torrent */
 	void updateRowValues(Gtk::TreeModel::Row &, Torrent*);
 
-	/* transforma un tamaño enn bytes en un string */
-	std::string showBytes(float bytes);
-
 	/* muestra todos los torrents */
 	void showAll();
 

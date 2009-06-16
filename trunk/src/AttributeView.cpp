@@ -51,10 +51,12 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 void AttributesView::setPeersView()
 {
 	columns_peers.add(col_name_peers);
+	columns_peers.add(col_type_peers);
 	list_peers =  Gtk::ListStore::create(columns_peers);
 	view_peers->set_model(list_peers);
 
-	int cols_count = this->view_peers->append_column("Nombre del Peer", col_name_peers);
+	this->view_peers->append_column("Nombre del Peer", col_name_peers);
+	int cols_count = this->view_peers->append_column("Tipo de Peer", col_type_peers);
 	Gtk::TreeViewColumn* pColumn;
 	for (int i=0; i<cols_count; i++)
 	{
@@ -123,8 +125,27 @@ void AttributesView::showInfo(Torrent *t)
 
 void AttributesView::showPeers()
 {
-	//muestra la lista de peers de este torrent
-	//implementar hacer lo mismo que en show files
+	list_peers->clear();
+	std::list<Peer*>::iterator it = torrent->getIterPeers();
+	std::list<Peer*>::iterator end = torrent->getEndIterPeers();
+	Gtk::TreeModel::Row row;
+
+	while (it != end)
+	{
+		Gtk::TreeModel::Row row = (* list_peers->append());
+		row[col_name_peers] = (*it)->getIp();
+		switch ((*it)->getTipo())
+		{
+		case 'P': row[col_type_peers] = "Peer";
+				 break;
+		case 'U':  row[col_type_peers] = "Subida";
+				break;
+		case 'D':  row[col_type_peers] = "Bajada";
+			  break;
+		}
+		it++;
+	}
+
 }
 
 void AttributesView::showInformation()
@@ -158,7 +179,7 @@ void AttributesView::showFiles()
 	while (it != end)
 	{
 		Gtk::TreeModel::Row row = (* list_files->append());
-		//row[col_size_file] = (*it)->getTamanio();//show bytes!!!
+		row[col_size_files] = torrent->bytesToString((*it)->getTamanio());
 		row[col_path_files] = (*it)->getPath();
 		it++;
 	}
