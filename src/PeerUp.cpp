@@ -8,8 +8,7 @@
 #include "PeerUp.h"
 
 PeerUp::PeerUp(Socket* peerRemoto,Torrent* torrent):Peer(peerRemoto,torrent) {
-	run();
-
+	tipo = 'U';
 }
 
 PeerUp::~PeerUp() {

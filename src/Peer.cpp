@@ -21,6 +21,7 @@ Peer::Peer(Socket* peerRemoto, Torrent* torrent) {
 	am_interested = false;
 	peer_choking = true;
 	peer_interested = false;
+	tipo = 'P';
 }
 
 Peer::~Peer() {
@@ -297,4 +298,7 @@ void Peer::setPeer_choking(bool estado){
 	peer_choking=estado;
 }
 
+char Peer::getTipo(){
+	return tipo;
+}
 
