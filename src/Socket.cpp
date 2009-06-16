@@ -5,10 +5,12 @@
  *      Author: ale
  */
 
+
 #include <arpa/inet.h>
-#include <errno.h>
 #include <netdb.h>
-#include <string.h>
+#include <sstream>
+#include <iostream>
+#include <cstring>
 
 #include "Constantes.h"
 #include "Socket.h"
@@ -116,17 +118,39 @@ int Socket::receiveExact(char* stream, unsigned int size) {
 	return ERROR;
 }
 
-	Socket* Socket::accept() {
-		struct sockaddr_in client;
-		memset(&client, 0, sizeof(client));
-		unsigned int sizeClient = sizeof(client);
-		int fdNuevo;
-		if ((fdNuevo = ::accept(fd, (struct sockaddr *) &(client), &sizeClient))) {
-			return new Socket(fdNuevo);
-		}
-		return NULL;
+Socket* Socket::accept() {
+	struct sockaddr_in client;
+	memset(&client, 0, sizeof(client));
+	unsigned int sizeClient = sizeof(client);
+	int fdNuevo;
+	if ((fdNuevo = ::accept(fd, (struct sockaddr *) &(client), &sizeClient))) {
+		return new Socket(fdNuevo);
 	}
+	return NULL;
+}
 
-	bool Socket::is_valid() {
-		return valido;
-	}
+void Socket::setIp(std::string ipInt){
+	this->ip = ip;
+}
+
+void Socket::setIp(int ipInt){
+	std::stringstream ip;
+	unsigned char* ipArr =(unsigned char*) &ipInt;
+	unsigned char temp =  ipArr[0];
+	ip << (int) temp << ".";
+	temp = (unsigned char) ipArr[1];
+	ip << (int) temp << ".";
+	temp = (unsigned char) ipArr[2];
+	ip << (int) temp << ".";
+	temp = (unsigned char) ipArr[3];
+	ip << (int) temp;
+	this->ip = ip.str();
+}
+
+std::string Socket::getIp(){
+	return ip;
+}
+
+bool Socket::is_valid() {
+	return valido;
+}
