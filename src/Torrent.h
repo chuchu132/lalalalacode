@@ -127,6 +127,13 @@ public:
 	/* setea la carpeta en la que se tiene que guardar el archivo descargado*/
 	void setCarpetaDescarga(std::string url);
 
+	/* transforma bytes en un string */
+	std::string bytesToString(float bytes);
+
+	std::list<Peer*>::iterator getIterPeers();
+	std::list<Peer*>::iterator getEndIterPeers();
+
+
 private:
 
 	ClienteTorrent* clienteTorrent;

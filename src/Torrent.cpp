@@ -12,6 +12,7 @@
 #include "PeerDown.h"
 #include <cstring>
 #include <cstdio>
+#include <iomanip>
 
 Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(clienteTorrent) {
 	tracker = new Tracker();
@@ -196,12 +197,36 @@ std::string Torrent::getHashString() {
 }
 
 unsigned int Torrent::getCantPeers() {
-	std::list<Peer*>::iterator it = peers.begin();
-	unsigned int cant = 0;
+	return peers.size();
+}
 
-	while (it != peers.end()) {
-		it++;
-		cant++;
+std::string Torrent::bytesToString(float bytes) {
+	std::stringstream buffer;
+	buffer << std::setprecision(2);
+	if (bytes < 1024)
+	{
+		buffer<< bytes<<" bytes";
 	}
-	return cant;
+	else
+	{
+		bytes /= 1024;
+		if (bytes < 1024)
+		{
+			buffer <<bytes<<" kb";
+		}
+		else
+		{
+			bytes /= 1024;
+			buffer<<bytes<<" Mb";
+		}
+	}
+	return buffer.str();
+}
+
+std::list<Peer*>::iterator Torrent::getIterPeers() {
+	return peers.begin();
+}
+
+std::list<Peer*>::iterator Torrent::getEndIterPeers() {
+	return peers.end();
 }

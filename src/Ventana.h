@@ -16,6 +16,7 @@
 #include "Torrent.h"
 #include "Controlador.h"
 #include "AttributeView.h"
+#include "Constantes.h"
 
 
 class TorrentView;
@@ -55,7 +56,7 @@ private:
 	Gtk::Widget* menu;
 
 	/* widgets */
-	Gtk::Entry *puerto;
+	Gtk::Entry *entry_puerto;
 
 	/* clases para mostrar la lista de torrents */
 	TorrentView *torrents;
@@ -122,6 +123,9 @@ public:
 	int run();
 
 	bool huboError();
+
+	/* devuelve cero si no se especifico ningun puerto */
+	unsigned int getPuerto();
 
 };
 

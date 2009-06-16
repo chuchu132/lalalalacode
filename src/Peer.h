@@ -130,6 +130,8 @@ public:
 
 	void setTipo(char estado);
 
+	std::string getIp();
+
 
 private:
 	/*

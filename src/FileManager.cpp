@@ -347,13 +347,7 @@ void FileManager::copiar(unsigned int desde, unsigned int cantidad, std::string 
 }
 
 unsigned int FileManager::getCantArchivos() {
-	std::list<Archivo*>::iterator it = archivos.begin();
-	unsigned int cant = 0;
-	while (it != archivos.end()) {
-		it++;
-		cant++;
-	}
-	return cant;
+	return archivos.size();
 }
 
 unsigned int FileManager::getTamanioPieza() {
