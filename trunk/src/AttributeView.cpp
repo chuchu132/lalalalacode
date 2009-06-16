@@ -12,7 +12,13 @@
 #define VIEW_NOTIF "notificaciones"
 
 #define PESTANIAS "Pestanias"
-//#define labels
+#define L_NAME "l_name"
+#define L_URL "l_url"
+#define L_PEERS "l_peers"
+#define L_PATH "l_ruta"
+#define L_HASH "l_hash"
+#define L_PARTS "l_parts"
+#define L_FILES "l_num_files"
 
 
 AttributesView::AttributesView()
@@ -23,6 +29,9 @@ AttributesView::AttributesView()
 
 AttributesView::~AttributesView()
 {
+	list_files->clear();
+	list_notif->clear();
+	list_peers->clear();
 }
 
 void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
@@ -32,7 +41,7 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 	builder->get_widget(VIEW_FILES,view_files);
 	builder->get_widget(VIEW_NOTIF,view_notif);
 	setPeersView();
-	setStatusView();
+	setInformationView(builder);
 	setFilesView();
 	setNotificationsView();
 	// me conecto a la señal de pagina cambiada para refrescar la vista
@@ -54,9 +63,15 @@ void AttributesView::setPeersView()
 	}
 }
 
-void AttributesView::setStatusView()
+void AttributesView::setInformationView(Glib::RefPtr<Gtk::Builder> builder)
 {
-/*Gtk::Label */
+	builder->get_widget(L_FILES,lfiles);
+	builder->get_widget(L_HASH,lhash);
+	builder->get_widget(L_NAME,lname);
+	builder->get_widget(L_PARTS,lparts);
+	builder->get_widget(L_PATH,lpath);
+	builder->get_widget(L_PEERS,lpeers);
+	builder->get_widget(L_URL,lurl);
 }
 
 void AttributesView::setFilesView()
@@ -95,7 +110,7 @@ void AttributesView::showInfo(Torrent *t)
 	switch (page_selected)
 	{
 	case 1:
-		showStatus();
+		showInformation();
 		break;
 	case 2:
 		showPeers();
@@ -109,20 +124,29 @@ void AttributesView::showInfo(Torrent *t)
 void AttributesView::showPeers()
 {
 	//muestra la lista de peers de este torrent
-	std::cout<<"mostrar peers"<<std::endl;
 	//implementar hacer lo mismo que en show files
 }
 
-void AttributesView::showStatus()
+void AttributesView::showInformation()
 {
-	//muestra el estado del torrent
-	std::cout<<"mostrar estado"<<std::endl;
+	std::stringstream texto1;
+	texto1 << (int)(torrent->getTamanio() / torrent->getFileManager()->getTamanioPieza());
+	lparts->set_text(texto1.str());
+
+	std::stringstream texto2;
+	texto2 << torrent->getFileManager()->getCantArchivos();
+	lfiles->set_text(texto2.str());
+
+	lpath->set_text(torrent->getPath());
+	lname->set_text(torrent->getNombre());
+	lurl->set_text(torrent->getUrlTracker());
+	//lhash->set_text(torrent->getHash());
+	//lpeers->set_text();
 }
 
 void AttributesView::showFiles()
 {
 	//muestra los archivos del torrent
-	std::cout<<"mostrar archivos"<<std::endl;
 	list_files->clear();
 
 	std::list<Archivo*>::iterator it = torrent->getFileManager()->getIteratorArchivos();

@@ -43,7 +43,6 @@ void Controlador::pausarTorrent(Torrent *t)
 
 void Controlador::actualizarEstado(Torrent *t)
 {
-	std::cout<<"__actualizar estado "<<std::endl;
 	ventana->actualizarEstado(t);
 }
 

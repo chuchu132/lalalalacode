@@ -345,3 +345,17 @@ void FileManager::copiar(unsigned int desde, unsigned int cantidad, std::string 
 
 	salida.close();
 }
+
+unsigned int FileManager::getCantArchivos() {
+	std::list<Archivo*>::iterator it = archivos.begin();
+	unsigned int cant = 0;
+	while (it != archivos.end()) {
+		it++;
+		cant++;
+	}
+	return cant;
+}
+
+unsigned int FileManager::getTamanioPieza() {
+	return tamanioPieza;
+}
