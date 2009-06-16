@@ -8,7 +8,7 @@
 #include "PeerDown.h"
 
 PeerDown::PeerDown(Socket* peerRemoto,Torrent* torrent):Peer(peerRemoto,torrent) {
-	tipo = 'D';
+	setTipo('D');
 }
 
 PeerDown::~PeerDown() {
