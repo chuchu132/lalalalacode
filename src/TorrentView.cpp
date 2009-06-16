@@ -260,8 +260,12 @@ void TorrentView::hideRows(std::string type)
 //	Torrent *t;
 //	while (iter != list_torrents->children().end())
 //	{
-//		row = *iter;
-//		t = row[col_torrent]; (type == t->getEstado());
+//		if (type == t->getEstado())
+//		{
+//			row = *iter;
+//			attr->torrentDeleted(row[col_torrent]);
+//			list_torrents->remove(iter);
+//		}
 //		iter++;
 //	}
 }
@@ -269,12 +273,6 @@ void TorrentView::hideRows(std::string type)
 void TorrentView::showAll()
 {
 	std::cout<<"mostrar todos"<<std::endl;
-//	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
-//	Gtk::TreeModel::Row row;
-//	while (iter != list_torrents->children().end())
-//	{
-//		row = *iter;
-//		iter++;
-//	}
+
 }
 

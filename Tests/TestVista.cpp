@@ -18,12 +18,13 @@ void TestVista::run(){
 		Controlador controlador(cliente);
 		Ventana ventana;
 
+		cliente.setControlador(&controlador);
 		ventana.setControlador(&controlador);
 		controlador.setVentana(&ventana);
-		cliente.setControlador(&controlador);
 
 		if (!ventana.huboError())
 		{
+			controlador.agregarTorrentsEnVista();
 			controlador.correrVista();
 		}
 
