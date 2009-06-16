@@ -14,5 +14,6 @@ TestClienteTorrent::~TestClienteTorrent() {}
 
 void TestClienteTorrent::run(){
 	ClienteTorrent cliente;
-	cliente.inicializarDirectorios();
+	cliente.agregarTorrent("./Tests/AngelsAndDemons.torrent");
+
 }
