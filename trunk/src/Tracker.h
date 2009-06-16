@@ -52,8 +52,11 @@ public:
 
 	void decodificarPeers(char* cadena,unsigned int longitudCadena);
 
+	unsigned int getMinInterval();
+
 private:
 	Torrent* torrent;
+	unsigned int minInterval;
 	Socket trackerRemoto; // Conexion con el tracker remoto.
 	std::string path;
 	std::string url;
