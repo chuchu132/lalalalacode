@@ -71,7 +71,7 @@ void* ClienteTorrent::run() {
 								new PeerUp(conexionPeerNuevo, torrent);
 						if (peerNuevo != NULL) {
 							torrent->agregarPeer(peerNuevo);
-							peerNuevo->run();
+
 						}
 					}
 					//delete[] handshake;
