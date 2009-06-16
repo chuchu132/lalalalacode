@@ -142,7 +142,7 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		if ( t->inicializarTorrent(&parserTorrent)){
 			t->setCarpetaDescarga(config.getRutaDescargas());
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
-			t->run();
+			//t->run();
 			notif = "Se ha agregado el Torrent ";
 			notif += t->getNombre();
 		}
@@ -198,4 +198,8 @@ void ClienteTorrent::inicializarDirectorios(){
 		mkdir(config.getRutaDescargas().c_str(),0755);
 		mkdir(URL_CARPETA_TEMP,0755);
 	return;
+}
+
+std::list<Torrent*>* ClienteTorrent::getListaTorrents() {
+	return &torrents;
 }

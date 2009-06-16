@@ -154,6 +154,9 @@ private:
 
 	time_t horaSistema;
 
+	time_t horaAnterior;
+	unsigned int downAnterior;
+
 };
 
 #endif /* TORRENT_H_ */

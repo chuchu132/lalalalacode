@@ -403,3 +403,8 @@ unsigned int Ventana::getPuerto()
 	return puerto;
 }
 
+std::string Ventana::getRutaDescargas()
+{
+	//todo
+	return RUTA_DESCARGAS;
+}

@@ -46,9 +46,14 @@ void Controlador::actualizarEstado(Torrent *t)
 	ventana->actualizarEstado(t);
 }
 
-void Controlador::agregarTorrentEnVista(Torrent *t)
+void Controlador::agregarTorrentsEnVista()
 {
-	ventana->addTorrent(t);
+	std::list<Torrent*>::iterator it;
+
+	for (it = cliente.getListaTorrents()->begin(); it != cliente.getListaTorrents()->end(); it++)
+	{
+		ventana->addTorrent((*it));
+	}
 }
 
 void Controlador::cerrarCliente()
@@ -77,6 +82,6 @@ void Controlador::guardarConfiguracion()
 	unsigned int puerto = ventana->getPuerto();
 	if (puerto != 0)
 		config->guardarPuerto(ventana->getPuerto());
-//	config->guardarRutaDescargas(ventana->getRutaDescargas());
+	config->guardarRutaDescargas(ventana->getRutaDescargas());
 }
 

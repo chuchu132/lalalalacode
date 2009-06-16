@@ -63,6 +63,8 @@ void Torrent::run(){
 try {
 
 	 horaSistema = time (NULL);//Obtiene los segundos que pasaron desde 1970
+	 horaAnterior = time(NULL);
+	 downAnterior = downloaded;
      tracker->run();
 } catch ( AvisoDescargaCompleta aviso) {
 	// TODO parar todo el aviso lo lanza el filemanager al verificar q se descargaron todas las piezas
@@ -172,6 +174,15 @@ int Torrent::getVelocidadSubida() {
 
 int Torrent::getVelocidadBajada() {
 	return 30;
+
+// no esta probado ;) lo mismo para vel de subida
+//	time_t horaAct = time(NULL);
+//	double tiempo = difftime(horaAct,horaAnterior);
+//	horaAnterior = horaAct;
+//
+//	unsigned int diferencia = downloaded - downAnterior;
+//
+//	return  ((diferencia/1024)/tiempo);
 }
 
 void Torrent::setControlador(Controlador* ctrl) {

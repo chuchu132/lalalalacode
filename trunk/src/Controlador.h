@@ -54,8 +54,8 @@ public:
 	/* actualiza el estado de un torrent en la vista */
 	void actualizarEstado(Torrent*);
 
-	/* agrega el torrent en la vista */
-	void agregarTorrentEnVista(Torrent*);
+	/* agrega todos los torrents del cliente en la vista */
+	void agregarTorrentsEnVista();
 
 	/* muestra un mensaje en la pestaña de notificaciones */
 	void notificarVista(std::string);

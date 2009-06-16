@@ -86,6 +86,9 @@ public:
 	Configuracion* getConfiguracion();
 
 	void inicializarDirectorios();
+
+	std::list<Torrent*>* getListaTorrents();
+
 };
 
 #endif /* CLIENTETORRENT_H_ */

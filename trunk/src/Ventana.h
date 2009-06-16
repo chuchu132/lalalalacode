@@ -127,6 +127,8 @@ public:
 	/* devuelve cero si no se especifico ningun puerto */
 	unsigned int getPuerto();
 
+	std::string getRutaDescargas();
+
 };
 
 #endif /* VENTANA_H_ */
