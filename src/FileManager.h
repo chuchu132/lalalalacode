@@ -21,6 +21,7 @@
 #include "Archivo.h"
 #include "Bitmap.h"
 #include "DatosParser.h"
+#include "Mutex.h"
 
 class ClienteTorrent;
 class FileManager {
@@ -62,6 +63,8 @@ public:
 	void descargaAarchivos();
 
 	unsigned int getTamanioPieza(unsigned int  index);
+
+	bool getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto);
 
 private:
 	/*

@@ -359,3 +359,15 @@ unsigned int FileManager::getCantArchivos() {
 unsigned int FileManager::getTamanioPieza() {
 	return tamanioPieza;
 }
+
+bool FileManager::getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto){
+	bool retorno;
+	llavePedidos.lock();
+	Bitmap* faltanDescargar = bitmap.nuevoPorFusion(mapaPeerRemoto);
+	Bitmap* noPidioNadie = mapaPedidos.nuevoPorFusion(*faltanDescargar);
+	if( (retorno = noPidioNadie->getPrimeroLibre(index)) ){
+		mapaPedidos.marcarBit(index);
+	};
+	llavePedidos.unlock();
+	return retorno;
+}
