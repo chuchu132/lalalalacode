@@ -80,6 +80,7 @@ public:
 	 *   length: longitud del bloque solicitado
 	 */
 	bool sendRequest(unsigned int  index);
+
 	/*
 	 * Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block
 	 * piece: Transmisión de un bloque
@@ -125,6 +126,10 @@ public:
 
 	void setPeer_choking(bool estado);
 
+	char getTipo();
+
+	void setTipo(char estado);
+
 
 private:
 	/*
@@ -157,7 +162,6 @@ private:
 	/*Envia un mensaje de Have a los peers que no tienen la pieza indicada por index*/
 	void repartirHave(int index);
 
-	char getTipo();
 
 };
 

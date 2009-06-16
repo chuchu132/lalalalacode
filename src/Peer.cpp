@@ -180,6 +180,7 @@ bool Peer::sendRequest(unsigned int  index) {
 	return !error;
 }
 
+
 /*Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block */
 bool Peer::sendPiece(int index, int begin, int lenght) {
 	FileManager* fileManager = this->torrent->getFileManager();
@@ -301,4 +302,9 @@ void Peer::setPeer_choking(bool estado){
 char Peer::getTipo(){
 	return tipo;
 }
+
+void Peer::setTipo(char estado){
+    tipo=estado;
+}
+
 
