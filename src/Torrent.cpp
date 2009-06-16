@@ -65,11 +65,12 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 
 void Torrent::run(){
 
-	 horaInicial= time (NULL);//Obtiene los segundos que pasaron desde 1970
+	 horaInicial = time (NULL);//Obtiene los segundos que pasaron desde 1970
      horaAnterior = time(NULL);
 	 downAnterior = downloaded;
 	 tracker->execute();
-
+	 if (controlador != NULL)
+		 controlador->notificarVista("");
 }
 
 bool Torrent::conectarTracker(std::string url) {

@@ -2,7 +2,7 @@
  * Configuracion.h
  *
  *  Created on: 12/06/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #ifndef CONFIGURACION_H_
@@ -17,7 +17,6 @@
 
 class Configuracion {
 	/* Guarda la configuracion del Cliente BitTorrent */
-	/* Los cambios de configuracion tienen efecto la proxima vez que se ejecute el programa */
 
 private:
 	std::fstream archivo; //archivo de configuracion
@@ -26,7 +25,6 @@ private:
 	unsigned int puerto; //puerto en el que el cliente escucha conexiones entrantes
 	std::list<std::string> torrents; // lista con los torrents abiertos en la ultima ejecucion
 									 // y su estado
-
 	std::string estado;
 
 	void crearArchivo();

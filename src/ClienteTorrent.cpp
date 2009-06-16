@@ -23,16 +23,16 @@ ClienteTorrent::ClienteTorrent() {
 
 	std::string estado;
 	Torrent *t;
-//todo agregar los torrents en la vista
 	while (config.hayTorrents()) {
 		t = agregarTorrent(config.obtenerTorrent());
 		if (t != NULL) {
 			estado = config.getEstadoTorrent();
-			if (estado == T_DETENIDO) {
-				t->detener();
+			if (estado == T_ACTIVO) {
+				//t-run();
 			}
 			else {
 				if (estado == T_PAUSADO) {
+					//t->run();
 					t->pausar();
 				}
 			}
@@ -74,7 +74,6 @@ void* ClienteTorrent::run() {
 
 						}
 					}
-					//delete[] handshake;
 				}
 				delete[] handshake;
 			}
@@ -97,7 +96,6 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 }
 
 void ClienteTorrent::finalizar() {
-	//ver
 	if (activo)
 	{
 		activo = false;
@@ -138,10 +136,9 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 	}
 	else {
 		t = new Torrent(this, ruta);
-		t->setControlador(controlador);//cuidado si controlador es null!!
+		t->setControlador(controlador);
 		if ( t->inicializarTorrent(&parserTorrent)){
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
-
 			notif = "Se ha agregado el Torrent ";
 			notif += t->getNombre();
 		}

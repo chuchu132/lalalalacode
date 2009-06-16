@@ -2,7 +2,7 @@
  * TorrentView.h
  *
  *  Created on: 29/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #ifndef TORRENTVIEW_H_

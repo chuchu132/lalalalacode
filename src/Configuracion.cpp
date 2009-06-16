@@ -2,7 +2,7 @@
  * Configuracion.cpp
  *
  *  Created on: 12/06/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #include "Configuracion.h"

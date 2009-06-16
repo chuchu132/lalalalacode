@@ -2,7 +2,7 @@
  * TorrentView.cpp
  *
  *  Created on: 29/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #include "TorrentView.h"
@@ -255,6 +255,7 @@ void TorrentView::updateRow(Torrent *t)
 void TorrentView::hideRows(std::string type)
 {
 	std::cout<<"mostrar "<<type<<"s"<<std::endl;
+	//todo
 //	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
 //	Gtk::TreeModel::Row row;
 //	Torrent *t;
@@ -273,6 +274,6 @@ void TorrentView::hideRows(std::string type)
 void TorrentView::showAll()
 {
 	std::cout<<"mostrar todos"<<std::endl;
-
+	//todo
 }
 

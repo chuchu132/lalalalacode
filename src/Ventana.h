@@ -2,7 +2,7 @@
  * Ventana.h
  *
  *  Created on: 28/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #ifndef VENTANA_H_

@@ -2,7 +2,7 @@
  * AttributesView.cpp
  *
  *  Created on: 31/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #include "AttributeView.h"
