@@ -79,7 +79,8 @@ bool Peer::procesar(char* buffer, int length) {
 		procesarCancel(index,begin,length2);
 	}
 	break;
-
+	default :
+		return false;
 	}
 	return true;
 
