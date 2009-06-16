@@ -89,6 +89,18 @@ void Torrent::agregarPeer(Peer* peerNuevo){
 	controlador->actualizarEstado(this);
 }
 
+void Torrent::agregarPeer(std::string ip,unsigned int puerto){
+	Socket* conexion = new Socket();
+	if(conexion->connect(ip,puerto)==OK){
+		Peer* nuevoPeer = new PeerDown(conexion,this);
+		peers.push_back(nuevoPeer);
+		nuevoPeer->execute();
+	}else{
+		delete conexion;
+	}
+}
+
+
 std::string Torrent::getNombre() {
 	return nombre;
 }
