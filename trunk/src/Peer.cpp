@@ -259,3 +259,25 @@ bool Peer::conexionEstaOK(){
 Torrent* Peer::getTorrent(){
 	return torrent;
 }
+
+Bitmap Peer::getBitmap(){
+    return bitmap;
+}
+
+bool Peer::getAm_interested(){
+	return am_interested;
+}
+
+void Peer::setAm_interested(bool estado){
+	am_interested=estado;
+}
+
+bool Peer::getPeer_choking(){
+	return peer_choking;
+}
+
+void Peer::setPeer_choking(bool estado){
+	peer_choking=estado;
+}
+
+
