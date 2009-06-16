@@ -79,7 +79,7 @@ public:
 	 *   begin: offset en bytes dentro de la pieza
 	 *   length: longitud del bloque solicitado
 	 */
-	bool sendRequest(int index,int block,int length);
+	bool sendRequest(unsigned int  index);
 	/*
 	 * Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block
 	 * piece: Transmisión de un bloque
