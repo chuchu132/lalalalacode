@@ -15,6 +15,7 @@
 #include "TestBencodeParser.h"
 #include "TestTracker.h"
 #include "TestConfiguracion.h"
+#include "TestClienteTorrent.h"
 #include "TestFileManager.h"
 
 
@@ -22,18 +23,15 @@ int main (int argc, char* argv[])
 {
 	CppTester tester;
 
-	/*  Agregar los tests al final, antes de correrTests() */
-
-	tester.agregarTest(new TestDummy(),"Test dummy");
-	tester.agregarTest(new TestParserCgi(),"Test ParserCgi");
 	tester.agregarTest(new TestSha1(),"Test Sha1");
 	tester.agregarTest(new TestBitmap(),"Test Bitmap");
 	tester.agregarTest(new TestDatosParser(),"Test DatosParser");
+	tester.agregarTest(new TestVista(),"Test Vista");
+	tester.agregarTest(new TestClienteTorrent(),"Test ClienteTorrent");
 	tester.agregarTest(new TestBencodeParser(),"Test BencodeParser");
-	tester.agregarTest(new TestTracker(),"Test Tracker");
 	tester.agregarTest(new TestConfiguracion(),"Test Archivo Configuracion");
 	tester.agregarTest(new TestFileManager(),"Test Filemanager");
-	tester.agregarTest(new TestVista(),"Test Vista");
+//tester.agregarTest(new TestTracker(),"Test Tracker"); sin testear
 
 	tester.correrTests();
 

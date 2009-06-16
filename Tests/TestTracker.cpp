@@ -9,6 +9,7 @@
 #include "../src/ParserMensaje.h"
 #include "../src/Tracker.h"
 #include "TestTracker.h"
+#include "../src/Torrent.h"
 
 #include <cstring>
 
@@ -28,6 +29,8 @@ void TestTracker::run() {
 	if (parser.procesar()) {
 		datos = parser.salidaParser();
 		Tracker tracker;
+		Torrent unTorrent(NULL,"frutaaa");
+		tracker.setTorrent(&unTorrent);
 		std::string url;
 		char* datoTemp;
 		int tam;
