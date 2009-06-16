@@ -47,34 +47,34 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 	break;
 	case ID_MSJ_HAVE:{
-		int index;
+		unsigned int index;
 		parser.decodificarHave(buffer,index);
 		procesarHave(index);
 	}
 	break;
 	case ID_MSJ_BITFIELD:{
 		char* bitfield;
-		int longitud;
+		unsigned int longitud;
 		parser.decodificarBitfield(buffer,length,longitud,&bitfield);
 		procesarBitfield(bitfield,longitud);
 	}
 	break;
 	case ID_MSJ_REQUEST:
 	{
-		int index,begin,length2;
+		unsigned int index,begin,length2;
 		parser.decodificarRequest(buffer,index,begin,length2);
 		procesarRequest(index,begin,length2);
 	}
 	break;
 	case ID_MSJ_PIECE:{
 		char* data;
-		int index,begin,length2;
+		unsigned int index,begin,length2;
 		parser.decodificarPiece(buffer,length,index,begin,length2,&data);
 		procesarPiece(index,begin,length2,data);
 	}
 	break;
 	case ID_MSJ_CANCEL:{
-		int index,begin,length2;
+		unsigned int index,begin,length2;
 		parser.decodificarCancel(buffer,index,begin,length2);
 		procesarCancel(index,begin,length2);
 	}
@@ -152,15 +152,31 @@ bool Peer::sendBitfield() {
 }
 
 /*Formato mensaje Request: <len=0013><Id=6><index><begin><length> */
-bool Peer::sendRequest(int index, int block, int length) {
+bool Peer::sendRequest(unsigned int  index) {
+	int block,cantBlockEnteros,resto;
+	unsigned int tamPieza;
 	ParserMensaje parser;
-	bool retorno;
+	bool error = false;
 	char buffer[FIXED_LENGTH_REQUEST];
-	parser.crearMensajeRequest(index, block, length, buffer);
-	llaveEnvio.lock();
-	retorno = (peerRemoto->send(buffer, FIXED_LENGTH_REQUEST) != ERROR);
-	llaveEnvio.unlock();
-	return retorno;
+
+	tamPieza = torrent->getFileManager()->getTamanioPieza(index);
+	cantBlockEnteros = (unsigned int) (tamPieza / TAM_BLOQUES);
+	resto = (unsigned int)(tamPieza % TAM_BLOQUES);
+	block = 0;
+	while( (block < cantBlockEnteros) && !error){
+		parser.crearMensajeRequest(index,(block*TAM_BLOQUES), TAM_BLOQUES, buffer);
+		llaveEnvio.lock();
+		error = (peerRemoto->send(buffer, FIXED_LENGTH_REQUEST) == ERROR);
+		llaveEnvio.unlock();
+		block++;
+	}
+	if(resto != 0){
+		parser.crearMensajeRequest(index,(block*TAM_BLOQUES), resto, buffer);
+		llaveEnvio.lock();
+		error = (peerRemoto->send(buffer, FIXED_LENGTH_REQUEST) == ERROR);
+		llaveEnvio.unlock();
+	}
+	return !error;
 }
 
 /*Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block */
@@ -262,7 +278,7 @@ Torrent* Peer::getTorrent(){
 }
 
 Bitmap Peer::getBitmap(){
-    return bitmap;
+	return bitmap;
 }
 
 bool Peer::getAm_interested(){

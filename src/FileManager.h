@@ -56,6 +56,8 @@ public:
 	/*Hace el split del archivo descargas*/
 	void descargaAarchivos();
 
+	unsigned int getTamanioPieza(unsigned int  index);
+
 private:
 	/*
 	 * Los archivos se manejan como uno del tamaño total

@@ -152,6 +152,17 @@ bool FileManager::inicializarDatosBitmap(DatosParser* datos) {
 }
 
 
+unsigned int FileManager::getTamanioPieza(unsigned int index){
+	unsigned int cantidadPiezas = (unsigned int )(bytesTotales / tamanioPieza);
+	if(index < cantidadPiezas){
+		return tamanioPieza;
+	}else{
+		return (unsigned int )(bytesTotales % tamanioPieza);
+	}
+}
+
+
+
 bool FileManager::crearArchivo(std::string path, unsigned int tamanio) {
 	descarga.open(path.c_str(), ios::in | ios::out | ios::trunc | ios::binary);
 	if (descarga.is_open()) {

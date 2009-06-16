@@ -32,49 +32,49 @@ void ParserMensaje::crearMensajeId(const char id, char* buffer) {
 	buffer[OFFSET_ID] = id; //seteo id del msj
 }
 
-void ParserMensaje::crearMensajeHave(const int index, char* buffer) {
-	(*((int*) (buffer + OFFSET_LEN))) = htonl(LEN_MSJ_HAVE); //seteo len
+void ParserMensaje::crearMensajeHave(const unsigned int index, char* buffer) {
+	(*((unsigned int*) (buffer + OFFSET_LEN))) = htonl(LEN_MSJ_HAVE); //seteo len
 	buffer[OFFSET_LEN] = ID_MSJ_HAVE; //seteo el Id
-	(*((int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo piece index
+	(*((unsigned int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo piece index
 }
 
-void ParserMensaje::crearMensajeBitfield(const char* map, const int longitud,
+void ParserMensaje::crearMensajeBitfield(const char* map, const unsigned int longitud,
 		char* buffer) {
-	(*((int*) (buffer + OFFSET_LEN))) = htonl(LEN_BASE_MSJ_BITFIELD + longitud); //seteo len
+	(*((unsigned int*) (buffer + OFFSET_LEN))) = htonl(LEN_BASE_MSJ_BITFIELD + longitud); //seteo len
 	buffer[OFFSET_ID] = ID_MSJ_BITFIELD; //seteo el Id
 	memcpy(buffer + OFFSET_ARG_1, map, longitud);
 }
 
-void ParserMensaje::crearMensajeRequest(int index, int block, int length,
+void ParserMensaje::crearMensajeRequest(unsigned int index, unsigned int block, unsigned int length,
 		char* buffer) {
 	(*((int*) buffer + OFFSET_LEN)) = htonl(LEN_MSJ_REQUEST); //seteo len
 	buffer[OFFSET_ID] = ID_MSJ_REQUEST; //seteo el Id
-	(*((int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo index
-	(*((int*) (buffer + OFFSET_ARG_2))) = htonl(block); //seteo block
-	(*((int*) (buffer + OFFSET_ARG_3))) = htonl(length); //seteo length
+	(*((unsigned int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo index
+	(*((unsigned int*) (buffer + OFFSET_ARG_2))) = htonl(block); //seteo block
+	(*((unsigned int*) (buffer + OFFSET_ARG_3))) = htonl(length); //seteo length
 }
 
-void ParserMensaje::crearMensajePiece(int index, int begin, int lenght,
+void ParserMensaje::crearMensajePiece(unsigned int index, unsigned int begin, unsigned int lenght,
 		char* data, char* buffer) {
 
 	(*((int*) (buffer + OFFSET_LEN))) = htonl(LEN_BASE_MSJ_PIECE + lenght); //seteo len
 	buffer[OFFSET_ID] = ID_MSJ_BITFIELD; //seteo  Id
-	(*((int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo index
-	(*((int*) (buffer + OFFSET_ARG_2))) = htonl(begin); //seteo block
+	(*((unsigned int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo index
+	(*((unsigned int*) (buffer + OFFSET_ARG_2))) = htonl(begin); //seteo block
 	memcpy(buffer + OFFSET_ARG_3, data, lenght); //seteo block
 }
 
-void ParserMensaje::crearMensajeCancel(int index, int block, int length,
+void ParserMensaje::crearMensajeCancel(unsigned int index, unsigned int block, unsigned int length,
 		char* buffer) {
 	(*((int*) (buffer + OFFSET_LEN))) = htonl(LEN_MSJ_CANCEL); //seteo len
 	buffer[OFFSET_ID] = ID_MSJ_CANCEL; //seteo  Id
-	(*((int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo index
-	(*((int*) (buffer + OFFSET_ARG_2))) = htonl(block); //seteo block
-	(*((int*) (buffer + OFFSET_ARG_3))) = htonl(length); //seteo length
+	(*((unsigned int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo index
+	(*((unsigned int*) (buffer + OFFSET_ARG_2))) = htonl(block); //seteo block
+	(*((unsigned int*) (buffer + OFFSET_ARG_3))) = htonl(length); //seteo length
 }
 
 std::string ParserMensaje::crearGetBase(std::string path,unsigned int* info_hash,
-		std::string peer_id, int port, int uploaded, int downloaded, int left) {
+		std::string peer_id, unsigned int port, unsigned int uploaded, unsigned int downloaded, unsigned int left) {
 	ParserCgi parserCgi;
 	Sha1 sha;
 	std::stringstream buffer;
@@ -86,7 +86,7 @@ std::string ParserMensaje::crearGetBase(std::string path,unsigned int* info_hash
 }
 
 std::string ParserMensaje::crearGetConEvento(std::string host,std::string path,unsigned int* info_hash,
-		std::string peer_id, int port, int uploaded, int downloaded, int left,
+		std::string peer_id, unsigned int port, unsigned int uploaded, unsigned int downloaded, unsigned int left,
 		std::string event) {
 	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
 			downloaded, left);
@@ -97,7 +97,7 @@ std::string ParserMensaje::crearGetConEvento(std::string host,std::string path,u
 }
 
 std::string ParserMensaje::crearGetConNumwant(std::string host,std::string path,unsigned int* info_hash,
-		std::string peer_id, int port, int uploaded, int downloaded, int left,
+		std::string peer_id, unsigned int port, unsigned int uploaded, unsigned int downloaded, unsigned int left,
 		int numwant) {
 	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
 			downloaded, left);
@@ -119,42 +119,42 @@ char ParserMensaje::decodificarId(char* buffer){
 	return buffer[OFFSET_ID_SIN_LEN];
 }
 
-void ParserMensaje::decodificarHave(char* buffer,int& index){
+void ParserMensaje::decodificarHave(char* buffer,unsigned int& index){
 	int temp;
-	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(unsigned int));
 	index = ntohl(temp);
 }
-void ParserMensaje::decodificarBitfield(char* buffer,int longitudbuffer, int& longitud,char** bitfield){
+void ParserMensaje::decodificarBitfield(char* buffer,unsigned int longitudbuffer, unsigned int& longitud,char** bitfield){
 	*bitfield = (buffer + OFFSET_ARG_2_SIN_LEN);
 	longitud = longitudbuffer - LEN_BASE_MSJ_BITFIELD;
 }
 
-void ParserMensaje::decodificarRequest(char* buffer,int& index,int& begin,int& length){
-	int temp;
-	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+void ParserMensaje::decodificarRequest(char* buffer,unsigned int& index,unsigned int& begin,unsigned int& length){
+	unsigned int temp;
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(unsigned int));
 	index = ntohl(temp);
-	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
+	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(unsigned int));
 	begin = ntohl(temp);
-	memcpy(&temp,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(int));
+	memcpy(&temp,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(unsigned int));
 	length = ntohl(temp);
 }
 
-void ParserMensaje::decodificarPiece(char* buffer,int longitudBuffer,int& index,int& begin,int& longitud,char** data){
+void ParserMensaje::decodificarPiece(char* buffer,unsigned int longitudBuffer,unsigned int& index,unsigned int& begin,unsigned int& longitud,char** data){
 	longitud = longitudBuffer - LEN_BASE_MSJ_PIECE;
-	int temp;
-	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+	unsigned int temp;
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(unsigned int));
 	index = ntohl(temp);
-	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
+	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(unsigned int));
 	begin = ntohl(temp);
 	*data = (buffer + OFFSET_ARG_3_SIN_LEN);
 }
 
-void ParserMensaje::decodificarCancel(char* buffer,int& index,int& begin,int& length){
-	int temp;
-	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(int));
+void ParserMensaje::decodificarCancel(char* buffer,unsigned int& index,unsigned int& begin,unsigned int& length){
+	unsigned int temp;
+	memcpy(&temp,buffer + OFFSET_ARG_1_SIN_LEN, sizeof(unsigned int));
 	index = ntohl(temp);
-	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(int));
+	memcpy(&temp,buffer + OFFSET_ARG_2_SIN_LEN, sizeof(unsigned int));
 	begin = ntohl(temp);
-	memcpy(&temp,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(int));
+	memcpy(&temp,buffer + OFFSET_ARG_3_SIN_LEN, sizeof(unsigned int));
 	length = ntohl(temp);
 }
