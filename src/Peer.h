@@ -115,6 +115,17 @@ public:
 
 	Torrent* getTorrent();
 
+	Bitmap  getBitmap();
+
+	bool getAm_interested();
+
+	void setAm_interested(bool estado);
+
+	bool getPeer_choking();
+
+	void setPeer_choking(bool estado);
+
+
 private:
 	/*
 	 * La llave de envio se bloquea antes de cualquier envio al peer remoto
