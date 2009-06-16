@@ -60,8 +60,9 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 
 void Torrent::run(){
 try {
-	//blabla
-	//peer.procesar()
+
+	 horaSistema = time (NULL);//Obtiene los segundos que pasaron desde 1970
+     tracker->run();
 } catch ( AvisoDescargaCompleta aviso) {
 	// TODO parar todo el aviso lo lanza el filemanager al verificar q se descargaron todas las piezas
 }
@@ -82,14 +83,6 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 	}
 	return (tracker->send(envio.c_str(), envio.length()));
 }
-
-void Torrent::agregarPeer(Peer* peerNuevo){
-	llaveListaPeers.lock();
-	peers.insert(peers.end(), peerNuevo);
-	llaveListaPeers.unlock();
-	controlador->actualizarEstado(this);
-}
-
 void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 	Socket* conexion = new Socket();
 	if(conexion->connect(ip,puerto)==OK){
@@ -99,9 +92,9 @@ void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 		nuevoPeer->execute();
 	}else{
 		delete conexion;
-	}
-}
+		}
 
+}
 
 std::string Torrent::getNombre() {
 	return nombre;

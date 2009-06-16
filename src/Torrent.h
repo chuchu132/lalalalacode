@@ -145,6 +145,8 @@ private:
 
 	Controlador *controlador;
 
+	time_t horaSistema;
+
 };
 
 #endif /* TORRENT_H_ */

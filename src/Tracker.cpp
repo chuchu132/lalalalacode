@@ -21,16 +21,13 @@ Tracker::~Tracker() {
 void* Tracker::run() {
 	int cantidad;
 	bool seCerro = false;
-	bool respuestaCompleta = true;
+	bool respuestaCompleta = false;
 	std::string buffer;
 	char bufferTemp[1000];
 	memset(bufferTemp, 0, 1000);
 	while (trackerRemoto.is_valid() && !seCerro) {
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
 			bufferTemp[cantidad] = '\0';
-			//if (respuestaCompleta==true)
-			//	buffer = bufferTemp;
-			//else
 			buffer += bufferTemp;
 			std::cout << "\nReciev: \n" << buffer << std::endl;
 			respuestaCompleta = procesarResponse(buffer);
@@ -38,6 +35,7 @@ void* Tracker::run() {
 		if (respuestaCompleta == true)
 			seCerro = true;
 	}
+
 	return NULL;
 }
 
@@ -166,7 +164,6 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
 		puerto = ntohs(puerto);
 		std::cout << ":" << puerto << std::endl;
-
 		torrent->agregarPeer(ip.str(),puerto);
 
 	}
