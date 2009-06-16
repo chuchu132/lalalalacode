@@ -183,3 +183,18 @@ std::string Torrent::getUrlTracker() {
 	return tracker->getUrl();
 }
 
+std::string Torrent::getHashString() {
+	Sha1 decodif;
+	return decodif.salidaAstring(info_hash);
+}
+
+unsigned int Torrent::getCantPeers() {
+	std::list<Peer*>::iterator it = peers.begin();
+	unsigned int cant = 0;
+
+	while (it != peers.end()) {
+		it++;
+		cant++;
+	}
+	return cant;
+}
