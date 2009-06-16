@@ -52,7 +52,7 @@ public:
 	 */
 	Bitmap* nuevoPorFusion(Bitmap& otro);
 
-
+	int indexPiezaRandom();
 
 private:
 	char* bitmap;

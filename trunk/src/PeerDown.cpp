@@ -34,23 +34,18 @@ void* PeerDown::run() {
 				    bitmapTorrent = getTorrent()->getFileManager()->getBitmap();
 				    Bitmap bitmapPeer= getBitmap();
 			        resultadoFusion = bitmapTorrent.nuevoPorFusion (bitmapPeer);
-					for(int i=0;i<resultadoFusion->getTamanioEnBytes();i++){
-						if (resultadoFusion->estaMarcada(i)){
-							index=i;
-							break;
-						}
-					}
+			        index=resultadoFusion->indexPiezaRandom();
 					if(index!=-1){
 						sendMsg (2); //Interested
 						setAm_interested(true);
 					}
 			}
 			 if ( getPeer_choking()==false  && getAm_interested()==true) {
-					for (int i=0; i<TAM_BLOQUES;i+= FIXED_LENGTH_REQUEST)
-						sendRequest(index, i, FIXED_LENGTH_REQUEST);
+					sendRequest(index);
 					setAm_interested(false);
 			}
 		}
 	}
 	return NULL;
 }
+
