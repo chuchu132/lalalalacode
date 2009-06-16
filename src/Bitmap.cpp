@@ -105,3 +105,18 @@ bool Bitmap::estaVacio(){
 	}
 	return vacio;
 }
+
+int Bitmap::indexPiezaRandom(){
+
+	int index;
+	if (estaVacio()){
+		for(int i=0;i<getTamanioEnBytes();i++){
+			if (estaMarcada(i)){
+			    index=i;
+				return index;
+			}
+		}
+	}else return -1;
+
+}
+
