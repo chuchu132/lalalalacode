@@ -9,6 +9,7 @@
 #define SOCKET_H_
 
 #include <iostream>
+#include <string>
 
 class Socket {
 public:
@@ -26,10 +27,14 @@ public:
 	int receiveExact(char* stream,unsigned int size);
 	Socket* accept();
 	bool is_valid();
+	std::string getIp();
+	void setIp(int ip);
+	void setIp(std::string ip);
 
 protected:
 	int fd;
 	bool valido;
+	std::string ip;
 
 private:
 	Socket(int fd);
