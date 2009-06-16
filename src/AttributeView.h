@@ -80,6 +80,8 @@ public:
 	/* borra las notificaciones de la vista */
 	void clearNotifications();
 
+	void torrentDeleted(Torrent*);
+
 };
 
 #endif /* ATTRIBUTESVIEW_H_ */

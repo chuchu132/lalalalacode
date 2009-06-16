@@ -137,11 +137,14 @@ void AttributesView::showInformation()
 	texto2 << torrent->getFileManager()->getCantArchivos();
 	lfiles->set_text(texto2.str());
 
+	std::stringstream texto3;
+	texto3 << torrent->getCantPeers();
+	lpeers->set_text(texto3.str());
+
 	lpath->set_text(torrent->getPath());
 	lname->set_text(torrent->getNombre());
 	lurl->set_text(torrent->getUrlTracker());
-	//lhash->set_text(torrent->getHash());
-	//lpeers->set_text();
+	lhash->set_text(torrent->getHashString());
 }
 
 void AttributesView::showFiles()
@@ -179,4 +182,14 @@ void AttributesView::addNotification(std::string notif)
 void AttributesView::clearNotifications()
 {
 	list_notif->clear();
+}
+
+void AttributesView::torrentDeleted(Torrent *t)
+{
+	if (torrent == t)
+	{
+		torrent = NULL;
+		list_files->clear();
+		list_peers->clear();
+	}
 }

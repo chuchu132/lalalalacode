@@ -256,6 +256,7 @@ void Ventana::on_button_erase_clicked()
 	if (t != NULL)
 	{
 		torrents->eraseSelectedRow();
+		attr->torrentDeleted(t);
 		controlador->borrarTorrent(t);
 	}
 }

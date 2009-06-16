@@ -90,6 +90,8 @@ public:
 
 	unsigned int* getInfoHash();
 
+	std::string getHashString();
+
 	std::string getPeerId();
 
 	/* Devuelve el estado por ej: "detenido", "pausado", "conectando", "completo", etc */
@@ -114,14 +116,16 @@ public:
 
 	std::list<Peer*>* getListaPeers();
 
+	std::string getPath();
+
+	unsigned int getCantPeers();
+
 	void setControlador(Controlador* ctrl);
 
 	bool estaActivo();
 
 	/* setea la carpeta en la que se tiene que guardar el archivo descargado*/
 	void setCarpetaDescarga(std::string url);
-
-	std::string getPath();
 
 private:
 
