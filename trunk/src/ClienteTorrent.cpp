@@ -141,7 +141,7 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		t->setControlador(controlador);//cuidado si controlador es null!!
 		if ( t->inicializarTorrent(&parserTorrent)){
 			torrents.push_back(t); //agrego el torrent a la lista de torrents
-			//t->run();
+
 			notif = "Se ha agregado el Torrent ";
 			notif += t->getNombre();
 		}

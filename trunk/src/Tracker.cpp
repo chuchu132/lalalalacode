@@ -30,7 +30,8 @@ void* Tracker::run() {
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
 			bufferTemp[cantidad] = '\0';
 			buffer += bufferTemp;
-			std::cout << "\nReciev: \n" << buffer << std::endl;
+			std::cout << "\nReciev: \n" /*<< buffer */<< std::endl;
+			/*creo que,entre otras cosas, el cout hacia q todo explote antes*/
 			respuestaCompleta = procesarResponse(buffer);
 		}
 		if (respuestaCompleta == true)
@@ -129,15 +130,15 @@ std::string Tracker::archivoTracker(std::string buffer,int *longitud) {
 	if (inicio != string::npos && lonInicial != string::npos && lonTotal
 			!= string::npos && marca != string::npos) {
 		//Obtengo la longitud total del archivo bencode
-		char longitudBencode[lonTotal - lonInicial + 1];
+		char* longitudBencode = new char[lonTotal - lonInicial + 1]; /*OJO al crear arrays de tamaño desconocido no crearlos estaticos*/
 		for (inicio = lonInicial + 1; inicio < lonTotal - 1; inicio++) {
 			longitudBencode[i] = buffer[inicio];
 			i++;
 		}
 		longitudBencode[i] = '\0';
 		char *aux = new char[atoi(longitudBencode) + 1];
-
-		if (buffer[atoi(longitudBencode) + marca - 1] == 'e') {
+		int longTemp = ( atoi(longitudBencode) + marca - 1); /*ACA hay lio se vas de rango*/
+		if (buffer[longTemp] == 'e') {
 			i = 0;
 			for (unsigned pos = marca; pos < (atoi(longitudBencode) + marca); pos++) {
 				aux[i] = buffer[pos];
@@ -151,6 +152,7 @@ std::string Tracker::archivoTracker(std::string buffer,int *longitud) {
 		else
 			salida= "Error";
 		delete[] aux;
+		delete[] longitudBencode;
 	} else
 		salida="Error";
 	return salida;

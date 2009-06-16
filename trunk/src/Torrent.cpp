@@ -64,15 +64,11 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 }
 
 void Torrent::run(){
-try {
+
 	 horaInicial= time (NULL);//Obtiene los segundos que pasaron desde 1970
      horaAnterior = time(NULL);
 	 downAnterior = downloaded;
 	 tracker->execute();
-
-} catch ( AvisoDescargaCompleta aviso) {
-	// TODO parar todo el aviso lo lanza el filemanager al verificar q se descargaron todas las piezas
-}
 
 }
 
