@@ -106,17 +106,24 @@ bool Bitmap::estaVacio(){
 	return vacio;
 }
 
-int Bitmap::indexPiezaRandom(){
-
-	int index;
-	if (estaVacio()){
-		for(int i=0;i<getTamanioEnBytes();i++){
-			if (estaMarcada(i)){
-			    index=i;
-				return index;
-			}
+bool Bitmap::getPrimeroLibre(unsigned int &index){
+	bool encontro = false;
+	int i = 0;
+	while(!encontro && (i<tamanio)){
+		encontro = ((bitmap[i] & 0xFF) != 0);
+		i++;
+	}
+	if(encontro){
+		index = (i*8);
+		char temp = bitmap[i];
+		i=0;
+		encontro = false;
+		while(!encontro){ //siempre da true.
+			encontro = (((temp <<i) & 0x80) == 1);
 		}
-	}else return -1;
+		index += i;
+	}
 
+	return encontro;
 }
 
