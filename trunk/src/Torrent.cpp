@@ -65,8 +65,6 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 
 void Torrent::run(){
 try {
-
-
 	 horaInicial= time (NULL);//Obtiene los segundos que pasaron desde 1970
      horaAnterior = time(NULL);
 	 downAnterior = downloaded;
