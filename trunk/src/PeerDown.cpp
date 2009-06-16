@@ -20,19 +20,18 @@ void* PeerDown::run() {
 	int index=-1;
 	Bitmap bitmapTorrent;
 	Bitmap* resultadoFusion;
-	FileManager* fileManager;
 	bool error = false; // error puede ser en la conexion, en lo recibido o al procesar
 	while (getTorrent()->estaActivo() &&  conexionEstaOK() ) {
 		int length;
 		char* buffer;
 		if(recvMsj(&buffer,length)){
-		procesar(buffer,length);
+			error=!procesar(buffer,length);
 		}
+		else error=true;
 		if (!error) {
 
 			if ( getAm_interested()==false && getPeer_choking()==false ){
-					fileManager = getTorrent()->getFileManager();
-				    bitmapTorrent = fileManager->getBitmap();
+				    bitmapTorrent = getTorrent()->getFileManager()->getBitmap();
 				    Bitmap bitmapPeer= getBitmap();
 			        resultadoFusion = bitmapTorrent.nuevoPorFusion (bitmapPeer);
 					for(int i=0;i<resultadoFusion->getTamanioEnBytes();i++){
