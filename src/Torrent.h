@@ -69,7 +69,7 @@ public:
 
 	/*Cuando el Tracker recibe una lista de peers desde el Tracker remoto
 	 * los agrega a la lista de peers del Torrent*/
-	void agregarPeer(std::string ip,int puerto);
+	void agregarPeer(std::string ip,unsigned int puerto);
 
 	void agregarPeer(Peer* peerNuevo);
 
