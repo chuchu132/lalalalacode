@@ -18,6 +18,7 @@ void* PeerDown::run() {
 	sendHandshake();
 	sendBitfield();
 	unsigned int index=-1;
+	int contadorCiclos =0;
 	bool error = false; // error puede ser en la conexion, en lo recibido o al procesar
 	while (getTorrent()->estaActivo() &&  conexionEstaOK() ) {
 		int length;
@@ -38,6 +39,11 @@ void* PeerDown::run() {
 					sendRequest(index);
 					setAm_interested(false);
 			}
+		}
+		contadorCiclos++;
+		if (contadorCiclos==60){
+			contadorCiclos=0;
+			sendKeepAlive();
 		}
 	}
 	return NULL;
