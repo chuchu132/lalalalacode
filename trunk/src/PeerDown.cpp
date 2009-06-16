@@ -17,9 +17,7 @@ PeerDown::~PeerDown() {
 void* PeerDown::run() {
 	sendHandshake();
 	sendBitfield();
-	int index=-1;
-	Bitmap bitmapTorrent;
-	Bitmap* resultadoFusion;
+	unsigned int index=-1;
 	bool error = false; // error puede ser en la conexion, en lo recibido o al procesar
 	while (getTorrent()->estaActivo() &&  conexionEstaOK() ) {
 		int length;
@@ -29,13 +27,9 @@ void* PeerDown::run() {
 		}
 		else error=true;
 		if (!error) {
-
 			if ( getAm_interested()==false && getPeer_choking()==false ){
-				    bitmapTorrent = getTorrent()->getFileManager()->getBitmap();
-				    Bitmap bitmapPeer= getBitmap();
-			        resultadoFusion = bitmapTorrent.nuevoPorFusion (bitmapPeer);
-			        index=resultadoFusion->indexPiezaRandom();
-					if(index!=-1){
+				    Bitmap mapaPeerRemoto= getBitmap();
+			        if(getTorrent()->getFileManager()->getPiezaAdescargar(index,mapaPeerRemoto)){
 						sendMsg (2); //Interested
 						setAm_interested(true);
 					}
