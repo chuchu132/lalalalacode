@@ -19,6 +19,7 @@
 
 Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(clienteTorrent) {
 	tracker = new Tracker();
+	tracker->setTorrent(this);
 	uploaded = 0;
 	downloaded = 0;
 	this->path = path;
@@ -220,7 +221,7 @@ unsigned int Torrent::getCantPeers() {
 
 std::string Torrent::bytesToString(float bytes) {
 	std::stringstream buffer;
-	buffer << std::setprecision(2);
+	buffer << std::setprecision(4);
 	if (bytes < 1024)
 	{
 		buffer<< bytes<<" bytes";

@@ -48,11 +48,12 @@ public:
 
 	bool procesarResponse(std::string buffer);
 
-	std::string archivoTracker (std::string buffer,int *longitud);
+	std::string archivoTracker(std::string &buffer, int &longitud);
 
 	void decodificarPeers(char* cadena,unsigned int longitudCadena);
 
 	unsigned int getMinInterval();
+	void setTorrent(Torrent* unTorrent);
 
 private:
 	Torrent* torrent;

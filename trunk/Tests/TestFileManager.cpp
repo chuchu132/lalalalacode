@@ -7,6 +7,7 @@
 
 #include "TestFileManager.h"
 #include "../src/BencodeParser.h"
+#include "../src/ClienteTorrent.h"
 #include "../src/DatosParser.h"
 #include "../src/FileManager.h"
 #include <cstring>
@@ -53,6 +54,7 @@ void TestFileManager::test(std::string urlTorrent){
 			filemanager.getBitmap().marcarBit(1); //marco la pieza como que esta completa para poder leer una parte
 			char* datoRecuperado = 	filemanager.readBlock(1,10,10);
 			assert(memcmp(datoRecuperado,"FiTorrent",10)==0,"El dato recuperado es igual al ingresado");
+			filemanager.getBitmap().desmarcarBit(1);
 			filemanager.guardarBitmap(url);
 			delete[] datoRecuperado;
 			delete datos;
@@ -84,7 +86,8 @@ void TestFileManager::testSplitFiles(std::string urlTorrent){
 	BencodeParser parser(urlTorrent.c_str());
 
 	if (parser.procesar()) {
-		FileManager filemanager(NULL);
+		ClienteTorrent cliente;
+		FileManager filemanager(&cliente);
 		DatosParser* datos =  parser.salidaParser();
 		datos->primero();
 		if(filemanager.inicializar(datos)){

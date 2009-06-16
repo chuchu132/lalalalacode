@@ -22,12 +22,12 @@ void TestConfiguracion::run() {
 	Test::assert(config->getRutaDescargas()== RUTA_DESCARGAS, "Ruta de descargas default");
 
 	config->guardarPuerto(35001);
-	config->guardarRutaDescargas("Archivos Bajados/otra_carpeta");
+	config->guardarRutaDescargas("./Archivos Bajados/");
 
 	delete config;
 
 	Configuracion config2;
 	Test::assert(config2.getPuerto()== 35001, "Puerto Cargado desde Archivo");
-	Test::assert(config2.getRutaDescargas()== "Archivos Bajados/otra_carpeta", "Ruta de descargas Cargada desde Archivo");
+	Test::assert(config2.getRutaDescargas()== "./Archivos Bajados/", "Ruta de descargas Cargada desde Archivo");
 
 }
