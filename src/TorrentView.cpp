@@ -149,7 +149,8 @@ void TorrentView::on_category_selected()
 void TorrentView::on_row_selected()
 {
 	Torrent *t = getSelectedTorrent();
-	attr->showInfo(t);
+	if (t != NULL)
+		attr->showInfo(t);
 }
 
 void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)

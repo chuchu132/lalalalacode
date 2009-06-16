@@ -101,6 +101,8 @@ public:
 	/* devuelve el tamanio descargado en bytes*/
 	unsigned int getTamanioDescargado();
 
+	std::string getUrlTracker();
+
 	int getVelocidadSubida();
 
 	int getVelocidadBajada();

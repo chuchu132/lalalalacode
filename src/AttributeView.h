@@ -14,7 +14,7 @@ class Torrent;
 
 class AttributesView {
 	/* administra la parte inferior de la ventana
-	 * donde se muestra el estado del torrent y los peers */
+	 * donde se muestra informacion sobre el torrent */
 
 private:
 	Gtk::TreeView *view_peers;
@@ -41,19 +41,23 @@ private:
 	Gtk::Notebook *page;
 	guint page_selected; //numero de pagina seleccionada
 
-	Gtk::Label lurl;
-	Gtk::Label lhash;
-	Gtk::Label lparts;
+	Gtk::Label *lurl;
+	Gtk::Label *lhash;
+	Gtk::Label *lparts;
+	Gtk::Label *lpeers;
+	Gtk::Label *lfiles;
+	Gtk::Label *lpath;
+	Gtk::Label *lname;
 
 	Torrent *torrent;//torrent seleccionado
 
 	void showPeers();
-	void showStatus();
+	void showInformation();
 	void showFiles();
 
 	void setPeersView();
-	void setStatusView();
 	void setFilesView();
+	void setInformationView(Glib::RefPtr<Gtk::Builder> builder);
 	void setNotificationsView();
 
 	void on_page_selected(GtkNotebookPage* , guint);

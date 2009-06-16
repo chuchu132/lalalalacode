@@ -23,7 +23,7 @@ ClienteTorrent::ClienteTorrent() {
 
 	std::string estado;
 	Torrent *t;
-
+//todo agregar los torrents en la vista
 	while (config.hayTorrents()) {
 		t = agregarTorrent(config.obtenerTorrent());
 		if (t != NULL) {
@@ -135,7 +135,8 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		notif = "Error al examinar el archivo ";
 		notif += ruta;
 		t = NULL;
-	} else {
+	}
+	else {
 		t = new Torrent(this, ruta);
 		t->setControlador(controlador);//cuidado si controlador es null!!
 		if ( t->inicializarTorrent(&parserTorrent)){
@@ -144,14 +145,14 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 			t->run();
 			notif = "Se ha agregado el Torrent ";
 			notif += t->getNombre();
-		} else {
+		}
+		else {
 			std::cout<<"error al inicializar el torrent "<<std::endl;
 			delete t;
 			t = NULL;
 			notif = "Error al decodificar el archivo ";
 			notif += ruta;
 		}
-		return t;
 	}
 
 	if (controlador != NULL)

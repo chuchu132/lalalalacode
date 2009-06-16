@@ -178,3 +178,8 @@ void Torrent::setCarpetaDescarga(std::string url) {
 std::string Torrent::getPath() {
 	return path;
 }
+
+std::string Torrent::getUrlTracker() {
+	return tracker->getUrl();
+}
+

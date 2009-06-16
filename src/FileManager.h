@@ -33,7 +33,12 @@ public:
 
 	unsigned int getTamanio();
 
+	unsigned int getTamanioPieza();
+
 	Bitmap& getBitmap();
+
+	/* devuelve la cantidad de archivos */
+	unsigned int getCantArchivos();
 
 	/* Devuelve un arreglo con el bloque pedido, quien lo solicita debe liberarlo*/
 	char* readBlock(int index,int begin,int longitud);
