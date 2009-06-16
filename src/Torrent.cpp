@@ -97,8 +97,8 @@ void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 
 }
 void Torrent::agregarPeer(Peer* peerNuevo){
-	peers.push_back(nuevoPeer);
-	nuevoPeer->execute();
+	peers.push_back(peerNuevo);
+	peerNuevo->execute();
 }
 
 
