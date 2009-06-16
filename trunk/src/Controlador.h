@@ -2,7 +2,7 @@
  * Controlador.h
  *
  *  Created on: 29/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #ifndef CONTROLADOR_H_
@@ -29,8 +29,6 @@ public:
 	~Controlador();
 
 	void setVentana(Ventana *ventana);
-
-	//TODO ver que devuelven las funciones en caso de error
 
 	/* cierra el cliente
 	 * es llamado al salir de la aplicacion */

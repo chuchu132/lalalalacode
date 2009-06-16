@@ -2,7 +2,7 @@
  * Controlador.cpp
  *
  *  Created on: 29/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #include "Controlador.h"
@@ -49,7 +49,6 @@ void Controlador::actualizarEstado(Torrent *t)
 void Controlador::agregarTorrentsEnVista()
 {
 	std::list<Torrent*>::iterator it;
-
 	for (it = cliente.getListaTorrents()->begin(); it != cliente.getListaTorrents()->end(); it++)
 	{
 		ventana->addTorrent((*it));

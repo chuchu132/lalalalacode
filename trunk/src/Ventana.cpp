@@ -2,7 +2,7 @@
  * Ventana.cpp
  *
  *  Created on: 28/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #include "Ventana.h"
@@ -405,6 +405,5 @@ unsigned int Ventana::getPuerto()
 
 std::string Ventana::getRutaDescargas()
 {
-	//todo
 	return RUTA_DESCARGAS;
 }

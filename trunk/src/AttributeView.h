@@ -2,7 +2,7 @@
  * AttributesView.h
  *
  *  Created on: 31/05/2009
- *      Author: teddy
+ *      Author: Lucia
  */
 
 #ifndef ATTRIBUTESVIEW_H_

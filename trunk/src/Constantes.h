@@ -99,10 +99,10 @@ const int PUERTO_DEFAULT_TRACKER = 80;
 #define T_PAUSADO "Pausado"
 #define T_DETENIDO "Detenido"
 #define T_COMPLETO "Completo"
-
-#define URL_CARPETA_TEMP "./incompletos/"
+#define T_CONECTANDO "Conectando"
 
 /* Configuracion Default */
+#define URL_CARPETA_TEMP "./incompletos/"
 #define RUTA_CONFIGURACION "FiTorrent.config"
 #define RUTA_DESCARGAS "./Descargas/"
 const unsigned int PUERTO_DEFAULT = 36277;

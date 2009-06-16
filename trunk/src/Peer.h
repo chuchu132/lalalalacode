@@ -19,6 +19,7 @@
 #include "Socket.h"
 #include "Thread.h"
 #include "Torrent.h"
+#include "AvisoDescargaCompleta.h"
 
 class Torrent;
 class Peer: public Thread {
