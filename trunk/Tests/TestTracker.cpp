@@ -25,12 +25,12 @@ TestTracker::~TestTracker() {
 
 void TestTracker::run() {
 
-	BencodeParser parser("./Tests/AngelsAndDemons.torrent");
+	BencodeParser parser("./Tests/PSP.torrent");
 	if (parser.procesar()) {
 		datos = parser.salidaParser();
 		Tracker tracker;
-		Torrent unTorrent(NULL,"frutaaa");
-		tracker.setTorrent(&unTorrent);
+	//	Torrent unTorrent(NULL,"frutaaa");
+	//	tracker.setTorrent(&unTorrent);
 		std::string url;
 		char* datoTemp;
 		int tam;

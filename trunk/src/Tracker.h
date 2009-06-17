@@ -46,13 +46,16 @@ public:
 	//TODO tal vez va privado
 	void inicilizar(std::string url);
 
-	bool procesarResponse(std::string buffer);
+	bool procesarResponse(std::string buffer,int longitud);
 
-	std::string archivoTracker(std::string &buffer, int &longitud);
+	std::string extraerBencode(std::string &buffer, int &longitud);
+
+	int obtenerLongitudBencode (std::string &buffer,unsigned int &marca);
 
 	void decodificarPeers(char* cadena,unsigned int longitudCadena);
 
 	unsigned int getMinInterval();
+
 	void setTorrent(Torrent* unTorrent);
 
 private:
