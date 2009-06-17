@@ -22,7 +22,7 @@ void TestClienteTorrent::run(){
 
 	torrent->run();
 
-	sleep(10); // 5 min
+	sleep(300); // 5 min
 
 	torrent->detener();
 	sleep(10);
