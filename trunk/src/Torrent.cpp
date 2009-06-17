@@ -77,12 +77,31 @@ void Torrent::run(){
 	horaInicial = time (NULL);//Obtiene los segundos que pasaron desde 1970
 	horaAnterior = time(NULL);
 	downAnterior = downloaded;
-	std::cout<<((tracker->connect())?"conecto":"noconecto")<<std::endl;
-	std::cout<<((enviarEventoEstado(NULL,50))?"envio":"noenvio")<<std::endl;
-	tracker->execute();
-	sleep(5);
-	if (controlador != NULL)
-		controlador->notificarVista("");
+	if (controlador != NULL) {
+		std::string notif = "Conectando con ";
+		notif += tracker->getPath();
+		controlador->notificarVista(notif);
+	}
+	if (tracker->connect()) {
+		std::cout<<"conecto"<<std::endl;
+		std::cout<<((enviarEventoEstado(NULL,50))?"envio":"noenvio")<<std::endl;
+		tracker->execute();
+		if (controlador != NULL) {
+			std::string notif = "Conectado con el tracker ";
+			notif += tracker->getPath();
+			controlador->notificarVista(notif);
+		}
+		sleep(5);
+
+	} else {
+		std::cout<<"noconecto"<<std::endl;
+
+		if (controlador != NULL) {
+			std::string notif = "Fallo la conexion con el tracker ";
+			notif += tracker->getPath();
+			controlador->notificarVista(notif);
+		}
+	}
 }
 
 bool Torrent::conectarTracker(std::string url) {
