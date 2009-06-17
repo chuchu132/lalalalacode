@@ -29,8 +29,8 @@ void TestTracker::run() {
 	if (parser.procesar()) {
 		datos = parser.salidaParser();
 		Tracker tracker;
-	//	Torrent unTorrent(NULL,"frutaaa");
-	//	tracker.setTorrent(&unTorrent);
+		Torrent unTorrent(NULL,"frutaaa");
+		tracker.setTorrent(&unTorrent);
 		std::string url;
 		char* datoTemp;
 		int tam;
@@ -40,7 +40,8 @@ void TestTracker::run() {
 		url = datoTemp;
 		delete[] datoTemp;
 		/*Intento conectarme*/
-		if( tracker.connect(url) ){
+		tracker.inicilizar(url);
+		if( tracker.connect() ){
 		assert(true,"Se conecto al tracker");
 		/*Lanzo un hilo a escuchar lo que manda el tracker*/
 		tracker.execute();
@@ -67,7 +68,7 @@ void TestTracker::run() {
 
 		assert(true,"Paso del send");
 
-		sleep(10);
+		sleep(100);
 		assert(true,"Paso el sleep");
 		tracker.cerrarConexion();
 		tracker.join();

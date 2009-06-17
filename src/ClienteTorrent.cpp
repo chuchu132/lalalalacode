@@ -11,12 +11,15 @@
 #include "PeerUp.h"
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <cmath>
+#include <cstring>
 
 #define CANT_CLIENTES 5
 
 ClienteTorrent::ClienteTorrent() {
-	// TODO crear el peer_id
-
+	std::string temp = "-FITORRENT-FIUBA-";
+	temp += (rand()%1000);
+	memcpy(peer_id,temp.c_str(),LEN_SHA1);
 	inicializarDirectorios();
 	controlador = NULL;
 	activo = false;
@@ -40,7 +43,7 @@ ClienteTorrent::ClienteTorrent() {
 	}
 }
 
-ClienteTorrent::~ClienteTorrent() {
+ClienteTorrent::~ClienteTorrent() { //TODO borrar lista peers
 	if (activo)
 		finalizar();
 }

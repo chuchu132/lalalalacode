@@ -42,6 +42,14 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 	char* datoTemp;
 	int tamTemp;
 
+	datos->primero();
+	if(!datos->obtenerDatoPorNombre("announce",&datoTemp,tamTemp)){
+		delete datos;
+		return false;
+	}
+	tracker->inicilizar(datoTemp);
+	delete[] datoTemp;
+
 	if(!datos->obtenerDatoPorNombre("info_hash",&datoTemp,tamTemp)){
 		delete datos;
 		return false;
@@ -66,16 +74,19 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 
 void Torrent::run(){
 
-	 horaInicial = time (NULL);//Obtiene los segundos que pasaron desde 1970
-     horaAnterior = time(NULL);
-	 downAnterior = downloaded;
-	 tracker->execute();
-	 if (controlador != NULL)
-		 controlador->notificarVista("");
+	horaInicial = time (NULL);//Obtiene los segundos que pasaron desde 1970
+	horaAnterior = time(NULL);
+	downAnterior = downloaded;
+	std::cout<<((tracker->connect())?"conecto":"noconecto")<<std::endl;
+	std::cout<<((enviarEventoEstado(NULL,0))?"envio":"noenvio")<<std::endl;
+	tracker->execute();
+	if (controlador != NULL)
+		controlador->notificarVista("");
 }
 
 bool Torrent::conectarTracker(std::string url) {
-	return tracker->connect(url);
+	tracker->inicilizar(url);
+	return tracker->connect();
 }
 
 bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
@@ -98,7 +109,7 @@ void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 		nuevoPeer->execute();
 	}else{
 		delete conexion;
-		}
+	}
 
 }
 void Torrent::agregarPeer(Peer* peerNuevo){
@@ -178,14 +189,14 @@ int Torrent::getVelocidadSubida() {
 int Torrent::getVelocidadBajada() {
 	return 30;
 
-// no esta probado ;) lo mismo para vel de subida
-//	time_t horaAct = time(NULL);
-//	double tiempo = difftime(horaAct,horaAnterior);
-//	horaAnterior = horaAct;
-//
-//	unsigned int diferencia = downloaded - downAnterior;
-//
-//	return  ((diferencia/1024)/tiempo);
+	// no esta probado ;) lo mismo para vel de subida
+	//	time_t horaAct = time(NULL);
+	//	double tiempo = difftime(horaAct,horaAnterior);
+	//	horaAnterior = horaAct;
+	//
+	//	unsigned int diferencia = downloaded - downAnterior;
+	//
+	//	return  ((diferencia/1024)/tiempo);
 }
 
 void Torrent::setControlador(Controlador* ctrl) {

@@ -217,7 +217,6 @@ std::string Sha1::binAUrlEncode(unsigned int *salidaSha1){
 	ParserCgi parser;
 	unsigned int invertidos[5];
 	unsigned int temp;
-	std::cout<<salidaAstring(salidaSha1)<<std::endl;
 	for(int i = 0; i < 5; i++ ){
 		memcpy(&temp,salidaSha1 + i,sizeof(unsigned int));
 		temp = ntohl(temp);

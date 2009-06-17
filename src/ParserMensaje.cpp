@@ -102,7 +102,8 @@ std::string ParserMensaje::crearGetConNumwant(std::string host,std::string path,
 	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
 			downloaded, left);
 	std::stringstream buffer;
-	buffer << base << "&numwant=" << numwant<<" HTTP/1.0\r\n"<<"Host: "<<host<<"\r\n\r\n";
+	buffer << base << "&numwant="<< numwant<<"&event="<<EVENT_STARTED<<" HTTP/1.0\r\n"<<"Host: "<<host<<"\r\n\r\n";
+	std::cout<<buffer.str()<<std::endl;
 	return buffer.str();
 }
 

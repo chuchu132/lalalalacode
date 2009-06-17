@@ -9,12 +9,15 @@
 
 PeerDown::PeerDown(Socket* peerRemoto,Torrent* torrent):Peer(peerRemoto,torrent) {
 	setTipo('D');
+	std::cout<<"new PeerDown"<<std::endl;
 }
 
 PeerDown::~PeerDown() {
+	std::cout<<"~PeerDown"<<std::endl;
 }
 
 void* PeerDown::run() {
+	std::cout<<"run PeerDown"<<std::endl;
 	sendHandshake();
 	sendBitfield();
 	unsigned int index=-1;
