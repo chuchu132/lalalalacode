@@ -34,8 +34,6 @@ private:
 	 * al iniciar y que debe identificar al ClienteTorrent univocamente
 	 * por lo menos en la maquina local, es decir, no puede haber 2 ClienteTorrent
 	 * corriendo en una pc con los mismos peers ids.
-	 * TODO definir que algoritmo usar para generar el codigo.
-	 * Opciones: usar Pocess ID, time stamp.
 	 */
 	char peer_id[20];
 	Socket peerListener; //socket para escuchar conexiones de peers

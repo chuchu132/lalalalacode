@@ -32,9 +32,12 @@ public:
 
 	/* Recibe una url por ejemplo: http://open.tracker.thepiratebay.org:80/announce
 	 * De la url extrae la direccion del host, el puerto (sino usa el default) y
-	 * el path. Luego intenta conectarse y devuelve el resultado de dicho intento.
+	 * el path.
 	 */
-	bool connect(std::string url);
+	void inicilizar(std::string url);
+
+	/*se conecta a la url seteada con inicializar*/
+	bool connect();
 
 	bool send(const char* stream,unsigned int size);
 
@@ -44,9 +47,8 @@ public:
 	std::string getUrl();
 
 	//TODO tal vez va privado
-	void inicilizar(std::string url);
 
-	bool procesarResponse(std::string buffer,int longitud);
+	bool procesarResponse(std::string &buffer,int &longitud);
 
 	std::string extraerBencode(std::string &buffer, int &longitud);
 
