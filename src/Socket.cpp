@@ -5,16 +5,14 @@
  *      Author: ale
  */
 
-
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <sstream>
 #include <iostream>
 #include <cstring>
-
+#include <fcntl.h>
 #include "Constantes.h"
 #include "Socket.h"
-
 
 Socket::Socket() {
 	valido = true;
@@ -31,6 +29,24 @@ Socket::Socket(int fdNuevo) {
 Socket::Socket(const Socket& original) {
 	fd = original.fd;
 	valido = original.valido;
+}
+
+int Socket::setNonblocking() {
+	unsigned int flags;
+
+	if (-1 == (flags = fcntl(sd, F_GETFL, 0))) {
+		flags = 0;
+		return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+	}
+}
+
+int Socket::setBlocking() {
+	unsigned int flags;
+
+	if (-1 == (flags = fcntl(sd, F_GETFL, 0))) {
+		flags = 0;
+		return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+	}
 }
 
 Socket::~Socket() {
@@ -50,7 +66,7 @@ int Socket::connect(const std::string &host, unsigned int port) {
 		if ((host_add = gethostbyname(host.c_str()))) {
 
 			address.sin_addr.s_addr
-			= ((struct in_addr*) (host_add->h_addr))->s_addr;
+					= ((struct in_addr*) (host_add->h_addr))->s_addr;
 
 			return ::connect(fd, (struct sockaddr *) &address, sizeof(address));
 		}
@@ -75,7 +91,7 @@ int Socket::listen(unsigned int port, unsigned int numClientesEspera) {
 }
 
 int Socket::close() {
-	shutdown(fd,2);
+	shutdown(fd, 2);
 	valido = false;
 	return ::close(fd);
 }
@@ -98,20 +114,24 @@ int Socket::send(const char* stream, unsigned int size) {
 	return size;
 }
 
-int Socket::receive(char* stream,unsigned int size){
+int Socket::receive(char* stream, unsigned int size) {
 	return recv(fd, stream, size, 0);
 }
 
 int Socket::receiveExact(char* stream, unsigned int size) {
 	unsigned int recibido = 0;
 	int aux = 0;
-	while (recibido < size ) {
+	while (recibido < size) {
 		aux = recv(fd, stream + recibido, size - recibido, 0);
 		if (aux > 0) {
 			recibido += aux;
-			if(recibido == size){return size;}
+			if (recibido == size) {
+				return size;
+			}
 		} else {
-			if(aux < 0){return ERROR;}
+			if (aux < 0) {
+				return ERROR;
+			}
 			return recibido;
 		}
 	}
@@ -129,14 +149,14 @@ Socket* Socket::accept() {
 	return NULL;
 }
 
-void Socket::setIp(std::string ipInt){
+void Socket::setIp(std::string ipInt) {
 	this->ip = ip;
 }
 
-void Socket::setIp(int ipInt){
+void Socket::setIp(int ipInt) {
 	std::stringstream ip;
-	unsigned char* ipArr =(unsigned char*) &ipInt;
-	unsigned char temp =  ipArr[0];
+	unsigned char* ipArr = (unsigned char*) &ipInt;
+	unsigned char temp = ipArr[0];
 	ip << (int) temp << ".";
 	temp = (unsigned char) ipArr[1];
 	ip << (int) temp << ".";
@@ -147,7 +167,7 @@ void Socket::setIp(int ipInt){
 	this->ip = ip.str();
 }
 
-std::string Socket::getIp(){
+std::string Socket::getIp() {
 	return ip;
 }
 

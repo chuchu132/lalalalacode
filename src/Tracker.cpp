@@ -199,9 +199,9 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
 		puerto = ntohs(puerto);
 		std::cout<<"IP: "<<ip.str()<<" Puerto: "<< puerto<<std::endl;
-		//torrent->agregarPeer(ip.str(), puerto);
+		torrent->agregarPeer(ip.str(), puerto);
 		i++;
-		cantPeers ++;//= torrent->getCantPeers();
+		cantPeers++;// = torrent->getCantPeers();
 	}
 }
 

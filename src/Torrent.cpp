@@ -78,8 +78,9 @@ void Torrent::run(){
 	horaAnterior = time(NULL);
 	downAnterior = downloaded;
 	std::cout<<((tracker->connect())?"conecto":"noconecto")<<std::endl;
-	std::cout<<((enviarEventoEstado(NULL,0))?"envio":"noenvio")<<std::endl;
+	std::cout<<((enviarEventoEstado(NULL,50))?"envio":"noenvio")<<std::endl;
 	tracker->execute();
+	sleep(5);
 	if (controlador != NULL)
 		controlador->notificarVista("");
 }
