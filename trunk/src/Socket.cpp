@@ -31,23 +31,6 @@ Socket::Socket(const Socket& original) {
 	valido = original.valido;
 }
 
-int Socket::setNonblocking() {
-	unsigned int flags;
-
-	if (-1 == (flags = fcntl(sd, F_GETFL, 0))) {
-		flags = 0;
-		return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-	}
-}
-
-int Socket::setBlocking() {
-	unsigned int flags;
-
-	if (-1 == (flags = fcntl(sd, F_GETFL, 0))) {
-		flags = 0;
-		return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-	}
-}
 
 Socket::~Socket() {
 	if (valido) {
