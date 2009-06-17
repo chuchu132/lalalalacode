@@ -28,10 +28,9 @@ void* Tracker::run() {
 	while (trackerRemoto.is_valid() && !seCerro) {
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
 			bufferTemp[cantidad] = '\0';
-			buffer.operator+=(bufferTemp);
-			std::cout << "\nReciev: \n" /*<< buffer */<< std::endl;
-			/*creo que,entre otras cosas, el cout hacia q todo explote antes*/
-			if (procesarResponse(buffer)) {
+			//buffer.operator+=(bufferTemp);
+			buffer.insert(0,bufferTemp,cantidad);
+			if (procesarResponse(buffer,cantidad)) {
 				//borrar buffr procesado
 			}
 		} else {
@@ -92,11 +91,11 @@ void Tracker::setTorrent(Torrent* unTorrent) {
 }
 
 //TODO falta testeo
-bool Tracker::procesarResponse(std::string buffer) {
-	int longitud;
-	buffer = archivoTracker(buffer, longitud);
+bool Tracker::procesarResponse(std::string buffer,int longitud) {
+
+	buffer = extraerBencode(buffer, longitud);
 	if (buffer != "Error") {
-		BencodeParser parser(buffer.c_str(), longitud /*buffer.size()*/);
+		BencodeParser parser(buffer.c_str(), longitud);
 		DatosParser* datos;
 		char *aux;
 		int tam;
@@ -104,70 +103,85 @@ bool Tracker::procesarResponse(std::string buffer) {
 			datos = parser.salidaParser();
 			datos->primero();
 			if (datos->obtenerDatoPorNombre("peers", &aux, tam)) {
-				//while (!datos->final()){
+
 				decodificarPeers(datos->obtenerDato(),
 						datos->obtenerLongitudDato());
-				//	datos->siguiente();
-				//}
+
 				delete datos;
 				delete[] aux;
 			}
 		}
-
 		return true;
 	} else {
 		return false;
 	}
 }
 
-std::string Tracker::archivoTracker(std::string &buffer, int &longitud) {
+std::string Tracker::extraerBencode(std::string &buffer, int &longitud) {
 
-	unsigned inicio = 0, lonInicial, lonTotal, i = 0, marca;
+	unsigned i = 0, marca,longitudBencode;
 	std::string salida;
 
-	inicio = buffer.find("Content-Length: ", inicio);
-	lonInicial = buffer.find(" ", inicio);
-	lonTotal = buffer.find("\n", lonInicial);
-	marca = buffer.find("d", lonTotal);
-
-	if (inicio != string::npos && lonInicial != string::npos && lonTotal
-			!= string::npos && marca != string::npos) {
-		//Obtengo la longitud total del archivo bencode
-		char* longitudBencode = new char[lonTotal - lonInicial + 1]; /*OJO al crear arrays de tamaño desconocido no crearlos estaticos*/
-		for (inicio = lonInicial + 1; inicio < lonTotal - 1; inicio++) {
-			longitudBencode[i] = buffer[inicio];
-			i++;
-		}
-		longitudBencode[i] = '\0';
-		char *aux = new char[atoi(longitudBencode) + 1];
-		int longTemp = (atoi(longitudBencode) + marca - 1); /*ACA hay lio se vas de rango*/
-		if (longTemp < longitud) {
+    longitudBencode=obtenerLongitudBencode (buffer,marca);
+	if(longitudBencode>0){
+		char *aux = new char[longitudBencode+1];
+		int longTemp = (longitudBencode+marca-1);
+		if (longTemp == longitud -1) {
 			if (buffer[longTemp] == 'e') {
 				i = 0;
 				for (unsigned pos = marca; pos
-						< (atoi(longitudBencode) + marca); pos++) {
+						< (longitudBencode + marca); pos++) {
 					aux[i] = buffer[pos];
 					i++;
 				}
 				aux[i] = '\0';
 				buffer.erase(0);
-				salida.insert(0, aux, atoi(longitudBencode));
-				longitud = atoi(longitudBencode);
+				salida.insert(0, aux, longitudBencode);
+				longitud = longitudBencode;
 			} else {
 				salida = "Error";
 			}
 		}
+		else {
+			salida="Error";
+		}
 		delete[] aux;
-		delete[] longitudBencode;
-
 	} else
 		salida = "Error";
 	return salida;
 }
 
+int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
+
+	unsigned inicio = 0, i=0,lonInicial, lonTotal,salida;
+
+	inicio    = buffer.find("Content-Length: ", inicio);
+	lonInicial= buffer.find(" ", inicio);
+	lonTotal  = buffer.find("\n", lonInicial);
+	marca     = buffer.find("d", lonTotal);
+
+	if (inicio != string::npos && lonInicial != string::npos && lonTotal
+			!= string::npos && marca != string::npos) {
+		//Obtengo la longitud total del archivo bencode
+		char* longitudBencode = new char[lonTotal - lonInicial + 1];
+		for (inicio = lonInicial + 1; inicio < lonTotal - 1; inicio++) {
+			longitudBencode[i] = buffer[inicio];
+			i++;
+		}
+		longitudBencode[i] = '\0';
+		salida= atoi(longitudBencode);
+		delete[] longitudBencode;
+		return salida;
+	}
+	else return -1;
+
+}
+
+
 void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
-	int cantMax = torrent->getCantidadMaximaPeers();
-	int cantPeers = torrent->getCantPeers();
+	// No inicializado el torrent y no pasa estas dos lineas
+	int cantMax = 15;// torrent->getCantidadMaximaPeers();
+	int cantPeers = 0;//torrent->getCantPeers();
 	int cantIps = (int) (longitudCadena / 6);
 	unsigned short int puerto;
 	int i = 0;
@@ -184,9 +198,10 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		ip << (int) temp;
 		memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
 		puerto = ntohs(puerto);
-		torrent->agregarPeer(ip.str(), puerto);
+		std::cout<<"IP: "<<ip.str()<<" Puerto: "<< puerto<<std::endl;
+		//torrent->agregarPeer(ip.str(), puerto);
 		i++;
-		cantPeers = torrent->getCantPeers();
+		cantPeers ++;//= torrent->getCantPeers();
 	}
 }
 
