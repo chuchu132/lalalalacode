@@ -30,6 +30,8 @@ public:
 	std::string getIp();
 	void setIp(int ip);
 	void setIp(std::string ip);
+	int setNonblocking();
+	int setBlocking();
 
 protected:
 	int fd;
