@@ -16,6 +16,7 @@ public:
 	Socket();
 	virtual ~Socket();
 	int connect(const std::string &host,unsigned int port);
+	int connectWithTimeout(const std::string &host, unsigned int port,int timeout);
 	int listen(unsigned int port,unsigned int numClientesEspera);
 	int close();
 	int send(const char* stream,unsigned int size);

@@ -127,7 +127,7 @@ void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 	invente los no bloqueantes y bloqueantes pero no andan hay q ver de poner algun timeout
 	xq como estan ahora practicamente no esperan respuesta y pasan de largo
 	*/
-	if(conexion->connect(ip.c_str(),puerto)==OK){
+	if(conexion->connectWithTimeout(ip.c_str(),puerto,5)==OK){
 
 		conexion->setIp(ip);
 		Peer* nuevoPeer = new PeerDown(conexion,this);
