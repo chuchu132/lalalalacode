@@ -16,6 +16,7 @@
 #include <iomanip>
 #include <cstdio>
 #include <ctime>
+#include <errno.h>
 
 Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(clienteTorrent) {
 	tracker = new Tracker();
@@ -122,18 +123,19 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 
 void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 	Socket* conexion = new Socket();
-	conexion->setNonblocking(); /*TODO aca se traba con algunos peers q no responden el connect
+	/*TODO aca se traba con algunos peers q no responden el connect
 	invente los no bloqueantes y bloqueantes pero no andan hay q ver de poner algun timeout
 	xq como estan ahora practicamente no esperan respuesta y pasan de largo
 	*/
-	if(conexion->connect(ip,puerto)==OK){
-		conexion->setBlocking();
+	if(conexion->connect(ip.c_str(),puerto)==OK){
+
 		conexion->setIp(ip);
 		Peer* nuevoPeer = new PeerDown(conexion,this);
 		peers.push_back(nuevoPeer);
 		nuevoPeer->execute();
 	}else{
 		delete conexion;
+		std::cout<<strerror(errno)<<std::endl;
 	}
 
 }
