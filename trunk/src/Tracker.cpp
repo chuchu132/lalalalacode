@@ -202,7 +202,7 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		std::cout<<"IP: "<<ip.str()<<" Puerto: "<< puerto<<std::endl;
 		torrent->agregarPeer(ip.str(), puerto);
 		i++;
-		cantPeers++;// = torrent->getCantPeers();
+		cantPeers = torrent->getCantPeers();
 	}
 }
 
