@@ -21,9 +21,9 @@ const int	LEN_BASE_HANDSHAKE = 49;
 const int   LEN_HANDSHAKE = PSTRLEN + LEN_BASE_HANDSHAKE;
 const int   OFFSET_PSTRLEN = 0;
 const int   OFFSET_PROTOCOL = 1;
-const int   OFFSET_RESERVED = (OFFSET_PROTOCOL + OFFSET_PSTRLEN);
+const int   OFFSET_RESERVED = (OFFSET_PROTOCOL + PSTRLEN);
 const int   LEN_RESERVED = 8;
-const int   OFFSET_INFO_HASH = (OFFSET_PROTOCOL + PSTRLEN + LEN_RESERVED);
+const int   OFFSET_INFO_HASH = (OFFSET_RESERVED + LEN_RESERVED);
 const int   OFFSET_PEER_ID = (OFFSET_INFO_HASH + 20);
 
 /*IDs de los diferentes tipos de mensajes entre Peers*/

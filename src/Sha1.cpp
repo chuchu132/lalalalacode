@@ -73,7 +73,7 @@ bool Sha1::salida(unsigned *mensajeSalida) {
 
 	//Copio el contenido del buffer con el mensaje procesado al mensaje de salida
 	for (contador = 0; contador < 5; contador++) {
-		mensajeSalida[contador] = bufferMensaje[contador];
+		mensajeSalida[contador] = htonl(bufferMensaje[contador]); //guardo en big endian
 	}
 
 	return true;
@@ -207,7 +207,7 @@ std::string Sha1::salidaAstring(unsigned *salidaSha1) {
 	std::stringstream buffer;
 	int i;
 	for (i = 0; i < 5; i++)
-		buffer<< hex<< salidaSha1[i];
+		buffer<< hex<< ntohl(salidaSha1[i]);
 	//retorna la salida del sha1 en forma de una cadena
 	return buffer.str();
 }
@@ -215,17 +215,7 @@ std::string Sha1::salidaAstring(unsigned *salidaSha1) {
 
 std::string Sha1::binAUrlEncode(unsigned int *salidaSha1){
 	ParserCgi parser;
-	unsigned int invertidos[5];
-	unsigned int temp;
-	for(int i = 0; i < 5; i++ ){
-		memcpy(&temp,salidaSha1 + i,sizeof(unsigned int));
-		temp = ntohl(temp);
-		memcpy(invertidos + i,&temp,sizeof(unsigned int));
-	}
-
-	return parser.codificar((char*)invertidos,LEN_SHA1);
-
-
+	return parser.codificar((char*)salidaSha1,LEN_SHA1);
 }
 
 

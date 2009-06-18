@@ -222,10 +222,8 @@ int Socket::receiveExact(char* stream, unsigned int size) {
 				return size;
 			}
 		} else {
-			if (aux < 0) {
 				return ERROR;
-			}
-			return recibido;
+
 		}
 	}
 	return ERROR;

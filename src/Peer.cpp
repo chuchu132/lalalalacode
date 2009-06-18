@@ -264,10 +264,9 @@ bool Peer::recvHandshake() {
 	int cantidad = peerRemoto->receiveExact(&aLeer, 1);
 	if (cantidad > 0) {
 		char buffer[aLeer];
-		cantidad = peerRemoto->receiveExact(buffer, aLeer);
-		if (cantidad > 0) {
-			int longProto = (aLeer - LEN_BASE_HANDSHAKE);
-			if (memcmp((char*) torrent->getInfoHash(), buffer + longProto + 8,
+		if (peerRemoto->receiveExact(buffer, aLeer) != ERROR) {
+			int longProto = (aLeer+1 - LEN_BASE_HANDSHAKE);
+			if (memcmp(torrent->getInfoHash(), buffer + longProto + LEN_RESERVED,
 					LEN_SHA1) != 0) {
 				peerRemoto->close();
 			} else {
