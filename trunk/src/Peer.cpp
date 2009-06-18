@@ -12,7 +12,6 @@
 #include "Peer.h"
 #include "ParserMensaje.h"
 
-
 Peer::Peer(Socket* peerRemoto, Torrent* torrent) {
 	this->peerRemoto = peerRemoto;
 	conexionOK = peerRemoto->is_valid();
@@ -31,56 +30,55 @@ bool Peer::procesar(char* buffer, int length) {
 	ParserMensaje parser;
 	char id = parser.decodificarId(buffer);
 	switch (id) {
-	case ID_MSJ_CHOKE:{
+	case ID_MSJ_CHOKE: {
 		peer_choking = true;
 	}
-	break;
-	case ID_MSJ_UNCHOKE:{
+		break;
+	case ID_MSJ_UNCHOKE: {
 		peer_choking = false;
 	}
-	break;
-	case ID_MSJ_INTERESTED:{
+		break;
+	case ID_MSJ_INTERESTED: {
 		peer_interested = true;
 	}
-	break;
-	case ID_MSJ_NOT_INTERESTED:{
+		break;
+	case ID_MSJ_NOT_INTERESTED: {
 		peer_interested = false;
 	}
-	break;
-	case ID_MSJ_HAVE:{
+		break;
+	case ID_MSJ_HAVE: {
 		unsigned int index;
-		parser.decodificarHave(buffer,index);
+		parser.decodificarHave(buffer, index);
 		procesarHave(index);
 	}
-	break;
-	case ID_MSJ_BITFIELD:{
+		break;
+	case ID_MSJ_BITFIELD: {
 		char* bitfield;
 		unsigned int longitud;
-		parser.decodificarBitfield(buffer,length,longitud,&bitfield);
-		procesarBitfield(bitfield,longitud);
+		parser.decodificarBitfield(buffer, length, longitud, &bitfield);
+		procesarBitfield(bitfield, longitud);
 	}
-	break;
-	case ID_MSJ_REQUEST:
-	{
-		unsigned int index,begin,length2;
-		parser.decodificarRequest(buffer,index,begin,length2);
-		procesarRequest(index,begin,length2);
+		break;
+	case ID_MSJ_REQUEST: {
+		unsigned int index, begin, length2;
+		parser.decodificarRequest(buffer, index, begin, length2);
+		procesarRequest(index, begin, length2);
 	}
-	break;
-	case ID_MSJ_PIECE:{
+		break;
+	case ID_MSJ_PIECE: {
 		char* data;
-		unsigned int index,begin,length2;
-		parser.decodificarPiece(buffer,length,index,begin,length2,&data);
-		procesarPiece(index,begin,length2,data);
+		unsigned int index, begin, length2;
+		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
+		procesarPiece(index, begin, length2, data);
 	}
-	break;
-	case ID_MSJ_CANCEL:{
-		unsigned int index,begin,length2;
-		parser.decodificarCancel(buffer,index,begin,length2);
-		procesarCancel(index,begin,length2);
+		break;
+	case ID_MSJ_CANCEL: {
+		unsigned int index, begin, length2;
+		parser.decodificarCancel(buffer, index, begin, length2);
+		procesarCancel(index, begin, length2);
 	}
-	break;
-	default :
+		break;
+	default:
 		return false;
 	}
 	return true;
@@ -91,7 +89,8 @@ bool Peer::sendHandshake() {
 	ParserMensaje parser;
 	char buffer[LEN_HANDSHAKE];
 	bool retorno;
-	parser.crearHandshake(torrent->getInfoHash(),torrent->getPeerId().c_str(), buffer);
+	parser.crearHandshake(torrent->getInfoHash(), torrent->getPeerId().c_str(),
+			buffer);
 	llaveEnvio.lock();
 	retorno = (peerRemoto->send(buffer, LEN_HANDSHAKE) != ERROR);
 	llaveEnvio.unlock();
@@ -122,7 +121,7 @@ bool Peer::sendMsg(const char id) {
 /*Formato mensaje Have: <len=0005><Id=4><piece index> */
 bool Peer::sendHave(int index) {
 	bool retorno = true;
-	if(!bitmap.estaMarcada(index)){
+	if (!bitmap.estaMarcada(index)) {
 		ParserMensaje parser;
 		char buffer[FIXED_LENGTH_HAVE];
 		parser.crearMensajeHave(index, buffer);
@@ -153,8 +152,8 @@ bool Peer::sendBitfield() {
 }
 
 /*Formato mensaje Request: <len=0013><Id=6><index><begin><length> */
-bool Peer::sendRequest(unsigned int  index) {
-	int block,cantBlockEnteros,resto;
+bool Peer::sendRequest(unsigned int index) {
+	int block, cantBlockEnteros, resto;
 	unsigned int tamPieza;
 	ParserMensaje parser;
 	bool error = false;
@@ -162,24 +161,24 @@ bool Peer::sendRequest(unsigned int  index) {
 
 	tamPieza = torrent->getFileManager()->getTamanioPieza(index);
 	cantBlockEnteros = (unsigned int) (tamPieza / TAM_BLOQUES);
-	resto = (unsigned int)(tamPieza % TAM_BLOQUES);
+	resto = (unsigned int) (tamPieza % TAM_BLOQUES);
 	block = 0;
-	while( (block < cantBlockEnteros) && !error){
-		parser.crearMensajeRequest(index,(block*TAM_BLOQUES), TAM_BLOQUES, buffer);
+	while ((block < cantBlockEnteros) && !error) {
+		parser.crearMensajeRequest(index, (block * TAM_BLOQUES), TAM_BLOQUES,
+				buffer);
 		llaveEnvio.lock();
 		error = (peerRemoto->send(buffer, FIXED_LENGTH_REQUEST) == ERROR);
 		llaveEnvio.unlock();
 		block++;
 	}
-	if(resto != 0){
-		parser.crearMensajeRequest(index,(block*TAM_BLOQUES), resto, buffer);
+	if (resto != 0) {
+		parser.crearMensajeRequest(index, (block * TAM_BLOQUES), resto, buffer);
 		llaveEnvio.lock();
 		error = (peerRemoto->send(buffer, FIXED_LENGTH_REQUEST) == ERROR);
 		llaveEnvio.unlock();
 	}
 	return !error;
 }
-
 
 /*Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block */
 bool Peer::sendPiece(int index, int begin, int lenght) {
@@ -215,54 +214,73 @@ bool Peer::sendCancel(int index, int block, int length) {
 	return retorno;
 }
 
-void Peer::procesarHave(int index){
-	if(bitmap.estaOk()){
+void Peer::procesarHave(int index) {
+	if (bitmap.estaOk()) {
 		bitmap.marcarBit(index);
 	}
 }
 
-void Peer::procesarBitfield(const char* bitfield, int length ){
-	bitmap.inicializarBitmap(bitfield,length);
+void Peer::procesarBitfield(const char* bitfield, int length) {
+	bitmap.inicializarBitmap(bitfield, length);
 }
 
-void Peer::procesarRequest(int index,int begin,int length){
-	if(am_choking){
+void Peer::procesarRequest(int index, int begin, int length) {
+	if (am_choking) {
 		sendMsg(ID_MSJ_CHOKE);
-	}else{
-		sendPiece(index,begin,length);
+	} else {
+		sendPiece(index, begin, length);
 	}
 }
 
-void Peer::procesarPiece(int index,int begin,int longitud,char* data ){
-	try{
-	torrent->getFileManager()->writeBlock(index,begin,longitud,data);
-	if(torrent->getFileManager()->getBitmap().estaMarcada(index)){
-		repartirHave(index);
-		bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
-	}
-	}catch(AvisoDescargaCompleta aviso){
+void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
+	try {
+		torrent->getFileManager()->writeBlock(index, begin, longitud, data);
+		if (torrent->getFileManager()->getBitmap().estaMarcada(index)) {
+			repartirHave(index);
+			bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
+		}
+	} catch (AvisoDescargaCompleta aviso) {
 		//TODO el archivo esta completo.
 	}
 }
 
-void Peer::procesarCancel(int index,int begin,int length){
+void Peer::procesarCancel(int index, int begin, int length) {
 	//TODO de momento se ignora.
 }
 
-
-void Peer::repartirHave(int index){
+void Peer::repartirHave(int index) {
 	std::list<Peer*>* listaPeers = torrent->getListaPeers();
 	std::list<Peer*>::iterator it;
 	it = listaPeers->begin();
-	while(it != listaPeers->end()){
-		if((*it) != this){
-			(*it)->sendHave(index);}
+	while (it != listaPeers->end()) {
+		if ((*it) != this) {
+			(*it)->sendHave(index);
+		}
 	}
 }
 
-bool Peer::recvMsj(char** buffer,int& length){
-	int temp=0;
-	int cantidad = peerRemoto->receiveExact((char*) &temp,4); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
+bool Peer::recvHandshake() {
+	char aLeer;
+	int cantidad = peerRemoto->receiveExact(&aLeer, 1);
+	if (cantidad > 0) {
+		char buffer[aLeer];
+		cantidad = peerRemoto->receiveExact(buffer, aLeer);
+		if (cantidad > 0) {
+			int longProto = (aLeer - LEN_BASE_HANDSHAKE);
+			if (memcmp((char*) torrent->getInfoHash(), buffer + longProto + 8,
+					LEN_SHA1) != 0) {
+				peerRemoto->close();
+			} else {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+bool Peer::recvMsj(char** buffer, int& length) {
+	int temp = 0;
+	int cantidad = peerRemoto->receiveExact((char*) &temp, 4); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 	if (cantidad > 0) {
 		length = ntohl(temp);
 		*buffer = new char[length];
@@ -276,40 +294,40 @@ bool Peer::recvMsj(char** buffer,int& length){
 	return false;
 }
 
-bool Peer::conexionEstaOK(){
+bool Peer::conexionEstaOK() {
 	return conexionOK;
 }
 
-Torrent* Peer::getTorrent(){
+Torrent* Peer::getTorrent() {
 	return torrent;
 }
 
-Bitmap Peer::getBitmap(){
+Bitmap Peer::getBitmap() {
 	return bitmap;
 }
 
-bool Peer::getAm_interested(){
+bool Peer::getAm_interested() {
 	return am_interested;
 }
 
-void Peer::setAm_interested(bool estado){
-	am_interested=estado;
+void Peer::setAm_interested(bool estado) {
+	am_interested = estado;
 }
 
-bool Peer::getPeer_choking(){
+bool Peer::getPeer_choking() {
 	return peer_choking;
 }
 
-void Peer::setPeer_choking(bool estado){
-	peer_choking=estado;
+void Peer::setPeer_choking(bool estado) {
+	peer_choking = estado;
 }
 
-char Peer::getTipo(){
+char Peer::getTipo() {
 	return tipo;
 }
 
-void Peer::setTipo(char estado){
-    tipo=estado;
+void Peer::setTipo(char estado) {
+	tipo = estado;
 }
 
 std::string Peer::getIp() {

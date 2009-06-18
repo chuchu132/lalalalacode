@@ -113,6 +113,9 @@ public:
 	 * */
 	bool recvMsj(char** buffer,int& length);
 
+	/*Recibe el handshake del peer remoto y verifica los hash*/
+	bool recvHandshake() ;
+
 	bool conexionEstaOK();
 
 	Torrent* getTorrent();
@@ -132,7 +135,6 @@ public:
 	void setTipo(char estado);
 
 	std::string getIp();
-
 
 private:
 	/*
@@ -164,6 +166,7 @@ private:
 	void procesarCancel(int index,int begin,int length);
 	/*Envia un mensaje de Have a los peers que no tienen la pieza indicada por index*/
 	void repartirHave(int index);
+
 
 
 };
