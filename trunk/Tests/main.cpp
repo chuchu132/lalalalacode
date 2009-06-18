@@ -23,7 +23,7 @@ int main (int argc, char* argv[])
 {
 	CppTester tester;
 //
-//	tester.agregarTest(new TestSha1(),"Test Sha1");
+	tester.agregarTest(new TestSha1(),"Test Sha1");
 //	tester.agregarTest(new TestBitmap(),"Test Bitmap");
 //	tester.agregarTest(new TestDatosParser(),"Test DatosParser");
 //	tester.agregarTest(new TestVista(),"Test Vista");
