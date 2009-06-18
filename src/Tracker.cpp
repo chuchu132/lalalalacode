@@ -158,7 +158,7 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 	inicio    = buffer.find("Content-Length: ", inicio);
 	lonInicial= buffer.find(" ", inicio);
 	lonTotal  = buffer.find("\n", lonInicial);
-	marca     = buffer.find("d", lonTotal);
+	marca     = buffer.find("d8:complete", lonTotal);
 
 	if (inicio != string::npos && lonInicial != string::npos && lonTotal
 			!= string::npos && marca != string::npos) {
@@ -169,6 +169,7 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 			i++;
 		}
 		longitudBencode[i] = '\0';
+
 		salida= atoi(longitudBencode);
 		delete[] longitudBencode;
 		return salida;
