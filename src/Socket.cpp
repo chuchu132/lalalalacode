@@ -11,6 +11,7 @@
 #include <iostream>
 #include <cstring>
 #include <fcntl.h>
+#include <errno.h>
 #include "Constantes.h"
 #include "Socket.h"
 
@@ -75,6 +76,96 @@ int Socket::connect(const std::string &host, unsigned int port) {
 	}
 	return ERROR;
 }
+
+
+
+int Socket::connectWithTimeout(const std::string &host, unsigned int port,int timeout) {
+  int res;
+  struct sockaddr_in addr;
+  long arg;
+  fd_set myset;
+  struct timeval tv;
+  int valopt;
+  socklen_t lon;
+  hostent* host_add;
+
+  addr.sin_family = AF_INET;
+  addr.sin_port = htons(port);
+
+  if (valido && (host_add = gethostbyname(host.c_str()))) {
+			addr.sin_addr.s_addr = ((struct in_addr*) (host_add->h_addr))->s_addr;
+
+  // Set non-blocking
+  if( (arg = fcntl(fd, F_GETFL, NULL)) < 0) {
+     fprintf(stderr, "Error fcntl(..., F_GETFL) (%s)\n", strerror(errno));
+     return ERROR;
+  }
+  arg |= O_NONBLOCK;
+  if( fcntl(fd, F_SETFL, arg) < 0) {
+     fprintf(stderr, "Error fcntl(..., F_SETFL) (%s)\n", strerror(errno));
+     return ERROR;
+  }
+  // Trying to connect with timeout
+  res = ::connect(fd, (struct sockaddr *)&addr, sizeof(addr));
+  if (res < 0) {
+     if (errno == EINPROGRESS) {
+        fprintf(stderr, "EINPROGRESS in connect() - selecting\n");
+        do {
+           tv.tv_sec = timeout;
+           tv.tv_usec = 0;
+           FD_ZERO(&myset);
+           FD_SET(fd, &myset);
+           res = select(fd+1, NULL, &myset, NULL, &tv);
+           if (res < 0 && errno != EINTR) {
+              fprintf(stderr, "Error connecting %d - %s\n", errno, strerror(errno));
+              return ERROR;
+           }
+           else if (res > 0) {
+              lon = sizeof(int);
+              if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon) < 0) {
+                 fprintf(stderr, "Error in getsockopt() %d - %s\n", errno, strerror(errno));
+                 return ERROR;
+              }
+              // Check the value returned...
+              if (valopt) {
+                 fprintf(stderr, "Error in delayed connection() %d - %s\n", valopt, strerror(valopt));
+                 return ERROR;
+              }
+              break;
+           }
+           else {
+              fprintf(stderr, "Timeout in select() - Cancelling!\n");
+              return ERROR;
+           }
+        } while (1);
+     }
+     else {
+        fprintf(stderr, "Error connecting %d - %s\n", errno, strerror(errno));
+        return ERROR;
+     }
+  }
+  // Set to blocking mode again...
+  if( (arg = fcntl(fd, F_GETFL, NULL)) < 0) {
+     fprintf(stderr, "Error fcntl(..., F_GETFL) (%s)\n", strerror(errno));
+     return ERROR;
+  }
+  arg &= (~O_NONBLOCK);
+  if( fcntl(fd, F_SETFL, arg) < 0) {
+     fprintf(stderr, "Error fcntl(..., F_SETFL) (%s)\n", strerror(errno));
+     return ERROR;
+  }
+    return OK;
+  }
+  return ERROR;
+}
+
+
+
+
+
+
+
+
 
 int Socket::listen(unsigned int port, unsigned int numClientesEspera) {
 
