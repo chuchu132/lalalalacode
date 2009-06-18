@@ -27,4 +27,23 @@ void TestClienteTorrent::run(){
 	torrent->detener();
 	sleep(10);
 
+
+
+
+//	ClienteTorrent cliente;
+//		Controlador control(cliente);
+//
+//		Torrent* torrent = cliente.agregarTorrent("./Tests/PSP.torrent");
+//
+//		Socket* soc = new Socket();
+//		soc->connect("localhost",9999);
+//		Peer* peer = new PeerDown(soc,torrent);
+//		//torrent->agregarPeer(peer);
+//		peer->sendHandshake();
+//		peer->sendBitfield();
+//		peer->sendKeepAlive();
+//
+//		torrent->detener();
+//		sleep(10);
+
 }

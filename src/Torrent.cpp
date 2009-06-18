@@ -128,7 +128,7 @@ void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 	xq como estan ahora practicamente no esperan respuesta y pasan de largo
 	*/
 	if(conexion->connectWithTimeout(ip.c_str(),puerto,5)==OK){
-
+	//if(conexion->connectWithTimeout("localhost",9999,5)==OK){
 		conexion->setIp(ip);
 		Peer* nuevoPeer = new PeerDown(conexion,this);
 		peers.push_back(nuevoPeer);
