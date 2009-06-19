@@ -33,51 +33,59 @@ bool Peer::procesar(char* buffer, int length) {
 	case ID_MSJ_CHOKE: {
 		peer_choking = true;
 	}
-		break;
+	break;
 	case ID_MSJ_UNCHOKE: {
 		peer_choking = false;
+		if(am_interested){
+			unsigned int index;
+			if(getTorrent()->getFileManager()->getPiezaAdescargar(index, bitmap)){
+				sendRequest(index);
+			}else{
+				am_interested = false;
+			}
+		}
 	}
-		break;
+	break;
 	case ID_MSJ_INTERESTED: {
 		peer_interested = true;
 	}
-		break;
+	break;
 	case ID_MSJ_NOT_INTERESTED: {
 		peer_interested = false;
 	}
-		break;
+	break;
 	case ID_MSJ_HAVE: {
 		unsigned int index;
 		parser.decodificarHave(buffer, index);
 		procesarHave(index);
 	}
-		break;
+	break;
 	case ID_MSJ_BITFIELD: {
 		char* bitfield;
 		unsigned int longitud;
 		parser.decodificarBitfield(buffer, length, longitud, &bitfield);
 		procesarBitfield(bitfield, longitud);
 	}
-		break;
+	break;
 	case ID_MSJ_REQUEST: {
 		unsigned int index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);
 	}
-		break;
+	break;
 	case ID_MSJ_PIECE: {
 		char* data;
 		unsigned int index, begin, length2;
 		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
 		procesarPiece(index, begin, length2, data);
 	}
-		break;
+	break;
 	case ID_MSJ_CANCEL: {
 		unsigned int index, begin, length2;
 		parser.decodificarCancel(buffer, index, begin, length2);
 		procesarCancel(index, begin, length2);
 	}
-		break;
+	break;
 	default:
 		return false;
 	}
@@ -267,7 +275,7 @@ bool Peer::recvHandshake() {
 		int tamHsk= (unsigned char)longProto + LEN_BASE_HANDSHAKE - 1;
 		char buffer[tamHsk];
 		if (peerRemoto->receiveExact(buffer, tamHsk) != ERROR) {
-				if (memcmp(torrent->getInfoHash(), buffer + longProto + LEN_RESERVED,
+			if (memcmp(torrent->getInfoHash(), buffer + longProto + LEN_RESERVED,
 					LEN_SHA1) != 0) {
 				peerRemoto->close();
 			} else {
@@ -310,6 +318,10 @@ bool Peer::getAm_interested() {
 	return am_interested;
 }
 
+bool Peer::getAm_choking(){
+	return am_choking;
+}
+
 void Peer::setAm_interested(bool estado) {
 	am_interested = estado;
 }
@@ -340,7 +352,7 @@ void Peer::cerrarConexion(){
 }
 
 bool Peer::actualizarImInterested(){
-	Bitmap* nuevo = torrent->getFileManager()->bitmap.nuevoPorFusion(bitmap);
+	Bitmap* nuevo = torrent->getFileManager()->getBitmap().nuevoPorFusion(bitmap);
 	bool retorno = !nuevo->estaVacio();
 	delete nuevo;
 	am_interested = retorno;

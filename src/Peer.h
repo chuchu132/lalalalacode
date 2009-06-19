@@ -124,6 +124,8 @@ public:
 
 	bool getAm_interested();
 
+	bool getAm_choking();
+
 	void setAm_interested(bool estado);
 
 	bool getPeer_choking();
