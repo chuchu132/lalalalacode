@@ -108,7 +108,7 @@ bool Peer::sendHandshake() {
 bool Peer::sendKeepAlive() {
 	bool retorno;
 	llaveEnvio.lock();
-	retorno = (peerRemoto->send(LEN_MSJ_KEEPALIVE, sizeof(int)) != ERROR);
+	retorno = (peerRemoto->send(LEN_MSJ_KEEPALIVE, 4) != ERROR);
 	llaveEnvio.unlock();
 	return retorno;
 }
@@ -148,7 +148,7 @@ bool Peer::sendBitfield() {
 
 	const char* map = fileManager->getBitmap().getBitmap();
 	longitud = fileManager->getBitmap().getTamanioEnBytes();
-	int tamBuffer = (LEN_BASE_MSJ_BITFIELD + longitud + 1);
+	int tamBuffer = (OFFSET_ARG_1 + longitud );
 	char* buffer = new char[tamBuffer];
 
 	parser.crearMensajeBitfield(map, longitud, buffer);
