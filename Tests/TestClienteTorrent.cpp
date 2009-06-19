@@ -18,15 +18,15 @@ void TestClienteTorrent::run(){
 	ClienteTorrent cliente;
 	Controlador control(cliente);
 
-	Torrent* torrent = cliente.agregarTorrent("./Tests/curso armado y reparacion.zip.torrent");
+	Torrent* torrent = cliente.agregarTorrent("./Tests/boom.torrent");
 
 	torrent->run();
 
-	sleep(300); // 5 min
+	sleep(60); // 5 min
 
 	torrent->detener();
 	sleep(10);
-
+	delete torrent;
 
 
 

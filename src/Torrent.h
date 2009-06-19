@@ -133,6 +133,8 @@ public:
 
 	void removerPeersInactivos();
 
+	void detenerPeers();
+
 private:
 
 	ClienteTorrent* clienteTorrent;

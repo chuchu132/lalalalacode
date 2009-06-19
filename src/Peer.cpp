@@ -108,7 +108,8 @@ bool Peer::sendHandshake() {
 bool Peer::sendKeepAlive() {
 	bool retorno;
 	llaveEnvio.lock();
-	retorno = (peerRemoto->send(LEN_MSJ_KEEPALIVE, 4) != ERROR);
+	int temp = LEN_MSJ_KEEPALIVE;
+	retorno = (peerRemoto->send((char*)&temp, 4) != ERROR);
 	llaveEnvio.unlock();
 	return retorno;
 }

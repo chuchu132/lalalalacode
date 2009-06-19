@@ -84,7 +84,7 @@ const int LEN_SHA1 = 20;
 const int LEN_SHA1_ASCII = 40;
 const int BUFSIZE = 1000;
 const int UN_MEGA = 1048576;
-const int PEERS_MAX = 50;//TODO ojo que le agrande
+const int PEERS_MAX = 15;
 
 const int ERROR = -1;
 const int OK = 0;
