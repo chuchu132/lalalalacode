@@ -32,7 +32,7 @@ void* Tracker::run() {
 			buffer.insert(0,bufferTemp,cantidad);
 			std::cout.write(bufferTemp,cantidad)<<std::endl;
 			if (procesarResponse(buffer,cantidad)) {
-				//borrar buffr procesado
+				//TODO borrar buffr procesado
 			}
 		} else {
 			seCerro = true;
@@ -203,6 +203,10 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		torrent->agregarPeer(ip.str(), puerto);
 		i++;
 		cantPeers = torrent->getCantPeers();
+		if(cantPeers == cantMax){
+			torrent->removerPeersInactivos();
+			cantPeers = torrent->getCantPeers();
+		}
 	}
 }
 
