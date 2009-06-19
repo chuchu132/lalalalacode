@@ -23,6 +23,7 @@ void* PeerDown::run() {
 		unsigned int index = -1;
 		int contadorCiclos = 0;
 		bool error = !recvHandshake(); // error puede ser en la conexion, en lo recibido o al procesar
+
 		while (getTorrent()->estaActivo() && !error && conexionEstaOK()) {
 			int length;
 			char* buffer;
@@ -38,7 +39,6 @@ void* PeerDown::run() {
 							index, mapaPeerRemoto)) {
 						sendMsg(ID_MSJ_INTERESTED); //Interested
 						setAm_interested(true);
-						sendRequest(index);
 					}
 				}
 				if (getPeer_choking() == false && getAm_interested() == true) {
