@@ -22,8 +22,6 @@ public:
 	/*En el run el tracker va a estar escuchando al tracker remoto*/
 	void* run();
 
-	//TODO falta un setTorrent();
-
 	/*
 	 * Cada vez que llega un mensaje desde el tracker remoto se lo
 	 * procesa y luego continua recibiendo
@@ -44,10 +42,10 @@ public:
 	void cerrarConexion();
 
 	std::string getPath();
+
 	std::string getUrl();
 
 	//TODO tal vez va privado
-
 	bool procesarResponse(std::string &buffer,int &longitud);
 
 	std::string extraerBencode(std::string &buffer, int &longitud);
