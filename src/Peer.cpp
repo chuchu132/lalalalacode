@@ -347,6 +347,10 @@ std::string Peer::getIp() {
 	return peerRemoto->getIp();
 }
 
+unsigned int Peer::getPuerto() {
+	return peerRemoto->getPuerto();
+}
+
 void Peer::cerrarConexion(){
 	conexionOK = false;
 	peerRemoto->close();

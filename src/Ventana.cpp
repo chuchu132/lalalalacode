@@ -325,10 +325,10 @@ void Ventana::button_accept_clicked()
 
      select_window->hide();
      Torrent *t = controlador->agregarTorrent(filename);
-     t->run();
      if (t != NULL){
     	  torrents->addRow(t);
-      }
+    	  t->continuar();//VER!!! yo no pondria esto aca en la vista!
+     }
 }
 
 void Ventana::button_cancel_clicked()

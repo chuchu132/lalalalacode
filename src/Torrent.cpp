@@ -36,13 +36,6 @@ Torrent::~Torrent() {
 	if (activo)
 		detener();
 	delete tracker;
-	std::list<Peer*>::iterator it = peers.begin();
-	while(it != peers.end()){
-		(*it)->cerrarConexion();
-		(*it)->join();
-		delete (*it);
-		it++;
-	}
 }
 
 bool Torrent::inicializarTorrent(BencodeParser* parser){
@@ -87,24 +80,26 @@ void Torrent::run(){
 	downAnterior = downloaded;
 	if (controlador != NULL) {
 		std::string notif = "Conectando con ";
-		notif += tracker->getPath();
+		notif += tracker->getUrl();
 		controlador->notificarVista(notif);
 	}
+
 	if (tracker->connect()) {
 		std::cout<<"conecto"<<std::endl;
 		std::cout<<((enviarEventoEstado(NULL,100))?"envio":"noenvio")<<std::endl;
 		tracker->execute();
 		if (controlador != NULL) {
 			std::string notif = "Conectado con el tracker ";
-			notif += tracker->getPath();
+			notif += tracker->getUrl();
 			controlador->notificarVista(notif);
 		}
 	} else {
 		std::cout<<"noconecto"<<std::endl;
 
+		estado = T_DETENIDO;//si no se conecto el estado es detenido
 		if (controlador != NULL) {
 			std::string notif = "Fallo la conexion con el tracker ";
-			notif += tracker->getPath();
+			notif += tracker->getUrl();
 			controlador->notificarVista(notif);
 		}
 	}
@@ -130,6 +125,7 @@ void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 	Socket* conexion = new Socket();
 	if(conexion->connectWithTimeout(ip.c_str(),puerto,5)==OK){
 		conexion->setIp(ip);
+		conexion->setPuerto(puerto);
 		Peer* nuevoPeer = new PeerDown(conexion,this);
 		peers.push_back(nuevoPeer);
 		nuevoPeer->execute();
@@ -171,29 +167,44 @@ std::list<Peer*>* Torrent::getListaPeers(){
 
 //implementar
 void Torrent::continuar() {
-	estado = T_ACTIVO;
-	activo = true;
-	tracker->execute();
-	activo = false;
-	if (controlador != NULL)
-		controlador->actualizarEstado(this);
+
+	if (estado != T_ACTIVO) {
+
+//		activo = true;
+//		tracker->execute();
+//		activo = false;
+		//si esta detenido hace un run.. ver en el caso pausado
+		estado = T_ACTIVO;
+		run();
+		if (controlador != NULL)
+			controlador->actualizarEstado(this);
+	}
 }
 
 void Torrent::detener() {
-	estado = T_DETENIDO;
-	activo = false;
-	tracker->cerrarConexion();
-	tracker->join();
-	detenerPeers();
-	if (controlador != NULL)
-		controlador->actualizarEstado(this);
+
+	if (estado != T_DETENIDO) {
+
+		activo = false;
+		detenerPeers();
+		tracker->cerrarConexion();
+		tracker->join();
+		estado = T_DETENIDO;
+		std::cout<<"torrent detenido"<<std::endl;
+		if (controlador != NULL)
+			controlador->actualizarEstado(this);
+	}
 }
 
 void Torrent::pausar() {
-	estado = T_PAUSADO;
-	activo = false;
-	if (controlador != NULL)
-		controlador->actualizarEstado(this);
+	//todo.. ver que hace el pausar
+	if (estado != T_PAUSADO) {
+
+		estado = T_PAUSADO;
+		activo = false;
+		if (controlador != NULL)
+			controlador->actualizarEstado(this);
+	}
 }
 
 std::string Torrent::getEstado() {
@@ -213,11 +224,11 @@ unsigned int Torrent::getTamanioDescargado() {
 }
 
 int Torrent::getVelocidadSubida() {
-	return 2;//todo.. ver ocmo calcular la velocidad
+	return 0;//todo.. ver ocmo calcular la velocidad
 }
 
 int Torrent::getVelocidadBajada() {
-	return 30;
+	return 0;
 
 	// no esta probado ;) lo mismo para vel de subida
 	//	time_t horaAct = time(NULL);

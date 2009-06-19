@@ -36,7 +36,7 @@ ClienteTorrent::ClienteTorrent() {
 			else {
 				if (estado == T_PAUSADO) {
 					//t->run();
-					t->pausar();
+					//t->pausar();
 				}
 			}
 		}

@@ -30,7 +30,8 @@ private:
 	Gtk::TreeModelColumnRecord columns_files;
 	Gtk::TreeModelColumnRecord columns_notif;
 
-	Gtk::TreeModelColumn<Glib::ustring> col_name_peers;
+	Gtk::TreeModelColumn<std::string> col_name_peers;
+	Gtk::TreeModelColumn<unsigned int> col_port_peers;
 	Gtk::TreeModelColumn<Glib::ustring> col_type_peers;
 	Gtk::TreeModelColumn<Glib::ustring> col_size_files;
 	Gtk::TreeModelColumn<std::string> col_path_files;

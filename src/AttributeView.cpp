@@ -51,11 +51,13 @@ void AttributesView::setAttributesView(Glib::RefPtr<Gtk::Builder> builder)
 void AttributesView::setPeersView()
 {
 	columns_peers.add(col_name_peers);
+	columns_peers.add(col_port_peers);
 	columns_peers.add(col_type_peers);
 	list_peers =  Gtk::ListStore::create(columns_peers);
 	view_peers->set_model(list_peers);
 
 	this->view_peers->append_column("Nombre del Peer", col_name_peers);
+	this->view_peers->append_column("Puerto", col_port_peers);
 	int cols_count = this->view_peers->append_column("Tipo de Peer", col_type_peers);
 	Gtk::TreeViewColumn* pColumn;
 	for (int i=0; i<cols_count; i++)
@@ -133,7 +135,8 @@ void AttributesView::showPeers()
 	while (it != end)
 	{
 		Gtk::TreeModel::Row row = (* list_peers->append());
-		row[col_name_peers] = (*it)->getIp();
+		row[col_name_peers] = (*it)->getIp(); //no muestra nada :S
+		row[col_port_peers] = (*it)->getPuerto();
 		switch ((*it)->getTipo())
 		{
 		case 'P': row[col_type_peers] = "Peer";

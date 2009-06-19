@@ -231,7 +231,7 @@ Socket* Socket::accept() {
 }
 
 void Socket::setIp(std::string ipInt) {
-	this->ip = ip;
+	this->ip = ipInt;
 }
 
 void Socket::setIp(int ipInt) {
@@ -254,4 +254,12 @@ std::string Socket::getIp() {
 
 bool Socket::is_valid() {
 	return valido;
+}
+
+void Socket::setPuerto(unsigned int port) {
+	puerto = port;
+}
+
+unsigned int Socket::getPuerto() {
+	return puerto;
 }
