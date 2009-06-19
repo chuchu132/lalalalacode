@@ -154,11 +154,11 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		}
 	}
 
-	if (controlador != NULL)
-		controlador->notificarVista(notif);
-	else
+	if (controlador != NULL){
+		controlador->notificarVista(notif);}
+	else{
 		std::cout<<notif<<std::endl;
-
+	}
 	return t;
 }
 
@@ -186,7 +186,6 @@ void ClienteTorrent::setControlador(Controlador *ctrl) {
 		(*it)->setControlador(ctrl);
 		it++;
 	}
-
 }
 
 Configuracion* ClienteTorrent::getConfiguracion() {

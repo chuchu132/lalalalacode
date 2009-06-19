@@ -92,15 +92,13 @@ void Torrent::run(){
 	}
 	if (tracker->connect()) {
 		std::cout<<"conecto"<<std::endl;
-		std::cout<<((enviarEventoEstado(NULL,50))?"envio":"noenvio")<<std::endl;
+		std::cout<<((enviarEventoEstado(NULL,100))?"envio":"noenvio")<<std::endl;
 		tracker->execute();
 		if (controlador != NULL) {
 			std::string notif = "Conectado con el tracker ";
 			notif += tracker->getPath();
 			controlador->notificarVista(notif);
 		}
-		sleep(5);
-
 	} else {
 		std::cout<<"noconecto"<<std::endl;
 
@@ -175,6 +173,8 @@ std::list<Peer*>* Torrent::getListaPeers(){
 void Torrent::continuar() {
 	estado = T_ACTIVO;
 	activo = true;
+	tracker->execute();
+	activo = false;
 	if (controlador != NULL)
 		controlador->actualizarEstado(this);
 }
@@ -182,6 +182,9 @@ void Torrent::continuar() {
 void Torrent::detener() {
 	estado = T_DETENIDO;
 	activo = false;
+	tracker->cerrarConexion();
+	tracker->join();
+	detenerPeers();
 	if (controlador != NULL)
 		controlador->actualizarEstado(this);
 }
@@ -296,12 +299,25 @@ void Torrent::removerPeersInactivos(){
 	std::list<Peer*>::iterator it = peers.begin();
 	Peer* temp;
 	while(it != peers.end()){
-			if(!(*it)->conexionEstaOK()){
-				(*it)->join();
-				peers.remove((*it));
-				temp = (*it);
-				delete temp;
-			}
-			it++;
+		if(!(*it)->conexionEstaOK()){
+			(*it)->join();
+			temp = (*it);
+			it = peers.erase(it);
+			delete temp;
 		}
+		it++;
+	}
+}
+
+void Torrent::detenerPeers(){
+	std::list<Peer*>::iterator it = peers.begin();
+	Peer* temp;
+	while(it != peers.end()){
+		(*it)->cerrarConexion();
+		(*it)->join();
+		temp = (*it);
+		it = peers.erase(it);
+		delete temp;
+		it++;
+	}
 }

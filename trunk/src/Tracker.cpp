@@ -18,7 +18,8 @@ Tracker::Tracker() {
 Tracker::~Tracker() {
 
 }
-//TODO re implementar
+//TODO testear achicando el tamaño del buffer para cubrir los casos de mas de una lectura
+//para llenar el buffer, implementar borrado de la parte procesada del buffer.
 void* Tracker::run() {
 	int cantidad;
 	bool seCerro = false;
