@@ -138,6 +138,8 @@ public:
 
 	std::string getIp();
 
+	unsigned int getPuerto();
+
 	void cerrarConexion();
 
 	bool actualizarImInterested();
@@ -162,14 +164,19 @@ private:
 	/*Metodos utilizados para procesar los mensajes que llegan desde el peer remoto*/
 	/*Marca en el Bitmap la pieza indicada por index*/
 	void procesarHave(int index);
+
 	/*Guarda en el Bitmap el Bitfield recibido*/
 	void procesarBitfield(const char* bitfield, int length );
+
 	/*Busca y envia el bloque indicado por index y begin*/
 	void procesarRequest(int index,int begin,int length);
+
 	/*Guarda en disco el bloque de datos recibidos en la posicion correspondiente*/
 	void procesarPiece(int index,int begin,int longitud,char* data );
+
 	/*TODO no se q hace*/
 	void procesarCancel(int index,int begin,int length);
+
 	/*Envia un mensaje de Have a los peers que no tienen la pieza indicada por index*/
 	void repartirHave(int index);
 

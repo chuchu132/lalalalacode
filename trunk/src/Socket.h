@@ -31,6 +31,8 @@ public:
 	std::string getIp();
 	void setIp(int ip);
 	void setIp(std::string ip);
+	void setPuerto(unsigned int port);
+	unsigned int getPuerto();
 	int setNonblocking();
 	int setBlocking();
 
@@ -38,6 +40,7 @@ protected:
 	int fd;
 	bool valido;
 	std::string ip;
+	unsigned int puerto;
 
 private:
 	Socket(int fd);

@@ -147,7 +147,7 @@ private:
 	std::string nombre;
 	std::string estado;
 	std::string path; //ruta en la que esta guardado el archivo .torrent
-	bool activo;
+	bool activo;// SE ESTA USANDO PARA ALGO???
 	unsigned int port; // puerto donde esta escuchando el Cliente.
 	unsigned int uploaded;
 	unsigned int downloaded;

@@ -200,8 +200,9 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		ip << (int) temp;
 		memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
 		puerto = ntohs(puerto);
-		std::cout<<"IP: "<<ip.str()<<" Puerto: "<< puerto<<std::endl;
-		torrent->agregarPeer(ip.str(), puerto);
+		std::string ip_string = ip.str();
+		std::cout<<"IP: "<<ip_string<<" Puerto: "<< puerto<<std::endl;
+		torrent->agregarPeer(ip_string, puerto);
 		i++;
 		cantPeers = torrent->getCantPeers();
 		if(cantPeers == cantMax){
