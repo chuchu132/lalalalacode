@@ -46,11 +46,6 @@ public:
 	 */
 	bool inicializarTorrent(BencodeParser* parser);
 
-	/*No confundir con el run de Threads, este metodo se llama
-	 * una vez que el torrent esta inicializado, y pone a descargar/compartir el archivo
-	 * TODO Implementar*/
-	void run();
-
 	bool conectarTracker(std::string url);
 
 	/* Se envia un GET con la siguiente informacion:
@@ -77,7 +72,8 @@ public:
 	void detener();
 
 	/* reanuda el trafico del torrent */
-	void continuar();
+	/* debe llamarse para activar al torrent */
+	void continuar(); //todo cambiar nombre.. no se entiende lo que hace sino XD
 
 	/* pausa el trafico del torrent */
 	void pausar();
@@ -122,6 +118,10 @@ public:
 
 	void setControlador(Controlador* ctrl);
 
+	void setDownloaded(unsigned int bytes);
+
+	void setUploaded(unsigned int bytes);
+
 	bool estaActivo();
 
 	/* transforma bytes en un string */
@@ -135,7 +135,16 @@ public:
 
 	void detenerPeers();
 
+	std::string getTiempoRestante();
+
 private:
+
+	/*No confundir con el run de Threads, este metodo se llama
+	 * una vez que el torrent esta inicializado, y pone a descargar/compartir el archivo
+	 * */
+	/*para descargar hay que llamar al metodo continuar*/
+	void run();
+
 
 	ClienteTorrent* clienteTorrent;
 	Tracker* tracker;
@@ -147,8 +156,9 @@ private:
 	std::string nombre;
 	std::string estado;
 	std::string path; //ruta en la que esta guardado el archivo .torrent
-	bool activo;// SE ESTA USANDO PARA ALGO???
+	bool activo;
 	unsigned int port; // puerto donde esta escuchando el Cliente.
+
 	unsigned int uploaded;
 	unsigned int downloaded;
 

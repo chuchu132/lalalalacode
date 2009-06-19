@@ -48,7 +48,8 @@ public:
 	bool inicializar(DatosParser* datos);
 
 	/* Escribe en disco el bloque */
-	void writeBlock(int index,int begin,int longitud,const char* block);
+	/* Devuelve la cantidad de bytes escritos */
+	unsigned int writeBlock(int index,int begin,int longitud,const char* block);
 
 	bool verificarHashPieza(int index);
 
@@ -59,6 +60,7 @@ public:
 	std::list<Archivo*>::iterator getEndArchivos();
 
 	void guardarBitmap(std::string urlBitmap);
+
 	/*Hace el split del archivo descargas*/
 	void descargaAarchivos();
 

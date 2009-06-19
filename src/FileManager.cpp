@@ -227,19 +227,22 @@ char* FileManager::readBlock(int index, int begin, int longitud) {
 	}
 }
 
-void FileManager::writeBlock(int index, int begin, int longitud,
+unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 		const char* block) {
+	unsigned int bytes = 0;
 	if (!bitmap.estaMarcada(index)) {
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
 		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
+			bytes = longitud;
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();
 			}
 		}
 	}
+	return bytes;
 }
 //TODO testear
 bool FileManager::verificarHashPieza(int index) {

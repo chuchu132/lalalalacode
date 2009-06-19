@@ -22,6 +22,7 @@ void TestVista::run(){
 		ventana.setControlador(&controlador);
 		controlador.setVentana(&ventana);
 
+		//aca faltaria un cliente.excecute() para escuchar a los peers entrantes
 		if (!ventana.huboError())
 		{
 			controlador.agregarTorrentsEnVista();

@@ -50,7 +50,6 @@ Ventana::Ventana()
 	}catch(Glib::FileError& ex1)
 	{
 		std::cerr<<"error al cargar el archivo de la vista"<<std::endl;
-		std::cerr<<"falta el archivo "<< WINDOW_FILE<<std::endl;
 		std::cerr<<ex1.what()<<std::endl;
 		error = true;
 	}

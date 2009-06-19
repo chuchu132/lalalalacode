@@ -43,7 +43,7 @@ ClienteTorrent::ClienteTorrent() {
 	}
 }
 
-ClienteTorrent::~ClienteTorrent() { //TODO borrar lista peers
+ClienteTorrent::~ClienteTorrent() {
 	if (activo)
 		finalizar();
 }
