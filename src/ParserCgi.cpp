@@ -16,7 +16,7 @@ ParserCgi::~ParserCgi() {}
 /*Codifica un string en URL Encoding */
 std::string ParserCgi::codificar(const char* original,int tam){
 	std::string codificado = "";
-	for (int i = 0; i < tam; ++i) {
+	for (int i = 0; i < tam; i++) {
 		if (hayQueCodificarlo(original[i])){ //TODO ver si es lo mismo q codifique todos los caracteres
 			codificado += intAhexaNN(original[i]);
 		}else{

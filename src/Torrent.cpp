@@ -130,7 +130,7 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 
 void Torrent::agregarPeer(std::string ip,unsigned int puerto){
 	Socket* conexion = new Socket();
-	if(conexion->connectWithTimeout(ip.c_str(),puerto,3)==OK){
+	if(conexion->connectWithTimeout(ip.c_str(),puerto,5)==OK){
 		conexion->setIp(ip);
 		Peer* nuevoPeer = new PeerDown(conexion,this);
 		peers.push_back(nuevoPeer);

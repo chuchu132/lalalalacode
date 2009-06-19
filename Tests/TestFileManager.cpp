@@ -57,7 +57,7 @@ void TestFileManager::test(std::string urlTorrent){
 			filemanager.getBitmap().desmarcarBit(1);
 			filemanager.guardarBitmap(url);
 			delete[] datoRecuperado;
-			delete datos;
+
 
 			std::list<Archivo*>::iterator itA = filemanager.getIteratorArchivos();
 			std::list<Archivo*>::iterator finListaArchivo = filemanager.getEndArchivos();
@@ -75,7 +75,9 @@ void TestFileManager::test(std::string urlTorrent){
 		}
 		else{
 			assert(false,"NO se pudo inicializar el Filemanager.");
+
 		}
+		delete datos;
 	}else{
 		assert(false,"El archivo "+urlTorrent + " no pudo se procesado.");
 	}
@@ -93,6 +95,7 @@ void TestFileManager::testSplitFiles(std::string urlTorrent){
 		if(filemanager.inicializar(datos)){
 			filemanager.descargaAarchivos();
 		}
+		delete datos;
 	}
 }
 

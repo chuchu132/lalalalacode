@@ -126,7 +126,7 @@ void ParserMensaje::decodificarHave(char* buffer,unsigned int& index){
 	index = ntohl(temp);
 }
 void ParserMensaje::decodificarBitfield(char* buffer,unsigned int longitudbuffer, unsigned int& longitud,char** bitfield){
-	*bitfield = (buffer + OFFSET_ARG_2_SIN_LEN);
+	*bitfield = (buffer + OFFSET_ARG_2_SIN_LEN - 1);
 	longitud = longitudbuffer - LEN_BASE_MSJ_BITFIELD;
 }
 

@@ -18,7 +18,7 @@ void TestClienteTorrent::run(){
 	ClienteTorrent cliente;
 	Controlador control(cliente);
 
-	Torrent* torrent = cliente.agregarTorrent("./Tests/PSP.torrent");
+	Torrent* torrent = cliente.agregarTorrent("./Tests/curso armado y reparacion.zip.torrent");
 
 	torrent->run();
 
