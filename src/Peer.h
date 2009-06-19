@@ -138,7 +138,7 @@ public:
 
 	void cerrarConexion();
 
-	bool verificarImInterested();
+	bool actualizarImInterested();
 
 private:
 	/*
