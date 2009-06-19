@@ -339,10 +339,11 @@ void Peer::cerrarConexion(){
 	peerRemoto->close();
 }
 
-bool Peer::verificarImInterested(){
+bool Peer::actualizarImInterested(){
 	Bitmap* nuevo = torrent->getFileManager()->bitmap.nuevoPorFusion(bitmap);
 	bool retorno = !nuevo->estaVacio();
 	delete nuevo;
+	am_interested = retorno;
 	return retorno;
 }
 
