@@ -194,12 +194,10 @@ void Torrent::continuar() {
 
 	if (estado != T_ACTIVO) {
 
-		//		activo = true;
-		//		tracker->execute();
-		//		activo = false;
-		//si esta detenido hace un run.. ver en el caso pausado
-		estado = T_ACTIVO;
 		activo = true;
+
+		//si esta detenido hace un run.. ver en el caso pausado <-- No hay pausa ;)
+		estado = T_ACTIVO;
 		run();
 		if (controlador != NULL)
 			controlador->actualizarEstado(this);

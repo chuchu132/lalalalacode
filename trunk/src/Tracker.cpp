@@ -31,13 +31,7 @@ void* Tracker::run() {
 	while (trackerRemoto.is_valid() && !seCerro) {
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 10)) > 0) {
 			bufferTemp[cantidad] = '\0';
-<<<<<<< .mine
 
-			buffer.insert(caracteresProcesados,bufferTemp,cantidad);
-			longitud=caracteresProcesados+cantidad;
-			if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
-				 buffer.erase(0,posUltimoProcesado);
-=======
 
 			buffer.insert(caracteresProcesados,bufferTemp,cantidad);
 			longitud=caracteresProcesados+cantidad;
@@ -47,17 +41,8 @@ void* Tracker::run() {
 			else {
 			caracteresProcesados+=cantidad;
 			buffer.resize(caracteresProcesados+cantidad);
->>>>>>> .r229
-			}
-<<<<<<< .mine
-			else {
-			caracteresProcesados+=cantidad;
-			buffer.resize(caracteresProcesados+cantidad);
 			}
 
-=======
-
->>>>>>> .r229
 		} else {
 			seCerro = true;
 		}

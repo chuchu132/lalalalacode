@@ -274,7 +274,7 @@ bool FileManager::descargaCompleta() {
 	unsigned int resto = (unsigned int) (cantPiezas % 8);
 	unsigned int tamBitmap = cantBytesCompletos + ((resto == 0) ? 0 : 1);
 
-	unsigned int i;
+	unsigned int i=0;
 	char ultimo;
 	if (resto != 0) {
 		ultimo  =  0xFF << (8-resto);
