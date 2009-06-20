@@ -46,6 +46,7 @@ void* Tracker::run() {
 		} else {
 			seCerro = true;
 		}
+		sleep(0);//ver!
 
 	}
 

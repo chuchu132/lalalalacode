@@ -59,6 +59,7 @@ void* PeerDown::run() {
 			else{
 				std::cout<<" Error al procesar "<<this->getIp()<<std::endl;
 			}
+			sleep(1);//todo.. ver cuanto  dormir
 		}
 	}
 	std::cout << "muere run PeerDown de "<<this->getIp()<< std::endl;

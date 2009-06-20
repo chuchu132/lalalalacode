@@ -148,7 +148,6 @@ void Torrent::agregarPeer(Peer* peerNuevo) {
 }
 
 void Torrent::removerPeersInactivos() {
-	//ver! esta funcion tira segFault
 	llaveListaPeers.lock();
 	std::list<Peer*>::iterator it = peers.begin();
 	Peer* temp;
@@ -186,17 +185,14 @@ void Torrent::refrescarPeers() {
 		enviarEventoEstado(NULL, 0);
 		horaInicial = horaActual;
 	}
-	controlador->actualizarEstado(this);
+	//controlador->actualizarEstado(this);
 }
 
-//implementar
 void Torrent::continuar() {
 
 	if (estado != T_ACTIVO) {
 
 		activo = true;
-
-		//si esta detenido hace un run.. ver en el caso pausado <-- No hay pausa ;)
 		estado = T_ACTIVO;
 		run();
 		if (controlador != NULL)
@@ -268,7 +264,6 @@ unsigned int Torrent::getTamanio() {
 
 unsigned int Torrent::getTamanioDescargado() {
 	return downloaded;
-	//TODO calcular descargado!
 }
 
 int Torrent::getVelocidadSubida() {
