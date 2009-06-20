@@ -272,7 +272,7 @@ void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 				begin, longitud, data);
 		torrent->setDownloaded(bytes);
 		if (torrent->getFileManager()->getBitmap().estaMarcada(index)) {
-			repartirHave(index);
+			repartirHave(index); //todo me esta fallando el send de esta llamada
 			bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
 			setPiezaPendiente(false);
 		}
