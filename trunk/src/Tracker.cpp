@@ -187,7 +187,7 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 	int cantIps = (int) (longitudCadena / 6);
 	unsigned short int puerto;
 	int i = 0;
-	while ((cantMax > cantPeers) && (i < cantIps)) {
+	while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo() ) {
 		std::stringstream ip;
 		int index = (i * 6);
 		unsigned char temp = (unsigned char) cadena[index];

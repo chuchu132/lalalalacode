@@ -32,12 +32,12 @@ void* PeerDown::run() {
 			if (recvMsj(&buffer, length)) {
 				error = (!procesar(buffer, length));
 			} else {
+				std::cout<<" Error al procesar "<<std::endl;
 				error = true;
 			}
 			if (!error) {
 				if (getAm_interested() == false && getPeer_choking() == true) {
 					if (actualizarImInterested()){
-						//sendMsg(ID_MSJ_UNCHOKE);// aceptamos todo lo que venga
 						sendMsg(ID_MSJ_INTERESTED); //Interested
 						}
 				}
@@ -57,7 +57,7 @@ void* PeerDown::run() {
 			}
 		}
 	}
-	std::cout << "muere run PeerDown de "<<getIp()<< std::endl;
+	std::cout << "muere run PeerDown de "<<this->getIp()<< std::endl;
 	std::cout.flush();
 	cerrarConexion(); // si la conexion esta cerrada el peer puede ser eliminado de la lista
 	return NULL;
