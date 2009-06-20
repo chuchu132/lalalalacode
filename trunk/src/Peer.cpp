@@ -345,6 +345,14 @@ void Peer::setPeer_choking(bool estado) {
 	peer_choking = estado;
 }
 
+bool Peer::getPeer_interested() {
+	return peer_interested;
+}
+
+void Peer::setPeer_interested(bool estado) {
+	peer_interested = estado;
+}
+
 char Peer::getTipo() {
 	return tipo;
 }

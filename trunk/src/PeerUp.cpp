@@ -18,22 +18,33 @@ PeerUp::~PeerUp() {
  * necesaria para linkearlo con un Torrent determinado.
  */
 void* PeerUp::run(){
-//	sendHandshake();
-//	sendBitfield();
-//	while(conexionOK){
-//		if(am_choking){
-//			sendMsg(ID_MSJ_CHOKE);
-//			esperarUnchoke.lock();
-//			esperarUnchoke.unlock();
-//			//TODO cuanto am_chiking est en true CPU se va a ir a 100%
-//		}else{
-//			sendMsg(ID_MSJ_UNCHOKE);
-//
-//
-//			}
-//
-//		}
-		return NULL;
 
-//	}
+	std::cout << "run PeerUP" << std::endl;
+	bool error = sendHandshake();
+	if (!error)
+		error = sendBitfield();
+
+	while(conexionEstaOK() && getTorrent()->estaActivo() && (!error)){
+		int length;
+		char* buffer;
+		if (recvMsj(&buffer, length)) {
+			error = (!procesar(buffer, length));
+		} else {
+			error = true;
+		}
+		if (getPeer_interested()) {
+			if (getAm_choking()) {
+				//ver en que caso lo unchokeo por ej tener un max de 3 peers up unchoked solamente
+	//			sendMsg(ID_MSJ_UNCHOKE);
+			}
+		}
+		else {
+			sendKeepAlive();
+		}
+		sleep(10);
+	}
+	std::cout << "final run PeerUp" << std::endl;
+	return NULL;
 }
+
+
