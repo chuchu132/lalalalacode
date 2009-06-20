@@ -31,10 +31,12 @@ bool Peer::procesar(char* buffer, int length) {
 	char id = parser.decodificarId(buffer);
 	switch (id) {
 	case ID_MSJ_CHOKE: {
+		std::cout<<getIp()<<" mando Choke"<<std::endl;
 		peer_choking = true;
 	}
 	break;
 	case ID_MSJ_UNCHOKE: {
+		std::cout<<getIp()<<" mando UnChoke"<<std::endl;
 		peer_choking = false;
 		if(am_interested){
 			unsigned int index;
@@ -47,10 +49,12 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 	break;
 	case ID_MSJ_INTERESTED: {
+		std::cout<<getIp()<<" mando Intested"<<std::endl;
 		peer_interested = true;
 	}
 	break;
 	case ID_MSJ_NOT_INTERESTED: {
+		std::cout<<getIp()<<" mando NotInterested"<<std::endl;
 		peer_interested = false;
 	}
 	break;
@@ -58,6 +62,7 @@ bool Peer::procesar(char* buffer, int length) {
 		unsigned int index;
 		parser.decodificarHave(buffer, index);
 		procesarHave(index);
+		std::cout<<getIp()<<" mando Have "<< index <<std::endl;
 	}
 	break;
 	case ID_MSJ_BITFIELD: {
@@ -65,12 +70,14 @@ bool Peer::procesar(char* buffer, int length) {
 		unsigned int longitud;
 		parser.decodificarBitfield(buffer, length, longitud, &bitfield);
 		procesarBitfield(bitfield, longitud);
+		std::cout<<getIp()<<" mando Bitfield  de "<<longitud<<" bytes"<<std::endl;
 	}
 	break;
 	case ID_MSJ_REQUEST: {
 		unsigned int index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);
+		std::cout<<getIp()<<" Pidio piece "<<index<<" offset "<<begin<<std::endl;
 	}
 	break;
 	case ID_MSJ_PIECE: {
@@ -78,6 +85,7 @@ bool Peer::procesar(char* buffer, int length) {
 		unsigned int index, begin, length2;
 		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
 		procesarPiece(index, begin, length2, data);
+		std::cout<<getIp()<<" mando la Pieza "<< std::ios::hex<<index<<" offset "<< std::ios::hex<<begin<<std::endl;
 	}
 	break;
 	case ID_MSJ_CANCEL: {
@@ -289,8 +297,9 @@ bool Peer::recvHandshake() {
 }
 
 bool Peer::recvMsj(char** buffer, int& length) {
+	std::cout<<"Esperando mesj desde "<<getIp()<<std::endl;
 	int temp = 0;
-	int cantidad = peerRemoto->receiveExact((char*) &temp, 4); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
+	int cantidad = peerRemoto->receiveExact((char*) &temp, 4);
 	if (cantidad > 0) {
 		length = ntohl(temp);
 		*buffer = new char[length];
