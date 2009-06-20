@@ -10,7 +10,6 @@
 PeerDown::PeerDown(Socket* peerRemoto, Torrent* torrent) :
 	Peer(peerRemoto, torrent) {
 	setTipo('D');
-	setPiezaPedida(false);
 	std::cout << "new PeerDown "<<getIp() << std::endl;
 }
 
@@ -42,10 +41,8 @@ void* PeerDown::run() {
 						sendMsg(ID_MSJ_INTERESTED); //Interested
 						}
 				}
-				if (getPeer_choking() == false && getAm_interested() == true && !getPiezaPedida()) {
+				if (getPeer_choking() == false && getAm_interested() == true) {
 					sendRequest(index);
-					setIndexPiezaPedida(index);
-					setPiezaPedida(true);
 					setAm_interested(false);
 				}else{
 					actualizarImInterested();
@@ -53,7 +50,6 @@ void* PeerDown::run() {
 
 
 				contadorCiclos++;
-				//sleep(2);
 				if (contadorCiclos == 30) {
 					contadorCiclos = 0;
 					sendKeepAlive();
@@ -66,20 +62,3 @@ void* PeerDown::run() {
 	cerrarConexion(); // si la conexion esta cerrada el peer puede ser eliminado de la lista
 	return NULL;
 }
-
-bool PeerDown::getPiezaPedida (){
-	return piezaPedida;
-}
-
-void PeerDown::setPiezaPedida (bool estado){
-	piezaPedida=estado;
-}
-
-int  PeerDown::getIndexPiezaPedida(){
-	return indexPiezaPedida;
-}
-
-void PeerDown::setIndexPiezaPedida(int indice){
-	indexPiezaPedida=indice;
-}
-
