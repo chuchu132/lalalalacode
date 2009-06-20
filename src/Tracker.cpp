@@ -18,23 +18,30 @@ Tracker::Tracker() {
 Tracker::~Tracker() {
 
 }
-//TODO testear achicando el tamaño del buffer para cubrir los casos de mas de una lectura
-//para llenar el buffer, implementar borrado de la parte procesada del buffer.
+
 void* Tracker::run() {
 	int cantidad;
+	int caracteresProcesados=0;
+	int longitud,posUltimoProcesado;
 	bool seCerro = false;
 	std::string buffer;
 	char bufferTemp[1000];
 	memset(bufferTemp, 0, 1000);
 
 	while (trackerRemoto.is_valid() && !seCerro) {
-		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
+		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 10)) > 0) {
 			bufferTemp[cantidad] = '\0';
-			buffer.insert(0,bufferTemp,cantidad);
-			std::cout.write(bufferTemp,cantidad)<<std::endl;
-			if (procesarResponse(buffer,cantidad)) {
-				//TODO borrar buffr procesado
+
+			buffer.insert(caracteresProcesados,bufferTemp,cantidad);
+			longitud=caracteresProcesados+cantidad;
+			if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
+				 buffer.erase(0,posUltimoProcesado);
 			}
+			else {
+			caracteresProcesados+=cantidad;
+			buffer.resize(caracteresProcesados+cantidad);
+			}
+
 		} else {
 			seCerro = true;
 		}
@@ -92,12 +99,12 @@ void Tracker::setTorrent(Torrent* unTorrent) {
 	this->torrent = unTorrent;
 }
 
-//TODO falta testeo
-bool Tracker::procesarResponse(std::string& buffer,int& longitud) {
+bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoProcesado) {
+    std::string salida;
 
-	buffer = extraerBencode(buffer, longitud);
-	if (buffer != "Error") {
-		BencodeParser parser(buffer.c_str(), longitud);
+	if (extraerBencode(buffer, longitud,salida,posUltimoProcesado)) {
+		std::cout<<buffer<<std::endl;
+		BencodeParser parser(salida.c_str(), longitud);
 		if (parser.procesar()) {
 			DatosParser* datos;
 			char *aux;
@@ -118,10 +125,9 @@ bool Tracker::procesarResponse(std::string& buffer,int& longitud) {
 	}
 }
 
-std::string Tracker::extraerBencode(std::string &buffer, int &longitud) {
+bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado) {
 
 	unsigned i = 0, marca,longitudBencode;
-	std::string salida;
 
 	longitudBencode=obtenerLongitudBencode (buffer,marca);
 	if(longitudBencode>0){
@@ -136,20 +142,21 @@ std::string Tracker::extraerBencode(std::string &buffer, int &longitud) {
 					i++;
 				}
 				aux[i] = '\0';
-				buffer.erase(0);
 				salida.insert(0, aux, longitudBencode);
-				longitud = longitudBencode; // sumar el offset hasta el inicio del bencode creo q esta en "marca"
+				longitud = longitudBencode;
+
+				posUltimoProcesado=longitudBencode+marca;
 			} else {
-				salida = "Error";
+				return false;
 			}
 		}
 		else {
-			salida="Error";
+		return false;
 		}
 		delete[] aux;
 	} else
-		salida = "Error";
-	return salida;
+		return false;
+	return true;
 }
 
 int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
@@ -181,13 +188,13 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 
 
 void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
-	// No inicializado el torrent y no pasa estas dos lineas
+
 	int cantMax =  torrent->getCantidadMaximaPeers();
 	int cantPeers = torrent->getCantPeers();
 	int cantIps = (int) (longitudCadena / 6);
 	unsigned short int puerto;
 	int i = 0;
-	while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo() ) {
+	while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo()) {
 		std::stringstream ip;
 		int index = (i * 6);
 		unsigned char temp = (unsigned char) cadena[index];
