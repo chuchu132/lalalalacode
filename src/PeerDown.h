@@ -16,18 +16,6 @@ public:
 	virtual ~PeerDown();
 	void* run();
 
-	bool getPiezaPedida ();
-
-	void setPiezaPedida (bool estado);
-
-	int  getIndexPiezaPedida();
-
-	void setIndexPiezaPedida(int indice);
-
-private:
-
-	bool piezaPedida;
-	int  indexPiezaPedida;
 };
 
 #endif /* PEERDOWN_H_ */
