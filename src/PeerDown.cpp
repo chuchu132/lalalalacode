@@ -22,7 +22,7 @@ PeerDown::~PeerDown() {
 void* PeerDown::run() {
 	std::cout << "run PeerDown" << std::endl;
 	if (sendHandshake() && sendBitfield()) {
-		unsigned int index = -1;
+		//unsigned int index = -1;
 		int contadorCiclos = 0;
 		bool error = !recvHandshake(); // error puede ser en la conexion, en lo recibido o al procesar
 
@@ -31,18 +31,19 @@ void* PeerDown::run() {
 			char* buffer;
 			if (recvMsj(&buffer, length)) {
 				error = (!procesar(buffer, length));
+				delete[] buffer;
 			} else {
-				std::cout<<" Error al procesar "<<std::endl;
+				std::cout<<" Error al recibir "<<this->getIp()<<std::endl;
 				error = true;
 			}
 			if (!error) {
-				if (getAm_interested() == false && getPeer_choking() == true) {
+				if (getPeer_choking() == true && getAm_interested() == false ) {
 					if (actualizarImInterested()){
 						sendMsg(ID_MSJ_INTERESTED); //Interested
 						}
 				}
 				if (getPeer_choking() == false && getAm_interested() == true) {
-					sendRequest(index);
+					//sendRequest(index);
 					setAm_interested(false);
 				}else{
 					actualizarImInterested();
@@ -54,6 +55,9 @@ void* PeerDown::run() {
 					contadorCiclos = 0;
 					sendKeepAlive();
 				}
+			}
+			else{
+				std::cout<<" Error al procesar "<<this->getIp()<<std::endl;
 			}
 		}
 	}

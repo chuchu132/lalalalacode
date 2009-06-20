@@ -148,6 +148,10 @@ public:
 
 	bool actualizarImInterested();
 
+	bool tienePiezaPendiente();
+
+	void setPiezaPendiente(bool estado);
+
 private:
 	/*
 	 * La llave de envio se bloquea antes de cualquier envio al peer remoto
@@ -157,6 +161,12 @@ private:
 	Socket* peerRemoto;
 	bool conexionOK;
 	Torrent* torrent;
+
+	/*
+	 * Esta en true cuando se le solicito una pieza al peer remoto y todavia
+	 * no completo la entrega.
+	 */
+	bool piezaPendiente;
 
 	char tipo;
 	bool am_choking;
