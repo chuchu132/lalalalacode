@@ -19,6 +19,7 @@ PeerUp::~PeerUp() {
  */
 void* PeerUp::run(){
 
+	int contadorCiclos=0;
 	std::cout << "run PeerUP" << std::endl;
 	bool error = sendHandshake();
 	if (!error)
@@ -35,10 +36,12 @@ void* PeerUp::run(){
 		if (getPeer_interested()) {
 			if (getAm_choking()) {
 				//ver en que caso lo unchokeo por ej tener un max de 3 peers up unchoked solamente
-	//			sendMsg(ID_MSJ_UNCHOKE);
+				sendMsg(ID_MSJ_UNCHOKE);
 			}
 		}
-		else {
+		contadorCiclos++;
+		if (contadorCiclos == 30) {
+			contadorCiclos = 0;
 			sendKeepAlive();
 		}
 		sleep(10);
