@@ -18,6 +18,7 @@ public:
 	void run();
 	void test(std::string urlTorrent);
 	void testSplitFiles(std::string urlTorrent);
+	void verificarPiezas(std::string urlTorrent);
 };
 
 #endif /* TESTFILEMANAGER_H_ */

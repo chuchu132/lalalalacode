@@ -51,7 +51,7 @@ public:
 	/* Devuelve la cantidad de bytes escritos */
 	unsigned int writeBlock(int index,int begin,int longitud,const char* block);
 
-	bool verificarHashPieza(int index);
+	bool verificarHashPieza(unsigned int index);
 
 	/* devuelve un iterador sobre los archivos.  */
 	std::list<Archivo*>::iterator getIteratorArchivos();

@@ -20,9 +20,10 @@ TestFileManager::~TestFileManager() {
 }
 
 void TestFileManager::run(){
-	test("./Tests/AngelsAndDemons.torrent"); // single file
-	test("./Tests/blues.torrent"); // multi file
-	testSplitFiles("./Tests/disco.torrent");
+//	test("./Tests/AngelsAndDemons.torrent"); // single file
+//	test("./Tests/blues.torrent"); // multi file
+//	testSplitFiles("./Tests/disco.torrent");
+	verificarPiezas("./Tests/boom.torrent");
 	}
 
 void TestFileManager::test(std::string urlTorrent){
@@ -99,3 +100,23 @@ void TestFileManager::testSplitFiles(std::string urlTorrent){
 	}
 }
 
+/*Este test debe correrse con el archivo original dentro de la carpeta
+ * incompletos con el info hash como nombre */
+void TestFileManager::verificarPiezas(std::string urlTorrent){
+	BencodeParser parser(urlTorrent.c_str());
+
+	if (parser.procesar()) {
+		ClienteTorrent cliente;
+		FileManager filemanager(&cliente);
+		DatosParser* datos =  parser.salidaParser();
+		datos->primero();
+		if(filemanager.inicializar(datos)){
+			unsigned int aux =(unsigned int ) filemanager.getTamanio() / filemanager.getTamanioPieza();
+			for(unsigned int i = 0 ; i < aux; i++){
+			std::cout<<i<<std::endl;
+				assert(filemanager.verificarHashPieza(i),"El hash debe dar ok");
+			}
+		}
+		delete datos;
+	}
+}

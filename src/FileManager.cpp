@@ -234,9 +234,9 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
-		bytes = longitud;
 		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
+			bytes = longitud;
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();
 			}
@@ -244,17 +244,17 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 	}
 	return bytes;
 }
-//TODO testear
-bool FileManager::verificarHashPieza(int index) {
-	char* pieza = new char[tamanioPieza];
-	memset(pieza, 0, tamanioPieza);
-	int offset = (index * tamanioPieza);
-	descarga.seekg(offset);
-	descarga.get(pieza, tamanioPieza);
+
+bool FileManager::verificarHashPieza(unsigned int index) {
+	unsigned int tamTemp = getTamanioPieza(index);
+	char* pieza = new char[tamTemp];
+	memset(pieza, 0, tamTemp);
+	unsigned int offset = (index * tamanioPieza);
+	descarga.seekg(offset,std::ios::beg);
+	descarga.read(pieza, tamanioPieza);
 	Sha1 sha1Encoder;
 	std::string hashObtenido = sha1Encoder.codificar(pieza, tamanioPieza);
-	std::string hashOriginal = sha1Encoder.codificar(((char*) hashPiezas)
-			+ (index * LEN_SHA1), LEN_SHA1);
+	std::string hashOriginal = sha1Encoder.salidaAstring( &hashPiezas[index*5] );
 	delete[] pieza;
 	return (hashOriginal.compare(hashObtenido) == 0);
 }
