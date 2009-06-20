@@ -31,69 +31,86 @@ bool Peer::procesar(char* buffer, int length) {
 	char id = parser.decodificarId(buffer);
 	switch (id) {
 	case ID_MSJ_CHOKE: {
-		std::cout<<getIp()<<" mando Choke"<<std::endl;
+		std::cout << getIp() << " mando Choke" << std::endl;
 		peer_choking = true;
 	}
-	break;
+		break;
 	case ID_MSJ_UNCHOKE: {
-		std::cout<<getIp()<<" mando UnChoke"<<std::endl;
+		std::cout << getIp() << " mando UnChoke" << std::endl;
 		peer_choking = false;
-		if(am_interested){
+		if (am_interested) {
 			unsigned int index;
-			if(getTorrent()->getFileManager()->getPiezaAdescargar(index, bitmap)){
+			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
+					bitmap)) {
 				sendRequest(index);
-			}else{
+			} else {
 				am_interested = false;
 			}
 		}
 	}
-	break;
+		break;
 	case ID_MSJ_INTERESTED: {
-		std::cout<<getIp()<<" mando Intested"<<std::endl;
+		std::cout << getIp() << " mando Intested" << std::endl;
 		peer_interested = true;
 	}
-	break;
+		break;
 	case ID_MSJ_NOT_INTERESTED: {
-		std::cout<<getIp()<<" mando NotInterested"<<std::endl;
+		std::cout << getIp() << " mando NotInterested" << std::endl;
 		peer_interested = false;
 	}
-	break;
+		break;
 	case ID_MSJ_HAVE: {
 		unsigned int index;
 		parser.decodificarHave(buffer, index);
 		procesarHave(index);
-		std::cout<<getIp()<<" mando Have "<< index <<std::endl;
+		std::cout << getIp() << " mando Have " << index << std::endl;
 	}
-	break;
+		break;
 	case ID_MSJ_BITFIELD: {
 		char* bitfield;
 		unsigned int longitud;
 		parser.decodificarBitfield(buffer, length, longitud, &bitfield);
 		procesarBitfield(bitfield, longitud);
-		std::cout<<getIp()<<" mando Bitfield  de "<<longitud<<" bytes"<<std::endl;
+		std::cout << getIp() << " mando Bitfield  de " << longitud << " bytes"
+				<< std::endl;
 	}
-	break;
+		break;
 	case ID_MSJ_REQUEST: {
 		unsigned int index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);
-		std::cout<<getIp()<<" Pidio piece "<<index<<" offset "<<begin<<std::endl;
+		std::cout << getIp() << " Pidio piece " << index << " offset " << begin
+				<< std::endl;
 	}
-	break;
+		break;
 	case ID_MSJ_PIECE: {
 		char* data;
 		unsigned int index, begin, length2;
 		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
 		procesarPiece(index, begin, length2, data);
-		std::cout<<getIp()<<" mando la Pieza "<< std::ios::hex<<index<<" offset "<< std::ios::hex<<begin<<std::endl;
+		std::cout << getIp() << " mando la Pieza " << index
+						<< " offset " <<  begin << std::endl;
+		if (!tienePiezaPendiente()) {
+			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
+					bitmap)) {
+				sendRequest(index);
+			} else {
+				am_interested = false;
+			}
+		}
 	}
-	break;
+		break;
 	case ID_MSJ_CANCEL: {
 		unsigned int index, begin, length2;
 		parser.decodificarCancel(buffer, index, begin, length2);
 		procesarCancel(index, begin, length2);
 	}
-	break;
+		break;
+	case ID_MSJ_KEEPALIVE: {
+		std::cout << getIp() << " mando keepalive" << std::endl;
+	}
+		break;
+
 	default:
 		return false;
 	}
@@ -117,7 +134,7 @@ bool Peer::sendKeepAlive() {
 	bool retorno;
 	llaveEnvio.lock();
 	int temp = LEN_MSJ_KEEPALIVE;
-	retorno = (peerRemoto->send((char*)&temp, 4) != ERROR);
+	retorno = (peerRemoto->send((char*) &temp, 4) != ERROR);
 	llaveEnvio.unlock();
 	return retorno;
 }
@@ -157,7 +174,7 @@ bool Peer::sendBitfield() {
 
 	const char* map = fileManager->getBitmap().getBitmap();
 	longitud = fileManager->getBitmap().getTamanioEnBytes();
-	int tamBuffer = (OFFSET_ARG_1 + longitud );
+	int tamBuffer = (OFFSET_ARG_1 + longitud);
 	char* buffer = new char[tamBuffer];
 
 	parser.crearMensajeBitfield(map, longitud, buffer);
@@ -251,11 +268,13 @@ void Peer::procesarRequest(int index, int begin, int length) {
 
 void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 	try {
-		unsigned int bytes = torrent->getFileManager()->writeBlock(index, begin, longitud, data);
+		unsigned int bytes = torrent->getFileManager()->writeBlock(index,
+				begin, longitud, data);
+		torrent->setDownloaded(bytes);
 		if (torrent->getFileManager()->getBitmap().estaMarcada(index)) {
 			repartirHave(index);
 			bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
-			torrent->setDownloaded(bytes);
+			setPiezaPendiente(false);
 		}
 	} catch (AvisoDescargaCompleta aviso) {
 		//TODO el archivo esta completo.
@@ -282,11 +301,11 @@ bool Peer::recvHandshake() {
 	char longProto;
 	int cantidad = peerRemoto->receiveExact(&longProto, 1);
 	if (cantidad > 0) {
-		int tamHsk= (unsigned char)longProto + LEN_BASE_HANDSHAKE - 1;
+		int tamHsk = (unsigned char) longProto + LEN_BASE_HANDSHAKE - 1;
 		char buffer[tamHsk];
 		if (peerRemoto->receiveExact(buffer, tamHsk) != ERROR) {
-			if (memcmp(torrent->getInfoHash(), buffer + longProto + LEN_RESERVED,
-					LEN_SHA1) != 0) {
+			if (memcmp(torrent->getInfoHash(), buffer + longProto
+					+ LEN_RESERVED, LEN_SHA1) != 0) {
 				peerRemoto->close();
 			} else {
 				return true;
@@ -297,18 +316,28 @@ bool Peer::recvHandshake() {
 }
 
 bool Peer::recvMsj(char** buffer, int& length) {
-	std::cout<<"Esperando mesj desde "<<getIp()<<std::endl;
+	std::cout << "Esperando mesj desde " << getIp() << std::endl;
 	int temp = 0;
 	int cantidad = peerRemoto->receiveExact((char*) &temp, 4);
 	if (cantidad > 0) {
 		length = ntohl(temp);
-		*buffer = new char[length];
-		cantidad = peerRemoto->receiveExact(*buffer, length);
-		if (cantidad > 0) {
+		std::cout << "Leer " << length << " bytes desde " << getIp()
+				<< std::endl;
+		if (length != 0) {
+			*buffer = new char[length];
+			cantidad = peerRemoto->receiveExact(*buffer, length);
+			if (cantidad > 0) {
+				return true;
+			}
+			delete[] (*buffer);
+			buffer = NULL;
+		} else {
+			/*Caso particular mensaje keepalive no tiene id ni argumentos*/
+			*buffer = new char[1];
+			*buffer[0] = ID_MSJ_KEEPALIVE;
+			length = 1;
 			return true;
 		}
-		delete[] (*buffer);
-		buffer = NULL;
 	}
 	return false;
 }
@@ -329,7 +358,7 @@ bool Peer::getAm_interested() {
 	return am_interested;
 }
 
-bool Peer::getAm_choking(){
+bool Peer::getAm_choking() {
 	return am_choking;
 }
 
@@ -369,16 +398,25 @@ unsigned int Peer::getPuerto() {
 	return peerRemoto->getPuerto();
 }
 
-void Peer::cerrarConexion(){
+void Peer::cerrarConexion() {
 	conexionOK = false;
 	peerRemoto->close();
 }
 
-bool Peer::actualizarImInterested(){
-	Bitmap* nuevo = torrent->getFileManager()->getBitmap().nuevoPorFusion(bitmap);
+bool Peer::actualizarImInterested() {
+	Bitmap* nuevo = torrent->getFileManager()->getBitmap().nuevoPorFusion(
+			bitmap);
 	bool retorno = !nuevo->estaVacio();
 	delete nuevo;
 	am_interested = retorno;
 	return retorno;
+}
+
+bool Peer::tienePiezaPendiente() {
+	return piezaPendiente;
+}
+
+void Peer::setPiezaPendiente(bool estado) {
+	this->piezaPendiente = estado;
 }
 

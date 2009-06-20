@@ -36,6 +36,7 @@ const char ID_MSJ_BITFIELD = 5;
 const char ID_MSJ_REQUEST = 6;
 const char ID_MSJ_PIECE = 7;
 const char ID_MSJ_CANCEL = 8;
+const char ID_MSJ_KEEPALIVE = 9;
 
 /*Longitudes constantes del campo Len de los mensajes entre peers*/
 const int  LEN_MSJ_KEEPALIVE = 0;

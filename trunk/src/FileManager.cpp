@@ -108,9 +108,9 @@ bool FileManager::inicializarArchivosYdirectorios(DatosParser* datos) {
 				datos->siguiente();
 				subdir = datos->obtenerDato();
 				if ((subdir.compare("length") == 0) ||
-					(subdir.compare("piece length") == 0) ||
-					(subdir.compare("name") == 0)
-					)
+						(subdir.compare("piece length") == 0) ||
+						(subdir.compare("name") == 0)
+				)
 				{
 					seguir = false;
 				} else {
@@ -234,9 +234,9 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
+		bytes = longitud;
 		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
-			bytes = longitud;
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();
 			}
@@ -273,25 +273,23 @@ bool FileManager::descargaCompleta() {
 	unsigned int cantBytesCompletos = (unsigned int) (cantPiezas / 8);
 	unsigned int resto = (unsigned int) (cantPiezas % 8);
 	unsigned int tamBitmap = cantBytesCompletos + ((resto == 0) ? 0 : 1);
-	char* bitmapAux = new char[tamBitmap];
-	//creo un bitmap con 1 en los bits que corresponden a piezas
+
 	unsigned int i;
-	for (i = 0; i < cantBytesCompletos; i++) {
-		bitmapAux[i] = 0xFF;
-	}
+	char ultimo;
 	if (resto != 0) {
-		bitmapAux[cantBytesCompletos] = (char) pow(2, 8 - resto);
+		ultimo  =  0xFF << (8-resto);
+	}else{
+		ultimo = 0xFF;
 	}
 
 	const char* miBitmap = bitmap.getBitmap();
 	bool completo = true;
 	//comparo byte a byte mi bitmap con el completo hasta que haya una diferencia o se termine
-	while (completo && (i < tamBitmap)) {
-		completo = (bitmapAux[i] == (bitmapAux[i] & miBitmap[i]));
+	while (completo && (i < tamBitmap-1)) {
+		completo = (0xFF == (0XFF & miBitmap[i]));
 		i++;
 	}
-	delete[] bitmapAux;
-	return completo;
+	return (completo)?(ultimo == (miBitmap[i] & ultimo)):false;
 }
 
 void FileManager::descargaAarchivos() {
