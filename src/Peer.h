@@ -132,6 +132,10 @@ public:
 
 	void setPeer_choking(bool estado);
 
+	bool getPeer_interested();
+
+	void setPeer_interested(bool estado);
+
 	char getTipo();
 
 	void setTipo(char estado);
