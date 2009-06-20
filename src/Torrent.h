@@ -137,6 +137,8 @@ public:
 
 	std::string getTiempoRestante();
 
+	void desargaCompleta();
+
 private:
 
 	/*No confundir con el run de Threads, este metodo se llama

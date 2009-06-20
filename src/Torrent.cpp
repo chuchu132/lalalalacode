@@ -18,7 +18,8 @@
 #include <ctime>
 #include <errno.h>
 
-Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path):fileManager(clienteTorrent) {
+Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
+	fileManager(clienteTorrent) {
 	tracker = new Tracker();
 	tracker->setTorrent(this);
 	uploaded = 0;
@@ -37,28 +38,28 @@ Torrent::~Torrent() {
 	delete tracker;
 }
 
-bool Torrent::inicializarTorrent(BencodeParser* parser){
+bool Torrent::inicializarTorrent(BencodeParser* parser) {
 	DatosParser* datos = parser->salidaParser();
 	char* datoTemp;
 	int tamTemp;
 
 	datos->primero();
-	if(!datos->obtenerDatoPorNombre("announce",&datoTemp,tamTemp)){
+	if (!datos->obtenerDatoPorNombre("announce", &datoTemp, tamTemp)) {
 		delete datos;
 		return false;
 	}
 	tracker->inicilizar(datoTemp);
 	delete[] datoTemp;
 
-	if(!datos->obtenerDatoPorNombre("info_hash",&datoTemp,tamTemp)){
+	if (!datos->obtenerDatoPorNombre("info_hash", &datoTemp, tamTemp)) {
 		delete datos;
 		return false;
 	}
-	memcpy(info_hash,datoTemp,LEN_SHA1);
+	memcpy(info_hash, datoTemp, LEN_SHA1);
 	delete[] datoTemp;
 
 	datos->primero();
-	if(!datos->obtenerDatoPorNombre("name",&datoTemp,tamTemp)){
+	if (!datos->obtenerDatoPorNombre("name", &datoTemp, tamTemp)) {
 		delete datos;
 		return false;
 	}
@@ -72,9 +73,9 @@ bool Torrent::inicializarTorrent(BencodeParser* parser){
 	return result;
 }
 
-void Torrent::run(){
+void Torrent::run() {
 
-	horaInicial = time (NULL);//Obtiene los segundos que pasaron desde 1970
+	horaInicial = time(NULL);//Obtiene los segundos que pasaron desde 1970
 	horaAnterior = time(NULL);
 	downAnterior = downloaded;
 	if (controlador != NULL) {
@@ -84,8 +85,9 @@ void Torrent::run(){
 	}
 
 	if (tracker->connect()) {
-		std::cout<<"conecto"<<std::endl;
-		std::cout<<((enviarEventoEstado(NULL,100))?"envio":"noenvio")<<std::endl;
+		std::cout << "conecto" << std::endl;
+		std::cout << ((enviarEventoEstado(NULL, 100)) ? "envio" : "noenvio")
+				<< std::endl;
 		tracker->execute();
 		if (controlador != NULL) {
 			std::string notif = "Conectado con el tracker ";
@@ -93,7 +95,7 @@ void Torrent::run(){
 			controlador->notificarVista(notif);
 		}
 	} else {
-		std::cout<<"noconecto"<<std::endl;
+		std::cout << "noconecto" << std::endl;
 
 		estado = T_DETENIDO;//si no se conecto el estado es detenido
 		activo = false;
@@ -114,40 +116,44 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 	ParserMensaje parser;
 	std::string envio;
 	if (numwant < 0) {
-		envio += parser.crearGetConEvento(tracker->getUrl(),tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),event);
+		envio += parser.crearGetConEvento(tracker->getUrl(),
+				tracker->getPath(), info_hash, clienteTorrent->getPeerId(),
+				port, uploaded, downloaded, left(), event);
 	} else {
-		envio = parser.crearGetConNumwant(tracker->getUrl(),tracker->getPath(),info_hash,clienteTorrent->getPeerId(),port,uploaded,downloaded,left(),numwant);
+		envio = parser.crearGetConNumwant(tracker->getUrl(),
+				tracker->getPath(), info_hash, clienteTorrent->getPeerId(),
+				port, uploaded, downloaded, left(), numwant);
 	}
 	return (tracker->send(envio.c_str(), envio.length()));
 }
 
-void Torrent::agregarPeer(std::string ip,unsigned int puerto){
+void Torrent::agregarPeer(std::string ip, unsigned int puerto) {
 	Socket* conexion = new Socket();
-	if(conexion->connectWithTimeout(ip.c_str(),puerto,5)==OK){
+	if (conexion->connectWithTimeout(ip.c_str(), puerto, 5) == OK) {
 		conexion->setIp(ip);
 		conexion->setPuerto(puerto);
-		Peer* nuevoPeer = new PeerDown(conexion,this);
+		Peer* nuevoPeer = new PeerDown(conexion, this);
 		peers.push_back(nuevoPeer);
 		nuevoPeer->execute();
 		if (controlador != NULL)
 			controlador->actualizarEstado(this);
-	}else{
+	} else {
 		delete conexion;
 	}
 }
 
-void Torrent::agregarPeer(Peer* peerNuevo){
+void Torrent::agregarPeer(Peer* peerNuevo) {
 	peers.push_back(peerNuevo);
 	peerNuevo->execute();
 }
 
-void Torrent::removerPeersInactivos(){
+void Torrent::removerPeersInactivos() {
 	//ver! esta funcion tira segFault
 	llaveListaPeers.lock();
 	std::list<Peer*>::iterator it = peers.begin();
 	Peer* temp;
-	while(it != peers.end()){
-		if(!(*it)->conexionEstaOK()){
+	while (it != peers.end()) {
+		if (!(*it)->conexionEstaOK()) {
 			(*it)->join();
 			temp = (*it);
 			it = peers.erase(it);
@@ -160,10 +166,10 @@ void Torrent::removerPeersInactivos(){
 		controlador->actualizarEstado(this);
 }
 
-void Torrent::detenerPeers(){
+void Torrent::detenerPeers() {
 	std::list<Peer*>::iterator it = peers.begin();
 	Peer* temp;
-	while(it != peers.end()){
+	while (it != peers.end()) {
 		temp = (*it);
 		temp->cerrarConexion();
 		temp->join();
@@ -175,9 +181,9 @@ void Torrent::detenerPeers(){
 
 void Torrent::refrescarPeers() {
 	time_t horaActual = time(NULL);
-	unsigned int dif = (unsigned int) difftime(horaActual,horaInicial);
-	if(dif >= tracker->getMinInterval() ){
-		enviarEventoEstado(NULL,0);
+	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
+	if (dif >= tracker->getMinInterval()) {
+		enviarEventoEstado(NULL, 0);
 		horaInicial = horaActual;
 	}
 	controlador->actualizarEstado(this);
@@ -188,9 +194,9 @@ void Torrent::continuar() {
 
 	if (estado != T_ACTIVO) {
 
-//		activo = true;
-//		tracker->execute();
-//		activo = false;
+		//		activo = true;
+		//		tracker->execute();
+		//		activo = false;
 		//si esta detenido hace un run.. ver en el caso pausado
 		estado = T_ACTIVO;
 		activo = true;
@@ -205,11 +211,11 @@ void Torrent::detener() {
 	if (estado != T_DETENIDO) {
 
 		activo = false;
-		detenerPeers();
 		tracker->cerrarConexion();
 		tracker->join();
+		detenerPeers();
 		estado = T_DETENIDO;
-		std::cout<<"torrent detenido"<<std::endl;
+		std::cout << "torrent detenido" << std::endl;
 		if (controlador != NULL)
 			controlador->actualizarEstado(this);
 	}
@@ -226,30 +232,27 @@ void Torrent::pausar() {
 	}
 }
 
-
 std::string Torrent::getNombre() {
 	return nombre;
 }
 
-unsigned int  Torrent::left(){
+unsigned int Torrent::left() {
 	return (fileManager.getTamanio() - downloaded);
 }
 
-
-unsigned int* Torrent::getInfoHash(){
+unsigned int* Torrent::getInfoHash() {
 	return info_hash;
 }
 
-std::string Torrent::getPeerId(){
+std::string Torrent::getPeerId() {
 	return clienteTorrent->getPeerId();
 }
 
-
-FileManager* Torrent::getFileManager(){
+FileManager* Torrent::getFileManager() {
 	return &fileManager;
 }
 
-std::list<Peer*>* Torrent::getListaPeers(){
+std::list<Peer*>* Torrent::getListaPeers() {
 	return &peers;
 }
 
@@ -257,7 +260,7 @@ std::string Torrent::getEstado() {
 	return estado;
 }
 
-bool Torrent::estaActivo(){
+bool Torrent::estaActivo() {
 	return activo;
 }
 
@@ -311,21 +314,15 @@ unsigned int Torrent::getCantPeers() {
 std::string Torrent::bytesToString(float bytes) {
 	std::stringstream buffer;
 	buffer << std::setprecision(4);
-	if (bytes < 1024)
-	{
-		buffer<< bytes<<" bytes";
-	}
-	else
-	{
+	if (bytes < 1024) {
+		buffer << bytes << " bytes";
+	} else {
 		bytes /= 1024;
-		if (bytes < 1024)
-		{
-			buffer <<bytes<<" kb";
-		}
-		else
-		{
+		if (bytes < 1024) {
+			buffer << bytes << " kb";
+		} else {
 			bytes /= 1024;
-			buffer<<bytes<<" Mb";
+			buffer << bytes << " Mb";
 		}
 	}
 	return buffer.str();
@@ -339,7 +336,7 @@ std::list<Peer*>::iterator Torrent::getEndIterPeers() {
 	return peers.end();
 }
 
-int Torrent::getCantidadMaximaPeers(){
+int Torrent::getCantidadMaximaPeers() {
 	return cantidadMaximaPeers;
 }
 
@@ -350,7 +347,7 @@ std::string Torrent::getTiempoRestante() {
 
 void Torrent::setDownloaded(unsigned int bytes) {
 	downloaded += bytes;
-	std::cout<<"_________Bytes descargados: "<<downloaded<<std::endl;
+	std::cout << "_________Bytes descargados: " << downloaded << std::endl;
 	if (controlador != NULL)//ver
 		controlador->actualizarEstado(this);
 
@@ -360,4 +357,24 @@ void Torrent::setUploaded(unsigned int bytes) {
 	uploaded += bytes;
 	if (controlador != NULL)//ver
 		controlador->actualizarEstado(this);
+}
+
+void Torrent::desargaCompleta() {
+	activo = false;
+	tracker->cerrarConexion();
+	tracker->join();
+	std::list<Peer*>::iterator it = peers.begin();
+	Peer* temp;
+	while (it != peers.end()) {
+		temp = (*it);
+		temp->cerrarConexion();
+		it = peers.erase(it);
+		delete temp;
+		it++;
+	}
+	estado = T_COMPLETO;
+	if (controlador != NULL){
+		controlador->actualizarEstado(this);
+	}
+std::cout<<"<---------------SE COMPLETO LA DESCARGA!!!------------------>"<<std::endl;
 }

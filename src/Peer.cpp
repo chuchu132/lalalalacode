@@ -277,7 +277,7 @@ void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 			setPiezaPendiente(false);
 		}
 	} catch (AvisoDescargaCompleta aviso) {
-		//TODO el archivo esta completo.
+		torrent->desargaCompleta();
 	}
 }
 
