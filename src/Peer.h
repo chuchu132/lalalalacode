@@ -150,7 +150,11 @@ public:
 
 	bool tienePiezaPendiente();
 
-	void setPiezaPendiente(bool estado);
+	void setEstadoPiezaPendiente(bool estado);
+
+	void setIdxPiezaPendiente(unsigned int index);
+
+	unsigned int getIdxPiezaPendiente();
 
 private:
 	/*
@@ -167,6 +171,7 @@ private:
 	 * no completo la entrega.
 	 */
 	bool piezaPendiente;
+	unsigned int idxPiezaPendiente;
 
 	char tipo;
 	bool am_choking;

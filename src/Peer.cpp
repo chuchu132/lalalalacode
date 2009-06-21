@@ -21,6 +21,8 @@ Peer::Peer(Socket* peerRemoto, Torrent* torrent) {
 	peer_choking = true;
 	peer_interested = false;
 	tipo = 'P';
+	piezaPendiente = false;
+	idxPiezaPendiente = 0;
 }
 
 Peer::~Peer() {
@@ -38,11 +40,12 @@ bool Peer::procesar(char* buffer, int length) {
 	case ID_MSJ_UNCHOKE: {
 		std::cout << getIp() << " mando UnChoke" << std::endl;
 		peer_choking = false;
-		if (am_interested) {
+		if (am_interested && !tienePiezaPendiente()){
 			unsigned int index;
 			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
 					bitmap)) {
 				sendRequest(index);
+				setIdxPiezaPendiente(index);
 			} else {
 				am_interested = false;
 			}
@@ -94,6 +97,7 @@ bool Peer::procesar(char* buffer, int length) {
 			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
 					bitmap)) {
 				sendRequest(index);
+				setIdxPiezaPendiente(index);
 			} else {
 				am_interested = false;
 			}
@@ -274,7 +278,7 @@ void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 		if (torrent->getFileManager()->getBitmap()->estaMarcada(index)) {
 			//repartirHave(index);
 			bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
-			setPiezaPendiente(false);
+			setEstadoPiezaPendiente(false);
 		}
 	} catch (AvisoDescargaCompleta aviso) {
 		torrent->desargaCompleta();
@@ -419,6 +423,14 @@ bool Peer::tienePiezaPendiente() {
 	return piezaPendiente;
 }
 
-void Peer::setPiezaPendiente(bool estado) {
+void Peer::setEstadoPiezaPendiente(bool estado) {
 	this->piezaPendiente = estado;
+}
+
+void Peer::setIdxPiezaPendiente(unsigned int index){
+	this->idxPiezaPendiente = index;
+}
+
+unsigned int Peer::getIdxPiezaPendiente(){
+	return idxPiezaPendiente;
 }

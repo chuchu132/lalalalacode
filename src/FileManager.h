@@ -68,6 +68,9 @@ public:
 
 	bool getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto);
 
+
+	void cancelarPedido(unsigned int index);
+
 private:
 	/*
 	 * Los archivos se manejan como uno del tamaño total
