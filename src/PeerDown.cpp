@@ -67,6 +67,7 @@ void* PeerDown::run() {
 	/*Si al peer que muere se le habia pedido una pieza y no la completo, se marca para volver a pedir*/
 	if(tienePiezaPendiente()){
 		getTorrent()->getFileManager()->cancelarPedido(getIdxPiezaPendiente());
+		std::cout<<"                           PIEZA "<<getIdxPiezaPendiente()<<" DE NUEVO"<<std::endl;
 	}
 	return NULL;
 }
