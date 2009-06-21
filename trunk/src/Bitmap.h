@@ -35,7 +35,7 @@ public:
 	bool estaMarcada(int index);
 
 	/*Devulve un puntero al bitmap*/
-	const char* getBitmap();
+	char* getBitmap();
 
 	int getTamanioEnBytes();
 
