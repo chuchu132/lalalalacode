@@ -36,7 +36,7 @@ public:
 
 	unsigned int getTamanioPieza();
 
-	Bitmap& getBitmap();
+	Bitmap* getBitmap();
 
 	/* devuelve la cantidad de archivos */
 	unsigned int getCantArchivos();
