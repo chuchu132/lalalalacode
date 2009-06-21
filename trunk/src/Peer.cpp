@@ -155,7 +155,7 @@ bool Peer::sendMsg(const char id) {
 /*Formato mensaje Have: <len=0005><Id=4><piece index> */
 bool Peer::sendHave(int index) {
 	bool retorno = true;
-	if (!bitmap.estaMarcada(index)) {
+	if (bitmap.estaOk() && !bitmap.estaMarcada(index)) {
 		ParserMensaje parser;
 		char buffer[FIXED_LENGTH_HAVE];
 		parser.crearMensajeHave(index, buffer);
@@ -172,8 +172,8 @@ bool Peer::sendBitfield() {
 	int longitud;
 	bool retorno;
 
-	const char* map = fileManager->getBitmap().getBitmap();
-	longitud = fileManager->getBitmap().getTamanioEnBytes();
+	const char* map = fileManager->getBitmap()->getBitmap();
+	longitud = fileManager->getBitmap()->getTamanioEnBytes();
 	int tamBuffer = (OFFSET_ARG_1 + longitud);
 	char* buffer = new char[tamBuffer];
 
@@ -271,8 +271,8 @@ void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 		unsigned int bytes = torrent->getFileManager()->writeBlock(index,
 				begin, longitud, data);
 		torrent->setDownloaded(bytes);
-		if (torrent->getFileManager()->getBitmap().estaMarcada(index)) {
-			//repartirHave(index); todo descomentar!!!!!!!!!!!!!!!
+		if (torrent->getFileManager()->getBitmap()->estaMarcada(index)) {
+			//repartirHave(index);
 			bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
 			setPiezaPendiente(false);
 		}
@@ -289,8 +289,10 @@ void Peer::repartirHave(int index) {
 	std::list<Peer*>* listaPeers = torrent->getListaPeers();
 	std::list<Peer*>::iterator it;
 	it = listaPeers->begin();
+
 	while (it != listaPeers->end()) {
 		if ((*it) != this) {
+			std::cout<<"repartir a: "<<(*it)->getIp()<<std::endl;
 			(*it)->sendHave(index);
 		}
 		it++;
@@ -405,7 +407,7 @@ void Peer::cerrarConexion() {
 }
 
 bool Peer::actualizarImInterested() {
-	Bitmap* nuevo = torrent->getFileManager()->getBitmap().nuevoPorFusion(
+	Bitmap* nuevo = torrent->getFileManager()->getBitmap()->nuevoPorFusion(
 			bitmap);
 	bool retorno = !nuevo->estaVacio();
 	delete nuevo;
@@ -420,4 +422,3 @@ bool Peer::tienePiezaPendiente() {
 void Peer::setPiezaPendiente(bool estado) {
 	this->piezaPendiente = estado;
 }
-
