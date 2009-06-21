@@ -369,3 +369,9 @@ bool FileManager::getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto)
 	delete noPidioNadie;
 	return retorno;
 }
+
+void FileManager::cancelarPedido(unsigned int index){
+	llavePedidos.lock();
+	mapaPedidos.desmarcarBit(index);
+	llavePedidos.unlock();
+}
