@@ -11,6 +11,7 @@
 #include "Ventana.h"
 #include "ClienteTorrent.h"
 #include "Torrent.h"
+#include "Mutex.h"
 
 class Ventana;
 class ClienteTorrent;
@@ -23,6 +24,8 @@ class Controlador {
 private:
 	Ventana *ventana;
 	ClienteTorrent &cliente;
+	Mutex mutex_lista;
+	std::list<Torrent*> actualizaciones;
 public:
 
 	Controlador(ClienteTorrent&);
@@ -62,6 +65,12 @@ public:
 	int correrVista();
 
 	void guardarConfiguracion();
+
+	void detenerVista();
+
+	bool hayCambios();
+
+	Torrent* getCambio();
 
 };
 

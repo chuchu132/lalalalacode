@@ -51,7 +51,6 @@ ClienteTorrent::~ClienteTorrent() {
 void* ClienteTorrent::run() {
 
 	peerListener.listen(config.getPuerto(), CANT_CLIENTES);
-	peerListener.setNonblocking();
 	Socket* conexionPeerNuevo;
 	int cantidad, length;
 	char* handshake;
@@ -90,7 +89,7 @@ void* ClienteTorrent::run() {
 				conexionPeerNuevo->close();
 		}
 		std::cout<<"*** sleep 10: clientetorrent run ***"<<std::endl;
-		sleep(10);
+		sleep(10);//tiene un sleep alto para darle prioridad a los peerdown
 	}
 
 	peerListener.close();
@@ -111,7 +110,9 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 void ClienteTorrent::finalizar() {
 	if (activo)
 	{
+		std::cout<<"Finalizando clienteTorrent"<<std::endl;
 		activo = false;
+		peerListener.setNonblocking();
 		this->join();
 	}
 	std::list<Torrent*>::iterator it = torrents.begin();

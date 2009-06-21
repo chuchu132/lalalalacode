@@ -137,7 +137,7 @@ public:
 
 	std::string getTiempoRestante();
 
-	void desargaCompleta();
+	void descargaCompleta();
 
 private:
 

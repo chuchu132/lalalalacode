@@ -26,6 +26,7 @@ void TestVista::run(){
 		{
 			//aca faltaria un cliente.excecute() para escuchar a los peers entrantes
 			controlador.correrVista();
+			controlador.detenerVista();
 		}
 
 		assert(true,"Ventana cerrada.");
