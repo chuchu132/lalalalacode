@@ -293,6 +293,7 @@ void Peer::repartirHave(int index) {
 		if ((*it) != this) {
 			(*it)->sendHave(index);
 		}
+		it++;
 	}
 }
 
