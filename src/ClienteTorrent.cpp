@@ -59,9 +59,9 @@ void* ClienteTorrent::run() {
 
 	while (activo) {
 		conexionPeerNuevo = peerListener.accept();
-		std::cout<<"conexion entrante de "<<conexionPeerNuevo->getIp()<<std::endl;
+		std::cout<<"conexion entrante de "<<conexionPeerNuevo->getPuerto()<<std::endl;
 		if (conexionPeerNuevo != NULL) {
-			cantidad = conexionPeerNuevo->receiveExact((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
+			cantidad = conexionPeerNuevo->receiveExact((char*) &length, 1);
 			if (cantidad > 0) {
 				length = ntohl(length);// pasa a de big endian al endian local
 				handshake = new char[length];
@@ -86,6 +86,8 @@ void* ClienteTorrent::run() {
 				}
 				delete[] handshake;
 			}
+			else //Si no envia el handshake luego de conectarse se cierra la coneccion con ese peer
+				conexionPeerNuevo->close();
 		}
 		std::cout<<"*** sleep 10: clientetorrent run ***"<<std::endl;
 		sleep(10);
