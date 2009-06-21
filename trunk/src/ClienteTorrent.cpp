@@ -51,7 +51,7 @@ ClienteTorrent::~ClienteTorrent() {
 void* ClienteTorrent::run() {
 
 	peerListener.listen(config.getPuerto(), CANT_CLIENTES);
-
+	peerListener.setNonblocking();
 	Socket* conexionPeerNuevo;
 	int cantidad, length;
 	char* handshake;
@@ -163,7 +163,8 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 	}
 
 	if (controlador != NULL){
-		controlador->notificarVista(notif);}
+		controlador->notificarVista(notif);
+	}
 	else{
 		std::cout<<notif<<std::endl;
 	}

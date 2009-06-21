@@ -72,6 +72,7 @@ void Controlador::notificarVista(std::string notificacion)
 
 int Controlador::correrVista()
 {
+	agregarTorrentsEnVista();
 	return ventana->run();
 }
 
