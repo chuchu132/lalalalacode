@@ -6,17 +6,17 @@
  */
 
 #include "CppTester.h"
-#include "TestBitmap.h"
-#include "TestDummy.h"
+//#include "TestBitmap.h"
+//#include "TestDummy.h"
 #include "TestVista.h"
-#include "TestParserCgi.h"
-#include "TestSha1.h"
-#include "TestDatosParser.h"
-#include "TestBencodeParser.h"
-#include "TestTracker.h"
-#include "TestConfiguracion.h"
-#include "TestClienteTorrent.h"
-#include "TestFileManager.h"
+//#include "TestParserCgi.h"
+//#include "TestSha1.h"
+//#include "TestDatosParser.h"
+//#include "TestBencodeParser.h"
+//#include "TestTracker.h"
+//#include "TestConfiguracion.h"
+//#include "TestClienteTorrent.h"
+//#include "TestFileManager.h"
 
 
 int main (int argc, char* argv[])

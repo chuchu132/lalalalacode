@@ -12,6 +12,7 @@ PeerUp::PeerUp(Socket* peerRemoto,Torrent* torrent):Peer(peerRemoto,torrent) {
 }
 
 PeerUp::~PeerUp() {
+	std::cout<<"~PeerUp"<<std::endl;
 }
 /*
  * El ClienteTorrent recibe el handshake del peer remoto, de donde saca la informacion
@@ -30,20 +31,19 @@ void* PeerUp::run(){
 		char* buffer;
 		if (recvMsj(&buffer, length)) {
 			error = (!procesar(buffer, length));
+			if (getPeer_interested() && getAm_choking() ) {
+					//ver en que caso lo unchokeo por ej tener un max de 3 peers up unchoked solamente
+					sendMsg(ID_MSJ_UNCHOKE);
+			}
+			contadorCiclos++;
+			if (contadorCiclos == 30) {
+				contadorCiclos = 0;
+				sendKeepAlive();
+			}
 		} else {
 			error = true;
 		}
-		if (getPeer_interested()) {
-			if (getAm_choking()) {
-				//ver en que caso lo unchokeo por ej tener un max de 3 peers up unchoked solamente
-				sendMsg(ID_MSJ_UNCHOKE);
-			}
-		}
-		contadorCiclos++;
-		if (contadorCiclos == 30) {
-			contadorCiclos = 0;
-			sendKeepAlive();
-		}
+		std::cout<<"*** sleep 10: run peer up ***"<<std::endl;
 		sleep(10);
 	}
 	std::cout << "final run PeerUp" << std::endl;

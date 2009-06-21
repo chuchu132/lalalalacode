@@ -59,6 +59,7 @@ void* ClienteTorrent::run() {
 
 	while (activo) {
 		conexionPeerNuevo = peerListener.accept();
+		std::cout<<"conexion entrante de "<<conexionPeerNuevo->getIp()<<std::endl;
 		if (conexionPeerNuevo != NULL) {
 			cantidad = conexionPeerNuevo->receiveExact((char*) &length, sizeof(int)); //TODO RE IMPORTNATE!!ver que el receive llene el buffer socket->receive no testeado!!
 			if (cantidad > 0) {
@@ -73,14 +74,21 @@ void* ClienteTorrent::run() {
 						Peer* peerNuevo =
 								new PeerUp(conexionPeerNuevo, torrent);
 						if (peerNuevo != NULL) {
-							torrent->agregarPeer(peerNuevo);
-
+							if (!torrent->agregarPeer(peerNuevo)) {
+								delete peerNuevo;
+							}
+							else {
+								std::cout<<"agregar PeerUp "
+									<<conexionPeerNuevo->getIp()<<std::endl;
+							}
 						}
 					}
 				}
 				delete[] handshake;
 			}
 		}
+		std::cout<<"*** sleep 10: clientetorrent run ***"<<std::endl;
+		sleep(10);
 	}
 
 	peerListener.close();
