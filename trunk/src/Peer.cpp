@@ -46,6 +46,7 @@ bool Peer::procesar(char* buffer, int length) {
 					bitmap)) {
 				sendRequest(index);
 				setIdxPiezaPendiente(index);
+				setEstadoPiezaPendiente(true);
 			} else {
 				am_interested = false;
 			}
@@ -98,6 +99,7 @@ bool Peer::procesar(char* buffer, int length) {
 					bitmap)) {
 				sendRequest(index);
 				setIdxPiezaPendiente(index);
+				setEstadoPiezaPendiente(true);
 			} else {
 				am_interested = false;
 			}
