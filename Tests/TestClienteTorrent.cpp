@@ -21,7 +21,7 @@ void TestClienteTorrent::run(){
 	Torrent* torrent = cliente.agregarTorrent("./Tests/boom.torrent");
 
 	torrent->continuar();
-
+	cliente.run();
 	sleep(60); // 5 min
 
 	torrent->detener();

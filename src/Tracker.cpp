@@ -103,7 +103,7 @@ bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoP
     std::string salida;
 
 	if (extraerBencode(buffer, longitud,salida,posUltimoProcesado)) {
-		std::cout<<buffer<<std::endl;
+		//std::cout<<buffer<<std::endl;
 		BencodeParser parser(salida.c_str(), longitud);
 		if (parser.procesar()) {
 			DatosParser* datos;
