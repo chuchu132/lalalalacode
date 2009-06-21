@@ -133,8 +133,11 @@ void Torrent::agregarPeer(std::string ip, unsigned int puerto) {
 		conexion->setIp(ip);
 		conexion->setPuerto(puerto);
 		Peer* nuevoPeer = new PeerDown(conexion, this);
+		llaveListaPeers.lock();
 		peers.push_back(nuevoPeer);
+		llaveListaPeers.unlock();
 		nuevoPeer->execute();
+
 		if (controlador != NULL)
 			controlador->actualizarEstado(this);
 	} else {
@@ -142,9 +145,20 @@ void Torrent::agregarPeer(std::string ip, unsigned int puerto) {
 	}
 }
 
-void Torrent::agregarPeer(Peer* peerNuevo) {
-	peers.push_back(peerNuevo);
-	peerNuevo->execute();
+bool Torrent::agregarPeer(Peer* peerNuevo) {
+	bool resultado;
+
+	llaveListaPeers.lock();
+	if (getCantPeers() < getCantidadMaximaPeers()) {
+		peers.push_back(peerNuevo);
+		peerNuevo->execute();
+		resultado = true;
+	}
+	else {
+		resultado = false;
+	}
+	llaveListaPeers.unlock();
+	return resultado;
 }
 
 void Torrent::removerPeersInactivos() {
@@ -167,7 +181,7 @@ void Torrent::removerPeersInactivos() {
 
 void Torrent::detenerPeers() {
 	std::list<Peer*>::iterator it = peers.begin();
-	Peer* temp;
+	Peer* temp; //todo.. ver que no haya problemas con otros threads
 	while (it != peers.end()) {
 		temp = (*it);
 		temp->cerrarConexion();
@@ -329,7 +343,7 @@ std::list<Peer*>::iterator Torrent::getEndIterPeers() {
 	return peers.end();
 }
 
-int Torrent::getCantidadMaximaPeers() {
+unsigned int Torrent::getCantidadMaximaPeers() {
 	return cantidadMaximaPeers;
 }
 
@@ -354,20 +368,13 @@ void Torrent::setUploaded(unsigned int bytes) {
 
 void Torrent::desargaCompleta() {
 	activo = false;
-	tracker->cerrarConexion();
+	tracker->cerrarConexion(); //esto hace que no se puedan bajar de nosotros :S
 	tracker->join();
-	std::list<Peer*>::iterator it = peers.begin();
-	Peer* temp;
-	while (it != peers.end()) {
-		temp = (*it);
-		temp->cerrarConexion();
-		it = peers.erase(it);
-		delete temp;
-		it++;
-	}
+	detenerPeers(); //habria que cerrar solo los peerdown
 	estado = T_COMPLETO;
+	std::cout<<"<---------------SE COMPLETO LA DESCARGA!!!------------------>"<<std::endl;
 	if (controlador != NULL){
 		controlador->actualizarEstado(this);
 	}
-std::cout<<"<---------------SE COMPLETO LA DESCARGA!!!------------------>"<<std::endl;
+
 }

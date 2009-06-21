@@ -46,7 +46,8 @@ void* Tracker::run() {
 		} else {
 			seCerro = true;
 		}
-		sleep(0);//ver!
+		std::cout<<"*** sleep 1: tracker run ***"<<std::endl;
+		sleep(1);
 
 	}
 
@@ -217,8 +218,12 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		while( torrent->estaActivo() && (cantPeers == cantMax)){
 			torrent->removerPeersInactivos();
 			cantPeers = torrent->getCantPeers();
+			std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
 			sleep(5);
 		}
+		std::cout<<"*** sleep 0: tracker decodificar peers ***"<<std::endl;
+		sleep(0);
+
 	}
 }
 

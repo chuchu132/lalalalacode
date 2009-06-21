@@ -66,7 +66,7 @@ public:
 	 * los agrega a la lista de peers del Torrent*/
 	void agregarPeer(std::string ip,unsigned int puerto);
 
-	void agregarPeer(Peer* peerNuevo);
+	bool agregarPeer(Peer* peerNuevo);
 
 	/* detiene el trafico del torrent */
 	void detener();
@@ -129,7 +129,7 @@ public:
 
 	std::list<Peer*>::iterator getIterPeers();
 	std::list<Peer*>::iterator getEndIterPeers();
-	int getCantidadMaximaPeers();
+	unsigned int getCantidadMaximaPeers();
 
 	void removerPeersInactivos();
 
@@ -151,7 +151,7 @@ private:
 	ClienteTorrent* clienteTorrent;
 	Tracker* tracker;
 	Mutex llaveListaPeers;
-	int cantidadMaximaPeers;
+	unsigned int cantidadMaximaPeers;
 	std::list<Peer*> peers;
 	FileManager fileManager;
 	unsigned int info_hash[5];
