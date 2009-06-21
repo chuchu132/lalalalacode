@@ -62,7 +62,7 @@ private:
 	void on_row_selected();
 
 	/* actualiza la fila con los datos del torrent */
-	void updateRowValues(Gtk::TreeModel::Row &, Torrent*);
+	void updateRowValues(Gtk::TreeModel::Row &row, Torrent *t);
 
 	/* muestra todos los torrents */
 	void showAll();

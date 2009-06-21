@@ -155,12 +155,12 @@ void TorrentView::on_row_selected()
 void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t)
 {
 	row[col_status] = t->getEstado();
-	row[col_progress] = t->getTamanioDescargado() * 100 / t->getTamanio();
-	row[col_completed] =t->bytesToString(t->getTamanioDescargado());
 	row[col_remaining] =t->bytesToString(t->left());
 	row[col_downspeed] = t->getVelocidadBajada();
 	row[col_upspeed] = t->getVelocidadSubida();
 	row[col_time] = t->getTiempoRestante();
+	row[col_progress] = t->getTamanioDescargado() * 100 / t->getTamanio();
+	row[col_completed] =t->bytesToString(t->getTamanioDescargado());
 }
 
 void TorrentView::addRow(Torrent *t)
@@ -245,7 +245,7 @@ void TorrentView::updateRow(Torrent *t)
 		row = *iter;
 		if (row[col_torrent] == t)
 		{
-			this->updateRowValues(row,t);
+			updateRowValues(row,t);
 			break;
 		}
 		iter++;
