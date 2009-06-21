@@ -46,9 +46,6 @@ void* Tracker::run() {
 		} else {
 			seCerro = true;
 		}
-		std::cout<<"*** sleep 1: tracker run ***"<<std::endl;
-		sleep(1);
-
 	}
 
 	return NULL;
@@ -221,8 +218,6 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 			std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
 			sleep(5);
 		}
-		std::cout<<"*** sleep 0: tracker decodificar peers ***"<<std::endl;
-		sleep(0);
 
 	}
 }
