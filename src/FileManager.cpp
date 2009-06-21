@@ -364,7 +364,10 @@ bool FileManager::getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto)
 	Bitmap* noPidioNadie = mapaPedidos.nuevoPorFusion(*faltanDescargar);
 	if( (retorno = noPidioNadie->getPrimeroLibre(index)) ){
 		mapaPedidos.marcarBit(index);
-	};
+		std::cout<< "          SE RESERVO LA PIEZA: "<<index<<std::endl;
+	}else{
+		std::cout<< "NO HAY PIEZAS DISPONIBLES !!!!!!!!!!!!!!!!!!!!!!!!!"<<std::endl;
+	}
 	llavePedidos.unlock();
 	delete faltanDescargar;
 	delete noPidioNadie;
@@ -374,5 +377,6 @@ bool FileManager::getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto)
 void FileManager::cancelarPedido(unsigned int index){
 	llavePedidos.lock();
 	mapaPedidos.desmarcarBit(index);
+	std::cout<<"                           PIEZA "<<index<<" DE NUEVO"<<std::endl;
 	llavePedidos.unlock();
 }

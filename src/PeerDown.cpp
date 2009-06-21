@@ -61,13 +61,12 @@ void* PeerDown::run() {
 			}
 		}
 	}
-	std::cout << "muere run PeerDown de "<<this->getIp()<< std::endl;
+	std::cout << "muere run PeerDown de "<<this->getIp()<< " ultima pieza "<<getIdxPiezaPendiente()<<std::endl;
 	std::cout.flush();
 	cerrarConexion(); // si la conexion esta cerrada el peer puede ser eliminado de la lista
 	/*Si al peer que muere se le habia pedido una pieza y no la completo, se marca para volver a pedir*/
 	if(tienePiezaPendiente()){
 		getTorrent()->getFileManager()->cancelarPedido(getIdxPiezaPendiente());
-		std::cout<<"                           PIEZA "<<getIdxPiezaPendiente()<<" DE NUEVO"<<std::endl;
 	}
 	return NULL;
 }
