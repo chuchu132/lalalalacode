@@ -211,8 +211,8 @@ unsigned int FileManager::getTamanio() {
 	return bytesTotales;
 }
 
-Bitmap& FileManager::getBitmap() {
-	return bitmap;
+Bitmap* FileManager::getBitmap() {
+	return &bitmap;
 }
 /*Solo se comparten piezas que estan enteras */
 char* FileManager::readBlock(int index, int begin, int longitud) {
