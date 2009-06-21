@@ -10,7 +10,6 @@
 #include <cmath>
 
 
-
 Bitmap::Bitmap() {
 	bitmap = NULL;
 	tamanio = 0;
@@ -71,7 +70,7 @@ bool Bitmap::estaMarcada(int index) {
 	int offset = (index % 8);
 	return ((bitmap[byte] & (int)pow(2, (7 - offset))) != 0);
 }
-const char* Bitmap::getBitmap() {
+ char* Bitmap::getBitmap() {
 	return bitmap;
 }
 int Bitmap::getTamanioEnBytes(){

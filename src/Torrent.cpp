@@ -86,7 +86,7 @@ void Torrent::run() {
 
 	if (tracker->connect()) {
 		std::cout << "conecto" << std::endl;
-		std::cout << ((enviarEventoEstado(NULL, 100)) ? "envio" : "noenvio")
+		std::cout << ((enviarEventoEstado(NULL, 200)) ? "envio" : "noenvio")
 				<< std::endl;
 		tracker->execute();
 		if (controlador != NULL) {
@@ -184,8 +184,10 @@ void Torrent::detenerPeers() {
 	Peer* temp; //todo.. ver que no haya problemas con otros threads
 	while (it != peers.end()) {
 		temp = (*it);
+		if(temp->conexionEstaOK()){
 		temp->cerrarConexion();
 		temp->join();
+		}
 		it = peers.erase(it);
 		delete temp;
 		it++;
@@ -196,7 +198,8 @@ void Torrent::refrescarPeers() {
 	time_t horaActual = time(NULL);
 	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
 	if (dif >= tracker->getMinInterval()) {
-		enviarEventoEstado(NULL, 0);
+		removerPeersInactivos();
+		enviarEventoEstado(NULL, 200);
 		horaInicial = horaActual;
 	}
 	//controlador->actualizarEstado(this);
@@ -216,8 +219,7 @@ void Torrent::continuar() {
 
 void Torrent::detener() {
 
-	if (estado != T_DETENIDO) {
-
+	if (estado != T_DETENIDO && estado != T_COMPLETO ) {
 		activo = false;
 		tracker->cerrarConexion();
 		tracker->join();
@@ -374,6 +376,9 @@ void Torrent::descargaCompleta() {
 	detenerPeers(); //habria que cerrar solo los peerdown
 	estado = T_COMPLETO;
 	std::cout<<"<---------------SE COMPLETO LA DESCARGA!!!------------------>"<<std::endl;
+
+	fileManager.descargaAarchivos();
+
 	if (controlador != NULL){
 		std::string notif = "Se completo la descada del Torrent ";
 		notif += getNombre();

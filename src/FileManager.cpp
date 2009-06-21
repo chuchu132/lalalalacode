@@ -362,6 +362,12 @@ bool FileManager::getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto)
 	llavePedidos.lock();
 	Bitmap* faltanDescargar = bitmap.nuevoPorFusion(mapaPeerRemoto);
 	Bitmap* noPidioNadie = mapaPedidos.nuevoPorFusion(*faltanDescargar);
+	int resto = bytesTotales % tamanioPieza;
+	if(resto != 0){
+		char* bitmapAux = noPidioNadie->getBitmap();
+		unsigned int tam = noPidioNadie->getTamanioEnBytes();
+		bitmapAux[tam] = (bitmapAux[tam] & (0xFF<<(8-resto)));
+	}
 	if( (retorno = noPidioNadie->getPrimeroLibre(index)) ){
 		mapaPedidos.marcarBit(index);
 		std::cout<< "          SE RESERVO LA PIEZA: "<<index<<std::endl;
