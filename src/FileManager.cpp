@@ -237,7 +237,7 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 		if (verificarHashPieza(index)) {
 			bytes = longitud; //TODO muestra todo lo que entra.
 			bitmap.marcarBit(index);
-			std::cout<<"                           PIEZA "<<index<<" COMPLETA"<<std::endl;
+			std::cout<<"\x1b[94m                PIEZA\x1b[m"<<index<<"\x1b[94mCOMPLETA\x1b[m"<<std::endl;
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();
 			}
@@ -365,8 +365,6 @@ bool FileManager::getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto)
 	if( (retorno = noPidioNadie->getPrimeroLibre(index)) ){
 		mapaPedidos.marcarBit(index);
 		std::cout<< "          SE RESERVO LA PIEZA: "<<index<<std::endl;
-	}else{
-		std::cout<< "NO HAY PIEZAS DISPONIBLES !!!!!!!!!!!!!!!!!!!!!!!!!"<<std::endl;
 	}
 	llavePedidos.unlock();
 	delete faltanDescargar;
