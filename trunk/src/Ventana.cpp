@@ -256,13 +256,15 @@ void Ventana::on_button_add_clicked()
 
 void Ventana::on_button_erase_clicked()
 {
+	mutex_torrents.lock();
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 	{
 		torrents->eraseSelectedRow();
-		attr->torrentDeleted(t);
 		controlador->borrarTorrent(t);
+		attr->torrentDeleted(t);
 	}
+	mutex_torrents.unlock();
 }
 
 void Ventana::on_button_stop_clicked()
@@ -325,8 +327,10 @@ void Ventana::button_accept_clicked()
      select_window->hide();
      Torrent *t = controlador->agregarTorrent(filename);
      if (t != NULL){
-    	  torrents->addRow(t);
-    	  t->continuar();//VER!!! yo no pondria esto aca en la vista!
+    	 mutex_torrents.lock();
+    	 torrents->addRow(t);
+    	 mutex_torrents.unlock();
+    	 t->continuar();//VER!!! yo no pondria esto aca en la vista!
      }
 }
 
@@ -337,14 +341,16 @@ void Ventana::button_cancel_clicked()
 
 void Ventana::actualizarEstado(Torrent* t)
 {
-	torrents->updateRow(t);
+	torrents->updateRow(t);//tal vez va el mutex aca tb
 	if ( t == torrents->getSelectedTorrent())
 		attr->showInfo(t);
 }
 
 void Ventana::addTorrent(Torrent *t)
 {
+	mutex_torrents.lock();
 	torrents->addRow(t);
+	mutex_torrents.unlock();
 }
 
 void Ventana::mostrarNotificacion(std::string notificacion)
@@ -374,11 +380,12 @@ void Ventana::on_menu_preferences()
 	preferences_window->hide();
 }
 
-int Ventana::run()
+int Ventana::correr()
 {
 	if (!error)
 	{
 		Gtk::Main* kit = Gtk::Main::instance();
+		this->execute();
 		kit->run(*main_window);
 		return 0;
 	}
@@ -386,6 +393,29 @@ int Ventana::run()
 	{
 		return 1;
 	}
+}
+
+void* Ventana::run() {
+	activo = true;//ver si hay que usar un mutex para activo
+	Torrent *t;
+	std::cout<<"iniciado el loop de la vista-controlador"<<std::endl;
+	while (activo) {
+
+		if (controlador->hayCambios()) {
+			t = controlador->getCambio();
+			actualizarEstado(t);
+			sleep(1);
+		}
+		else {
+			sleep(3);
+		}
+	}
+	return NULL;
+}
+
+void Ventana::detener() {
+	activo = false;
+	this->join();
 }
 
 bool Ventana::huboError()

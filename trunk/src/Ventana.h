@@ -17,6 +17,8 @@
 #include "Controlador.h"
 #include "AttributeView.h"
 #include "Constantes.h"
+#include "Thread.h"
+#include "Mutex.h"
 
 
 class TorrentView;
@@ -24,7 +26,8 @@ class Controlador;
 class AttributesView;
 class Torrent;
 
-class Ventana {
+class Ventana: public Thread {
+	/* ventana asincronica.. para ventana sincronica usar de la rev 247 hacia atras */
 
 private:
 	Glib::RefPtr<Gtk::Builder> builder;//obtiene datos del archivo de la vista
@@ -66,6 +69,8 @@ private:
 	Controlador *controlador;
 
 	bool error; //indica si hubo un error
+	bool activo;
+	Mutex mutex_torrents;
 
 	//Signal handlers:
 	void on_button_add_clicked();
@@ -100,6 +105,7 @@ private:
 	//conecta las señales con los signal handlers
 	void connectSignals();
 
+	void* run();
 
 public:
 
@@ -120,7 +126,7 @@ public:
 
 	/* abre la ventana principal */
 	/* devuelve 0 en caso de exito y 1 en caso de error */
-	int run();
+	int correr();
 
 	bool huboError();
 
@@ -128,6 +134,8 @@ public:
 	unsigned int getPuerto();
 
 	std::string getRutaDescargas();
+
+	void detener();
 
 };
 

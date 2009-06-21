@@ -43,7 +43,9 @@ void Controlador::pausarTorrent(Torrent *t)
 
 void Controlador::actualizarEstado(Torrent *t)
 {
-	ventana->actualizarEstado(t);
+	mutex_lista.lock();
+	actualizaciones.push_back(t);
+	mutex_lista.unlock();
 }
 
 void Controlador::agregarTorrentsEnVista()
@@ -73,7 +75,11 @@ void Controlador::notificarVista(std::string notificacion)
 int Controlador::correrVista()
 {
 	agregarTorrentsEnVista();
-	return ventana->run();
+	return ventana->correr();
+}
+
+void Controlador::detenerVista() {
+	ventana->detener();
 }
 
 void Controlador::guardarConfiguracion()
@@ -85,3 +91,19 @@ void Controlador::guardarConfiguracion()
 	config->guardarRutaDescargas(ventana->getRutaDescargas());
 }
 
+bool Controlador::hayCambios() {
+	bool cambio;
+	mutex_lista.lock();
+	cambio = !actualizaciones.empty();
+	mutex_lista.unlock();
+	return cambio;
+}
+
+Torrent* Controlador::getCambio(){
+	Torrent *t;
+	mutex_lista.lock();
+	t = actualizaciones.front();
+	actualizaciones.pop_front();
+	mutex_lista.unlock();
+	return t;
+}

@@ -367,7 +367,7 @@ void Torrent::setUploaded(unsigned int bytes) {
 		controlador->actualizarEstado(this);
 }
 
-void Torrent::desargaCompleta() {
+void Torrent::descargaCompleta() {
 	activo = false;
 	tracker->cerrarConexion(); //esto hace que no se puedan bajar de nosotros :S
 	tracker->join();
@@ -375,6 +375,10 @@ void Torrent::desargaCompleta() {
 	estado = T_COMPLETO;
 	std::cout<<"<---------------SE COMPLETO LA DESCARGA!!!------------------>"<<std::endl;
 	if (controlador != NULL){
+		std::string notif = "Se completo la descada del Torrent ";
+		notif += getNombre();
+		notif += " =)";
+		controlador->notificarVista(notif);
 		controlador->actualizarEstado(this);
 	}
 
