@@ -45,6 +45,7 @@ void Controlador::actualizarEstado(Torrent *t)
 {
 	mutex_lista.lock();
 	actualizaciones.push_back(t);
+	//std::cout<<".........controlador push back ........"<<std::endl;
 	mutex_lista.unlock();
 }
 
@@ -104,6 +105,7 @@ Torrent* Controlador::getCambio(){
 	mutex_lista.lock();
 	t = actualizaciones.front();
 	actualizaciones.pop_front();
+	//std::cout<<".........front ........"<<std::endl;
 	mutex_lista.unlock();
 	return t;
 }

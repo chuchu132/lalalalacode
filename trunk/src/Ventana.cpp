@@ -398,11 +398,12 @@ int Ventana::correr()
 void* Ventana::run() {
 	activo = true;//ver si hay que usar un mutex para activo
 	Torrent *t;
-	std::cout<<"iniciado el loop de la vista-controlador"<<std::endl;
+	std::cout<<"iniciado el loop de actualizacion de la vista"<<std::endl;
 	while (activo) {
 
 		if (controlador->hayCambios()) {
 			t = controlador->getCambio();
+			//std::cout<<".........actualizando........"<<std::endl;
 			actualizarEstado(t);
 			sleep(1);
 		}
@@ -410,6 +411,7 @@ void* Ventana::run() {
 			sleep(3);
 		}
 	}
+	std::cout<<"fin del run vista"<<std::endl;
 	return NULL;
 }
 

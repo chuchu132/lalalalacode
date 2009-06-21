@@ -138,8 +138,8 @@ void Torrent::agregarPeer(std::string ip, unsigned int puerto) {
 		llaveListaPeers.unlock();
 		nuevoPeer->execute();
 
-		if (controlador != NULL)
-			controlador->actualizarEstado(this);
+//		if (controlador != NULL)
+//			controlador->actualizarEstado(this);
 	} else {
 		delete conexion;
 	}
