@@ -184,7 +184,7 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 		delete[] longitudBencode;
 		return salida;
 	}
-	else return -1;
+	else return ERROR;
 
 }
 

@@ -234,9 +234,9 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
+		bytes = longitud; //TODO muestra todo lo que entra.
 		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
-			bytes = longitud;
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();
 			}

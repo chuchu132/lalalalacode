@@ -22,7 +22,6 @@ PeerDown::~PeerDown() {
 void* PeerDown::run() {
 	std::cout << "run PeerDown" << std::endl;
 	if (sendHandshake() && sendBitfield()) {
-		//unsigned int index = -1;
 		int contadorCiclos = 0;
 		bool error = !recvHandshake(); // error puede ser en la conexion, en lo recibido o al procesar
 
@@ -30,28 +29,29 @@ void* PeerDown::run() {
 			int length;
 			char* buffer;
 			if (recvMsj(&buffer, length)) {
+				std::cout<<" Recibe ok el peer "<<this->getIp()<<std::endl;
 				error = (!procesar(buffer, length));
 				delete[] buffer;
 			} else {
 				std::cout<<" Error al recibir "<<this->getIp()<<std::endl;
 				error = true;
 			}
+
 			if (!error) {
 				if (getPeer_choking() == true && getAm_interested() == false ) {
 					if (actualizarImInterested()){
 						sendMsg(ID_MSJ_INTERESTED); //Interested
 						}
 				}
-				if (getPeer_choking() == false && getAm_interested() == true) {
-					//sendRequest(index);
-					setAm_interested(false);
-				}else{
+				if (getPeer_choking() == false && getAm_interested() == false) {
+
 					actualizarImInterested();
 				}
 
 
 				contadorCiclos++;
 				if (contadorCiclos == 30) {
+					std::cout<<" 30 ciclos de "<<this->getIp()<<std::endl;
 					contadorCiclos = 0;
 					sendKeepAlive();
 				}
@@ -59,7 +59,7 @@ void* PeerDown::run() {
 			else{
 				std::cout<<" Error al procesar "<<this->getIp()<<std::endl;
 			}
-			sleep(1);//todo.. ver cuanto  dormir
+			sleep(2);
 		}
 	}
 	std::cout << "muere run PeerDown de "<<this->getIp()<< std::endl;

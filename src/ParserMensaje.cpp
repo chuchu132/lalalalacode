@@ -34,7 +34,7 @@ void ParserMensaje::crearMensajeId(const char id, char* buffer) {
 
 void ParserMensaje::crearMensajeHave(const unsigned int index, char* buffer) {
 	(*((unsigned int*) (buffer + OFFSET_LEN))) = htonl(LEN_MSJ_HAVE); //seteo len
-	buffer[OFFSET_LEN] = ID_MSJ_HAVE; //seteo el Id
+	buffer[OFFSET_ID] = ID_MSJ_HAVE; //seteo el Id
 	(*((unsigned int*) (buffer + OFFSET_ARG_1))) = htonl(index); //seteo piece index
 }
 
