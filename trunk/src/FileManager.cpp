@@ -237,6 +237,7 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 		if (verificarHashPieza(index)) {
 			bytes = longitud; //TODO muestra todo lo que entra.
 			bitmap.marcarBit(index);
+			std::cout<<"                           PIEZA "<<index<<" COMPLETA"<<std::endl;
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();
 			}
