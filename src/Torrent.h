@@ -171,6 +171,7 @@ private:
 	time_t horaAnterior;
 	unsigned int downAnterior;
 
+
 };
 
 #endif /* TORRENT_H_ */

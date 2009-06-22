@@ -288,16 +288,16 @@ int Torrent::getVelocidadSubida() {
 }
 
 int Torrent::getVelocidadBajada() {
-	return 0;
 
-	// no esta probado ;) lo mismo para vel de subida
-	//	time_t horaAct = time(NULL);
-	//	double tiempo = difftime(horaAct,horaAnterior);
-	//	horaAnterior = horaAct;
-	//
-	//	unsigned int diferencia = downloaded - downAnterior;
-	//
-	//	return  ((diferencia/1024)/tiempo);
+
+	time_t horaAct = time(NULL);
+	double tiempo = difftime(horaAct,horaAnterior);
+	horaAnterior = horaAct;
+	unsigned int diferencia = downloaded - downAnterior;
+
+	downAnterior=downloaded;
+	return((diferencia/1024)/tiempo);
+
 }
 
 void Torrent::setControlador(Controlador* ctrl) {
