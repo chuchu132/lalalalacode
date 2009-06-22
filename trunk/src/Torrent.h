@@ -93,6 +93,8 @@ public:
 	/* Devuelve el estado por ej: "detenido", "pausado", "conectando", "completo", etc */
 	std::string getEstado();
 
+	bool estaCompleto();
+
 	/* devuelve el tamaño del archivo en bytes */
 	unsigned int getTamanio();
 
