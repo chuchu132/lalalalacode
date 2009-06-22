@@ -31,6 +31,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	controlador = NULL;
 	port = clienteTorrent->getPuerto();
 	cantidadMaximaPeers = PEERS_MAX;
+	endGame = PRIMER_END_GAME;
 }
 
 Torrent::~Torrent() {
@@ -129,7 +130,7 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 
 void Torrent::agregarPeer(std::string ip, unsigned int puerto) {
 	Socket* conexion = new Socket();
-	if (conexion->connectWithTimeout(ip.c_str(), puerto, 5) == OK) {
+	if (conexion->connectWithTimeout(ip.c_str(), puerto, TIME_OUT_CONNECT) == OK) {
 		conexion->setIp(ip);
 		conexion->setPuerto(puerto);
 		Peer* nuevoPeer = new PeerDown(conexion, this);
@@ -138,8 +139,8 @@ void Torrent::agregarPeer(std::string ip, unsigned int puerto) {
 		llaveListaPeers.unlock();
 		nuevoPeer->execute();
 
-//		if (controlador != NULL)
-//			controlador->actualizarEstado(this);
+		//		if (controlador != NULL)
+		//			controlador->actualizarEstado(this);
 	} else {
 		delete conexion;
 	}
@@ -153,20 +154,19 @@ bool Torrent::agregarPeer(Peer* peerNuevo) {
 		peers.push_back(peerNuevo);
 		peerNuevo->execute();
 		resultado = true;
-	}
-	else {
+	} else {
 		resultado = false;
 	}
 	llaveListaPeers.unlock();
 	return resultado;
 }
 
-void Torrent::removerPeersInactivos() {
+void Torrent::removerPeersInactivos(Peer* peerQueQueda) {
 	llaveListaPeers.lock();
 	std::list<Peer*>::iterator it = peers.begin();
 	Peer* temp;
 	while (it != peers.end()) {
-		if (!(*it)->conexionEstaOK()) {
+		if (!(*it)->conexionEstaOK() && ((*it) != peerQueQueda)) {
 			(*it)->join();
 			temp = (*it);
 			it = peers.erase(it);
@@ -181,15 +181,10 @@ void Torrent::removerPeersInactivos() {
 
 void Torrent::detenerPeers() {
 	std::list<Peer*>::iterator it = peers.begin();
-	Peer* temp; //todo.. ver que no haya problemas con otros threads
 	while (it != peers.end()) {
-		temp = (*it);
-		if(temp->conexionEstaOK()){
-		temp->cerrarConexion();
-		temp->join();
+		if ((*it)->conexionEstaOK()) {
+			(*it)->cerrarConexion();
 		}
-		it = peers.erase(it);
-		delete temp;
 		it++;
 	}
 }
@@ -198,17 +193,17 @@ void Torrent::refrescarPeers() {
 	time_t horaActual = time(NULL);
 	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
 	if (dif >= tracker->getMinInterval()) {
-		removerPeersInactivos();
-		enviarEventoEstado(NULL, 200);
+		removerPeersInactivos(NULL);
+		std::cout << ((enviarEventoEstado(NULL, 200)) ? "Pedido enviado"
+				: "Pedido NO enviado") << std::endl;
 		horaInicial = horaActual;
+		fileManager.vaciarMapaPedidos(); // reinicia el mapa de pedidos para aprovechar los nuevos peers
 	}
-	//controlador->actualizarEstado(this);
 }
 
 void Torrent::continuar() {
 
 	if (estado != T_ACTIVO) {
-
 		activo = true;
 		estado = T_ACTIVO;
 		run();
@@ -219,7 +214,7 @@ void Torrent::continuar() {
 
 void Torrent::detener() {
 
-	if (estado != T_DETENIDO && estado != T_COMPLETO ) {
+	if (estado != T_DETENIDO && estado != T_COMPLETO) {
 		activo = false;
 		tracker->cerrarConexion();
 		tracker->join();
@@ -288,16 +283,12 @@ int Torrent::getVelocidadSubida() {
 }
 
 int Torrent::getVelocidadBajada() {
-
-
 	time_t horaAct = time(NULL);
 	double tiempo = difftime(horaAct,horaAnterior);
 	horaAnterior = horaAct;
 	unsigned int diferencia = downloaded - downAnterior;
-
 	downAnterior=downloaded;
 	return((diferencia/1024)/tiempo);
-
 }
 
 void Torrent::setControlador(Controlador* ctrl) {
@@ -322,17 +313,18 @@ unsigned int Torrent::getCantPeers() {
 }
 
 std::string Torrent::bytesToString(float bytes) {
+	float temp = bytes;
 	std::stringstream buffer;
 	buffer << std::setprecision(4);
 	if (bytes < 1024) {
 		buffer << bytes << " bytes";
 	} else {
-		bytes /= 1024;
-		if (bytes < 1024) {
-			buffer << bytes << " kb";
+		temp = (bytes / 1024);
+		if (temp < 1024) {
+			buffer << temp << " kb";
 		} else {
-			bytes /= 1024;
-			buffer << bytes << " Mb";
+			temp /= 1024;
+			buffer << temp << " Mb";
 		}
 	}
 	return buffer.str();
@@ -369,17 +361,38 @@ void Torrent::setUploaded(unsigned int bytes) {
 		controlador->actualizarEstado(this);
 }
 
+
+bool Torrent::reiniciarPedidos(Peer* peerQueQueda){
+	unsigned int total = fileManager.getTamanio();
+	float porcent = (downloaded / total);
+	if( porcent > endGame){
+		fileManager.vaciarMapaPedidos();
+		removerPeersInactivos(peerQueQueda);
+		if(endGame == SEGUNDO_END_GAME){
+			endGame = 1.0;
+		}else{
+		endGame = SEGUNDO_END_GAME;
+		}
+
+		std::cout << "_________Reinicia los pedidos las descargan superan el "<<endGame<<" %"<< std::endl;
+		return true;
+	}
+	return false;
+}
+
 void Torrent::descargaCompleta() {
 	activo = false;
 	tracker->cerrarConexion(); //esto hace que no se puedan bajar de nosotros :S
 	tracker->join();
 	detenerPeers(); //habria que cerrar solo los peerdown
 	estado = T_COMPLETO;
-	std::cout<<"<---------------SE COMPLETO LA DESCARGA!!!------------------>"<<std::endl;
+	std::cout
+			<< "<---------------SE COMPLETO LA DESCARGA!!!------------------>"
+			<< std::endl;
 
 	fileManager.descargaAarchivos();
 
-	if (controlador != NULL){
+	if (controlador != NULL) {
 		std::string notif = "Se completo la descada del Torrent ";
 		notif += getNombre();
 		notif += " =)";
