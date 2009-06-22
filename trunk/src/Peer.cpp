@@ -41,7 +41,7 @@ bool Peer::procesar(char* buffer, int length) {
 	case ID_MSJ_UNCHOKE: {
 		std::cout << getIp() << " mando UnChoke" << std::endl;
 		peer_choking = false;
-		if (am_interested && !tienePiezaPendiente()){
+		if (am_interested && !tienePiezaPendiente()) {
 			unsigned int index;
 			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
 					bitmap)) {
@@ -51,8 +51,8 @@ bool Peer::procesar(char* buffer, int length) {
 			} else {
 				am_interested = false;
 			}
-		}else{
-			if(tienePiezaPendiente()){
+		} else {
+			if (tienePiezaPendiente()) {
 				sendRequest(getIdxPiezaPendiente()); //le vuelve a pedir la pieza que le "debe".
 			}
 		}
@@ -92,8 +92,8 @@ bool Peer::procesar(char* buffer, int length) {
 		unsigned int index, begin, length2;
 		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
 		procesarPiece(index, begin, length2, data);
-		std::cout << getIp() << " mando la Pieza " << index
-						<< " offset " <<  begin << std::endl;
+		std::cout << getIp() << " mando la Pieza " << index << " offset "
+				<< begin << std::endl;
 		if (!tienePiezaPendiente()) {
 			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
 					bitmap)) {
@@ -114,6 +114,7 @@ bool Peer::procesar(char* buffer, int length) {
 		break;
 	case ID_MSJ_KEEPALIVE: {
 		huboCambios = false;
+		procesarKeepAlive();
 		std::cout << getIp() << " mando keepalive" << std::endl;
 	}
 		break;
@@ -286,6 +287,10 @@ void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 			torrent->reiniciarPedidos(this); // verifica si hay q reiniciar los pedidos
 		}
 	} catch (AvisoDescargaCompleta aviso) {
+		setEstadoPiezaPendiente(false);
+		if (torrent->getFileManager()->getBitmap()->estaMarcada(index)) {
+			repartirHave(index);
+		}
 		torrent->descargaCompleta();
 		torrent->removerPeersInactivos(this);
 	}
@@ -302,7 +307,7 @@ void Peer::repartirHave(int index) {
 
 	while (it != listaPeers->end()) {
 		if ((*it) != this) {
-			std::cout<<"repartir a: "<<(*it)->getIp()<<std::endl;
+			std::cout << "repartir a: " << (*it)->getIp() << std::endl;
 			(*it)->sendHave(index);
 		}
 		it++;
@@ -355,7 +360,7 @@ bool Peer::recvMsj(char** buffer, int& length) {
 	return false;
 }
 
-bool Peer::getHuboCambios(){
+bool Peer::getHuboCambios() {
 	return huboCambios;
 }
 
@@ -437,10 +442,10 @@ void Peer::setEstadoPiezaPendiente(bool estado) {
 	this->piezaPendiente = estado;
 }
 
-void Peer::setIdxPiezaPendiente(unsigned int index){
+void Peer::setIdxPiezaPendiente(unsigned int index) {
 	this->idxPiezaPendiente = index;
 }
 
-unsigned int Peer::getIdxPiezaPendiente(){
+unsigned int Peer::getIdxPiezaPendiente() {
 	return idxPiezaPendiente;
 }
