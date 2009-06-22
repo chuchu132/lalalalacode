@@ -403,13 +403,14 @@ void* Ventana::run() {
 
 		if (controlador->hayCambios()) {
 			t = controlador->getCambio();
-			//std::cout<<".........actualizando........"<<std::endl;
 			actualizarEstado(t);
 			sleep(1);
 		}
 		else {
-			sleep(3);
+			sleep(2);
 		}
+		std::cout<<".........actualizando........"<<std::endl;
+
 	}
 	std::cout<<"fin del run vista"<<std::endl;
 	return NULL;

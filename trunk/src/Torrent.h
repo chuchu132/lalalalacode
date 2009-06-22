@@ -99,6 +99,8 @@ public:
 	/* devuelve el tamanio descargado en bytes*/
 	unsigned int getTamanioDescargado();
 
+	unsigned int getTamanioSubido();
+
 	std::string getUrlTracker();
 
 	int getVelocidadSubida();
@@ -122,10 +124,12 @@ public:
 
 	void setUploaded(unsigned int bytes);
 
+	void setEstado(std::string estado);
+
 	bool estaActivo();
 
 	/* transforma bytes en un string */
-	std::string bytesToString(float bytes);
+	std::string bytesToString(unsigned int bytes);
 
 	std::list<Peer*>::iterator getIterPeers();
 	std::list<Peer*>::iterator getEndIterPeers();
@@ -165,6 +169,7 @@ private:
 
 	unsigned int uploaded;
 	unsigned int downloaded;
+	Mutex llaveCambiosDownloaded;
 
 	float endGame; // porcentaje a partir del cual se vuelven a pedir todas las piezas restantes.
 

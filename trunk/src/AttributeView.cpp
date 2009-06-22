@@ -215,12 +215,12 @@ void AttributesView::torrentDeleted(Torrent *t)
 		torrent = NULL;
 		list_files->clear();
 		list_peers->clear();
-		lparts->set_text("");
-		lfiles->set_text("");
-		lpeers->set_text("");
-		lpath->set_text("");
-		lname->set_text("");
-		lurl->set_text("");
-		lhash->set_text("");
+		lparts->set_text(" ");
+		lfiles->set_text(" ");
+		lpeers->set_text(" ");
+		lpath->set_text(" ");
+		lname->set_text(" ");
+		lurl->set_text(" ");
+		lhash->set_text(" ");
 	}
 }

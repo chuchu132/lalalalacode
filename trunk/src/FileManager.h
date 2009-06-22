@@ -23,12 +23,13 @@
 #include "DatosParser.h"
 #include "Mutex.h"
 
+class Torrent;
 class ClienteTorrent;
 class FileManager {
 
 public:
 
-	FileManager(ClienteTorrent* cliente);
+	FileManager(ClienteTorrent* cliente,Torrent* torrent);
 
 	virtual ~FileManager();
 
@@ -59,7 +60,7 @@ public:
 	/* devuelve un iterador al ultimo elemento */
 	std::list<Archivo*>::iterator getEndArchivos();
 
-	void guardarBitmap(std::string urlBitmap);
+	void guardarDatos();
 
 	/*Hace el split del archivo descargas*/
 	void descargaAarchivos();
@@ -81,7 +82,9 @@ private:
 	 * obtenida del .torrent.
 	 * */
 	ClienteTorrent* clienteTorrent;
+	Torrent* torrent;
 	Bitmap bitmap;
+	std::string  urlDatos;
 	Bitmap mapaPedidos;
 	Mutex llavePedidos;
 	std::string nombreCarpeta;
@@ -95,8 +98,9 @@ private:
 
 	bool inicializarTamaniosYpiezas(DatosParser* datos);
 	bool inicializarArchivosYdirectorios(DatosParser* datos);
-	bool inicializarDatosBitmap(DatosParser* datos);
-	void inicializarBitmap(std::string urlBitmap);
+	bool inicializarDatosYbitmap(DatosParser* datos);
+	void inicializarBitmap();
+	void inicializarDatos();
 
 	bool descargaCompleta();
 
