@@ -31,16 +31,14 @@ void* Tracker::run() {
 	while (trackerRemoto.is_valid() && !seCerro) {
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
 			bufferTemp[cantidad] = '\0';
-
-
 			buffer.insert(caracteresProcesados,bufferTemp,cantidad);
 			longitud=caracteresProcesados+cantidad;
 			if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
 				 buffer.erase(0,posUltimoProcesado);
 			}
 			else {
-			caracteresProcesados+=cantidad;
-			buffer.resize(caracteresProcesados+cantidad);
+				caracteresProcesados+=cantidad;
+				buffer.resize(caracteresProcesados+cantidad);
 			}
 
 		} else {
@@ -101,9 +99,8 @@ void Tracker::setTorrent(Torrent* unTorrent) {
 
 bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoProcesado) {
     std::string salida;
-
 	if (extraerBencode(buffer, longitud,salida,posUltimoProcesado)) {
-		//std::cout<<buffer<<std::endl;
+		std::cout<<buffer<<std::endl;
 		BencodeParser parser(salida.c_str(), longitud);
 		if (parser.procesar()) {
 			DatosParser* datos;
@@ -128,7 +125,6 @@ bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoP
 bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado) {
 
 	unsigned i = 0, marca,longitudBencode;
-
 	longitudBencode=obtenerLongitudBencode (buffer,marca);
 	if(longitudBencode>0){
 		char *aux = new char[longitudBencode+1];
@@ -161,25 +157,21 @@ bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &sal
 
 int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 
-	unsigned inicio = 0, i=0,lonInicial, lonTotal,salida;
+	unsigned inicio = 0, i=0,marcaPeers,marcaFinLong,salida;
 
-	inicio    = buffer.find("Content-Length: ", inicio);
-	lonInicial= buffer.find(" ", inicio);
-	lonTotal  = buffer.find("\n", lonInicial);
-	marca     = buffer.find("d8:complete", lonTotal);
+	marca       = buffer.find("d8:complete", 0);
+	marcaPeers  = buffer.find("peers",0);
+	marcaFinLong= buffer.find(":",marcaPeers);
 
-	if (inicio != string::npos && lonInicial != string::npos && lonTotal
-			!= string::npos && marca != string::npos) {
-		//Obtengo la longitud total del archivo bencode
-		char* longitudBencode = new char[lonTotal - lonInicial + 1];
-		for (inicio = lonInicial + 1; inicio < lonTotal - 1; inicio++) {
-			longitudBencode[i] = buffer[inicio];
+	if (marca != string::npos && marcaPeers != string::npos && marcaFinLong != string::npos) {
+		//Obtengo la longitud total de los peers
+		std::string longitudPeers;
+		for (inicio = marcaPeers + 5; inicio < marcaFinLong ; inicio++) {
+			longitudPeers[i] = buffer[inicio];
 			i++;
 		}
-		longitudBencode[i] = '\0';
-
-		salida= atoi(longitudBencode);
-		delete[] longitudBencode;
+       std::cout<< longitudPeers.c_str()<< std::endl;
+		salida= atoi(longitudPeers.c_str())+(marcaFinLong-marca)+2;
 		return salida;
 	}
 	else return ERROR;
