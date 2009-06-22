@@ -90,6 +90,7 @@ const int PEERS_MAX = 30; //TODO ojo lo agrande!!
 const float PRIMER_END_GAME = 0.5;
 const float SEGUNDO_END_GAME = 0.9;
 const int PERMISOS = 0777;
+const int TIEMPO_LIMITE = 3;
 
 const int ERROR = -1;
 const int OK = 0;

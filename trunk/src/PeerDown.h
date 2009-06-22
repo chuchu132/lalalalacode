@@ -15,7 +15,9 @@ public:
 	PeerDown(Socket* peerRemoto,Torrent* torrent);
 	virtual ~PeerDown();
 	void* run();
-
+	virtual void procesarKeepAlive();
+private:
+	int cantidadKeepAlive;
 };
 
 #endif /* PEERDOWN_H_ */

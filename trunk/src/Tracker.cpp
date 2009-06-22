@@ -35,7 +35,7 @@ void* Tracker::run() {
 			longitud=caracteresProcesados+cantidad;
 			std::cout<<bufferTemp<<std::endl;
 			if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
-				 buffer.erase(0,posUltimoProcesado);
+				buffer.erase(0,posUltimoProcesado);
 			}
 			else {
 				caracteresProcesados+=cantidad;
@@ -99,7 +99,7 @@ void Tracker::setTorrent(Torrent* unTorrent) {
 }
 
 bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoProcesado) {
-    std::string salida;
+	std::string salida;
 	if (extraerBencode(buffer, longitud,salida,posUltimoProcesado)) {
 		std::cout<<buffer<<std::endl;
 		BencodeParser parser(salida.c_str(), longitud);
@@ -148,7 +148,7 @@ bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &sal
 			}
 		}
 		else {
-		return false;
+			return false;
 		}
 		delete[] aux;
 	} else
@@ -171,7 +171,7 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 			longitudPeers[i] = buffer[inicio];
 			i++;
 		}
-       std::cout<< longitudPeers.c_str()<< std::endl;
+		std::cout<< longitudPeers.c_str()<< std::endl;
 		salida= atoi(longitudPeers.c_str())+(marcaFinLong-marca)+2;
 		return salida;
 	}
@@ -187,32 +187,37 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 	int cantIps = (int) (longitudCadena / 6);
 	unsigned short int puerto;
 	int i = 0;
-	while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo()) {
-		std::stringstream ip;
-		int index = (i * 6);
-		unsigned char temp = (unsigned char) cadena[index];
-		ip << (int) temp << ".";
-		temp = (unsigned char) cadena[index + 1];
-		ip << (int) temp << ".";
-		temp = (unsigned char) cadena[index + 2];
-		ip << (int) temp << ".";
-		temp = (unsigned char) cadena[index + 3];
-		ip << (int) temp;
-		memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
-		puerto = ntohs(puerto);
-		std::string ip_string = ip.str();
-		std::cout<<"IP: "<<ip_string<<" Puerto: "<< puerto<<std::endl;
-		torrent->agregarPeer(ip_string, puerto);
-		i++;
-		cantPeers = torrent->getCantPeers();
-		while( torrent->estaActivo() && (cantPeers == cantMax)){
-			torrent->removerPeersInactivos(NULL);
+	int rondas = 0;
+	do{
+		while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo()) {
+			std::stringstream ip;
+			int index = (i * 6);
+			unsigned char temp = (unsigned char) cadena[index];
+			ip << (int) temp << ".";
+			temp = (unsigned char) cadena[index + 1];
+			ip << (int) temp << ".";
+			temp = (unsigned char) cadena[index + 2];
+			ip << (int) temp << ".";
+			temp = (unsigned char) cadena[index + 3];
+			ip << (int) temp;
+			memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
+			puerto = ntohs(puerto);
+			std::string ip_string = ip.str();
+			std::cout<<"IP: "<<ip_string<<" Puerto: "<< puerto<<std::endl;
+			torrent->agregarPeer(ip_string, puerto);
+			i++;
 			cantPeers = torrent->getCantPeers();
-			std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
-			sleep(5);
-		}
+			while( torrent->estaActivo() && (cantPeers == cantMax)){
+				torrent->removerPeersInactivos(NULL);
+				cantPeers = torrent->getCantPeers();
+				std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
+				sleep(5);
+			}
 
-	}
+		}
+		rondas ++;
+	}while(rondas < 2);
+
 }
 
 

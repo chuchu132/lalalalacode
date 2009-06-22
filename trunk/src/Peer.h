@@ -156,6 +156,8 @@ public:
 
 	unsigned int getIdxPiezaPendiente();
 
+	bool getHuboCambios();
+
 private:
 	/*
 	 * La llave de envio se bloquea antes de cualquier envio al peer remoto
@@ -178,11 +180,12 @@ private:
 	bool am_interested;
 	bool peer_choking;
 	bool peer_interested;
+	bool huboCambios;
 	Bitmap bitmap;
 
 	/*Metodos utilizados para procesar los mensajes que llegan desde el peer remoto*/
 	/*Marca en el Bitmap la pieza indicada por index*/
-	void procesarHave(int index);
+	virtual void procesarHave(int index);
 
 	/*Guarda en el Bitmap el Bitfield recibido*/
 	void procesarBitfield(const char* bitfield, int length );
@@ -198,7 +201,6 @@ private:
 
 	/*Envia un mensaje de Have a los peers que no tienen la pieza indicada por index*/
 	void repartirHave(int index);
-
 
 
 };

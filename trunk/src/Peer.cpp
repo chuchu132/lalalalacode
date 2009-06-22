@@ -31,6 +31,7 @@ Peer::~Peer() {
 bool Peer::procesar(char* buffer, int length) {
 	ParserMensaje parser;
 	char id = parser.decodificarId(buffer);
+	huboCambios = true;
 	switch (id) {
 	case ID_MSJ_CHOKE: {
 		std::cout << getIp() << " mando Choke" << std::endl;
@@ -58,12 +59,10 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_INTERESTED: {
-		std::cout << getIp() << " mando Intested" << std::endl;
 		peer_interested = true;
 	}
 		break;
 	case ID_MSJ_NOT_INTERESTED: {
-		std::cout << getIp() << " mando NotInterested" << std::endl;
 		peer_interested = false;
 	}
 		break;
@@ -71,7 +70,6 @@ bool Peer::procesar(char* buffer, int length) {
 		unsigned int index;
 		parser.decodificarHave(buffer, index);
 		procesarHave(index);
-		std::cout << getIp() << " mando Have " << index << std::endl;
 	}
 		break;
 	case ID_MSJ_BITFIELD: {
@@ -79,8 +77,6 @@ bool Peer::procesar(char* buffer, int length) {
 		unsigned int longitud;
 		parser.decodificarBitfield(buffer, length, longitud, &bitfield);
 		procesarBitfield(bitfield, longitud);
-		std::cout << getIp() << " mando Bitfield  de " << longitud << " bytes"
-				<< std::endl;
 	}
 		break;
 	case ID_MSJ_REQUEST: {
@@ -117,6 +113,7 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_KEEPALIVE: {
+		huboCambios = false;
 		std::cout << getIp() << " mando keepalive" << std::endl;
 	}
 		break;
@@ -356,6 +353,10 @@ bool Peer::recvMsj(char** buffer, int& length) {
 		}
 	}
 	return false;
+}
+
+bool Peer::getHuboCambios(){
+	return huboCambios;
 }
 
 bool Peer::conexionEstaOK() {

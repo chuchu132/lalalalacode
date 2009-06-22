@@ -10,6 +10,7 @@
 PeerDown::PeerDown(Socket* peerRemoto, Torrent* torrent) :
 	Peer(peerRemoto, torrent) {
 	setTipo('D');
+	cantidadKeepAlive = 0;
 	std::cout << "new PeerDown "<<getIp() << std::endl;
 }
 
@@ -29,11 +30,12 @@ void* PeerDown::run() {
 			int length;
 			char* buffer;
 			if (recvMsj(&buffer, length)) {
-				std::cout<<" Recibe ok el peer "<<this->getIp()<<std::endl;
 				error = (!procesar(buffer, length));
 				delete[] buffer;
+				if(getHuboCambios()){
+					cantidadKeepAlive = 0;
+				}
 			} else {
-				std::cout<<" Error al recibir "<<this->getIp()<<std::endl;
 				error = true;
 			}
 
@@ -41,23 +43,18 @@ void* PeerDown::run() {
 				if (getPeer_choking() == true && getAm_interested() == false ) {
 					if (actualizarImInterested()){
 						sendMsg(ID_MSJ_INTERESTED); //Interested
-						}
+					}
 				}
 				if (getPeer_choking() == false && getAm_interested() == false) {
 
 					actualizarImInterested();
 				}
 
-
 				contadorCiclos++;
 				if (contadorCiclos == 30) {
-					std::cout<<" 30 ciclos de "<<this->getIp()<<std::endl;
 					contadorCiclos = 0;
 					sendKeepAlive();
 				}
-			}
-			else{
-				std::cout<<" Error al procesar "<<this->getIp()<<std::endl;
 			}
 		}
 	}
@@ -69,4 +66,11 @@ void* PeerDown::run() {
 		getTorrent()->getFileManager()->cancelarPedido(getIdxPiezaPendiente());
 	}
 	return NULL;
+}
+
+void PeerDown::procesarKeepAlive(){
+	cantidadKeepAlive++;
+	if(cantidadKeepAlive > TIEMPO_LIMITE){
+		cerrarConexion();
+	}
 }
