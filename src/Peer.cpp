@@ -50,6 +50,10 @@ bool Peer::procesar(char* buffer, int length) {
 			} else {
 				am_interested = false;
 			}
+		}else{
+			if(tienePiezaPendiente()){
+				sendRequest(getIdxPiezaPendiente()); //le vuelve a pedir la pieza que le "debe".
+			}
 		}
 	}
 		break;
@@ -281,9 +285,11 @@ void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 			repartirHave(index);
 			bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
 			setEstadoPiezaPendiente(false);
+			torrent->reiniciarPedidos(this); // verifica si hay q reiniciar los pedidos
 		}
 	} catch (AvisoDescargaCompleta aviso) {
 		torrent->descargaCompleta();
+		torrent->removerPeersInactivos(this);
 	}
 }
 

@@ -231,11 +231,11 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 		const char* block) {
 	unsigned int bytes = 0;
 	if (!bitmap.estaMarcada(index)) {
+		bytes = longitud; //TODO muestra todo lo que entra.
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
-		if (verificarHashPieza(index)) {
-			bytes = longitud; //TODO muestra todo lo que entra.
+		 if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
 			std::cout<<"\x1b[94m                PIEZA\x1b[m"<<index<<"\x1b[94mCOMPLETA\x1b[m"<<std::endl;
 			if (descargaCompleta()) {
@@ -382,5 +382,12 @@ void FileManager::cancelarPedido(unsigned int index){
 	llavePedidos.lock();
 	mapaPedidos.desmarcarBit(index);
 	std::cout<<"                           PIEZA "<<index<<" DE NUEVO"<<std::endl;
+	llavePedidos.unlock();
+}
+
+void FileManager::vaciarMapaPedidos(){
+	llavePedidos.lock();
+	int tam = mapaPedidos.getTamanioEnBytes();
+	mapaPedidos.inicializarBitmap(tam);
 	llavePedidos.unlock();
 }
