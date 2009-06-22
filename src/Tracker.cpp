@@ -13,6 +13,7 @@
 Tracker::Tracker() {
 	puerto = PUERTO_DEFAULT_TRACKER;
 	minInterval = 0;
+	refresh = false;
 }
 
 Tracker::~Tracker() {
@@ -29,6 +30,7 @@ void* Tracker::run() {
 	memset(bufferTemp, 0, BUFSIZE);
 
 	while (trackerRemoto.is_valid() && !seCerro) {
+		std::cout<<"Esperando respuesta..\n";
 		if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE-1)) > 0) {
 			bufferTemp[cantidad] = '\0';
 			buffer.insert(caracteresProcesados,bufferTemp,cantidad);
@@ -48,6 +50,10 @@ void* Tracker::run() {
 	}
 
 	return NULL;
+}
+
+void Tracker::setRefresh(bool refresh){
+	this->refresh = refresh;
 }
 
 std::string Tracker::getPath() {
@@ -188,8 +194,9 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 	unsigned short int puerto;
 	int i = 0;
 	int rondas = 0;
+	refresh = false;
 	do{
-		while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo()) {
+		while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo() && !refresh) {
 			std::stringstream ip;
 			int index = (i * 6);
 			unsigned char temp = (unsigned char) cadena[index];
@@ -207,7 +214,7 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 			torrent->agregarPeer(ip_string, puerto);
 			i++;
 			cantPeers = torrent->getCantPeers();
-			while( torrent->estaActivo() && (cantPeers == cantMax)){
+			while( torrent->estaActivo() && (cantPeers == cantMax) && !refresh){
 				torrent->removerPeersInactivos(NULL);
 				cantPeers = torrent->getCantPeers();
 				std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
@@ -216,8 +223,9 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 
 		}
 		rondas ++;
+		i = 0;
+		std::cout<<"Se va la segundaaa!!\n";
 	}while(rondas < 2);
-
 }
 
 

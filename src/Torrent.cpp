@@ -193,12 +193,15 @@ void Torrent::detenerPeers() {
 void Torrent::refrescarPeers() {
 	time_t horaActual = time(NULL);
 	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
-	if (dif >= tracker->getMinInterval()) {
+	if (dif >=  3/*tracker->getMinInterval()*/) {
+		if(enviarEventoEstado(NULL, 400)){
+		tracker->setRefresh(true);
 		removerPeersInactivos(NULL);
-		std::cout << ((enviarEventoEstado(NULL, 200)) ? "Pedido enviado"
-				: "Pedido NO enviado") << std::endl;
+		std::cout <<"Pedido enviado\n";
 		horaInicial = horaActual;
 		fileManager.vaciarMapaPedidos(); // reinicia el mapa de pedidos para aprovechar los nuevos peers
+		}
+		else{std::cout<<"Pedido NO enviado"<< std::endl;}
 	}
 }
 

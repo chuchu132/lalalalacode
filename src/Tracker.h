@@ -58,6 +58,8 @@ public:
 
 	void setTorrent(Torrent* unTorrent);
 
+	void setRefresh(bool refresh);
+
 private:
 	Torrent* torrent;
 	unsigned int minInterval;
@@ -65,6 +67,7 @@ private:
 	std::string path;
 	std::string url;
 	unsigned int puerto;
+	bool refresh;
 };
 
 #endif /* TRACKER_H_ */
