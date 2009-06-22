@@ -204,8 +204,12 @@ void Torrent::refrescarPeers() {
 
 void Torrent::continuar() {
 	if (estado != T_ACTIVO) {
+		if (downloaded >= getTamanio()){
+			estado = T_COMPLETO;
+		}
+		else
+			estado = T_ACTIVO;
 		activo = true;
-		estado = T_ACTIVO;
 		run();
 		if (controlador != NULL)
 			controlador->actualizarEstado(this);
