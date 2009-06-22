@@ -30,7 +30,7 @@ void TestFileManager::test(std::string urlTorrent){
 	BencodeParser parser(urlTorrent.c_str());
 
 	if (parser.procesar()) {
-		FileManager filemanager(NULL);
+		FileManager filemanager(NULL,NULL);
 		DatosParser* datos =  parser.salidaParser();
 		datos->primero();
 		if(filemanager.inicializar(datos)){
@@ -42,7 +42,7 @@ void TestFileManager::test(std::string urlTorrent){
 			std::string url = URL_CARPETA_TEMP;
 			url += sha.salidaAstring((unsigned int*)datoTemp);
 			url += ".bitmap";
-			filemanager.guardarBitmap(url);
+			filemanager.guardarDatos();
 			delete[] datoTemp;
 
 			/*OJO La primer vez que se corre el test esto da ok xq el bitmap se genera desde 0
@@ -56,7 +56,7 @@ void TestFileManager::test(std::string urlTorrent){
 			char* datoRecuperado = 	filemanager.readBlock(1,10,10);
 			assert(memcmp(datoRecuperado,"FiTorrent",10)==0,"El dato recuperado es igual al ingresado");
 			filemanager.getBitmap()->desmarcarBit(1);
-			filemanager.guardarBitmap(url);
+			filemanager.guardarDatos();
 			delete[] datoRecuperado;
 
 
@@ -90,7 +90,7 @@ void TestFileManager::testSplitFiles(std::string urlTorrent){
 
 	if (parser.procesar()) {
 		ClienteTorrent cliente;
-		FileManager filemanager(&cliente);
+		FileManager filemanager(&cliente,NULL);
 		DatosParser* datos =  parser.salidaParser();
 		datos->primero();
 		if(filemanager.inicializar(datos)){
@@ -107,7 +107,7 @@ void TestFileManager::verificarPiezas(std::string urlTorrent){
 
 	if (parser.procesar()) {
 		ClienteTorrent cliente;
-		FileManager filemanager(&cliente);
+		FileManager filemanager(&cliente,NULL);
 		DatosParser* datos =  parser.salidaParser();
 		datos->primero();
 		if(filemanager.inicializar(datos)){
