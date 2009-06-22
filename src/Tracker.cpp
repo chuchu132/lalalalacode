@@ -25,11 +25,11 @@ void* Tracker::run() {
 	int longitud,posUltimoProcesado;
 	bool seCerro = false;
 	std::string buffer;
-	char bufferTemp[1000];
-	memset(bufferTemp, 0, 1000);
+	char bufferTemp[BUFSIZE];
+	memset(bufferTemp, 0, BUFSIZE);
 
 	while (trackerRemoto.is_valid() && !seCerro) {
-		if ((cantidad = this->trackerRemoto.receive(bufferTemp, 999)) > 0) {
+		if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE-1)) > 0) {
 			bufferTemp[cantidad] = '\0';
 			buffer.insert(caracteresProcesados,bufferTemp,cantidad);
 			longitud=caracteresProcesados+cantidad;
@@ -205,7 +205,7 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		i++;
 		cantPeers = torrent->getCantPeers();
 		while( torrent->estaActivo() && (cantPeers == cantMax)){
-			torrent->removerPeersInactivos();
+			torrent->removerPeersInactivos(NULL);
 			cantPeers = torrent->getCantPeers();
 			std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
 			sleep(5);
