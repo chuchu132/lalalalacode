@@ -268,6 +268,13 @@ std::string Torrent::getEstado() {
 	return estado;
 }
 
+bool Torrent::estaCompleto(){
+	if (estado == T_COMPLETO )
+		return true;
+	else
+		return false;
+}
+
 bool Torrent::estaActivo() {
 	return activo;
 }

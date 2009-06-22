@@ -239,7 +239,8 @@ void FileManager::guardarDatos() {
 		temp = torrent->getTamanioSubido();
 		archivoDatos.write((char*) &temp,4);
 		char estado = 0;
-		if(torrent->getEstado().compare(T_COMPLETO) == 0){
+
+		if(torrent->estaCompleto()){
 			estado = 1;
 		}
 		archivoDatos.seekp(OFFSET_COMPLETED,std::ios::beg);
