@@ -89,6 +89,7 @@ const int UN_MEGA = 1048576;
 const int PEERS_MAX = 30; //TODO ojo lo agrande!!
 const float PRIMER_END_GAME = 0.5;
 const float SEGUNDO_END_GAME = 0.9;
+const int PERMISOS = 0777;
 
 const int ERROR = -1;
 const int OK = 0;
@@ -110,5 +111,13 @@ const int PUERTO_DEFAULT_TRACKER = 80;
 #define RUTA_CONFIGURACION "FiTorrent.config"
 #define RUTA_DESCARGAS "./Descargas/"
 const unsigned int PUERTO_DEFAULT = 36277;
+
+
+/*Constantes de offsets del archivo *.data*/
+const int OFFSET_DOWN = 0;
+const int OFFSET_UP = 4;
+const int OFFSET_COMPLETED = 8;
+const int OFFSET_BITMAP_SIZE = 9;
+const int OFFSET_BITMAP = 13;
 
 #endif /* CONSTANTES_H_ */

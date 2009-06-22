@@ -273,6 +273,7 @@ void Peer::procesarRequest(int index, int begin, int length) {
 		sendMsg(ID_MSJ_CHOKE);
 	} else {
 		sendPiece(index, begin, length);
+		torrent->setUploaded(length);
 	}
 }
 

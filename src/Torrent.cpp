@@ -19,11 +19,12 @@
 #include <errno.h>
 
 Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
-	fileManager(clienteTorrent) {
+	fileManager(clienteTorrent,this) {
 	tracker = new Tracker();
 	tracker->setTorrent(this);
 	uploaded = 0;
 	downloaded = 0;
+	downAnterior =0;
 	this->path = path;
 	estado = T_DETENIDO;
 	activo = true;
@@ -202,7 +203,6 @@ void Torrent::refrescarPeers() {
 }
 
 void Torrent::continuar() {
-
 	if (estado != T_ACTIVO) {
 		activo = true;
 		estado = T_ACTIVO;
@@ -216,10 +216,12 @@ void Torrent::detener() {
 
 	if (estado != T_DETENIDO && estado != T_COMPLETO) {
 		activo = false;
+		enviarEventoEstado(EVENT_STOPPED,-1);
 		tracker->cerrarConexion();
 		tracker->join();
 		std::cout << "tracker detenido" << std::endl;
 		detenerPeers();
+		removerPeersInactivos(NULL);
 		estado = T_DETENIDO;
 		std::cout << "torrent detenido" << std::endl;
 		if (controlador != NULL)
@@ -278,6 +280,10 @@ unsigned int Torrent::getTamanioDescargado() {
 	return downloaded;
 }
 
+unsigned int Torrent::getTamanioSubido(){
+	return uploaded;
+}
+
 int Torrent::getVelocidadSubida() {
 	return 0;//todo.. ver como calcular la velocidad
 }
@@ -286,13 +292,17 @@ int Torrent::getVelocidadBajada() {
 	time_t horaAct = time(NULL);
 	double tiempo = difftime(horaAct,horaAnterior);
 	horaAnterior = horaAct;
-	unsigned int diferencia = downloaded - downAnterior;
+	int diferencia = downloaded - downAnterior;
 	downAnterior=downloaded;
 	return((diferencia/1024)/tiempo);
 }
 
 void Torrent::setControlador(Controlador* ctrl) {
 	this->controlador = ctrl;
+}
+
+void Torrent::setEstado(std::string estado){
+	this->estado = estado;
 }
 
 std::string Torrent::getPath() {
@@ -312,7 +322,7 @@ unsigned int Torrent::getCantPeers() {
 	return peers.size();
 }
 
-std::string Torrent::bytesToString(float bytes) {
+std::string Torrent::bytesToString(unsigned int bytes) {
 	float temp = bytes;
 	std::stringstream buffer;
 	buffer << std::setprecision(4);
@@ -348,7 +358,9 @@ std::string Torrent::getTiempoRestante() {
 }
 
 void Torrent::setDownloaded(unsigned int bytes) {
+	llaveCambiosDownloaded.lock();
 	downloaded += bytes;
+	llaveCambiosDownloaded.unlock();
 	std::cout << "_________Bytes descargados: " << downloaded << std::endl;
 	if (controlador != NULL)//ver
 		controlador->actualizarEstado(this);
@@ -382,6 +394,7 @@ bool Torrent::reiniciarPedidos(Peer* peerQueQueda){
 
 void Torrent::descargaCompleta() {
 	activo = false;
+	enviarEventoEstado(EVENT_COMPLETED,-1);
 	tracker->cerrarConexion(); //esto hace que no se puedan bajar de nosotros :S
 	tracker->join();
 	detenerPeers(); //habria que cerrar solo los peerdown
