@@ -131,13 +131,15 @@ public:
 	std::list<Peer*>::iterator getEndIterPeers();
 	unsigned int getCantidadMaximaPeers();
 
-	void removerPeersInactivos();
+	void removerPeersInactivos(Peer* peerQueQueda);
 
 	void detenerPeers();
 
 	std::string getTiempoRestante();
 
 	void descargaCompleta();
+
+	bool reiniciarPedidos(Peer* peerQueQueda);
 
 private:
 
@@ -163,6 +165,8 @@ private:
 
 	unsigned int uploaded;
 	unsigned int downloaded;
+
+	float endGame; // porcentaje a partir del cual se vuelven a pedir todas las piezas restantes.
 
 	Controlador *controlador;
 
