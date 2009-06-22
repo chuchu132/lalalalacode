@@ -71,6 +71,8 @@ public:
 
 	void cancelarPedido(unsigned int index);
 
+	void vaciarMapaPedidos();
+
 private:
 	/*
 	 * Los archivos se manejan como uno del tamaño total

@@ -83,9 +83,12 @@ const int OFFSET_ARG_3_SIN_LEN = 9;
 /*Otras Constantes*/
 const int LEN_SHA1 = 20;
 const int LEN_SHA1_ASCII = 40;
+const int TIME_OUT_CONNECT = 2;
 const int BUFSIZE = 1000;
 const int UN_MEGA = 1048576;
 const int PEERS_MAX = 30; //TODO ojo lo agrande!!
+const float PRIMER_END_GAME = 0.5;
+const float SEGUNDO_END_GAME = 0.9;
 
 const int ERROR = -1;
 const int OK = 0;
