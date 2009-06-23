@@ -139,18 +139,19 @@ bool FileManager::inicializarDatosYbitmap(DatosParser* datos) {
 	url += hashString;
 	delete[] datoTemp;
 	descarga.open(url.c_str(), ios::in | ios::out | ios::binary);
+	urlDatos = (url + ".data");
 	if (!descarga.is_open()) {
 		if (!crearArchivo(url, bytesTotales)) {
 			return false;
 		}else{
 			inicializarBitmapVacio();
 		}
+	}else{
+		this->inicializarBitmap();
 	}
-	url += ".data";
-	urlDatos = url;
-	this->inicializarBitmap();
-	inicializarDatos();
+	mapaPedidos.inicializarBitmap(bitmap.getTamanioEnBytes());
 
+	inicializarDatos();
 	return true;
 }
 
@@ -191,14 +192,16 @@ void FileManager::inicializarBitmap() {
 	} else {
 		recuperarBitmap();
 	}
-	mapaPedidos.inicializarBitmap(bitmap.getTamanioEnBytes());
+
 }
 
 //Es lento
 void FileManager::recuperarBitmap() {
 	unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)
 			+ (((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
-	bitmap.inicializarBitmap(cantPiezas);
+	unsigned int cantBytes = (unsigned int) ((cantPiezas / 8) + (((cantPiezas
+				% 8) == 0) ? 0 : 1));
+	bitmap.inicializarBitmap(cantBytes);
 	unsigned int descargado = 0;
 	for (unsigned int i = 0; i < cantPiezas; i++) {
 		if (verificarHashPieza(i)) {
@@ -215,7 +218,6 @@ void FileManager::inicializarBitmapVacio() {
 	unsigned int cantBytes = (unsigned int) ((cantPiezas / 8) + (((cantPiezas
 			% 8) == 0) ? 0 : 1));
 	bitmap.inicializarBitmap(cantBytes);
-	mapaPedidos.inicializarBitmap(bitmap.getTamanioEnBytes());
 }
 
 void FileManager::inicializarDatos() {
@@ -397,6 +399,7 @@ void FileManager::descargaAarchivos() {
 		unsigned int tamanio = (*itA)->getTamanio();
 		copiar(0, tamanio, urlbase);
 	}
+	chdir(URL_CARPETA_TEMP);
 }
 
 void FileManager::copiar(unsigned int desde, unsigned int cantidad,
