@@ -25,6 +25,8 @@ void TestVista::run(){
 		if (!ventana.huboError())
 		{
 			//aca faltaria un cliente.excecute() para escuchar a los peers entrantes
+
+			//cliente.execute();
 			controlador.correrVista();
 			controlador.detenerVista();
 		}
