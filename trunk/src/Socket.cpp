@@ -65,7 +65,11 @@ int Socket::connect(const std::string &host, unsigned int port) {
 	address.sin_family = AF_INET;
 	address.sin_port = htons(port);
 
-	if ((host_add = gethostbyname(host.c_str()))) {
+	if (!valido) {
+			valido = ((fd = socket(AF_INET, SOCK_STREAM, 0))!= ERROR);
+	}
+
+	if (valido && (host_add = gethostbyname(host.c_str()))) {
 
 		address.sin_addr.s_addr
 				= ((struct in_addr*) (host_add->h_addr))->s_addr;
@@ -95,8 +99,11 @@ int Socket::connectWithTimeout(const std::string &host, unsigned int port,
 
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
-	valido = false;
-	if ((host_add = gethostbyname(host.c_str()))) {
+	if (!valido) {
+		valido = ((fd = socket(AF_INET, SOCK_STREAM, 0)) != ERROR);
+		}
+
+	if (valido && (host_add = gethostbyname(host.c_str()))) {
 		addr.sin_addr.s_addr = ((struct in_addr*) (host_add->h_addr))->s_addr;
 
 		// Set non-blocking
@@ -146,7 +153,6 @@ int Socket::connectWithTimeout(const std::string &host, unsigned int port,
 		if (fcntl(fd, F_SETFL, arg) < 0) {
 			return ERROR;
 		}
-		valido = true;
 		return OK;
 	}
 	return ERROR;
