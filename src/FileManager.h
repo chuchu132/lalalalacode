@@ -102,6 +102,8 @@ private:
 	bool inicializarDatosYbitmap(DatosParser* datos);
 	void inicializarBitmap();
 	void inicializarDatos();
+	void inicializarBitmapVacio();
+	void recuperarBitmap();
 
 	bool descargaCompleta();
 
