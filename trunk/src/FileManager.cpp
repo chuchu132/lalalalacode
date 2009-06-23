@@ -278,7 +278,7 @@ char* FileManager::readBlock(int index, int begin, int longitud) {
 }
 
 unsigned int FileManager::writeBlock(int index, int begin, int longitud,
-		const char* block) {
+		const char* block) throw(AvisoDescargaCompleta){
 	unsigned int bytes = 0;
 	if (!bitmap.estaMarcada(index)) {
 
@@ -290,7 +290,7 @@ unsigned int FileManager::writeBlock(int index, int begin, int longitud,
 			bitmap.marcarBit(index);
 			std::cout<<"                                                PIEZA"<<index<<" COMPLETA"<<std::endl;
 			if (descargaCompleta()) {
-				throw AvisoDescargaCompleta();
+				throw  AvisoDescargaCompleta();
 			}
 		}
 	}
@@ -319,7 +319,7 @@ std::list<Archivo*>::iterator FileManager::getEndArchivos() {
 	return archivos.end();
 }
 
-bool FileManager::descargaCompleta() {
+bool FileManager::descargaCompleta(){
 	unsigned int cantPiezas = (unsigned int) ((bytesTotales / tamanioPieza)
 			+ (((bytesTotales % tamanioPieza) == 0) ? 0 : 1));
 	unsigned int cantBytesCompletos = (unsigned int) (cantPiezas / 8);
@@ -434,7 +434,6 @@ bool FileManager::getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto)
 void FileManager::cancelarPedido(unsigned int index){
 	llavePedidos.lock();
 	mapaPedidos.desmarcarBit(index);
-	std::cout<<"                           PIEZA "<<index<<" DE NUEVO"<<std::endl;
 	llavePedidos.unlock();
 }
 

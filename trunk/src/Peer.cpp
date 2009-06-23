@@ -91,9 +91,9 @@ bool Peer::procesar(char* buffer, int length) {
 		char* data;
 		unsigned int index, begin, length2;
 		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
-		procesarPiece(index, begin, length2, data);
 		std::cout << getIp() << " mando la Pieza " << index << " offset "
 				<< begin << std::endl;
+		procesarPiece(index, begin, length2, data);
 		if (!tienePiezaPendiente()) {
 			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
 					bitmap)) {

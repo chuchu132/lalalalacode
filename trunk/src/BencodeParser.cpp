@@ -75,7 +75,7 @@ bool BencodeParser::procesar() {
 	}
 	return true;
 }
-void BencodeParser::parserDiccionario() {
+void BencodeParser::parserDiccionario()throw (ExcepcionCaracterInvalido) {
 
 	compararCaracter('d');
 	ident = 0;
@@ -108,7 +108,7 @@ void BencodeParser::parserDiccionario() {
 	}
 }
 
-void BencodeParser::parserLista() {
+void BencodeParser::parserLista() throw (ExcepcionCaracterInvalido) {
 
 	compararCaracter('l');
 	ident = 1;
@@ -121,7 +121,7 @@ void BencodeParser::parserLista() {
 
 }
 
-void BencodeParser::parserNumerico() {
+void BencodeParser::parserNumerico()throw (ExcepcionCaracterInvalido) {
 
 	compararCaracter('i');
 	unsigned int val = 0;
@@ -134,7 +134,7 @@ void BencodeParser::parserNumerico() {
 
 }
 
-void BencodeParser::parserCadena() {
+void BencodeParser::parserCadena()throw (ExcepcionCaracterInvalido) {
 	int len = 0;
 
 	while (isdigit(verCaracterSiguiente()))
@@ -179,7 +179,7 @@ char BencodeParser::obtenerCaracter() {
 	return buf[pos++];
 }
 
-void BencodeParser::compararCaracter(char c) {
+void BencodeParser::compararCaracter(char c) throw (ExcepcionCaracterInvalido) {
 	if (obtenerCaracter() != c) {
 		std::cerr << "ERROR AL PARSEAR .torrent " << std::endl;
 		throw ExcepcionCaracterInvalido();

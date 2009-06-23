@@ -12,6 +12,7 @@
 #include <string>
 #include <iostream>
 #include <fstream>
+#include "ExcepcionCaracterInvalido.h"
 #include "DatosParser.h"
 #include "Constantes.h"
 #include "Sha1.h"
@@ -59,16 +60,16 @@ public:
 	bool procesar();
 
 	//Parser para el tipo diccionario
-	void parserDiccionario();
+	void parserDiccionario() throw (ExcepcionCaracterInvalido);
 
 	//Parser para el tipo lista
-	void parserLista();
+	void parserLista() throw (ExcepcionCaracterInvalido);
 
 	//Parser para los datos numericos
-	void parserNumerico();
+	void parserNumerico() throw (ExcepcionCaracterInvalido);
 
 	//Parser para las cadenas de caracteres
-	void parserCadena();
+	void parserCadena() throw (ExcepcionCaracterInvalido);
 
 	//Realiza la Carga del buffer
 	void cargarBuffer();
@@ -83,7 +84,7 @@ public:
 	char obtenerCaracter();
 
 	//Verifica que el caracter sea un match con el que se le pasa como parametro
-	void compararCaracter(char c);
+	void compararCaracter(char c) throw (ExcepcionCaracterInvalido);
 
 	//Retorna la salida del parser
 	DatosParser* salidaParser();

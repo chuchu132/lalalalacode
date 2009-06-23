@@ -8,7 +8,7 @@
 #ifndef AVISODESCARGACOMPLETA_H_
 #define AVISODESCARGACOMPLETA_H_
 
-class AvisoDescargaCompleta {
+class AvisoDescargaCompleta{
 public:
 	AvisoDescargaCompleta();
 	virtual ~AvisoDescargaCompleta();
