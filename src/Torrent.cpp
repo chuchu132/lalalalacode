@@ -162,6 +162,22 @@ bool Torrent::agregarPeer(Peer* peerNuevo) {
 	return resultado;
 }
 
+
+bool Torrent::existePeerIP(std::string ip){
+	llaveListaPeers.lock();
+	std::list<Peer*>::iterator it = peers.begin();
+	bool existe=false;
+	while (it != peers.end()) {
+			if (ip==(*it)->getIp()){
+				existe=true;
+				break;
+			}
+		it++;
+	}
+	llaveListaPeers.unlock();
+	return existe;
+}
+
 void Torrent::removerPeersInactivos(Peer* peerQueQueda) {
 	llaveListaPeers.lock();
 	std::list<Peer*>::iterator it = peers.begin();
@@ -193,13 +209,14 @@ void Torrent::detenerPeers() {
 void Torrent::refrescarPeers() {
 	time_t horaActual = time(NULL);
 	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
-	if (dif >=  3/*tracker->getMinInterval()*/) {
+	if (dif >=  tracker->getMinInterval()) {
 		if(enviarEventoEstado(NULL, 400)){
 		tracker->setRefresh(true);
 		removerPeersInactivos(NULL);
 		std::cout <<"Pedido enviado\n";
 		horaInicial = horaActual;
-		fileManager.vaciarMapaPedidos(); // reinicia el mapa de pedidos para aprovechar los nuevos peers
+		fileManager.vaciarMapaPedidos();
+		// reinicia el mapa de pedidos para aprovechar los nuevos peers
 		}
 		else{std::cout<<"Pedido NO enviado"<< std::endl;}
 	}
@@ -373,7 +390,11 @@ std::string Torrent::getTiempoRestante() {
 
 void Torrent::setDownloaded(unsigned int bytes) {
 	llaveCambiosDownloaded.lock();
-	downloaded += bytes;
+
+	if ((downloaded + bytes)>= fileManager.getTamanio())
+		downloaded =  fileManager.getTamanio();
+	else
+		downloaded += bytes;
 	llaveCambiosDownloaded.unlock();
 	std::cout << "_________Bytes descargados: " << downloaded << std::endl;
 	if (controlador != NULL)//ver
@@ -408,6 +429,7 @@ bool Torrent::reiniciarPedidos(Peer* peerQueQueda){
 
 void Torrent::descargaCompleta() {
 	activo = false;
+	downloaded = fileManager.getTamanio();
 	enviarEventoEstado(EVENT_COMPLETED,-1);
 	tracker->cerrarConexion(); //esto hace que no se puedan bajar de nosotros :S
 	tracker->join();

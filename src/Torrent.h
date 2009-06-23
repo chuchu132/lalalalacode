@@ -137,6 +137,8 @@ public:
 	std::list<Peer*>::iterator getEndIterPeers();
 	unsigned int getCantidadMaximaPeers();
 
+	bool existePeerIP(std::string ip);
+
 	void removerPeersInactivos(Peer* peerQueQueda);
 
 	void detenerPeers();
