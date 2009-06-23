@@ -211,7 +211,10 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 			puerto = ntohs(puerto);
 			std::string ip_string = ip.str();
 			std::cout<<"IP: "<<ip_string<<" Puerto: "<< puerto<<std::endl;
+			if (!torrent->existePeerIP(ip_string)){
 			torrent->agregarPeer(ip_string, puerto);
+			std::cout<< " Ip agregado "<<std::endl;
+			}
 			i++;
 			cantPeers = torrent->getCantPeers();
 			while( torrent->estaActivo() && (cantPeers == cantMax) && !refresh){
@@ -224,8 +227,7 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		}
 		rondas ++;
 		i = 0;
-		std::cout<<"Se va la segundaaa!!\n";
-	}while(rondas < 2);
+	}while(!refresh && torrent->estaActivo());
 }
 
 
