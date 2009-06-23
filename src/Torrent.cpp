@@ -440,6 +440,7 @@ void Torrent::descargaCompleta() {
 			<< std::endl;
 
 	fileManager.descargaAarchivos();
+	fileManager.guardarDatos();
 
 	if (controlador != NULL) {
 		std::string notif = "Se completo la descada del Torrent ";

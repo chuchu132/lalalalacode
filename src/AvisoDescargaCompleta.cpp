@@ -12,3 +12,4 @@ AvisoDescargaCompleta::AvisoDescargaCompleta() {
 
 AvisoDescargaCompleta::~AvisoDescargaCompleta() {
 }
+

@@ -19,6 +19,7 @@
 #include <fstream>
 #include <string>
 #include "Archivo.h"
+#include "AvisoDescargaCompleta.h"
 #include "Bitmap.h"
 #include "DatosParser.h"
 #include "Mutex.h"
@@ -50,7 +51,7 @@ public:
 
 	/* Escribe en disco el bloque */
 	/* Devuelve la cantidad de bytes escritos */
-	unsigned int writeBlock(int index,int begin,int longitud,const char* block);
+	unsigned int writeBlock(int index,int begin,int longitud,const char* block) throw(AvisoDescargaCompleta);
 
 	bool verificarHashPieza(unsigned int index);
 
