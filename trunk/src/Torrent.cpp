@@ -253,16 +253,16 @@ void Torrent::detener() {
 	}
 }
 
-void Torrent::pausar() {
-	//todo.. ver que hace el pausar
-	if (estado != T_PAUSADO) {
-
-		estado = T_PAUSADO;
-		activo = false;
-		if (controlador != NULL)
-			controlador->actualizarEstado(this);
-	}
-}
+//void Torrent::pausar() {
+//	//todo.. ver que hace el pausar
+//	if (estado != T_PAUSADO) {
+//
+//		estado = T_PAUSADO;
+//		activo = false;
+//		if (controlador != NULL)
+//			controlador->actualizarEstado(this);
+//	}
+//}
 
 std::string Torrent::getNombre() {
 	return nombre;

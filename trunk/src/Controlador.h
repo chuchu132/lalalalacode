@@ -45,8 +45,6 @@ public:
 
 	void detenerTorrent(Torrent*);
 
-	void pausarTorrent(Torrent*);
-
 	void continuarTorrent(Torrent*);
 
 	/* refresca la lista de peers del torrent */

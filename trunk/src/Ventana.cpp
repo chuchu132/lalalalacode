@@ -17,7 +17,6 @@
 #define BUTTON_ADD 	"boton_agregar"
 #define BUTTON_ERASE "boton_borrar"
 #define BUTTON_STOP	"boton_detener"
-#define BUTTON_PAUSE	"boton_pausar"
 #define BUTTON_CONTINUE "boton_continuar"
 #define BUTTON_UP 	"boton_subir"
 #define BUTTON_DOWN	"boton_bajar"
@@ -148,8 +147,6 @@ void Ventana::setMenu()
 						sigc::mem_fun(*this, &Ventana::on_button_stop_clicked));
 	menu_archivo->add(Gtk::Action::create("FileContinue", Gtk::Stock::MEDIA_PLAY),
 						sigc::mem_fun(*this, &Ventana::on_button_continue_clicked));
-	menu_archivo->add(Gtk::Action::create("FilePause", Gtk::Stock::MEDIA_PAUSE),
-						sigc::mem_fun(*this, &Ventana::on_button_pause_clicked));
 
 	menu_editar->add(Gtk::Action::create("EditMenu", "Editar"));
 	menu_editar->add(Gtk::Action::create("EditPref", Gtk::Stock::PREFERENCES, "_Preferencias", "Configurar puertos, conexiones, etc."),
@@ -175,7 +172,6 @@ void Ventana::setMenu()
 	        "      <menuitem action='FileDelete'/>"
 			"	   <separator/>"
 	        "      <menuitem action='FileStop'/>"
-	        "      <menuitem action='FilePause'/>"
 	        "      <menuitem action='FileContinue'/>"
 	        "      <separator/>"
 	        "      <menuitem action='FileQuit'/>"
@@ -219,7 +215,6 @@ void Ventana::getButtons()
 	builder->get_widget(BUTTON_ADD, button_add);
 	builder->get_widget(BUTTON_ERASE, button_erase);
 	builder->get_widget(BUTTON_STOP, button_stop);
-	builder->get_widget(BUTTON_PAUSE, button_pause);
 	builder->get_widget(BUTTON_CONTINUE, button_continue);
 	builder->get_widget(BUTTON_UP, button_up);
 	builder->get_widget(BUTTON_DOWN, button_down);
@@ -232,7 +227,6 @@ void Ventana::connectSignals()
 	button_add->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_add_clicked) );
 	button_erase->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_erase_clicked) );
 	button_stop->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_stop_clicked) );
-	button_pause->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_pause_clicked) );
 	button_continue->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_continue_clicked) );
 	button_up->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_up_clicked) );
 	button_down->signal_clicked().connect( sigc::mem_fun(*this,&Ventana::on_button_down_clicked) );
@@ -273,15 +267,6 @@ void Ventana::on_button_stop_clicked()
 	if (t != NULL)
 	{
 		controlador->detenerTorrent(t);
-	}
-}
-
-void Ventana::on_button_pause_clicked()
-{
-	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL)
-	{
-		controlador->pausarTorrent(t);
 	}
 }
 
