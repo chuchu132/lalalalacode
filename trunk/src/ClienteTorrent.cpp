@@ -85,8 +85,9 @@ void* ClienteTorrent::run() {
 				}
 				delete[] handshake;
 			}
-			else //Si no envia el handshake luego de conectarse se cierra la coneccion con ese peer
+			else{ //Si no envia el handshake luego de conectarse se cierra la coneccion con ese peer
 				conexionPeerNuevo->close();
+			}
 		}
 		std::cout<<"*** sleep 10: clientetorrent run ***"<<std::endl;
 		sleep(10);//tiene un sleep alto para darle prioridad a los peerdown
