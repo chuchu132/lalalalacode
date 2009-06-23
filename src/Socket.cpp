@@ -96,7 +96,7 @@ int Socket::connectWithTimeout(const std::string &host, unsigned int port,
 	addr.sin_family = AF_INET;
 	addr.sin_port = htons(port);
 	valido = false;
-	if (host_add = gethostbyname(host.c_str())) {
+	if ((host_add = gethostbyname(host.c_str()))) {
 		addr.sin_addr.s_addr = ((struct in_addr*) (host_add->h_addr))->s_addr;
 
 		// Set non-blocking
