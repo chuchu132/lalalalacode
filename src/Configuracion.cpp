@@ -146,7 +146,7 @@ std::string Configuracion::obtenerTorrent() {
 
 	torrents.pop_front();
 
-	return info.substr(pos);
+	return info.substr(pos+1);
 }
 
 bool Configuracion::hayTorrents() {
