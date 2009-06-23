@@ -27,7 +27,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	downAnterior =0;
 	this->path = path;
 	estado = T_DETENIDO;
-	activo = true;
+	activo = false;
 	this->clienteTorrent = clienteTorrent;
 	controlador = NULL;
 	port = clienteTorrent->getPuerto();
@@ -98,9 +98,9 @@ void Torrent::run() {
 		}
 	} else {
 		std::cout << "noconecto" << std::endl;
-
-		estado = T_DETENIDO;//si no se conecto el estado es detenido
 		activo = false;
+		if (estado != T_COMPLETO)
+			estado = T_DETENIDO;
 		if (controlador != NULL) {
 			std::string notif = "Fallo la conexion con el tracker ";
 			notif += tracker->getUrl();
@@ -211,25 +211,26 @@ void Torrent::refrescarPeers() {
 	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
 	if (dif >=  tracker->getMinInterval()) {
 		if(enviarEventoEstado(NULL, 400)){
-		tracker->setRefresh(true);
-		removerPeersInactivos(NULL);
-		std::cout <<"Pedido enviado\n";
-		horaInicial = horaActual;
-		fileManager.vaciarMapaPedidos();
-		// reinicia el mapa de pedidos para aprovechar los nuevos peers
+			tracker->setRefresh(true);
+			removerPeersInactivos(NULL);
+			std::cout <<"Pedido enviado\n";
+			horaInicial = horaActual;
+			fileManager.vaciarMapaPedidos();
+			// reinicia el mapa de pedidos para aprovechar los nuevos peers
 		}
 		else{std::cout<<"Pedido NO enviado"<< std::endl;}
 	}
 }
 
 void Torrent::continuar() {
-	if (estado != T_ACTIVO) {
+	if (!activo) {
+		activo = true;
 		if (downloaded >= getTamanio()){
 			estado = T_COMPLETO;
 		}
 		else
 			estado = T_ACTIVO;
-		activo = true;
+
 		run();
 		if (controlador != NULL)
 			controlador->actualizarEstado(this);
@@ -238,7 +239,7 @@ void Torrent::continuar() {
 
 void Torrent::detener() {
 
-	if (estado != T_DETENIDO && estado != T_COMPLETO) {
+	if (activo) {
 		activo = false;
 		enviarEventoEstado(EVENT_STOPPED,-1);
 		tracker->cerrarConexion();
@@ -384,8 +385,22 @@ unsigned int Torrent::getCantidadMaximaPeers() {
 }
 
 std::string Torrent::getTiempoRestante() {
-	return "N/A";
-	//calcular el tiempo restante usando la velocidad
+//	if (estado == T_ACTIVO) {
+//		std::stringstream buffer;
+//		unsigned int tiempo = left()/ getVelocidadBajada();
+//		float temp;
+//		temp /= 3600;
+//		if ( temp > 1)
+//			buffer << (int)temp << "hs ";
+//		temp = tiempo % 3600;
+//		temp *=60;
+//		buffer << (int)(temp)<< "m ";
+//		temp = ((int)temp) % 60;
+//		buffer << (int) (temp*60)<<"s";
+//		return buffer.str();
+//	}
+//	else NO TESTEADO =P
+		return "-";
 }
 
 void Torrent::setDownloaded(unsigned int bytes) {
@@ -431,9 +446,9 @@ void Torrent::descargaCompleta() {
 	activo = false;
 	downloaded = fileManager.getTamanio();
 	enviarEventoEstado(EVENT_COMPLETED,-1);
-	tracker->cerrarConexion(); //esto hace que no se puedan bajar de nosotros :S
+	tracker->cerrarConexion(); //todo ver esto hace que no se puedan bajar de nosotros :S
 	tracker->join();
-	detenerPeers(); //habria que cerrar solo los peerdown
+	detenerPeers();
 	estado = T_COMPLETO;
 	std::cout
 			<< "<---------------SE COMPLETO LA DESCARGA!!!------------------>"

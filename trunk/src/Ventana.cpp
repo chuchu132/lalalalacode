@@ -315,7 +315,7 @@ void Ventana::button_accept_clicked()
     	 mutex_torrents.lock();
     	 torrents->addRow(t);
     	 mutex_torrents.unlock();
-    	 t->continuar();//VER!!! yo no pondria esto aca en la vista!
+    	 controlador->continuarTorrent(t);
      }
 }
 
