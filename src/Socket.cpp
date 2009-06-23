@@ -43,7 +43,7 @@ int Socket::setNonblocking() {
 }
 
 int Socket::setBlocking() {
-	 int flags;
+	int flags;
 
 	if (-1 == (flags = fcntl(fd, F_GETFL, 0))) {
 		flags = 0;
@@ -60,102 +60,97 @@ Socket::~Socket() {
 
 int Socket::connect(const std::string &host, unsigned int port) {
 
-	if (valido) {
-		hostent* host_add;
-		struct sockaddr_in address;
-		address.sin_family = AF_INET;
-		address.sin_port = htons(port);
+	hostent* host_add;
+	struct sockaddr_in address;
+	address.sin_family = AF_INET;
+	address.sin_port = htons(port);
 
-		if ((host_add = gethostbyname(host.c_str()))) {
+	if ((host_add = gethostbyname(host.c_str()))) {
 
-			address.sin_addr.s_addr
-					= ((struct in_addr*) (host_add->h_addr))->s_addr;
-
-			return ::connect(fd, (struct sockaddr *) &address, sizeof(address));
+		address.sin_addr.s_addr
+				= ((struct in_addr*) (host_add->h_addr))->s_addr;
+		if (::connect(fd, (struct sockaddr *) &address, sizeof(address))
+				!= ERROR) {
+			valido = true;
+			return OK;
+		} else {
+			valido = false;
+			return ERROR;
 		}
+
 	}
 	return ERROR;
 }
 
+int Socket::connectWithTimeout(const std::string &host, unsigned int port,
+		int timeout) {
+	int res;
+	struct sockaddr_in addr;
+	long arg;
+	fd_set myset;
+	struct timeval tv;
+	int valopt;
+	socklen_t lon;
+	hostent* host_add;
 
+	addr.sin_family = AF_INET;
+	addr.sin_port = htons(port);
+	valido = false;
+	if (host_add = gethostbyname(host.c_str())) {
+		addr.sin_addr.s_addr = ((struct in_addr*) (host_add->h_addr))->s_addr;
 
-int Socket::connectWithTimeout(const std::string &host, unsigned int port,int timeout) {
-  int res;
-  struct sockaddr_in addr;
-  long arg;
-  fd_set myset;
-  struct timeval tv;
-  int valopt;
-  socklen_t lon;
-  hostent* host_add;
-
-  addr.sin_family = AF_INET;
-  addr.sin_port = htons(port);
-
-  if (valido && (host_add = gethostbyname(host.c_str()))) {
-			addr.sin_addr.s_addr = ((struct in_addr*) (host_add->h_addr))->s_addr;
-
-  // Set non-blocking
-  if( (arg = fcntl(fd, F_GETFL, NULL)) < 0) {
-     return ERROR;
-  }
-  arg |= O_NONBLOCK;
-  if( fcntl(fd, F_SETFL, arg) < 0) {
-    return ERROR;
-  }
-  // Trying to connect with timeout
-  res = ::connect(fd, (struct sockaddr *)&addr, sizeof(addr));
-  if (res < 0) {
-     if (errno == EINPROGRESS) {
-        do {
-           tv.tv_sec = timeout;
-           tv.tv_usec = 0;
-           FD_ZERO(&myset);
-           FD_SET(fd, &myset);
-           res = select(fd+1, NULL, &myset, NULL, &tv);
-           if (res < 0 && errno != EINTR) {
-                 return ERROR;
-           }
-           else if (res > 0) {
-              lon = sizeof(int);
-              if (getsockopt(fd, SOL_SOCKET, SO_ERROR, (void*)(&valopt), &lon) < 0) {
-                  return ERROR;
-              }
-              // Check the value returned...
-              if (valopt) {
-                 return ERROR;
-              }
-              break;
-           }
-           else {
-                return ERROR;
-           }
-        } while (1);
-     }
-     else {
-         return ERROR;
-     }
-  }
-  // Set to blocking mode again...
-  if( (arg = fcntl(fd, F_GETFL, NULL)) < 0) {
-          return ERROR;
-  }
-  arg &= (~O_NONBLOCK);
-  if( fcntl(fd, F_SETFL, arg) < 0) {
-     return ERROR;
-  }
-    return OK;
-  }
-  return ERROR;
+		// Set non-blocking
+		if ((arg = fcntl(fd, F_GETFL, NULL)) < 0) {
+			return ERROR;
+		}
+		arg |= O_NONBLOCK;
+		if (fcntl(fd, F_SETFL, arg) < 0) {
+			return ERROR;
+		}
+		// Trying to connect with timeout
+		res = ::connect(fd, (struct sockaddr *) &addr, sizeof(addr));
+		if (res < 0) {
+			if (errno == EINPROGRESS) {
+				do {
+					tv.tv_sec = timeout;
+					tv.tv_usec = 0;
+					FD_ZERO(&myset);
+					FD_SET(fd, &myset);
+					res = select(fd + 1, NULL, &myset, NULL, &tv);
+					if (res < 0 && errno != EINTR) {
+						return ERROR;
+					} else if (res > 0) {
+						lon = sizeof(int);
+						if (getsockopt(fd, SOL_SOCKET, SO_ERROR,
+								(void*) (&valopt), &lon) < 0) {
+							return ERROR;
+						}
+						// Check the value returned...
+						if (valopt) {
+							return ERROR;
+						}
+						break;
+					} else {
+						return ERROR;
+					}
+				} while (1);
+			} else {
+				return ERROR;
+			}
+		}
+		// Set to blocking mode again...
+		if ((arg = fcntl(fd, F_GETFL, NULL)) < 0) {
+			return ERROR;
+		}
+		arg &= (~O_NONBLOCK);
+		if (fcntl(fd, F_SETFL, arg) < 0) {
+			return ERROR;
+		}
+		valido = true;
+		return OK;
+	}
+	return ERROR;
 }
-
-
-
-
-
-
-
-
 
 int Socket::listen(unsigned int port, unsigned int numClientesEspera) {
 
@@ -212,7 +207,7 @@ int Socket::receiveExact(char* stream, unsigned int size) {
 				return size;
 			}
 		} else {
-				return ERROR;
+			return ERROR;
 
 		}
 	}
