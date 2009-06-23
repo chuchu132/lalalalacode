@@ -51,7 +51,7 @@ void* PeerDown::run() {
 				}
 
 				contadorCiclos++;
-				if (contadorCiclos == 30) {
+				if (contadorCiclos == 3) {
 					contadorCiclos = 0;
 					sendKeepAlive();
 				}
