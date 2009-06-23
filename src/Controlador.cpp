@@ -36,11 +36,6 @@ void Controlador::detenerTorrent(Torrent *t)
 	t->detener();
 }
 
-void Controlador::pausarTorrent(Torrent *t)
-{
-	t->pausar();
-}
-
 void Controlador::actualizarEstado(Torrent *t)
 {
 	mutex_lista.lock();

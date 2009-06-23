@@ -76,7 +76,7 @@ public:
 	void continuar(); //todo cambiar nombre.. no se entiende lo que hace sino XD
 
 	/* pausa el trafico del torrent */
-	void pausar();
+//	void pausar();
 
 	/* refresca la lista de peers del torrent. Pide peers al Tracker */
 	void refrescarPeers();

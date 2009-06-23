@@ -76,18 +76,6 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkToolButton" id="boton_pausar">
-                        <property name="visible">True</property>
-                        <property name="tooltip_text">Pausar Descarga</property>
-                        <property name="label" translatable="yes">Pausar</property>
-                        <property name="stock_id">gtk-media-pause</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="homogeneous">True</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkToolButton" id="boton_continuar">
                         <property name="visible">True</property>
                         <property name="tooltip_text">Continuar Descarga</property>
@@ -250,10 +238,27 @@
                   </object>
                 </child>
                 <child type="tab">
-                  <object class="GtkLabel" id="label">
+                  <object class="GtkHBox" id="hbox1">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Notificaciones</property>
-                    <property name="single_line_mode">True</property>
+                    <child>
+                      <object class="GtkImage" id="image1">
+                        <property name="visible">True</property>
+                        <property name="pixbuf">notif.png</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Notificaciones</property>
+                        <property name="single_line_mode">True</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">3</property>
@@ -360,9 +365,10 @@
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">6</property>
+                                <property name="right_attach">5</property>
                                 <property name="top_attach">3</property>
                                 <property name="bottom_attach">4</property>
+                                <property name="x_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -374,7 +380,7 @@
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
-                                <property name="x_options">GTK_FILL</property>
+                                <property name="x_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -383,9 +389,10 @@
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">6</property>
+                                <property name="right_attach">5</property>
                                 <property name="top_attach">7</property>
                                 <property name="bottom_attach">8</property>
+                                <property name="x_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -394,9 +401,10 @@
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">6</property>
+                                <property name="right_attach">5</property>
                                 <property name="top_attach">8</property>
                                 <property name="bottom_attach">9</property>
+                                <property name="x_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -408,7 +416,7 @@
                                 <property name="right_attach">2</property>
                                 <property name="top_attach">9</property>
                                 <property name="bottom_attach">10</property>
-                                <property name="x_options">GTK_FILL</property>
+                                <property name="x_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -423,7 +431,8 @@
                               </object>
                               <packing>
                                 <property name="left_attach">1</property>
-                                <property name="right_attach">6</property>
+                                <property name="right_attach">5</property>
+                                <property name="x_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -457,18 +466,6 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkLabel" id="l_num_files">
-                                <property name="visible">True</property>
-                              </object>
-                              <packing>
-                                <property name="left_attach">1</property>
-                                <property name="right_attach">2</property>
-                                <property name="top_attach">10</property>
-                                <property name="bottom_attach">11</property>
-                                <property name="x_options">GTK_FILL</property>
-                              </packing>
-                            </child>
-                            <child>
                               <object class="GtkLabel" id="label12">
                                 <property name="visible">True</property>
                               </object>
@@ -477,6 +474,7 @@
                                 <property name="right_attach">6</property>
                                 <property name="top_attach">9</property>
                                 <property name="bottom_attach">10</property>
+                                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
@@ -488,6 +486,7 @@
                                 <property name="right_attach">6</property>
                                 <property name="top_attach">10</property>
                                 <property name="bottom_attach">11</property>
+                                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
                               </packing>
                             </child>
                             <child>
@@ -500,6 +499,64 @@
                                 <property name="right_attach">6</property>
                                 <property name="top_attach">4</property>
                                 <property name="bottom_attach">5</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label16">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">5</property>
+                                <property name="right_attach">6</property>
+                                <property name="top_attach">3</property>
+                                <property name="bottom_attach">4</property>
+                                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label17">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">5</property>
+                                <property name="right_attach">6</property>
+                                <property name="top_attach">7</property>
+                                <property name="bottom_attach">8</property>
+                                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label18">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">5</property>
+                                <property name="right_attach">6</property>
+                                <property name="top_attach">8</property>
+                                <property name="bottom_attach">9</property>
+                                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="label19">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">5</property>
+                                <property name="right_attach">6</property>
+                                <property name="x_options">GTK_EXPAND | GTK_SHRINK | GTK_FILL</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="l_num_files">
+                                <property name="visible">True</property>
+                              </object>
+                              <packing>
+                                <property name="left_attach">1</property>
+                                <property name="right_attach">2</property>
+                                <property name="top_attach">10</property>
+                                <property name="bottom_attach">11</property>
+                                <property name="x_options"></property>
                               </packing>
                             </child>
                             <child>
@@ -542,9 +599,26 @@
                   </packing>
                 </child>
                 <child type="tab">
-                  <object class="GtkLabel" id="label1">
+                  <object class="GtkHBox" id="hbox2">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Informacion</property>
+                    <child>
+                      <object class="GtkImage" id="image2">
+                        <property name="visible">True</property>
+                        <property name="pixbuf">info.png</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label1">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Informacion</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">1</property>
@@ -572,9 +646,26 @@
                   </packing>
                 </child>
                 <child type="tab">
-                  <object class="GtkLabel" id="label2">
+                  <object class="GtkHBox" id="hbox3">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Peers</property>
+                    <child>
+                      <object class="GtkImage" id="image3">
+                        <property name="visible">True</property>
+                        <property name="pixbuf">peers.png</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label2">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Peers</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">2</property>
@@ -602,9 +693,26 @@
                   </packing>
                 </child>
                 <child type="tab">
-                  <object class="GtkLabel" id="label5">
+                  <object class="GtkHBox" id="hbox4">
                     <property name="visible">True</property>
-                    <property name="label" translatable="yes">Archivos</property>
+                    <child>
+                      <object class="GtkImage" id="image4">
+                        <property name="visible">True</property>
+                        <property name="pixbuf">files.png</property>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="label5">
+                        <property name="visible">True</property>
+                        <property name="label" translatable="yes">Archivos</property>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="position">3</property>
@@ -651,7 +759,6 @@
     <property name="has_separator">False</property>
     <property name="program_name">&#x3C6;Torrent</property>
     <property name="version">1.0</property>
-    <property name="copyright" translatable="yes">Preentrega</property>
     <property name="comments" translatable="yes">Cliente de Bit Torrent</property>
     <property name="website">http://fi.uba.ar</property>
     <property name="authors">Alejandro Barbieri
@@ -837,7 +944,6 @@ Luc&#xED;a Garbarini
     <property name="icon">logo.png</property>
     <property name="type_hint">normal</property>
     <property name="skip_taskbar_hint">True</property>
-    <property name="has_separator">False</property>
     <property name="text">Desea Salir de &#x3C6;Torrent?</property>
     <child internal-child="vbox">
       <object class="GtkVBox" id="dialog-vbox5">

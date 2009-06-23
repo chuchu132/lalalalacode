@@ -44,7 +44,6 @@ private:
 	Gtk::ToolButton *button_add;
 	Gtk::ToolButton *button_erase;
 	Gtk::ToolButton *button_stop;
-	Gtk::ToolButton *button_pause;
 	Gtk::ToolButton *button_continue;
 	Gtk::ToolButton *button_up;
 	Gtk::ToolButton *button_down;
@@ -76,7 +75,6 @@ private:
 	void on_button_add_clicked();
   	void on_button_erase_clicked();
 	void on_button_stop_clicked();
-	void on_button_pause_clicked();
 	void on_button_continue_clicked();
 	void on_button_up_clicked();
 	void on_button_down_clicked();
