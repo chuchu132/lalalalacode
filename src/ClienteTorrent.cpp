@@ -30,15 +30,9 @@ ClienteTorrent::ClienteTorrent() {
 		t = agregarTorrent(config.obtenerTorrent());
 		if (t != NULL) {
 			estado = config.getEstadoTorrent();
-			if (estado == T_ACTIVO) {
-				//t-run();
-			}
-			else {
-				if (estado == T_PAUSADO) {
-					//t->run();
-					//t->pausar();
-				}
-			}
+			t->setEstado(estado);
+			if ( estado != T_DETENIDO)
+				t->continuar();
 		}
 	}
 }

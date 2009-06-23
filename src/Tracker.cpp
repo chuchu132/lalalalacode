@@ -46,6 +46,8 @@ void* Tracker::run() {
 
 		} else {
 			seCerro = true;
+			//VER hay que avisarle al torrent????
+			std::cout<<"se desconecto el tracker"<<std::endl;
 		}
 	}
 

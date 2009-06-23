@@ -102,10 +102,8 @@ const int PUERTO_DEFAULT_TRACKER = 80;
 
 /* Estados del Torrent */
 #define T_ACTIVO "Activo"
-#define T_PAUSADO "Pausado"
 #define T_DETENIDO "Detenido"
 #define T_COMPLETO "Completo"
-#define T_CONECTANDO "Conectando"
 
 /* Configuracion Default */
 #define URL_CARPETA_TEMP "./incompletos/"
