@@ -46,7 +46,7 @@ void Controlador::actualizarEstado(Torrent *t)
 
 void Controlador::agregarTorrentsEnVista()
 {
-	std::list<Torrent*>::iterator it;
+	LTorrentpIter it;
 	for (it = cliente.getListaTorrents()->begin(); it != cliente.getListaTorrents()->end(); it++)
 	{
 		ventana->addTorrent((*it));
@@ -81,7 +81,7 @@ void Controlador::detenerVista() {
 void Controlador::guardarConfiguracion()
 {
 	Configuracion *config = cliente.getConfiguracion();
-	unsigned int puerto = ventana->getPuerto();
+	UINT puerto = ventana->getPuerto();
 	if (puerto != 0)
 		config->guardarPuerto(ventana->getPuerto());
 	config->guardarRutaDescargas(ventana->getRutaDescargas());

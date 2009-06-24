@@ -27,7 +27,7 @@ class ClienteTorrent : public Thread {
 
 private:
 	/*Hay un Torrent por cada archivo .torrent que ingresa el usuario. */
-	std::list<Torrent*> torrents;
+	LTorrentp torrents;
 
 	/*
 	 * peer_id (string de 20 bytes) es un codigo que genera la aplicacion
@@ -77,7 +77,7 @@ public:
 
 	std::string getPeerId();
 
-	unsigned int getPuerto();
+	UINT getPuerto();
 
 	void setControlador(Controlador *ctrl);
 
@@ -85,7 +85,7 @@ public:
 
 	void inicializarDirectorios();
 
-	std::list<Torrent*>* getListaTorrents();
+	LTorrentp* getListaTorrents();
 
 };
 

@@ -105,7 +105,7 @@ bool Bitmap::estaVacio(){
 	return vacio;
 }
 
-bool Bitmap::getPrimeroLibre(unsigned int &index){
+bool Bitmap::getPrimeroLibre(UINT &index){
 	bool encontro = false;
 	int i = 0;
 	while(!encontro && (i<tamanio)){

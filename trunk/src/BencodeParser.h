@@ -6,20 +6,14 @@
 
 #ifndef _BENCODEPARSER_H
 #define	_BENCODEPARSER_H
-#include <list>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string>
-#include <iostream>
-#include <fstream>
+
 #include "ExcepcionCaracterInvalido.h"
 #include "DatosParser.h"
 #include "Constantes.h"
 #include "Sha1.h"
 #include <sstream>
-#include <string>
+#include "Tipos.h"
 
-using namespace std;
 
 class BencodeParser {
 private:
@@ -48,7 +42,7 @@ public:
 	BencodeParser(const char * url);
 
 	//Constructor: parametros , Cadena a parsear y su longitud
-	BencodeParser(const char * cadena,int longitud);
+	BencodeParser(const char * cadena,ULINT longitud);
 
 	//Destructor
 	~BencodeParser();
@@ -92,7 +86,7 @@ public:
 	//Obtiene el info_hash del .torrent y lo guarda en mensajeInfoHash
 	void procesarInfoHash();
 
-	char* archivoAString (const char *url,unsigned *longitud);
+	char* archivoAString (const char *url,ULINT *longitud);
 
 };
 
