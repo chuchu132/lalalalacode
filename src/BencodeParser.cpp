@@ -125,7 +125,7 @@ void BencodeParser::parserLista() throw (ExcepcionCaracterInvalido) {
 void BencodeParser::parserNumerico()throw (ExcepcionCaracterInvalido) {
 
 	compararCaracter('i');
-	unsigned int val = 0;
+	ULINT val = 0;
 	while (isdigit(verCaracterSiguiente()))
 		val = val * 10 + (obtenerCaracter() - '0');
 	compararCaracter('e');
