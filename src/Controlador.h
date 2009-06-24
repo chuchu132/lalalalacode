@@ -22,7 +22,6 @@ class Configuracion;
 
 class Controlador {
 
-
 private:
 	Ventana *ventana;
 	ClienteTorrent &cliente;

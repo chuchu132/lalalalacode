@@ -14,14 +14,15 @@
 #include <string>
 
 class Controlador;
+class Torrent;
 class Vista {
 
-private:
+protected:
 	Controlador *controlador;
 
 public:
 
-	virtual void setControlador(Controlador *c) = 0;
+	virtual void setControlador(Controlador *c);
 
 	/* actualiza el estado del torrent */
 	virtual void actualizarEstado(Torrent*) = 0;

@@ -12,22 +12,21 @@
 #include <glib.h>
 #include <iostream>
 
-#include "TorrentView.h"
 #include "Torrent.h"
 #include "Controlador.h"
-#include "AttributeView.h"
 #include "Constantes.h"
 #include "Thread.h"
 #include "Mutex.h"
 #include "Vista.h"
+#include "TorrentView.h"
+#include "AttributeView.h"
 
 class TorrentView;
 class Controlador;
 class AttributesView;
 class Torrent;
 
-class Ventana: public Thread , Vista{
-	/* ventana asincronica.. para ventana sincronica usar de la rev 247 hacia atras */
+class Ventana: public Thread ,Vista {
 
 private:
 	Glib::RefPtr<Gtk::Builder> builder;//obtiene datos del archivo de la vista
@@ -64,16 +63,13 @@ private:
 	TorrentView *torrents;
 	AttributesView *attr;
 
-	/* controlador de la vista */
-	Controlador *controlador;
-
 	bool error; //indica si hubo un error
 	bool activo;
 	Mutex mutex_torrents;
 
 	//Signal handlers:
 	void on_button_add_clicked();
-  	void on_button_erase_clicked();
+	void on_button_erase_clicked();
 	void on_button_stop_clicked();
 	void on_button_continue_clicked();
 	void on_button_up_clicked();
@@ -98,6 +94,7 @@ private:
 	//obtiene los tree view desde el archivo
 	void getViews();
 
+	//crea el menu
 	void setMenu();
 
 	//conecta las señales con los signal handlers
@@ -111,7 +108,6 @@ public:
 
 	~Ventana();
 
-	/* setea el controlador */
 	void setControlador(Controlador *c);
 
 	/* actualiza el estado del torrent */

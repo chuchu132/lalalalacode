@@ -31,16 +31,16 @@ private:
 	Gtk::TreeModelColumnRecord columns;
 	Gtk::TreeModelColumnRecord columns_categories;
 
-	Gtk::TreeModelColumn<Glib::ustring> col_name; 	//nombre del torrent
-	Gtk::TreeModelColumn<Glib::ustring> col_size;	//tam del archivo
-	Gtk::TreeModelColumn<std::string> col_status; 	//estado del torrent
-	Gtk::TreeModelColumn<int> col_progress; 	//progreso del torrent (porcentaje)
-	Gtk::TreeModelColumn<Glib::ustring> col_completed; 	//tamaño completado del torrent
-	Gtk::TreeModelColumn<Glib::ustring> col_remaining; 	//tamaño restante para completar descarga
-	Gtk::TreeModelColumn<int> col_downspeed; 	//velocidad de descarga del torrent
-	Gtk::TreeModelColumn<int> col_upspeed; 	//velocidad de subida del torrent
-	Gtk::TreeModelColumn<Glib::ustring> col_time; 	//tiempo restante para completar descarga
-	Gtk::TreeModelColumn<Torrent*> col_torrent; 	//puntero al objeto torrent que se esta mostrando
+	Gtk::TreeModelColumn<Glib::ustring> col_name; //nombre del torrent
+	Gtk::TreeModelColumn<Glib::ustring> col_size; //tam del archivo
+	Gtk::TreeModelColumn<std::string> col_status; //estado del torrent
+	Gtk::TreeModelColumn<int> col_progress; //progreso del torrent (porcentaje)
+	Gtk::TreeModelColumn<Glib::ustring> col_completed; //tamaño completado del torrent
+	Gtk::TreeModelColumn<Glib::ustring> col_remaining; //tamaño restante para completar descarga
+	Gtk::TreeModelColumn<int> col_downspeed; //velocidad de descarga del torrent
+	Gtk::TreeModelColumn<int> col_upspeed; //velocidad de subida del torrent
+	Gtk::TreeModelColumn<Glib::ustring> col_time; //tiempo restante para completar descarga
+	Gtk::TreeModelColumn<Torrent*> col_torrent; //puntero al objeto torrent que se esta mostrando
 
 	Gtk::TreeModelColumn<Glib::ustring> col_categories;
 	Gtk::TreeModelColumn<std::string> col_cat_status;
