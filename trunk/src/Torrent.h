@@ -123,6 +123,10 @@ public:
 
 	UINT getCantPeers();
 
+	time_t getTimeRefresh();
+
+	time_t getTimeLastDown();
+
 	void setControlador(Controlador* ctrl);
 
 	void setDownloaded(ULINT bytes);
@@ -130,6 +134,10 @@ public:
 	void setUploaded(ULINT bytes);
 
 	void setEstado(std::string estado);
+
+	void setTimeRefresh(time_t Trefresh);
+
+	void setTimeLastDown(time_t horaActual);
 
 	bool estaActivo();
 
@@ -188,6 +196,8 @@ private:
 	ULINT downAnterior;
 
 	int velocidadAnt;
+	time_t timeLastRefresh;
+	time_t timeLastDownload;
 
 
 };
