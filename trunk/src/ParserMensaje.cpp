@@ -107,6 +107,17 @@ std::string ParserMensaje::crearGetConNumwant(std::string host,std::string path,
 	return buffer.str();
 }
 
+std::string ParserMensaje::crearGetReAnnounce(std::string host,std::string path,unsigned int* info_hash,
+		std::string peer_id, unsigned int port, unsigned int uploaded, unsigned int downloaded, unsigned int left,
+		int numwant) {
+	std::string base = crearGetBase(path,info_hash, peer_id, port, uploaded,
+			downloaded, left);
+	std::stringstream buffer;
+	buffer << base << "&numwant="<< numwant<<" HTTP/1.0\r\n"<<"Host: "<<host<<"\r\n\r\n";
+	std::cout<<buffer.str()<<std::endl;
+	return buffer.str();
+}
+
 std::string ParserMensaje::getHash(char* handshakeMsj) {
 	Sha1 sha;
 	int saltoHastaHash;

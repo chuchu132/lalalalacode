@@ -129,6 +129,18 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 	return (tracker->send(envio.c_str(), envio.length()));
 }
 
+bool Torrent::enviarEventoReAnnounce(int numwant = 0) {
+	ParserMensaje parser;
+	std::string envio;
+
+	envio = parser.crearGetReAnnounce(tracker->getUrl(),
+			tracker->getPath(), info_hash, clienteTorrent->getPeerId(),
+			port, uploaded, downloaded, left(), numwant);
+
+	return (tracker->send(envio.c_str(), envio.length()));
+}
+
+
 void Torrent::agregarPeer(std::string ip, unsigned int puerto) {
 	Socket* conexion = new Socket();
 	if (conexion->connectWithTimeout(ip.c_str(), puerto, TIME_OUT_CONNECT) == OK) {
@@ -208,9 +220,9 @@ void Torrent::detenerPeers() {
 
 void Torrent::refrescarPeers() {
 	time_t horaActual = time(NULL);
-	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
-	if (dif >=  tracker->getMinInterval()) {
-		if(enviarEventoEstado(NULL, 400)){
+//	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
+	//if (dif >=  tracker->getMinInterval()) {
+		if(enviarEventoReAnnounce(400)){
 			tracker->setRefresh(true);
 			removerPeersInactivos(NULL);
 			std::cout <<"Pedido enviado\n";
@@ -219,7 +231,7 @@ void Torrent::refrescarPeers() {
 			// reinicia el mapa de pedidos para aprovechar los nuevos peers
 		}
 		else{std::cout<<"Pedido NO enviado"<< std::endl;}
-	}
+	//}
 }
 
 void Torrent::continuar() {

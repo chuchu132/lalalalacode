@@ -62,6 +62,8 @@ public:
 	 */
 	bool enviarEventoEstado(const char* event,int numwant);
 
+	bool enviarEventoReAnnounce(int numwant);
+
 	/*Cuando el Tracker recibe una lista de peers desde el Tracker remoto
 	 * los agrega a la lista de peers del Torrent*/
 	void agregarPeer(std::string ip,unsigned int puerto);
