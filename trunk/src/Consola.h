@@ -9,6 +9,7 @@
 #define CONSOLA_H_
 
 #include "Vista.h"
+#include <list>
 
 class Consola: public Vista {
 
@@ -38,7 +39,20 @@ public:
 
 	void detener();
 
+private:
 
+	int wherex;
+	int wherey;
+	int cantidadLineas;
+	std::list<Torrent*> torrents;
+	void flechitas(int &opcion,int cantOpc );
+	void clrscr();
+	void gotoXY(int x,int y);
+	void pantAgrTorrent();
+	void pantallaPrincipal();
+	void pantListaTorrent();
+	void mostrarDatosTorrent(int torrent);
+	void pantallaConfiguracion();
 };
 
 #endif /* CONSOLA_H_ */
