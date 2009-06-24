@@ -5,7 +5,7 @@
  *      Author: ale
  */
 
-#include "../src/Ventana.h"
+
 #include "../src/ClienteTorrent.h"
 #include "../src/Torrent.h"
 #include "../src/Controlador.h"

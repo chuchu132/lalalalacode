@@ -39,6 +39,8 @@ public:
 
 	void detener();
 
+	bool huboError();
+
 private:
 
 	int wherex;

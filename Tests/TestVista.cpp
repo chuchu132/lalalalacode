@@ -5,6 +5,8 @@
  *      Author: ale
  */
 
+
+#include "../src/Ventana.h"
 #include "TestVista.h"
 
 TestVista::TestVista() {}
@@ -16,13 +18,13 @@ void TestVista::run(){
 		Gtk::Main kit(0,0);
 		ClienteTorrent cliente;
 		Controlador controlador(cliente);
-		Ventana ventana;
+		Vista* ventana = new Ventana();
 
 		cliente.setControlador(&controlador);
-		ventana.setControlador(&controlador);
-		controlador.setVentana(&ventana);
+		ventana->setControlador(&controlador);
+		controlador.setVentana(ventana);
 
-		if (!ventana.huboError())
+		if (!ventana->huboError())
 		{
 			//aca faltaria un cliente.excecute() para escuchar a los peers entrantes
 
