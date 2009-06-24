@@ -9,6 +9,7 @@
 #define PARSERCGI_H_
 
 #include <string>
+#include "Tipos.h"
 
 class ParserCgi {
 public:
@@ -18,10 +19,10 @@ public:
 	std::string decodificar(std::string codificado);
 	void decodificar(std::string codificado,char** salida,int& tamanio);
 	bool hayQueCodificarlo(char caracter);
-	unsigned char intAhexaChar(unsigned char numero);
+	UCHAR intAhexaChar(UCHAR numero);
 	char hexaCharAint(char hexa);
-	std::string  intAhexaNN(const unsigned char numero);
-	unsigned char hexaNNaChar(std::string NN);
+	std::string  intAhexaNN(const UCHAR numero);
+	UCHAR hexaNNaChar(std::string NN);
 };
 
 #endif /* PARSERCGI_H_ */

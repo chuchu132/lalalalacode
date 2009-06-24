@@ -19,6 +19,7 @@
 #include "Socket.h"
 #include "Thread.h"
 #include "Torrent.h"
+#include "Tipos.h"
 #include "AvisoDescargaCompleta.h"
 
 class Torrent;
@@ -80,7 +81,7 @@ public:
 	 *   begin: offset en bytes dentro de la pieza
 	 *   length: longitud del bloque solicitado
 	 */
-	bool sendRequest(unsigned int  index);
+	bool sendRequest(UINT  index);
 
 	/*
 	 * Formato mensaje Piece: <len=0009 + X><Id=7><index><begin><block>  X = longitud en bytes de block
@@ -142,7 +143,7 @@ public:
 
 	std::string getIp();
 
-	unsigned int getPuerto();
+	UINT getPuerto();
 
 	void cerrarConexion();
 
@@ -152,9 +153,9 @@ public:
 
 	void setEstadoPiezaPendiente(bool estado);
 
-	void setIdxPiezaPendiente(unsigned int index);
+	void setIdxPiezaPendiente(UINT index);
 
-	unsigned int getIdxPiezaPendiente();
+	UINT getIdxPiezaPendiente();
 
 	bool getHuboCambios();
 
@@ -175,7 +176,7 @@ private:
 	 * no completo la entrega.
 	 */
 	bool piezaPendiente;
-	unsigned int idxPiezaPendiente;
+	UINT idxPiezaPendiente;
 
 	char tipo;
 	bool am_choking;

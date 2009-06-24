@@ -42,7 +42,7 @@ bool Peer::procesar(char* buffer, int length) {
 		std::cout << getIp() << " mando UnChoke" << std::endl;
 		peer_choking = false;
 		if (am_interested && !tienePiezaPendiente()) {
-			unsigned int index;
+			UINT index;
 			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
 					bitmap)) {
 				sendRequest(index);
@@ -67,20 +67,20 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_HAVE: {
-		unsigned int index;
+		UINT index;
 		parser.decodificarHave(buffer, index);
 		procesarHave(index);
 	}
 		break;
 	case ID_MSJ_BITFIELD: {
 		char* bitfield;
-		unsigned int longitud;
+		UINT longitud;
 		parser.decodificarBitfield(buffer, length, longitud, &bitfield);
 		procesarBitfield(bitfield, longitud);
 	}
 		break;
 	case ID_MSJ_REQUEST: {
-		unsigned int index, begin, length2;
+		UINT index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);
 		std::cout << getIp() << " Pidio piece " << index << " offset " << begin
@@ -89,7 +89,7 @@ bool Peer::procesar(char* buffer, int length) {
 		break;
 	case ID_MSJ_PIECE: {
 		char* data;
-		unsigned int index, begin, length2;
+		UINT index, begin, length2;
 		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
 		std::cout << getIp() << " mando la Pieza " << index << " offset "
 				<< begin << std::endl;
@@ -107,7 +107,7 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_CANCEL: {
-		unsigned int index, begin, length2;
+		UINT index, begin, length2;
 		parser.decodificarCancel(buffer, index, begin, length2);
 		procesarCancel(index, begin, length2);
 	}
@@ -194,16 +194,16 @@ bool Peer::sendBitfield() {
 }
 
 /*Formato mensaje Request: <len=0013><Id=6><index><begin><length> */
-bool Peer::sendRequest(unsigned int index) {
+bool Peer::sendRequest(UINT index) {
 	int block, cantBlockEnteros, resto;
-	unsigned int tamPieza;
+	UINT tamPieza;
 	ParserMensaje parser;
 	bool error = false;
 	char buffer[FIXED_LENGTH_REQUEST];
 
 	tamPieza = torrent->getFileManager()->getTamanioPieza(index);
-	cantBlockEnteros = (unsigned int) (tamPieza / TAM_BLOQUES);
-	resto = (unsigned int) (tamPieza % TAM_BLOQUES);
+	cantBlockEnteros = (UINT) (tamPieza / TAM_BLOQUES);
+	resto = (UINT) (tamPieza % TAM_BLOQUES);
 	block = 0;
 	while ((block < cantBlockEnteros) && !error) {
 		parser.crearMensajeRequest(index, (block * TAM_BLOQUES), TAM_BLOQUES,
@@ -277,7 +277,7 @@ void Peer::procesarRequest(int index, int begin, int length) {
 
 void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 	try {
-		unsigned int bytes = torrent->getFileManager()->writeBlock(index,
+		UINT bytes = torrent->getFileManager()->writeBlock(index,
 				begin, longitud, data);
 		torrent->setDownloaded(bytes);
 		if (torrent->getFileManager()->getBitmap()->estaMarcada(index)) {
@@ -416,7 +416,7 @@ std::string Peer::getIp() {
 	return peerRemoto->getIp();
 }
 
-unsigned int Peer::getPuerto() {
+UINT Peer::getPuerto() {
 	return peerRemoto->getPuerto();
 }
 
@@ -442,10 +442,10 @@ void Peer::setEstadoPiezaPendiente(bool estado) {
 	this->piezaPendiente = estado;
 }
 
-void Peer::setIdxPiezaPendiente(unsigned int index) {
+void Peer::setIdxPiezaPendiente(UINT index) {
 	this->idxPiezaPendiente = index;
 }
 
-unsigned int Peer::getIdxPiezaPendiente() {
+UINT Peer::getIdxPiezaPendiente() {
 	return idxPiezaPendiente;
 }

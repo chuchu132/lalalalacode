@@ -56,7 +56,7 @@ bool ParserCgi::hayQueCodificarlo(const char caracter){
 			('A'<=caracter && caracter<='Z'));
 }
 /*El numero ingresado debe estar en el rango [0,15]*/
-unsigned char ParserCgi::intAhexaChar(const unsigned char numero){
+UCHAR ParserCgi::intAhexaChar(const UCHAR numero){
 	if( numero<=9 ){
 		return (numero + 48);
 	}
@@ -66,9 +66,9 @@ unsigned char ParserCgi::intAhexaChar(const unsigned char numero){
 	return 0;
 }
 /*Convierte un numero [0,255] a %nn */
-std::string ParserCgi::intAhexaNN(const unsigned char numero){
-	unsigned char primero = (unsigned char)(numero / 16);
-	unsigned char segundo = (numero % 16);
+std::string ParserCgi::intAhexaNN(const UCHAR numero){
+	UCHAR primero = (UCHAR)(numero / 16);
+	UCHAR segundo = (numero % 16);
 	std::string resultado = "%";
 	resultado += intAhexaChar(primero);
 	resultado += intAhexaChar(segundo);
@@ -89,8 +89,8 @@ char ParserCgi::hexaCharAint(char hexa){
 	return 0;
 }
 
-unsigned char ParserCgi::hexaNNaChar(std::string nn){
-	unsigned char resultado = 16 * hexaCharAint(nn[0]);
+UCHAR ParserCgi::hexaNNaChar(std::string nn){
+	UCHAR resultado = 16 * hexaCharAint(nn[0]);
 	resultado += hexaCharAint(nn[1]);
 	return resultado;
 }
