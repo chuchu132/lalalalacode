@@ -26,6 +26,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	uploaded = 0;
 	downloaded = 0;
 	downAnterior =0;
+	velocidadAnt=0;
 	this->path = path;
 	estado = T_DETENIDO;
 	activo = false;
@@ -332,12 +333,14 @@ int Torrent::getVelocidadSubida() {
 int Torrent::getVelocidadBajada() {
 	time_t horaAct = time(NULL);
 	int tiempo = (int)difftime(horaAct,horaAnterior);
-	std::cout<<"diff timpo "<<tiempo<<std::endl;
+	if (tiempo<=0)
+		return velocidadAnt;
 	horaAnterior = horaAct;
 	ULINT diferencia = downloaded - downAnterior;
-	std::cout<<"diff descarga "<<diferencia<<std::endl;
+
 	downAnterior=downloaded;
-	return (tiempo > 0)?(int)((diferencia/1024)/tiempo):0;
+	velocidadAnt=(int)((diferencia/1024)/tiempo);
+	return velocidadAnt;
 }
 
 void Torrent::setControlador(Controlador* ctrl) {
@@ -404,18 +407,18 @@ std::string Torrent::getTiempoRestante() {
 		else{
 	    velocidad*=1024;
 	    float tiempo = (left()/ velocidad);
-		int temp;
+		int temp,auxTemp;
 		temp = (UINT)(tiempo/86400);
 		if (temp>0)
 			buffer <<temp << " d ";
 		temp = (UINT)tiempo % 86400;
-		temp = (UINT)(temp/3600);
-		if ( temp > 0)
-			buffer << temp << " hs ";
+		auxTemp = (UINT)(temp/3600);
+		if ( auxTemp > 0)
+			buffer << auxTemp << " hs ";
 		temp = temp % 3600;
-		temp = (UINT)(temp/60);
-		if ( temp > 0)
-			buffer << temp << " m ";
+		auxTemp = (UINT)(temp/60);
+		if ( auxTemp > 0)
+			buffer << auxTemp << " m ";
 		temp = temp % 60;
 		if ( temp > 0)
 			buffer << temp << " s";

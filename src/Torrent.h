@@ -187,6 +187,8 @@ private:
 	time_t horaAnterior;
 	ULINT downAnterior;
 
+	int velocidadAnt;
+
 
 };
 
