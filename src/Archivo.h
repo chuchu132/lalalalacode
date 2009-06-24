@@ -16,13 +16,13 @@ public:
 	Archivo();
 	virtual ~Archivo();
 	ULINT getTamanio();
-	LString* getPathList();
+	std::list<std::string>* getPathList();
 	std::string getPath();
 	void setTamanio(ULINT tam);
 	void addPath(std::string path);
 
 private:
-	LString path;
+	std::list<std::string> path;
 	ULINT tamanio;
 };
 

@@ -11,6 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <string>
 #include "Tipos.h"
 
 #include "Constantes.h"
@@ -23,7 +24,7 @@ private:
 
 	std::string rutaDescargas; //directorio en el que se guardan las descargas
 	UINT puerto; //puerto en el que el cliente escucha conexiones entrantes
-	LString torrents; // lista con los torrents abiertos en la ultima ejecucion
+	std::list<std::string>  torrents; // lista con los torrents abiertos en la ultima ejecucion
 									 // y su estado
 	std::string estado;
 

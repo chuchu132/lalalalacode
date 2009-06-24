@@ -6,7 +6,7 @@
  */
 
 #include "Archivo.h"
-
+#include <list>
 
 Archivo::Archivo() {}
 
@@ -17,8 +17,8 @@ ULINT Archivo::getTamanio(){
 }
 
 std::string Archivo::getPath(){
-	LStringIter itPath = path.begin();
-	LStringIter archivo = --path.end();
+	std::list<std::string>::iterator itPath = path.begin();
+	std::list<std::string>::iterator archivo = --path.end();
 	std::string url= "/";
 	while(itPath != path.end()){
 		url+=(*itPath);
@@ -30,7 +30,7 @@ std::string Archivo::getPath(){
 	return url;
 }
 
-LString* Archivo::getPathList()
+std::list<std::string>* Archivo::getPathList()
 {
 	return &path;
 }
