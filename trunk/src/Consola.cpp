@@ -51,7 +51,9 @@ std::string Consola::getRutaDescargas(){
 
 void Consola::detener(){}
 
-
+bool Consola::huboError(){
+	return false;
+}
 
 void Consola::clrscr(){
 	system("clear");

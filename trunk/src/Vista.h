@@ -12,6 +12,7 @@
 
 #include "Torrent.h"
 #include <string>
+#include "Tipos.h"
 
 class Controlador;
 class Torrent;
@@ -21,6 +22,8 @@ protected:
 	Controlador *controlador;
 
 public:
+
+	virtual ~Vista(){};
 
 	virtual void setControlador(Controlador *c);
 
@@ -37,7 +40,7 @@ public:
 	virtual int correr() = 0;
 
 	/* devuelve cero si no se especifico ningun puerto */
-	virtual unsigned int getPuerto() = 0;
+	virtual UINT getPuerto() = 0;
 
 	virtual std::string getRutaDescargas() = 0;
 

@@ -10,6 +10,7 @@
 #include "../src/Tracker.h"
 #include "TestTracker.h"
 #include "../src/Torrent.h"
+#include <cstdlib>
 
 #include <cstring>
 
