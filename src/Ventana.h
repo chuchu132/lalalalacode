@@ -19,14 +19,14 @@
 #include "Constantes.h"
 #include "Thread.h"
 #include "Mutex.h"
-
+#include "Vista.h"
 
 class TorrentView;
 class Controlador;
 class AttributesView;
 class Torrent;
 
-class Ventana: public Thread {
+class Ventana: public Thread , Vista{
 	/* ventana asincronica.. para ventana sincronica usar de la rev 247 hacia atras */
 
 private:
