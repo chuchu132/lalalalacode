@@ -17,6 +17,7 @@
 #include "Mutex.h"
 #include "Peer.h"
 #include "Tracker.h"
+#include "Tipos.h"
 
 
 /*******************************************************************
@@ -66,7 +67,7 @@ public:
 
 	/*Cuando el Tracker recibe una lista de peers desde el Tracker remoto
 	 * los agrega a la lista de peers del Torrent*/
-	void agregarPeer(std::string ip,unsigned int puerto);
+	void agregarPeer(std::string ip,UINT puerto);
 
 	bool agregarPeer(Peer* peerNuevo);
 
@@ -84,9 +85,9 @@ public:
 	void refrescarPeers();
 
 	/* Calcula cuantos bytes faltan descargar */
-	unsigned int left();
+	ULINT left();
 
-	unsigned int* getInfoHash();
+	UINT* getInfoHash();
 
 	std::string getHashString();
 
@@ -98,12 +99,12 @@ public:
 	bool estaCompleto();
 
 	/* devuelve el tamaño del archivo en bytes */
-	unsigned int getTamanio();
+	ULINT getTamanio();
 
 	/* devuelve el tamanio descargado en bytes*/
-	unsigned int getTamanioDescargado();
+	ULINT getTamanioDescargado();
 
-	unsigned int getTamanioSubido();
+	ULINT getTamanioSubido();
 
 	std::string getUrlTracker();
 
@@ -120,24 +121,24 @@ public:
 
 	std::string getPath();
 
-	unsigned int getCantPeers();
+	UINT getCantPeers();
 
 	void setControlador(Controlador* ctrl);
 
-	void setDownloaded(unsigned int bytes);
+	void setDownloaded(ULINT bytes);
 
-	void setUploaded(unsigned int bytes);
+	void setUploaded(ULINT bytes);
 
 	void setEstado(std::string estado);
 
 	bool estaActivo();
 
 	/* transforma bytes en un string */
-	std::string bytesToString(unsigned int bytes);
+	std::string bytesToString(ULINT bytes);
 
 	std::list<Peer*>::iterator getIterPeers();
 	std::list<Peer*>::iterator getEndIterPeers();
-	unsigned int getCantidadMaximaPeers();
+	UINT getCantidadMaximaPeers();
 
 	bool existePeerIP(std::string ip);
 
@@ -163,18 +164,18 @@ private:
 	ClienteTorrent* clienteTorrent;
 	Tracker* tracker;
 	Mutex llaveListaPeers;
-	unsigned int cantidadMaximaPeers;
+	UINT cantidadMaximaPeers;
 	std::list<Peer*> peers;
 	FileManager fileManager;
-	unsigned int info_hash[5];
+	UINT info_hash[5];
 	std::string nombre;
 	std::string estado;
 	std::string path; //ruta en la que esta guardado el archivo .torrent
 	bool activo;
-	unsigned int port; // puerto donde esta escuchando el Cliente.
+	UINT port; // puerto donde esta escuchando el Cliente.
 
-	unsigned int uploaded;
-	unsigned int downloaded;
+	ULINT uploaded;
+	ULINT downloaded;
 	Mutex llaveCambiosDownloaded;
 
 	float endGame; // porcentaje a partir del cual se vuelven a pedir todas las piezas restantes.
@@ -184,7 +185,7 @@ private:
 	time_t horaInicial;
 
 	time_t horaAnterior;
-	unsigned int downAnterior;
+	ULINT downAnterior;
 
 
 };
