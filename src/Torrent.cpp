@@ -35,6 +35,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	port = clienteTorrent->getPuerto();
 	cantidadMaximaPeers = PEERS_MAX;
 	endGame = PRIMER_END_GAME;
+	timeLastRefresh = time(NULL);
 }
 
 Torrent::~Torrent() {
@@ -134,7 +135,6 @@ bool Torrent::enviarEventoEstado(const char* event = NULL, int numwant = 0) {
 bool Torrent::enviarEventoReAnnounce(int numwant = 0) {
 	ParserMensaje parser;
 	std::string envio;
-
 	envio = parser.crearGetReAnnounce(tracker->getUrl(),
 			tracker->getPath(), info_hash, clienteTorrent->getPeerId(),
 			port, uploaded, downloaded, left(), numwant);
@@ -430,6 +430,7 @@ std::string Torrent::getTiempoRestante() {
 }
 
 void Torrent::setDownloaded(ULINT bytes) {
+	timeLastDownload=time(NULL);
 	llaveCambiosDownloaded.lock();
 
 	if ((downloaded + bytes)>= fileManager.getTamanio())
@@ -448,6 +449,21 @@ void Torrent::setUploaded(ULINT bytes) {
 		controlador->actualizarEstado(this);
 }
 
+time_t Torrent::getTimeRefresh(){
+	return timeLastRefresh;
+}
+
+time_t Torrent::getTimeLastDown(){
+	return timeLastDownload;
+}
+
+void Torrent::setTimeRefresh(time_t Trefresh){
+	timeLastRefresh=Trefresh;
+}
+
+void Torrent::setTimeLastDown(time_t horaActual){
+	timeLastDownload=horaActual;
+}
 
 bool Torrent::reiniciarPedidos(Peer* peerQueQueda){
 	ULINT total = fileManager.getTamanio();

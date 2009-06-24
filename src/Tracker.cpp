@@ -206,6 +206,8 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 	int i = 0;
 	int rondas = 0;
 	refresh = false;
+	time_t horaActual;
+	UINT difInterval,difDownload;
 	do{
 		while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo() && !refresh) {
 			std::stringstream ip;
@@ -224,7 +226,6 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 			std::cout<<"IP: "<<ip_string<<" Puerto: "<< puerto<<std::endl;
 			if (!torrent->existePeerIP(ip_string)){
 			torrent->agregarPeer(ip_string, puerto);
-			std::cout<< " Ip agregado "<<std::endl;
 			}
 			i++;
 			cantPeers = torrent->getCantPeers();
@@ -233,6 +234,16 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 				cantPeers = torrent->getCantPeers();
 				std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
 				sleep(5);
+			}
+
+			horaActual = time(NULL);
+			difInterval = (UINT) difftime(horaActual, torrent->getTimeRefresh());
+			difDownload = (UINT) difftime(horaActual, torrent->getTimeLastDown());
+			if (difInterval >= minInterval && difDownload >=MIN_REFRESH_DOWNLOAD) {
+				std::cout<<"********************** Actualizando ********************"<<std::endl;
+				torrent->refrescarPeers();
+				torrent->setTimeRefresh(horaActual);
+				torrent->setTimeLastDown(horaActual);
 			}
 
 		}
