@@ -385,21 +385,33 @@ unsigned int Torrent::getCantidadMaximaPeers() {
 }
 
 std::string Torrent::getTiempoRestante() {
-//	if (estado == T_ACTIVO) {
-//		std::stringstream buffer;
-//		unsigned int tiempo = left()/ getVelocidadBajada();
-//		float temp;
-//		temp /= 3600;
-//		if ( temp > 1)
-//			buffer << (int)temp << "hs ";
-//		temp = tiempo % 3600;
-//		temp *=60;
-//		buffer << (int)(temp)<< "m ";
-//		temp = ((int)temp) % 60;
-//		buffer << (int) (temp*60)<<"s";
-//		return buffer.str();
-//	}
-//	else NO TESTEADO =P
+	if (estado == T_ACTIVO) {
+		std::stringstream buffer;
+		float velocidad= getVelocidadBajada();
+		if (velocidad<=0)
+			velocidad= 0.001;
+	    velocidad*=1024;
+	    float tiempo = left()/ velocidad;
+		int temp;
+
+		temp = tiempo/ 86400;
+		if (temp>1)
+			buffer << (int)temp << "d ";
+		temp = (unsigned)tiempo % 86400;
+		temp = temp/3600;
+		if ( temp > 1)
+			buffer << (int)temp << "hs ";
+		temp = temp % 3600;
+		temp = temp/60;
+		if ( temp > 1)
+			buffer << (int)temp << "m ";
+		temp = temp % 60;
+		if ( temp > 1)
+			buffer << (int)temp << "s ";
+
+		return buffer.str();
+	}
+	else
 		return "-";
 }
 

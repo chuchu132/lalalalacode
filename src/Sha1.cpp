@@ -18,7 +18,6 @@ Sha1::Sha1() {
 }
 
 Sha1::~Sha1() {
-	// The destructor does nothing
 }
 
 void Sha1::inicializacion() {
