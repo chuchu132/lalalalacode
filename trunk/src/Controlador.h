@@ -13,6 +13,7 @@
 #include "Torrent.h"
 #include "Mutex.h"
 #include "Tipos.h"
+#include <list>
 
 class Ventana;
 class ClienteTorrent;
@@ -26,7 +27,7 @@ private:
 	Ventana *ventana;
 	ClienteTorrent &cliente;
 	Mutex mutex_lista;
-	LTorrentp actualizaciones;
+	std::list<Torrent*> actualizaciones;
 public:
 
 	Controlador(ClienteTorrent&);

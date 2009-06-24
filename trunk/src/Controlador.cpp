@@ -46,7 +46,7 @@ void Controlador::actualizarEstado(Torrent *t)
 
 void Controlador::agregarTorrentsEnVista()
 {
-	LTorrentpIter it;
+	std::list<Torrent*>::iterator it;
 	for (it = cliente.getListaTorrents()->begin(); it != cliente.getListaTorrents()->end(); it++)
 	{
 		ventana->addTorrent((*it));
