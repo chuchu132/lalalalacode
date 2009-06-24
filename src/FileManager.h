@@ -23,6 +23,7 @@
 #include "Bitmap.h"
 #include "DatosParser.h"
 #include "Mutex.h"
+#include "Tipos.h"
 
 class Torrent;
 class ClienteTorrent;
@@ -34,26 +35,26 @@ public:
 
 	virtual ~FileManager();
 
-	unsigned int getTamanio();
+	ULINT getTamanio();
 
-	unsigned int getTamanioPieza();
+	UINT getTamanioPieza();
 
 	Bitmap* getBitmap();
 
 	/* devuelve la cantidad de archivos */
-	unsigned int getCantArchivos();
+	UINT getCantArchivos();
 
 	/* Devuelve un arreglo con el bloque pedido, quien lo solicita debe liberarlo*/
-	char* readBlock(int index,int begin,int longitud);
+	char* readBlock(UINT index,UINT begin,UINT longitud);
 
 	/*Recibe los Datos del Parser con la info del archivo .torrent y con el, inicializa el bitmap.*/
 	bool inicializar(DatosParser* datos);
 
 	/* Escribe en disco el bloque */
 	/* Devuelve la cantidad de bytes escritos */
-	unsigned int writeBlock(int index,int begin,int longitud,const char* block) throw(AvisoDescargaCompleta);
+	UINT writeBlock(UINT index,UINT begin,UINT longitud,const char* block) throw(AvisoDescargaCompleta);
 
-	bool verificarHashPieza(unsigned int index);
+	bool verificarHashPieza(UINT index);
 
 	/* devuelve un iterador sobre los archivos.  */
 	std::list<Archivo*>::iterator getIteratorArchivos();
@@ -66,12 +67,12 @@ public:
 	/*Hace el split del archivo descargas*/
 	void descargaAarchivos();
 
-	unsigned int getTamanioPieza(unsigned int  index);
+	UINT getTamanioPieza(UINT  index);
 
-	bool getPiezaAdescargar(unsigned int &index,Bitmap& mapaPeerRemoto);
+	bool getPiezaAdescargar(UINT &index,Bitmap& mapaPeerRemoto);
 
 
-	void cancelarPedido(unsigned int index);
+	void cancelarPedido(UINT index);
 
 	void vaciarMapaPedidos();
 
@@ -90,12 +91,12 @@ private:
 	Mutex llavePedidos;
 	std::string nombreCarpeta;
 	std::list<Archivo*> archivos; //informacion sobre los distintos archivos, sirve para partir la descarga al final.
-	unsigned int tamanioPieza;
-	unsigned int bytesTotales; //tamnio total de los archivos a descargar
+	UINT tamanioPieza;
+	ULINT bytesTotales; //tamnio total de los archivos a descargar
 	std::fstream descarga; // file del tamanio del total de la descarga.
-	unsigned int*  hashPiezas;
+	UINT*  hashPiezas;
 
-	bool crearArchivo(std::string path,unsigned int tamanio);
+	bool crearArchivo(std::string path,ULINT tamanio);
 
 	bool inicializarTamaniosYpiezas(DatosParser* datos);
 	bool inicializarArchivosYdirectorios(DatosParser* datos);
@@ -107,7 +108,7 @@ private:
 
 	bool descargaCompleta();
 
-	void copiar(unsigned int desde, unsigned int cantidad, std::string destino);
+	void copiar(ULINT desde, UINT cantidad, std::string destino);
 
 };
 

@@ -5,15 +5,15 @@
 #include <iostream>
 #include <string>
 
-using namespace std;
+
 
 class DatosParser {
 
 private:
-	list<int> len;
-	list<char*> datos;// Lista con las cadenas de datos del .torrent
-	list<char*>::iterator it;//iterador para recorrer la lista
-	list<int>::iterator itLongitudes;
+	std::list<int> len;
+	std::list<char*> datos;// Lista con las cadenas de datos del .torrent
+	std::list<char*>::iterator it;//iterador para recorrer la lista
+	std::list<int>::iterator itLongitudes;
 
 public:
 
