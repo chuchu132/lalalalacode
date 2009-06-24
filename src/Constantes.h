@@ -96,9 +96,6 @@ const int ERROR = -1;
 const int OK = 0;
 
 const int TAM_BLOQUES = 16384; //ver http://wiki.theory.org/BitTorrentSpecification#Messages
-const int TAM_BUFFER = 100; //TODO redefinir
-
-const int PUERTO_DEFAULT_TRACKER = 80;
 
 /* Estados del Torrent */
 #define T_ACTIVO "Activo"
@@ -110,7 +107,7 @@ const int PUERTO_DEFAULT_TRACKER = 80;
 #define RUTA_CONFIGURACION "FiTorrent.config"
 #define RUTA_DESCARGAS "./Descargas/"
 const unsigned int PUERTO_DEFAULT = 36277;
-
+const int PUERTO_DEFAULT_TRACKER = 80;
 
 /*Constantes de offsets del archivo *.data*/
 const int OFFSET_DOWN = 0;

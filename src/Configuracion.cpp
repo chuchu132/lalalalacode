@@ -97,7 +97,7 @@ void Configuracion::guardarConfiguracion() {
 	archivo.close();
 }
 
-void Configuracion::guardarPuerto(unsigned int puerto) {
+void Configuracion::guardarPuerto(UINT puerto) {
 	this->puerto = puerto;
 }
 
@@ -109,7 +109,7 @@ std::string Configuracion::getRutaDescargas() {
 	return rutaDescargas;
 }
 
-unsigned int Configuracion::getPuerto() {
+UINT Configuracion::getPuerto() {
 	return puerto;
 }
 

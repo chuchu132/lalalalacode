@@ -9,21 +9,21 @@
 #define ARCHIVO_H_
 
 #include <string>
-#include <list>
+#include "Tipos.h"
 
 class Archivo {
 public:
 	Archivo();
 	virtual ~Archivo();
-	unsigned int getTamanio();
-	std::list<std::string>* getPathList();
+	ULINT getTamanio();
+	LString* getPathList();
 	std::string getPath();
-	void setTamanio(unsigned int tam);
+	void setTamanio(ULINT tam);
 	void addPath(std::string path);
 
 private:
-	std::list<std::string> path;
-	unsigned int tamanio;
+	LString path;
+	ULINT tamanio;
 };
 
 #endif /* ARCHIVO_H_ */

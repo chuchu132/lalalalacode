@@ -4,10 +4,11 @@
 #include "BencodeParser.h"
 #include "ExcepcionCaracterInvalido.h"
 
+
 BencodeParser::BencodeParser(const char * url) {
 
 	char *cadena;
-	unsigned longitud;
+	ULINT longitud;
 	estado = true;
 	cadena = archivoAString(url, &longitud);
 	if (cadena != NULL) {
@@ -20,7 +21,7 @@ BencodeParser::BencodeParser(const char * url) {
 
 }
 
-BencodeParser::BencodeParser(const char * cadena, int longitud) {
+BencodeParser::BencodeParser(const char * cadena, ULINT longitud) {
 	estado = true;
 	is.sputn(cadena, longitud);
 	inicializar();
@@ -124,7 +125,7 @@ void BencodeParser::parserLista() throw (ExcepcionCaracterInvalido) {
 void BencodeParser::parserNumerico()throw (ExcepcionCaracterInvalido) {
 
 	compararCaracter('i');
-	unsigned int val = 0;
+	ULINT val = 0;
 	while (isdigit(verCaracterSiguiente()))
 		val = val * 10 + (obtenerCaracter() - '0');
 	compararCaracter('e');
@@ -232,7 +233,7 @@ void BencodeParser::procesarInfoHash() {
 	delete[] buffer;
 }
 
-char* BencodeParser::archivoAString(const char *url, unsigned *tam) {
+char* BencodeParser::archivoAString(const char *url, ULINT *tam) {
 
 	char *salida = NULL;
 

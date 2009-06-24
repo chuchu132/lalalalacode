@@ -11,7 +11,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <list>
+#include "Tipos.h"
 
 #include "Constantes.h"
 
@@ -22,8 +22,8 @@ private:
 	std::fstream archivo; //archivo de configuracion
 
 	std::string rutaDescargas; //directorio en el que se guardan las descargas
-	unsigned int puerto; //puerto en el que el cliente escucha conexiones entrantes
-	std::list<std::string> torrents; // lista con los torrents abiertos en la ultima ejecucion
+	UINT puerto; //puerto en el que el cliente escucha conexiones entrantes
+	LString torrents; // lista con los torrents abiertos en la ultima ejecucion
 									 // y su estado
 	std::string estado;
 
@@ -49,14 +49,14 @@ public:
 
 	void guardarRutaDescargas(std::string);
 
-	void guardarPuerto(unsigned int);
+	void guardarPuerto(UINT);
 
 	void guardarTorrent(std::string estado, std::string ruta);
 
 	/* devuelve la ruta en la que se deben guardar los archivos descargados */
 	std::string getRutaDescargas();
 
-	unsigned int getPuerto();
+	UINT getPuerto();
 
 	std::string obtenerTorrent();
 

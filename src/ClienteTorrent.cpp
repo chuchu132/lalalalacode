@@ -92,7 +92,7 @@ void* ClienteTorrent::run() {
 }
 
 Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
-	std::list<Torrent*>::iterator it = torrents.begin();
+	LTorrentpIter it = torrents.begin();
 	Sha1 sha;
 	while (it != torrents.end()) {
 		if (sha.salidaAstring((*it)->getInfoHash()).compare(hashTorrent) == 0) {
@@ -110,7 +110,7 @@ void ClienteTorrent::finalizar() {
 		peerListener.setNonblocking();
 		this->join();
 	}
-	std::list<Torrent*>::iterator it = torrents.begin();
+	LTorrentpIter it = torrents.begin();
 	while (it != torrents.end()) {
 		//guarda info sobre el torrent
 		config.guardarTorrent((*it)->getEstado(), (*it)->getPath());
@@ -129,7 +129,7 @@ std::string ClienteTorrent::getPeerId() {
 	return temp;
 }
 
-unsigned int ClienteTorrent::getPuerto(){
+UINT ClienteTorrent::getPuerto(){
 	return config.getPuerto();
 }
 
@@ -170,7 +170,7 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 }
 
 void ClienteTorrent::borrarTorrent(Torrent *t) {
-	std::list<Torrent*>::iterator it = torrents.begin();
+	LTorrentpIter it = torrents.begin();
 	std::string notif = "Se ha borrado el Torrent ";
 	while (it != torrents.end()) {
 		if ((*it) == t) {
@@ -188,7 +188,7 @@ void ClienteTorrent::borrarTorrent(Torrent *t) {
 void ClienteTorrent::setControlador(Controlador *ctrl) {
 	this->controlador = ctrl;
 	//seteo el controlador a todos los torrents existentes
-	std::list<Torrent*>::iterator it = torrents.begin();
+	LTorrentp it = torrents.begin();
 	while (it != torrents.end()) {
 		(*it)->setControlador(ctrl);
 		it++;
@@ -205,6 +205,6 @@ void ClienteTorrent::inicializarDirectorios(){
 	return;
 }
 
-std::list<Torrent*>* ClienteTorrent::getListaTorrents() {
+LTorrentp* ClienteTorrent::getListaTorrents() {
 	return &torrents;
 }

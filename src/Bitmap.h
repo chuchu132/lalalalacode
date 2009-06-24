@@ -8,6 +8,8 @@
 #ifndef BITMAP_H_
 #define BITMAP_H_
 
+#include "Tipos.h"
+
 class Bitmap {
 public:
 
@@ -64,7 +66,7 @@ public:
 	 */
 	Bitmap* nuevoPorFusion(Bitmap& otro);
 
-	 bool getPrimeroLibre(unsigned int &index);
+	 bool getPrimeroLibre(UINT &index);
 
 private:
 	char* bitmap;
