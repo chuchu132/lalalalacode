@@ -28,28 +28,40 @@ void* Tracker::run() {
 	std::string buffer;
 	char bufferTemp[BUFSIZE];
 	memset(bufferTemp, 0, BUFSIZE);
+	refresh=false;
 
-	while (trackerRemoto.is_valid() && !seCerro) {
-		std::cout<<"Esperando respuesta..\n";
-		if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE-1)) > 0) {
-			bufferTemp[cantidad] = '\0';
-			buffer.insert(caracteresProcesados,bufferTemp,cantidad);
-			longitud=caracteresProcesados+cantidad;
-			std::cout<<bufferTemp<<std::endl;
-			if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
-				buffer.erase(0,posUltimoProcesado);
-			}
-			else {
-				caracteresProcesados+=cantidad;
-				buffer.resize(caracteresProcesados+cantidad);
-			}
+	do{
+		while (trackerRemoto.is_valid() && !seCerro && !refresh) {
+			std::cout<<"Esperando respuesta..\n";
+			if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE-1)) > 0) {
+				bufferTemp[cantidad] = '\0';
+				buffer.insert(caracteresProcesados,bufferTemp,cantidad);
+				longitud=caracteresProcesados+cantidad;
+				std::cout<<bufferTemp<<std::endl;
+				if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
+					buffer.erase(0,posUltimoProcesado);
+				}
+				else {
+					caracteresProcesados+=cantidad;
+					buffer.resize(caracteresProcesados+cantidad);
+				}
 
-		} else {
-			seCerro = true;
-			//VER hay que avisarle al torrent????
-			std::cout<<"se desconecto el tracker"<<std::endl;
+			} else {
+				seCerro = true;
+				//VER hay que avisarle al torrent????
+				//std::cout<<"se desconecto el tracker"<<std::endl;
+			}
 		}
-	}
+
+		if (trackerRemoto.is_valid()){
+			cerrarConexion();
+			if (connect()){
+				torrent->enviarEventoEstado(NULL,400);
+				refresh=false;
+			}
+		}
+		sleep(3);
+	}while (trackerRemoto.is_valid());
 
 	return NULL;
 }
@@ -109,7 +121,6 @@ void Tracker::setTorrent(Torrent* unTorrent) {
 bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoProcesado) {
 	std::string salida;
 	if (extraerBencode(buffer, longitud,salida,posUltimoProcesado)) {
-		std::cout<<buffer<<std::endl;
 		BencodeParser parser(salida.c_str(), longitud);
 		if (parser.procesar()) {
 			DatosParser* datos;
@@ -118,7 +129,6 @@ bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoP
 			datos = parser.salidaParser();
 			datos->primero();
 			if (datos->obtenerDatoPorNombre("peers", &aux, tam)) {
-
 				decodificarPeers(datos->obtenerDato(),
 						datos->obtenerLongitudDato());
 				delete[] aux;
@@ -138,7 +148,7 @@ bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &sal
 	if(longitudBencode>0){
 		char *aux = new char[longitudBencode+1];
 		int longTemp = (longitudBencode+marca-1);
-		if (longTemp == longitud -1) {
+		if (longTemp <= longitud -1) {
 			if (buffer[longTemp] == 'e') {
 				i = 0;
 				for (unsigned pos = marca; pos
@@ -149,7 +159,6 @@ bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &sal
 				aux[i] = '\0';
 				salida.insert(0, aux, longitudBencode);
 				longitud = longitudBencode;
-
 				posUltimoProcesado=longitudBencode+marca;
 			} else {
 				return false;

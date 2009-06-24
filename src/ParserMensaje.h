@@ -40,6 +40,8 @@ public:
 
 	std::string crearGetConNumwant(std::string host,std::string path,unsigned int* info_hash,std::string peer_id,unsigned int port,unsigned int uploaded,unsigned int downloaded,unsigned int left,int numwant);
 
+	std::string crearGetReAnnounce(std::string host,std::string path,unsigned int* info_hash,std::string peer_id, unsigned int port, unsigned int uploaded, unsigned int downloaded, unsigned int left,int numwant);
+
 	std::string getHash(char* handshakeMsj);
 
 	char decodificarId(char* buffer);
