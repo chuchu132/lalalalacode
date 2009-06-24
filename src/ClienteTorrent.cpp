@@ -11,7 +11,7 @@
 #include "PeerUp.h"
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <cmath>
+#include <cstdlib>
 #include <cstring>
 
 #define CANT_CLIENTES 5

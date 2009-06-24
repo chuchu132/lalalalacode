@@ -8,6 +8,7 @@
 #include "Constantes.h"
 #include "Tracker.h"
 #include <cstring>
+#include <cstdlib>
 #include <arpa/inet.h>
 #include <sstream>
 Tracker::Tracker() {

@@ -11,7 +11,7 @@ Controlador::Controlador(ClienteTorrent& c) : cliente(c) {}
 
 Controlador::~Controlador() {}
 
-void Controlador::setVentana(Ventana *ventana) {
+void Controlador::setVentana(Vista *ventana) {
 	this->ventana = ventana;
 }
 

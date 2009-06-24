@@ -8,6 +8,8 @@
 #ifndef ATTRIBUTESVIEW_H_
 #define ATTRIBUTESVIEW_H_
 
+#include <gtkmm.h>
+#include <glib.h>
 #include "Torrent.h"
 
 class Torrent;

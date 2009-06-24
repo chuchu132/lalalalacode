@@ -14,6 +14,7 @@
 #include <fstream>
 #include <cstring>
 #include <cmath>
+#include <cstdlib>
 #include <sys/stat.h>
 #include <sys/types.h>
 

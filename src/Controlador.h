@@ -8,14 +8,14 @@
 #ifndef CONTROLADOR_H_
 #define CONTROLADOR_H_
 
-#include "Ventana.h"
+#include "Vista.h"
 #include "ClienteTorrent.h"
 #include "Torrent.h"
 #include "Mutex.h"
 #include "Tipos.h"
 #include <list>
 
-class Ventana;
+class Vista;
 class ClienteTorrent;
 class Torrent;
 class Configuracion;
@@ -23,7 +23,7 @@ class Configuracion;
 class Controlador {
 
 private:
-	Ventana *ventana;
+	Vista *ventana;
 	ClienteTorrent &cliente;
 	Mutex mutex_lista;
 	std::list<Torrent*> actualizaciones;
@@ -32,7 +32,7 @@ public:
 	Controlador(ClienteTorrent&);
 	~Controlador();
 
-	void setVentana(Ventana *ventana);
+	void setVentana(Vista *ventana);
 
 	/* cierra el cliente
 	 * es llamado al salir de la aplicacion */

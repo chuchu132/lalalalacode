@@ -26,7 +26,7 @@ class Controlador;
 class AttributesView;
 class Torrent;
 
-class Ventana: public Thread ,Vista {
+class Ventana: public Vista ,Thread  {
 
 private:
 	Glib::RefPtr<Gtk::Builder> builder;//obtiene datos del archivo de la vista
