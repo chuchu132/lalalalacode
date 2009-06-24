@@ -172,7 +172,6 @@ bool Torrent::agregarPeer(Peer* peerNuevo) {
 	return resultado;
 }
 
-
 bool Torrent::existePeerIP(std::string ip){
 	llaveListaPeers.lock();
 	std::list<Peer*>::iterator it = peers.begin();
@@ -438,7 +437,6 @@ void Torrent::setDownloaded(ULINT bytes) {
 	std::cout << "_________Bytes descargados: " << downloaded << std::endl;
 	if (controlador != NULL)//ver
 		controlador->actualizarEstado(this);
-
 }
 
 void Torrent::setUploaded(ULINT bytes) {

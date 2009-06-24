@@ -37,7 +37,6 @@ private:
 	Gtk::TreeModelColumn<std::string> col_path_files;
 	Gtk::TreeModelColumn<std::string> col_notif;
 
-
 	Gtk::Notebook *page;
 	guint page_selected; //numero de pagina seleccionada
 
@@ -60,7 +59,7 @@ private:
 	void setInformationView(Glib::RefPtr<Gtk::Builder> builder);
 	void setNotificationsView();
 
-	void on_page_selected(GtkNotebookPage* , guint);
+	void on_page_selected(GtkNotebookPage*, guint);
 
 public:
 
