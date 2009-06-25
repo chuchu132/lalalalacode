@@ -12,7 +12,7 @@ Controlador::Controlador(ClienteTorrent& c) : cliente(c) {}
 Controlador::~Controlador() {}
 
 void Controlador::setVentana(Vista *ventana) {
-	this->ventana = ventana;
+	this->vista = ventana;
 }
 
 Torrent* Controlador::agregarTorrent(std::string ruta) {
@@ -41,7 +41,7 @@ void Controlador::agregarTorrentsEnVista() {
 	std::list<Torrent*>::iterator it;
 	for (it = cliente.getListaTorrents()->begin(); it
 			!= cliente.getListaTorrents()->end(); it++) {
-		ventana->addTorrent((*it));
+		vista->addTorrent((*it));
 	}
 }
 
@@ -54,24 +54,24 @@ void Controlador::refrescarPeers(Torrent *t) {
 }
 
 void Controlador::notificarVista(std::string notificacion) {
-	ventana->mostrarNotificacion(notificacion);
+	vista->mostrarNotificacion(notificacion);
 }
 
 int Controlador::correrVista() {
 	agregarTorrentsEnVista();
-	return ventana->correr();
+	return vista->correr();
 }
 
 void Controlador::detenerVista() {
-	ventana->detener();
+	vista->detener();
 }
 
 void Controlador::guardarConfiguracion() {
 	Configuracion *config = cliente.getConfiguracion();
-	UINT puerto = ventana->getPuerto();
+	UINT puerto = vista->getPuerto();
 	if (puerto != 0)
-		config->guardarPuerto(ventana->getPuerto());
-	config->guardarRutaDescargas(ventana->getRutaDescargas());
+		config->guardarPuerto(vista->getPuerto());
+	config->guardarRutaDescargas(vista->getRutaDescargas());
 }
 
 bool Controlador::hayCambios() {

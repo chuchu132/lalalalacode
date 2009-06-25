@@ -23,7 +23,7 @@ class Configuracion;
 class Controlador {
 
 private:
-	Vista *ventana;
+	Vista *vista;
 	ClienteTorrent &cliente;
 	Mutex mutex_lista;
 	std::list<Torrent*> actualizaciones;
