@@ -117,6 +117,6 @@ const int OFFSET_BITMAP_SIZE = 9;
 const int OFFSET_BITMAP = 13;
 
 /*Constantes refresh tracker*/
-const unsigned int MIN_REFRESH_DOWNLOAD=900;
+const unsigned int MIN_REFRESH_DOWNLOAD=300;
 
 #endif /* CONSTANTES_H_ */

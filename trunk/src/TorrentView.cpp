@@ -151,8 +151,8 @@ void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t) {
 	row[col_downspeed] = t->getVelocidadBajada();
 	row[col_upspeed] = t->getVelocidadSubida();
 	row[col_time] = t->getTiempoRestante();
-	row[col_progress] = (int) ((t->getTamanioDescargado() * 100)
-			/ t->getTamanio());
+	row[col_progress] = (int) (((t->getTamanioDescargado()/1024) * 100)
+			/ (t->getTamanio()/1024));
 	row[col_completed] = t->bytesToString(t->getTamanioDescargado());
 }
 
