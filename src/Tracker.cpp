@@ -11,6 +11,8 @@
 #include <cstdlib>
 #include <arpa/inet.h>
 #include <sstream>
+#include "Tipos.h"
+
 Tracker::Tracker() {
 	puerto = PUERTO_DEFAULT_TRACKER;
 	minInterval = 0;
@@ -33,7 +35,6 @@ void* Tracker::run() {
 
 	do{
 		while (trackerRemoto.is_valid() && !seCerro && !refresh) {
-			std::cout<<"Esperando respuesta..\n";
 			if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE-1)) > 0) {
 				bufferTemp[cantidad] = '\0';
 				buffer.insert(caracteresProcesados,bufferTemp,cantidad);
@@ -49,8 +50,6 @@ void* Tracker::run() {
 
 			} else {
 				seCerro = true;
-				//VER hay que avisarle al torrent????
-				//std::cout<<"se desconecto el tracker"<<std::endl;
 			}
 		}
 
@@ -88,8 +87,8 @@ bool Tracker::connect() {
 	}
 }
 
-bool Tracker::send(const char* stream, unsigned int size) {
-	return ((unsigned int) trackerRemoto.send(stream, size) == size);
+bool Tracker::send(const char* stream, UINT size) {
+	return ((UINT) trackerRemoto.send(stream, size) == size);
 }
 
 void Tracker::cerrarConexion() {
@@ -99,7 +98,7 @@ void Tracker::cerrarConexion() {
 void Tracker::inicilizar(std::string url) {
 	int ini = url.find('/', 0);
 	int fin = url.find_last_of('/', url.length());
-	unsigned int puerto = url.find(':', ini);
+	UINT puerto = url.find(':', ini);
 	path.assign(url, fin + 1, url.length() - fin - 1);
 	if (puerto != std::string::npos) {
 		std::string temp;
@@ -111,7 +110,7 @@ void Tracker::inicilizar(std::string url) {
 	}
 }
 
-unsigned int Tracker::getMinInterval() {
+UINT Tracker::getMinInterval() {
 	return minInterval;
 }
 
@@ -174,7 +173,7 @@ bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &sal
 	return true;
 }
 
-int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
+int Tracker::obtenerLongitudBencode (std::string &buffer,UINT &marca){
 
 	unsigned inicio = 0, i=0,marcaPeers,marcaFinLong,salida;
 
@@ -198,7 +197,7 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 }
 
 
-void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
+void Tracker::decodificarPeers(char * cadena, UINT longitudCadena) {
 
 	int cantMax =  torrent->getCantidadMaximaPeers();
 	int cantPeers = torrent->getCantPeers();
@@ -213,18 +212,17 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 		while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo() && !refresh) {
 			std::stringstream ip;
 			int index = (i * 6);
-			unsigned char temp = (unsigned char) cadena[index];
+			UCHAR temp = (UCHAR) cadena[index];
 			ip << (int) temp << ".";
-			temp = (unsigned char) cadena[index + 1];
+			temp = (UCHAR) cadena[index + 1];
 			ip << (int) temp << ".";
-			temp = (unsigned char) cadena[index + 2];
+			temp = (UCHAR) cadena[index + 2];
 			ip << (int) temp << ".";
-			temp = (unsigned char) cadena[index + 3];
+			temp = (UCHAR) cadena[index + 3];
 			ip << (int) temp;
-			memcpy(&puerto, cadena + index + 4, sizeof(unsigned short int));
+			memcpy(&puerto, cadena + index + 4, sizeof(USINT));
 			puerto = ntohs(puerto);
 			std::string ip_string = ip.str();
-			std::cout<<"IP: "<<ip_string<<" Puerto: "<< puerto<<std::endl;
 			if (!torrent->existePeerIP(ip_string)){
 			torrent->agregarPeer(ip_string, puerto);
 			}
@@ -233,7 +231,6 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 			while( torrent->estaActivo() && (cantPeers == cantMax) && !refresh){
 				torrent->removerPeersInactivos(NULL);
 				cantPeers = torrent->getCantPeers();
-				std::cout<<"*** sleep 5: tracker remover peers inactivos ***"<<std::endl;
 				sleep(5);
 			}
 
@@ -241,7 +238,6 @@ void Tracker::decodificarPeers(char * cadena, unsigned int longitudCadena) {
 			difInterval = (UINT) difftime(horaActual, torrent->getTimeRefresh());
 			difDownload = (UINT) difftime(horaActual, torrent->getTimeLastDown());
 			if (difInterval >= minInterval && difDownload >=MIN_REFRESH_DOWNLOAD) {
-				std::cout<<"********************** Actualizando ********************"<<std::endl;
 				torrent->refrescarPeers();
 				torrent->setTimeRefresh(horaActual);
 				torrent->setTimeLastDown(horaActual);

@@ -90,9 +90,7 @@ void Torrent::run() {
 	}
 
 	if (tracker->connect()) {
-		std::cout << "conecto" << std::endl;
-		std::cout << ((enviarEventoEstado(NULL, 200)) ? "envio" : "noenvio")
-				<< std::endl;
+		enviarEventoEstado(NULL, 200);
 		tracker->execute();
 		if (controlador != NULL) {
 			std::string notif = "Conectado con el tracker ";
@@ -100,7 +98,6 @@ void Torrent::run() {
 			controlador->notificarVista(notif);
 		}
 	} else {
-		std::cout << "noconecto" << std::endl;
 		activo = false;
 		if (estado != T_COMPLETO)
 			estado = T_DETENIDO;
@@ -218,8 +215,6 @@ void Torrent::detenerPeers() {
 
 void Torrent::refrescarPeers() {
 	time_t horaActual = time(NULL);
-//	unsigned int dif = (unsigned int) difftime(horaActual, horaInicial);
-	//if (dif >=  tracker->getMinInterval()) {
 		if(enviarEventoReAnnounce(400)){
 			tracker->setRefresh(true);
 			removerPeersInactivos(NULL);
@@ -229,7 +224,6 @@ void Torrent::refrescarPeers() {
 			// reinicia el mapa de pedidos para aprovechar los nuevos peers
 		}
 		else{std::cout<<"Pedido NO enviado"<< std::endl;}
-	//}
 }
 
 void Torrent::continuar() {
@@ -263,17 +257,6 @@ void Torrent::detener() {
 			controlador->actualizarEstado(this);
 	}
 }
-
-//void Torrent::pausar() {
-//	//todo.. ver que hace el pausar
-//	if (estado != T_PAUSADO) {
-//
-//		estado = T_PAUSADO;
-//		activo = false;
-//		if (controlador != NULL)
-//			controlador->actualizarEstado(this);
-//	}
-//}
 
 std::string Torrent::getNombre() {
 	return nombre;
@@ -327,7 +310,7 @@ ULINT Torrent::getTamanioSubido(){
 }
 
 int Torrent::getVelocidadSubida() {
-	return 0;//todo.. ver como calcular la velocidad
+	return 0;//TODO.. ver como calcular la velocidad
 }
 
 int Torrent::getVelocidadBajada() {
@@ -438,14 +421,13 @@ void Torrent::setDownloaded(ULINT bytes) {
 	else
 		downloaded += bytes;
 	llaveCambiosDownloaded.unlock();
-	std::cout << "_________Bytes descargados: " << downloaded << std::endl;
-	if (controlador != NULL)//ver
+	if (controlador != NULL)
 		controlador->actualizarEstado(this);
 }
 
 void Torrent::setUploaded(ULINT bytes) {
 	uploaded += bytes;
-	if (controlador != NULL)//ver
+	if (controlador != NULL)
 		controlador->actualizarEstado(this);
 }
 
@@ -476,8 +458,6 @@ bool Torrent::reiniciarPedidos(Peer* peerQueQueda){
 		}else{
 		endGame = SEGUNDO_END_GAME;
 		}
-
-		std::cout << "_________Reinicia los pedidos las descargan superan el "<<endGame<<" %"<< std::endl;
 		return true;
 	}
 	return false;
@@ -491,19 +471,13 @@ void Torrent::descargaCompleta() {
 	tracker->join();
 	detenerPeers();
 	estado = T_COMPLETO;
-	std::cout
-			<< "<---------------SE COMPLETO LA DESCARGA!!!------------------>"
-			<< std::endl;
-
 	fileManager.descargaAarchivos();
 	fileManager.guardarDatos();
 
 	if (controlador != NULL) {
 		std::string notif = "Se completo la descada del Torrent ";
 		notif += getNombre();
-		notif += " =)";
 		controlador->notificarVista(notif);
 		controlador->actualizarEstado(this);
 	}
-
 }

@@ -103,7 +103,6 @@ std::string ParserMensaje::crearGetConNumwant(std::string host,std::string path,
 			downloaded, left);
 	std::stringstream buffer;
 	buffer << base << "&numwant="<< numwant<<"&event="<<EVENT_STARTED<<" HTTP/1.0\r\n"<<"Host: "<<host<<"\r\n\r\n";
-	std::cout<<buffer.str()<<std::endl;
 	return buffer.str();
 }
 
@@ -114,15 +113,14 @@ std::string ParserMensaje::crearGetReAnnounce(std::string host,std::string path,
 			downloaded, left);
 	std::stringstream buffer;
 	buffer << base << "&numwant="<< numwant<<" HTTP/1.0\r\n"<<"Host: "<<host<<"\r\n\r\n";
-	std::cout<<buffer.str()<<std::endl;
 	return buffer.str();
 }
 
-std::string ParserMensaje::getHash(char* handshakeMsj) {
+std::string ParserMensaje::getHash(char* handshakeMsj,int longProto) {
 	Sha1 sha;
 	int saltoHastaHash;
 	char hashBinario[20];
-	memcpy(&saltoHastaHash, handshakeMsj, sizeof(int));
+	saltoHastaHash = (longProto + LEN_RESERVED);
 	memcpy(hashBinario, (handshakeMsj + saltoHastaHash), LEN_SHA1);
 	return sha.salidaAstring((UINT *)hashBinario);
 }

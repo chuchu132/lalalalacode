@@ -44,35 +44,43 @@ ClienteTorrent::~ClienteTorrent() {
 
 void* ClienteTorrent::run() {
 
-	peerListener.listen(config.getPuerto(), CANT_CLIENTES);
+	if(peerListener.listen(config.getPuerto(),CANT_CLIENTES )==ERROR){
+		std::cout<<"ERROR EN EL LISTEN\n";
+		peerListener.close();
+	}
 	Socket* conexionPeerNuevo;
-	int cantidad, length;
-	char* handshake;
+	int cantidad;
+
 	activo = true;
 
-	while (activo) {
+	while (activo && peerListener.is_valid()) {
 		conexionPeerNuevo = peerListener.accept();
 		std::cout<<"conexion entrante de "<<conexionPeerNuevo->getPuerto()<<std::endl;
 		if (conexionPeerNuevo != NULL) {
-			cantidad = conexionPeerNuevo->receiveExact((char*) &length, 1);
+
+			char longProto;
+
+			cantidad = conexionPeerNuevo->receiveExact(&longProto, 1);
+
 			if (cantidad > 0) {
-				length = ntohl(length);// pasa a de big endian al endian local
-				handshake = new char[length];
-				cantidad = conexionPeerNuevo->receiveExact(handshake, length);
-				if (cantidad > 0) {
+				int tamHsk = (unsigned char) longProto + LEN_BASE_HANDSHAKE - 1;
+				char* handshake = new char[tamHsk];
+				if (conexionPeerNuevo->receiveExact(handshake, tamHsk) != ERROR) {
 					ParserMensaje parser;
-					std::string hash = parser.getHash(handshake);
+					std::string hash = parser.getHash(handshake,longProto);
+					std::cout<<hash<<std::endl;
+					sleep(5);
 					Torrent* torrent = buscarTorrent(hash);
 					if (torrent != NULL) {
 						Peer* peerNuevo =
-								new PeerUp(conexionPeerNuevo, torrent);
+							new PeerUp(conexionPeerNuevo, torrent);
 						if (peerNuevo != NULL) {
 							if (!torrent->agregarPeer(peerNuevo)) {
 								delete peerNuevo;
 							}
 							else {
 								std::cout<<"agregar PeerUp "
-									<<conexionPeerNuevo->getIp()<<std::endl;
+								<<conexionPeerNuevo->getIp()<<std::endl;
 							}
 						}
 					}
@@ -83,8 +91,8 @@ void* ClienteTorrent::run() {
 				conexionPeerNuevo->close();
 			}
 		}
-		std::cout<<"*** sleep 10: clientetorrent run ***"<<std::endl;
-		sleep(10);//tiene un sleep alto para darle prioridad a los peerdown
+
+		sleep(5);//tiene un sleep alto para darle prioridad a los peerdown
 	}
 
 	peerListener.close();
@@ -200,8 +208,8 @@ Configuracion* ClienteTorrent::getConfiguracion() {
 }
 
 void ClienteTorrent::inicializarDirectorios(){
-		mkdir(config.getRutaDescargas().c_str(),0755);
-		mkdir(URL_CARPETA_TEMP,0755);
+	mkdir(config.getRutaDescargas().c_str(),0755);
+	mkdir(URL_CARPETA_TEMP,0755);
 	return;
 }
 

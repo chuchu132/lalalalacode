@@ -44,7 +44,7 @@ public:
 
 	std::string crearGetReAnnounce(std::string host,std::string path,UINT* info_hash,std::string peer_id, UINT port, UINT uploaded, UINT downloaded, UINT left,int numwant);
 
-	std::string getHash(char* handshakeMsj);
+	std::string getHash(char* handshakeMsj,int longProto);
 
 	char decodificarId(char* buffer);
 	void decodificarHave(char* buffer,UINT& index);

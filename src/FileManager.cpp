@@ -305,9 +305,6 @@ UINT FileManager::writeBlock(UINT index, UINT begin, UINT longitud,
 		bytes = longitud; //TODO muestra todo lo que entra.
 		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
-			std::cout
-					<< "                                                PIEZA"
-					<< index << " COMPLETA" << std::endl;
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();
 			}
@@ -449,7 +446,6 @@ bool FileManager::getPiezaAdescargar(UINT &index,
 	}
 	if ((retorno = noPidioNadie->getPrimeroLibre(index))) {
 		mapaPedidos.marcarBit(index);
-		std::cout << "          SE RESERVO LA PIEZA: " << index << std::endl;
 	}
 	llavePedidos.unlock();
 	delete faltanDescargar;
