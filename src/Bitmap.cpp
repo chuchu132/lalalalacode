@@ -36,7 +36,7 @@ void Bitmap::inicializarBitmap(const char* unBitmap, int tamanioBytes) {
 }
 
 void Bitmap::inicializarBitmap(int tamanioBytes){
-	if(bitmap != NULL){
+	if(inicializado){
 		delete[] bitmap;
 	}
 	bitmap = new char[tamanioBytes];

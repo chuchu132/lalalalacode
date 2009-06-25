@@ -47,9 +47,7 @@ private:
 	int wherey;
 	int cantidadLineas;
 	std::list<Torrent*> torrents;
-	void flechitas(int &opcion,int cantOpc );
-	void clrscr();
-	void gotoXY(int x,int y);
+	int clrscr();
 	void pantAgrTorrent();
 	void pantallaPrincipal();
 	void pantListaTorrent();
