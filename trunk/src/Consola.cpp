@@ -11,10 +11,6 @@
 #include <cstdlib>
 #include <iostream>
 
-const UCHAR DOWN = 0x50;
-const UCHAR UP = 0x48;
-const UCHAR ENTER = 0x0D;
-
 Consola::Consola() {}
 
 Consola::~Consola() {}
@@ -55,49 +51,8 @@ bool Consola::huboError(){
 	return false;
 }
 
-void Consola::clrscr(){
-	system("clear");
-	wherex = 0;
-	wherey = 0;
-}
-
-void Consola::gotoXY(int x,int y)
-{
-	printf("%c[%d;%df",0x1B,y,x);
-	wherex = x;
-	wherey = y;
-}
-
-void Consola::flechitas(int &opcion, int cantOpc){
-	UCHAR tecla;
-	int x,y;
-	x =(wherex+2);
-	y =(wherey - cantOpc);
-	gotoXY(x,y);
-	printf("*");
-	opcion =1;
-	do{
-		tecla = getchar();
-		if( (tecla == DOWN) && (opcion != cantOpc)){
-			gotoXY(wherex-1, wherey);
-			printf("_");
-			gotoXY(wherex-1, wherey+1);
-			printf("*");
-			opcion++;
-		}
-		else{
-			if ((tecla == UP) && (opcion != 1)){
-				gotoXY(wherex-1, wherey);
-				printf("_");
-				gotoXY(wherex-1, wherey-1);
-				printf("*");
-				opcion--;
-			}
-		}
-	}while (tecla != ENTER);
-	gotoXY(wherex -1, wherey);
-	printf("*");
-	gotoXY(x+2,wherey+(cantOpc-(opcion -1)));
+int Consola::clrscr(){
+	return system("clear");
 }
 
 void Consola::pantallaPrincipal(){
@@ -105,14 +60,14 @@ void Consola::pantallaPrincipal(){
 	do{
 		clrscr();
 		std::cout<<std::endl
-		<< " Fi-Torrent"<<std::endl
-		<< " [_] Agregar Torrent"<<std::endl
-		<< " [_] Listar Torrents"<<std::endl
-		<< " [_] Configurar"<<std::endl
-		<< " [_] Salir"<<std::endl;
+		<< " FI-TORRENT"<<std::endl
+		<< " [1] Agregar Torrent"<<std::endl
+		<< " [2] Listar Torrents"<<std::endl
+		<< " [3] Configurar"<<std::endl
+		<< " [4] Salir"<<std::endl
+		<< "Opcion: ";
 		int opcion;
-		opcion = 0;
-		flechitas(opcion,4);
+		std::cin>>opcion;
 		switch (opcion) {
 		case 1: pantAgrTorrent();
 		break;
@@ -123,53 +78,65 @@ void Consola::pantallaPrincipal(){
 		case 4: fin = true;
 		break;
 		}
-	}while(fin);
+	}while(!fin);
 }
 
 void Consola::pantAgrTorrent(){
 	clrscr();
 	std::string url;
 	std::cout<<std::endl
-	<<" Fi-Torrent"<<std::endl
-	<<" [_] Ingresar URL .torrent"<<std::endl
-	<<" [_] Volver"<<std::endl;
-	int opcion = 0;
-	flechitas(opcion,2);
+	<<" FI-TORRENT"<<std::endl
+	<<" [1] Ingresar URL .torrent"<<std::endl
+	<<" [2] Volver"<<std::endl
+	<< "Opcion: ";
+	int opcion;
+	std::cin>>opcion;
 	if(opcion == 1){
 		clrscr();
 		std::cout<<std::endl
 		<<"  Fi-Torrent"<<std::endl
 		<<"  URL: ";
 		std::cin>>url;
-
-		std::cout<<std::endl<<" [_] Volver"<<std::endl;
-		flechitas(opcion,1);
+		Torrent* t =controlador->agregarTorrent(url);
+		if(t!=NULL){
+			addTorrent(t);
+			controlador->continuarTorrent(t);
+			std::cout<<"  Se agrrgo el torrent: "<<t->getNombre()<<std::endl;
+		}else
+			std::cout<<"  No se pudo agregar el torrent desde "<<url<<std::endl;
+		std::cout<<std::endl<<" [1] Volver"<<std::endl
+		                    << "Opcion: ";
+		std::cin>>opcion;
 	}
 }
 
 void Consola::pantListaTorrent(){
 	bool continuar = true;
 	while(continuar){
-	clrscr();
-	int cantTorrent = torrents.size();
-	std::cout<<" Fi-Torrent"<<std::endl;
-	if(cantTorrent != 0){
-		std::cout<<"      ESTADO      NOMBRE ARCHIVO O CARPETA"
-		<<std::endl;
-		std::list<Torrent*>::iterator it = torrents.begin();
-		std::list<Torrent*>::iterator end = torrents.end();
-		while(it != end){
-			std::cout<<" [_] "<<(*it)->getEstado()<<"   "<<(*it)->getNombre()<<std::endl;
-			it++;
+		clrscr();
+		int cantTorrent = torrents.size();
+		std::cout<<" FI-TORRENT"<<std::endl;
+		int i=1;
+		if(cantTorrent != 0){
+			std::cout<<"      ESTADO      NOMBRE ARCHIVO O CARPETA"
+			<<std::endl;
+			std::list<Torrent*>::iterator it = torrents.begin();
+			std::list<Torrent*>::iterator end = torrents.end();
+
+			while(it != end){
+				std::cout<<" ["<<i<<"] "<<(*it)->getEstado()<<"   "<<(*it)->getNombre()<<std::endl;
+				it++;
+				i++;
+			}
 		}
-	}
-	std::cout<<" [_] Volver al menu principal"<<std::endl;
-	int opcion = 0;
-	flechitas(opcion,cantTorrent +1);
-	if(opcion != cantTorrent)
-		mostrarDatosTorrent(opcion-1);
-	else
-		continuar = false;
+		std::cout<<" ["<<i<<"] Volver al menu principal"<<std::endl
+				 << "Opcion: ";
+		int opcion;
+		std::cin>>opcion;
+		if(opcion > 0 && opcion <(cantTorrent+1))
+			mostrarDatosTorrent(opcion-1);
+		else
+			continuar = false;
 	}
 }
 
@@ -177,22 +144,23 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 	std::list<Torrent*>::iterator it = torrents.begin();
 	for(int i =0; i<numTorrent;i++)	it++;
 	clrscr();
-	std::cout<<"\n DATOS TORRENT"<<std::endl
-	<<" NOMBRE: "<< (*it)->getNombre()<<std::endl
-	<<" ESTADO: "<< (*it)->getEstado()<<std::endl
-	<<" DESCARGADO: "<<(*it)->getTamanioDescargado()<<" SUBIDO: "<<(*it)->getTamanioSubido()<<std::endl
-	<<" PROGRESO: "<< (int)((*it)->getTamanioDescargado() / (*it)->getTamanio() )<<" %"<<std::endl
-	<<" CANTIDAD PEERS: "<<(*it)->getCantPeers()<<std::endl
-	<<" CANTIDAD ARCHIVOS: "<<(*it)->getFileManager()->getCantArchivos()<<std::endl;
-	std::cout<<std::endl<<" [_] VOLVER"<<std::endl
-	<<" [_] DETENER/CONTINUAR"<<std::endl
-	<<" [_] BORRAR (el torrent se borra luego de elegir volver.)"<<std::endl
-	<<" [_] REFRESCAR PEERS"<<std::endl;
-	int opcion = 0;
 	bool volver = false;
 	bool borrar = false;
 	while(!volver){
-		flechitas(opcion,4);
+		std::cout<<"\n DATOS TORRENT"<<std::endl
+		<<" NOMBRE: "<< (*it)->getNombre()<<std::endl
+		<<" ESTADO: "<< (*it)->getEstado()<<std::endl
+		<<" DESCARGADO: "<<(*it)->getTamanioDescargado()<<" SUBIDO: "<<(*it)->getTamanioSubido()<<std::endl
+		<<" PROGRESO: "<< (int)((*it)->getTamanioDescargado() / (*it)->getTamanio() )<<" %"<<std::endl
+		<<" CANTIDAD PEERS: "<<(*it)->getCantPeers()<<std::endl
+		<<" CANTIDAD ARCHIVOS: "<<(*it)->getFileManager()->getCantArchivos()<<std::endl;
+		std::cout<<std::endl<<" [1] VOLVER"<<std::endl
+		<<" [2] DETENER/CONTINUAR"<<std::endl
+		<<" [3] BORRAR (el torrent se borra luego de elegir volver.)"<<std::endl
+		<<" [4] REFRESCAR PEERS"<<std::endl
+		<< "Opcion: ";
+		int opcion;
+		std::cin>>opcion;
 		switch (opcion) {
 		case 1: volver = true;
 		case 2:{
@@ -202,9 +170,6 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 			}else{
 				controlador->detenerTorrent((*it));
 			}
-			gotoXY(0,2);
-			std::cout<<" ESTADO: "<< (*it)->getEstado()<<"          ";
-			gotoXY(0,11);
 		}
 		break;
 		case 3:	borrar = true;
@@ -220,17 +185,18 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 void Consola::pantallaConfiguracion(){
 	bool continuar = true;
 	while(continuar){
-	clrscr();
-	std::cout<<"\n Configuracion"<<std::endl
-			 <<"  VALORES ACTUALES:"<<std::endl
-			 <<"  RUTA DE DESCARGAS: "<<RUTA_DESCARGAS<<std::endl
-			 <<"  PUERTO : "<<PUERTO_DEFAULT<<std::endl
-			 <<" [_] VOLVER"<<std::endl
-			 <<" [_] CAMBIAR URL DESCARGAS"<<std::endl
-			 <<" [_] CAMBIAR PUERTO"<<std::endl;
-	int opcion =0;
-	flechitas(opcion,3);
-	switch (opcion) {
+		clrscr();
+		std::cout<<"\n Configuracion"<<std::endl
+		<<"  VALORES ACTUALES:"<<std::endl
+		<<"  RUTA DE DESCARGAS: "<<RUTA_DESCARGAS<<std::endl
+		<<"  PUERTO : "<<PUERTO_DEFAULT<<std::endl
+		<<" [1] VOLVER"<<std::endl
+		<<" [2] CAMBIAR URL DESCARGAS"<<std::endl
+		<<" [3] CAMBIAR PUERTO"<<std::endl
+		<< "Opcion: ";
+		int opcion;
+		std::cin>>opcion;
+		switch (opcion) {
 		case 1: continuar =  false;
 		break;
 		case 2:{
@@ -247,8 +213,8 @@ void Consola::pantallaConfiguracion(){
 			std::cin>>puerto;
 		}
 		break;
+		}
+		controlador->guardarConfiguracion();
 	}
-	controlador->guardarConfiguracion();
-}
 }
 
