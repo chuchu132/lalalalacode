@@ -189,7 +189,7 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,unsigned int &marca){
 			longitudPeers[i] = buffer[inicio];
 			i++;
 		}
-		std::cout<< longitudPeers.c_str()<< std::endl;
+		longitudPeers[i]='\0';
 		salida= atoi(longitudPeers.c_str())+(marcaFinLong-marca)+2;
 		return salida;
 	}
