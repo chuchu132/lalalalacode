@@ -27,10 +27,7 @@ void TestVista::run(){
 	cliente.execute();
 	controlador.correrVista();
 	//controlador.detenerVista();
-
-
 	//	char opcion = ' ';
-
 	//		if (ventana->huboError()) {
 	//			do {
 	//				std::cout<<"Desea correr la vista por consola? Y/N"<<std::endl;
@@ -43,7 +40,6 @@ void TestVista::run(){
 	//			}
 	//		}
 	//		if ((!ventana->huboError()) && (opcion != 'N')) {
-
 	//}
 
 	delete ventana;
