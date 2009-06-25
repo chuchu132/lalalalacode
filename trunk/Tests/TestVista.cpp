@@ -7,6 +7,7 @@
 
 
 #include "../src/Ventana.h"
+#include "../src/Consola.h"
 #include "TestVista.h"
 
 TestVista::TestVista() {}
@@ -21,19 +22,31 @@ void TestVista::run(){
 		Vista* ventana = new Ventana();
 
 		cliente.setControlador(&controlador);
-		ventana->setControlador(&controlador);
-		controlador.setVentana(ventana);
 
-		if (!ventana->huboError())
-		{
-			//aca faltaria un cliente.excecute() para escuchar a los peers entrantes
+		char opcion = ' ';
 
+		if (ventana->huboError()) {
+			do {
+				std::cout<<"Desea correr la vista por consola? Y/N"<<std::endl;
+				std::cin>> uppercase >>opcion;
+			}while((opcion !='Y') || (opcion !='N'));
+
+			if (opcion =='Y'){
+				delete ventana;
+				ventana = new Consola();
+			}
+		}
+		if ((!ventana->huboError()) && (opcion != 'N')) {
+
+			ventana->setControlador(&controlador);
+			controlador.setVentana(ventana);
 			//cliente.execute();
 			controlador.correrVista();
 			controlador.detenerVista();
 		}
 
-		assert(true,"Ventana cerrada.");
+		delete ventana;
+		assert(true,"Fin Test Vista");
 }
 
 
