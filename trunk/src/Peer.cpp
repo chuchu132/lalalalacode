@@ -28,6 +28,7 @@ Peer::Peer(Socket* peerRemoto, Torrent* torrent) {
 Peer::~Peer() {
 }
 
+
 bool Peer::procesar(char* buffer, int length) {
 	ParserMensaje parser;
 	char id = parser.decodificarId(buffer);
@@ -83,16 +84,12 @@ bool Peer::procesar(char* buffer, int length) {
 		UINT index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);
-		std::cout << getIp() << " Pidio piece " << index << " offset " << begin
-				<< std::endl;
 	}
 		break;
 	case ID_MSJ_PIECE: {
 		char* data;
 		UINT index, begin, length2;
 		parser.decodificarPiece(buffer, length, index, begin, length2, &data);
-		std::cout << getIp() << " mando la Pieza " << index << " offset "
-				<< begin << std::endl;
 		procesarPiece(index, begin, length2, data);
 		if (!tienePiezaPendiente()) {
 			if (getTorrent()->getFileManager()->getPiezaAdescargar(index,
@@ -115,7 +112,6 @@ bool Peer::procesar(char* buffer, int length) {
 	case ID_MSJ_KEEPALIVE: {
 		huboCambios = false;
 		procesarKeepAlive();
-		std::cout << getIp() << " mando keepalive" << std::endl;
 	}
 		break;
 
@@ -307,7 +303,6 @@ void Peer::repartirHave(int index) {
 
 	while (it != listaPeers->end()) {
 		if ((*it) != this) {
-			std::cout << "repartir a: " << (*it)->getIp() << std::endl;
 			(*it)->sendHave(index);
 		}
 		it++;
@@ -334,13 +329,10 @@ bool Peer::recvHandshake() {
 }
 
 bool Peer::recvMsj(char** buffer, int& length) {
-	std::cout << "Esperando mesj desde " << getIp() << std::endl;
 	int temp = 0;
 	int cantidad = peerRemoto->receiveExact((char*) &temp, 4);
 	if (cantidad > 0) {
 		length = ntohl(temp);
-		std::cout << "Leer " << length << " bytes desde " << getIp()
-				<< std::endl;
 		if (length != 0) {
 			*buffer = new char[length];
 			cantidad = peerRemoto->receiveExact(*buffer, length);

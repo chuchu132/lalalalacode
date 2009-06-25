@@ -11,6 +11,7 @@
 #include <list>
 
 typedef unsigned long int ULINT;
+typedef unsigned short int USINT;
 typedef unsigned int UINT;
 typedef unsigned char UCHAR;
 

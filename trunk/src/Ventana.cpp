@@ -69,7 +69,6 @@ Ventana::~Ventana() {
 		detener();
 	if (controlador != NULL)
 		controlador->cerrarCliente();
-	std::cout << "cerrando la vista" << std::endl;
 }
 
 void Ventana::getWindows() {
@@ -262,7 +261,6 @@ void Ventana::on_button_continue_clicked() {
 }
 
 void Ventana::on_button_peers_clicked() {
-	std::cout << "refrescar peers clickeado" << std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL)
 		controlador->refrescarPeers(t);
@@ -282,8 +280,6 @@ void Ventana::on_button_notifications_clicked() {
 
 void Ventana::button_accept_clicked() {
 	std::string filename = select_window->get_filename();
-	std::cout << "archivo seleccionado: " << filename << std::endl;
-
 	select_window->hide();
 	Torrent *t = controlador->agregarTorrent(filename);
 	if (t != NULL) {
@@ -355,7 +351,6 @@ void* Ventana::run() {
 			sleep(2);
 		}
 	}
-	std::cout << "fin del run vista" << std::endl;
 	return NULL;
 }
 
@@ -373,12 +368,11 @@ unsigned int Ventana::getPuerto() {
 	unsigned int puerto = 0;
 	buffer << entry_puerto->get_text();
 	buffer >> puerto;
-	std::cout << puerto << std::endl;
 	return puerto;
 }
 
 std::string Ventana::getRutaDescargas() {
-	return RUTA_DESCARGAS;//todo implementar!!
+	return RUTA_DESCARGAS;//TODO implementar!!
 }
 
 void Ventana::setControlador(Controlador *c){

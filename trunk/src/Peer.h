@@ -161,6 +161,7 @@ public:
 
 	virtual void procesarKeepAlive(){};
 
+
 private:
 	/*
 	 * La llave de envio se bloquea antes de cualquier envio al peer remoto
