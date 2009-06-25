@@ -29,7 +29,7 @@ void TestVista::run(){
 			do {
 				std::cout<<"Desea correr la vista por consola? Y/N"<<std::endl;
 				std::cin>> uppercase >>opcion;
-			}while((opcion !='Y') || (opcion !='N'));
+			}while((opcion !='Y') && (opcion !='N'));
 
 			if (opcion =='Y'){
 				delete ventana;

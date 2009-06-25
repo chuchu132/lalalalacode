@@ -9,6 +9,7 @@
 //#include "TestBitmap.h"
 //#include "TestDummy.h"
 #include "TestVista.h"
+#include "TestPeerRemoto.h"
 //#include "TestParserCgi.h"
 //#include "TestSha1.h"
 //#include "TestDatosParser.h"
@@ -26,7 +27,8 @@ int main (int argc, char* argv[])
 //	tester.agregarTest(new TestSha1(),"Test Sha1");
 //	tester.agregarTest(new TestBitmap(),"Test Bitmap");
 //	tester.agregarTest(new TestDatosParser(),"Test DatosParser");
-	tester.agregarTest(new TestVista(),"Test Vista");
+	tester.agregarTest(new TestPeerRemoto(),"Test Peer Remoto");
+//	tester.agregarTest(new TestVista(),"Test Vista");
 //	tester.agregarTest(new TestClienteTorrent(),"Test ClienteTorrent");
 //	tester.agregarTest(new TestBencodeParser(),"Test BencodeParser");
 //	tester.agregarTest(new TestConfiguracion(),"Test Archivo Configuracion");
