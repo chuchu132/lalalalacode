@@ -23,7 +23,7 @@ void TestPeerRemoto::run(){
 	Controlador control(cliente);
 
 	Torrent* torrent = cliente.agregarTorrent("./Tests/blues.torrent");
-	torrent->agregarPeer("190.19.22.45",36277);
+	torrent->agregarPeer("201.213.28.226",9999);
 	torrent->continuar();
 	//cliente.run();
 	sleep(100);
