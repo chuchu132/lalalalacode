@@ -60,17 +60,32 @@ public:
 
 private:
 	Torrent* torrent;
-	UINT minInterval;
+	UINT minInterval;//Intervalo minimo para realizar pedidos al Tracker
 	Socket trackerRemoto; // Conexion con el tracker remoto.
 	std::string path;
 	std::string url;
-	UINT puerto;
-	bool refresh;
+	UINT puerto; //puerto al que se conecta el tracker
+	bool refresh;//flag determinando si se realiza un refresh de los peers
 
+	/* Obtiene el bencode dentro del string buffer
+	 * Parametros:
+	 * buffer: string que posee el bencode correspondiente al response del tracker
+	 * longitud: cantidad de caracteres leidos en el recive del tracker
+	 * salida: string que se devuelve con el bencode
+	 * posUltimoProcesado: indica la posicion dentro del buffer , del ultimo caracter procesado del bencode
+	 * Retorna: true en caso de haber obtenido el bencode en su totalidad , false en caso contrario
+	 */
 	bool extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado);
 
+	/*
+	 * Retorna la longitud total del bencode dentro del "buffer"
+	 * Retorna en marca la posicion dentro del buffer del comienzo del bencode
+	 */
 	int obtenerLongitudBencode (std::string &buffer,UINT &marca);
 
+	/*
+	 * Realiza la decodificacion de la cadena binaria de peers y los agrega a los PeerDown
+	 */
 	void decodificarPeers(char* cadena,UINT longitudCadena);
 };
 

@@ -1,3 +1,9 @@
+/*
+ * BencodeParser.cpp
+ *
+ *  Created on 30 de mayo de 2009, 23:25
+ *      Author: Adrian
+ */
 #include <sstream>
 #include <cstring>
 #include <cstdio>
@@ -15,9 +21,9 @@ BencodeParser::BencodeParser(const char * url) {
 		is.sputn(cadena, longitud);
 		inicializar();
 		delete[] cadena;
-	} else {
+	} else
 		estado = false;
-	}
+
 
 }
 
@@ -37,7 +43,6 @@ void BencodeParser::inicializar() {
 	is.pubseekpos(0);
 	pos = 0;
 	buf_lim = 0;
-	ident = 0;
 	diccionario = 0;
 	contador = 1;
 
@@ -48,26 +53,21 @@ void BencodeParser::inicializar() {
 }
 
 bool BencodeParser::procesar() {
-	if (!estado) {
+	if (!estado)
 		return false;
-	}
 	try {
 		char caracter = verCaracterSiguiente();
 
 		switch (caracter) {
-
 		case 'd':
 			parserDiccionario();
 			break;
-
 		case 'l':
 			parserLista();
 			break;
-
 		case 'i':
 			parserNumerico();
 			break;
-
 		default:
 			parserCadena();
 		}
@@ -79,29 +79,20 @@ bool BencodeParser::procesar() {
 void BencodeParser::parserDiccionario()throw (ExcepcionCaracterInvalido) {
 
 	compararCaracter('d');
-	ident = 0;
-
-	if (contador == 0) {
+	if (contador == 0)
 		diccionario++;
-	}
 
 	while (verCaracterSiguiente() != 'e') {
-
 		parserCadena();
-
-		if (!procesar()) {
+		if (!procesar())
 			throw ExcepcionCaracterInvalido();
-		}
 	}
-
 	compararCaracter('e');
 
-	if (contador == 0) {
+	if (contador == 0)
 		diccionario--;
-	}
 
 	if (diccionario == 0) {
-
 		offsetFin = marcaFinHash - buf_lim + pos + 1;
 		procesarInfoHash();
 		contador = 1;
@@ -112,11 +103,9 @@ void BencodeParser::parserDiccionario()throw (ExcepcionCaracterInvalido) {
 void BencodeParser::parserLista() throw (ExcepcionCaracterInvalido) {
 
 	compararCaracter('l');
-	ident = 1;
 	while (verCaracterSiguiente() != 'e') {
-		if (!procesar()) {
+		if (!procesar())
 			throw ExcepcionCaracterInvalido();
-		}
 	}
 	compararCaracter('e');
 

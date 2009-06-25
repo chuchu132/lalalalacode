@@ -2,6 +2,7 @@
  * File:   sha1.h
  *
  * Created on 27 de mayo de 2009, 11:04
+ * Author: Adrian
  */
 #include "iostream"
 #include <string>
@@ -28,47 +29,54 @@ private:
 
 public:
 
-	// Constructor
+	/* Constructor*/
 	Sha1();
 
-	// Destructor
+	/* Destructor*/
 	virtual ~Sha1();
 
-	// Inicializa los atributos de la clase para el ingreso de un nuevo mensaje a procesar
+	/* Inicializa los atributos de la clase para el ingreso de un nuevo mensaje a procesar */
 	void inicializacion();
 
+	/*
+	 * Realiza la conversion del mensaje a su correspondiente codificacion sha1
+	 * Retorna el sha1 resultante en un string
+	 */
 	std::string codificar(const char* mensaje,int longitud);
 
-	// Recibe como parametros la salida del sha1 y la pasa a una cadena que se devuelve finalizado el metodo
+	/* Recibe como parametros la salida del sha1 y la pasa a una cadena que se devuelve finalizado el metodo */
 	std::string salidaAstring(unsigned *salidaSha1);
 
-	// Devuelve el mensaje procesado en el parametro mensajeDigerido.
-	// Si hubo un error devuelve false , en caso contrario true
+	/*
+	 * Devuelve el mensaje procesado en el parametro mensajeDigerido.
+	 * Si hubo un error devuelve false , en caso contrario true
+	 */
 	bool salida(unsigned *mensajeDigerido);
 
-	// Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo
+	/* Entrada para el algoritmo Sha1 , recibe el  mensaje y la londitud del mismo */
 	void entrada(const char *mensaje, unsigned longitud);
 
+	/*realiza la conversion de la salida del algoritmo sha1 y lo codifica en Url */
 	std::string binAUrlEncode(unsigned int* salidaSha1);
 
 private:
 
-	//  Procesa los bloques del mensaje
+	/*  Procesa los bloques del mensaje */
 	void procesarBloques();
 
-	//  Setea los primeros 16 bits del bloque
+	/*  Setea los primeros 16 bits del bloque */
 	void setearBloque(unsigned Aux[], unsigned bufferTemp[]);
 
-	//  Asigna los valores parciales procesados
+	/*  Asigna los valores parciales procesados */
 	void asignacionParcial(unsigned & temp, unsigned bufferTemp[]);
 
-	//  Realiza el padding de bloque actual a 512 bits
+	/*  Realiza el padding de bloque actual a 512 bits */
 	void rellenado();
 
-	//  Rellena con ceros hasta el valor del limite que se le envia como parametro
+	/*  Rellena con ceros hasta el valor del limite que se le envia como parametro */
 	void rellenadoParcial(int limite);
 
-	//  Realiza la operacion de  shift del algoritmo
+	/*  Realiza la operacion de  shift del algoritmo */
 	inline unsigned circularShift(int cantBits, unsigned bloque);
 
 };

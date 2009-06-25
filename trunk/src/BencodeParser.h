@@ -22,12 +22,10 @@ private:
 	int pos; //posicion dentro del buffer
 	int buf_lim; //limite del buffer
 
-	int ident; //Atributo para visualizacion por pantalla
-
 	DatosParser datos;//objeto que almacena los datos obtenidos del parser
 
-	int contador;
-	int diccionario;
+	int contador;// habilita al atributo diccionario para que indique cuando se abre y cierra un diccionario
+	int diccionario;//flag que indica cuando un diccionario se cierra y se abre
 
 	int offsetInfoHash;//Marca el offset inicial del diccionario info
 	int offsetFin;//Marca el final del diccionario info
@@ -38,54 +36,74 @@ private:
     bool estado;
 public:
 
-	//Constructor
+	/*Constructor*/
 	BencodeParser(const char * url);
 
-	//Constructor: parametros , Cadena a parsear y su longitud
+	/*Constructor: parametros , Cadena a parsear y su longitud*/
 	BencodeParser(const char * cadena,ULINT longitud);
 
-	//Destructor
+	/*Destructor*/
 	~BencodeParser();
 
-	//Inicializa los atributos del bencode
+	/*Inicializa los atributos del bencode*/
 	void inicializar();
 
-	//Proceso del parser
+	/*Proceso del parser*/
 	bool procesar();
 
-	//Parser para el tipo diccionario
+	/*Parser para los diccionarios*/
 	void parserDiccionario() throw (ExcepcionCaracterInvalido);
 
-	//Parser para el tipo lista
+	/*Parser para las lista*/
 	void parserLista() throw (ExcepcionCaracterInvalido);
 
-	//Parser para los datos numericos
+	/*Parser para los datos numericos*/
 	void parserNumerico() throw (ExcepcionCaracterInvalido);
 
-	//Parser para las cadenas de caracteres
+	/*Parser para las cadenas de caracteres*/
 	void parserCadena() throw (ExcepcionCaracterInvalido);
 
-	//Realiza la Carga del buffer
+	/*Realiza la Carga del buffer*/
 	void cargarBuffer();
 
-	//Verifica si el buffer esta listo
+	/*
+	 * Verifica si el buffer no esta en el limite.
+	 * En caso que este en el limite, lo carga con los proximos caracteres a procesar
+	 */
 	void verificarBuffer();
 
-	//Verifica cual es el proximo caracter en el buffer
+	/*
+	 * Verifica cual es el proximo caracter en el buffer y lo devuelve	 *
+	 * No el atributo posicion asociado al buffer.
+	 */
 	char verCaracterSiguiente();
 
-	//Obtiene el proximo caracter del buffer
+	/*
+	 * Obtiene el proximo caracter dentro del buffer.
+	 * Modifica el atributo posicion asociado al buffer
+	 */
 	char obtenerCaracter();
 
-	//Verifica que el caracter sea un match con el que se le pasa como parametro
+	/*
+	 * Verifica que el caracter sea un match con el que se le pasa como parametro
+	 * Lanza una excepcion en caso de que sea invalido el caracter
+	 */
 	void compararCaracter(char c) throw (ExcepcionCaracterInvalido);
 
-	//Retorna la salida del parser
+	/* Retorna la salida del parser*/
 	DatosParser* salidaParser();
 
-	//Obtiene el info_hash del .torrent y lo guarda en mensajeInfoHash
+	/*
+	 * Obtiene el info_hash del .torrent.
+	 * Lo agrega al atributo "datos" anteponiendo el campo clave "info_hash"
+	 */
 	void procesarInfoHash();
 
+	/*
+	 * Pasa el contenido de un archivo .torrent a una cadena de caracteres
+	 * Recibe como parametros la direccion del archivo
+	 * Retorna la longitud de la cadena de salida en el parametro "longitud"
+	 */
 	char* archivoAString (const char *url,ULINT *longitud);
 
 };
