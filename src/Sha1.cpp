@@ -1,4 +1,9 @@
-
+/*
+ * File:   sha1.cpp
+ *
+ * Created on 27 de mayo de 2009, 11:04
+ * Author: Adrian
+ */
 #include <arpa/inet.h>
 #include <cstring>
 #include <limits.h>
@@ -42,38 +47,31 @@ void Sha1::entrada(const char *mensaje, unsigned longitud) {
 	if ((!longitud) || (error)) {
 		error = true;
 	} else {
-
 		//Coloco el mensaje de entrad en el buffer
 		while (longitud-- && !error) {
 			bloquesMensaje[IndiceArrayBloques++] = (*mensaje & 0xFF);
-
 			longitudSuperior += 8;
 			//Fuerzo a que sea 32 bits
 			longitudSuperior &= 0xFFFFFFFF;
 			//Proceso los bloques
-			if (IndiceArrayBloques == 64) {
+			if (IndiceArrayBloques == 64)
 				procesarBloques();
-			}
 			mensaje++;
 		}
-
 	}
 }
 
 bool Sha1::salida(unsigned *mensajeSalida) {
 
 	int contador;
-
 	//Verifico que no se haya dado un error en el proceso
-	if (error) {
+	if (error)
 		return false;
-	}
+	//Se realiza el padding
 	rellenado();
-
 	//Copio el contenido del buffer con el mensaje procesado al mensaje de salida
-	for (contador = 0; contador < 5; contador++) {
+	for (contador = 0; contador < 5; contador++)
 		mensajeSalida[contador] = htonl(bufferMensaje[contador]); //guardo en big endian
-	}
 
 	return true;
 }
@@ -105,12 +103,8 @@ void Sha1::procesarBloques() {
 
 		asignacionParcial(temp, bufferTemp);
 	}
-
-
-	for (cont = 0; cont < 5; cont++) {
+	for (cont = 0; cont < 5; cont++)
 		bufferMensaje[cont] = (bufferMensaje[cont] + bufferTemp[cont]) & 0xFFFFFFFF;
-	}
-
 
 	IndiceArrayBloques = 0;
 }
@@ -120,27 +114,22 @@ void Sha1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
 	int cont;
 
 	for (cont = 0; cont < 16; cont++) {
-		Aux[cont] = ((unsigned) bloquesMensaje[cont * 4]) << 24;
+		Aux[cont]  = ((unsigned) bloquesMensaje[cont * 4]) << 24;
 		Aux[cont] |= ((unsigned) bloquesMensaje[cont * 4 + 1]) << 16;
 		Aux[cont] |= ((unsigned) bloquesMensaje[cont * 4 + 2]) << 8;
 		Aux[cont] |= ((unsigned) bloquesMensaje[cont * 4 + 3]);
 	}
 
-	for (cont = 16; cont < 80; cont++) {
+	for (cont = 16; cont < 80; cont++)
 		Aux[cont] = circularShift(1, Aux[cont - 3] ^ Aux[cont - 8] ^ Aux[cont - 14] ^ Aux[cont - 16]);
-	}
 
-	for (cont = 0; cont < 5; cont++) {
+	for (cont = 0; cont < 5; cont++)
 		bufferTemp[cont] = bufferMensaje[cont];
-	}
-
-
 }
 
 void Sha1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 
 	int aux = 4;
-
 	temp &= 0xFFFFFFFF;
 
 	for (aux = 4; aux >= 0; aux--) {
@@ -152,9 +141,7 @@ void Sha1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 			else
 				bufferTemp[aux] = temp;
 		}
-
 	}
-
 }
 
 void Sha1::rellenado() {
@@ -162,21 +149,17 @@ void Sha1::rellenado() {
 
 	//Se realiza el padding como establece el estandar, debe realizarse el padding a 512bits
 	//Despues de terminado este procedimiento se obtiene el mensaje procesado por completo
-
 	bloquesMensaje[IndiceArrayBloques++] = 0x80;
 
 	if (IndiceArrayBloques > 55) {
-
 		rellenadoParcial(64);
 		procesarBloques();
 	}
 	rellenadoParcial(56);
-
 	// Se almacena la longitud del mensaje en las ultimas 8 posiciones
 
 	int cont, mov = 24;
 	for (cont = 56; cont < 64; cont++) {
-
 		if (cont < 60)
 			bloquesMensaje[cont] = (longitudInferior >> mov) & 0XFF;
 		else {
@@ -185,7 +168,6 @@ void Sha1::rellenado() {
 		}
 		mov -= 8;
 	}
-
 	procesarBloques();
 
 }

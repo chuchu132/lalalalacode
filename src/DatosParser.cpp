@@ -1,3 +1,9 @@
+/*
+ * DatosParser.cpp
+ *
+ * Created on 5 de junio de 2009
+ * Author: Adrian
+ */
 #include "DatosParser.h"
 #include <cstring>
 
