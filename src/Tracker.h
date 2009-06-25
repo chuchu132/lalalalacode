@@ -11,6 +11,7 @@
 #include <string>
 #include "Socket.h"
 #include "Thread.h"
+#include "Tipos.h"
 #include "Torrent.h"
 
 class Torrent;
@@ -37,7 +38,7 @@ public:
 	/*se conecta a la url seteada con inicializar*/
 	bool connect();
 
-	bool send(const char* stream,unsigned int size);
+	bool send(const char* stream,UINT size);
 
 	void cerrarConexion();
 
@@ -45,15 +46,13 @@ public:
 
 	std::string getUrl();
 
+	/*
+	 * Procesa la lista de peer que envia el tracker luego de un request
+	 * los decodifica y los agrega en la lista del torrent.
+	 */
 	bool procesarResponse(std::string &buffer,int &longitud,int& posUltimoProcesado);
 
-	bool extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado);
-
-	int obtenerLongitudBencode (std::string &buffer,unsigned int &marca);
-
-	void decodificarPeers(char* cadena,unsigned int longitudCadena);
-
-	unsigned int getMinInterval();
+	UINT getMinInterval();
 
 	void setTorrent(Torrent* unTorrent);
 
@@ -61,12 +60,18 @@ public:
 
 private:
 	Torrent* torrent;
-	unsigned int minInterval;
+	UINT minInterval;
 	Socket trackerRemoto; // Conexion con el tracker remoto.
 	std::string path;
 	std::string url;
-	unsigned int puerto;
+	UINT puerto;
 	bool refresh;
+
+	bool extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado);
+
+	int obtenerLongitudBencode (std::string &buffer,UINT &marca);
+
+	void decodificarPeers(char* cadena,UINT longitudCadena);
 };
 
 #endif /* TRACKER_H_ */

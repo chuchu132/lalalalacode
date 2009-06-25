@@ -149,6 +149,8 @@ public:
 
 	bool actualizarImInterested();
 
+	/*La pieza pendiente indica si el peer mando un request piece
+	 * y todavia no concreto la descarga*/
 	bool tienePiezaPendiente();
 
 	void setEstadoPiezaPendiente(bool estado);
@@ -200,7 +202,9 @@ private:
 	/*Guarda en disco el bloque de datos recibidos en la posicion correspondiente*/
 	void procesarPiece(int index,int begin,int longitud,char* data );
 
-	/*TODO no se q hace*/
+	/*Cuando un peer solicita una misma pieza a varios peers remotos, al concluir la
+	 * descarga, envia un mensaje de cancel al resto de los peers para que no manden
+	 * piezas repetidas y consumir menos ancho de banda.*/
 	void procesarCancel(int index,int begin,int length);
 
 	/*Envia un mensaje de Have a los peers que no tienen la pieza indicada por index*/

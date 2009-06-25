@@ -10,18 +10,34 @@
 
 #include <string>
 #include "Tipos.h"
-
+/*
+ * Se encarga de codificar una tira de bytes en URL Encode.
+ */
 class ParserCgi {
 public:
 	ParserCgi();
 	virtual ~ParserCgi();
-	std::string codificar(const char* original,int tam);
-	std::string decodificar(std::string codificado);
-	void decodificar(std::string codificado,char** salida,int& tamanio);
+
+	/*Codifica un string en URL Encoding */
+	std::string codificar(const char* original, int tam);
+
+	/*Deodifica un string en URL Encoding y lo pasa a ASCII*/
+	void decodificar(std::string codificado, char** salida, int& tamanio);
+
 	bool hayQueCodificarlo(char caracter);
+
+	/*  Dado un numero decimal  lo convierte en una
+	 * letra que representa el numero en hexa
+	 */
 	UCHAR intAhexaChar(UCHAR numero);
+
+	/*Dado un numero en hexa representado en un char, devuelve el valor decimal*/
 	char hexaCharAint(char hexa);
-	std::string  intAhexaNN(const UCHAR numero);
+
+	/*Convierte un numero [0,255] a %nn (url encode)*/
+	std::string intAhexaNN(const UCHAR numero);
+
+	/*Convierte un numero representado en %nn a un decimal*/
 	UCHAR hexaNNaChar(std::string NN);
 };
 

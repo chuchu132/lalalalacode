@@ -6,12 +6,13 @@
  */
 
 #include <arpa/inet.h>
+#include <cstring>
+#include <errno.h>
+#include <fcntl.h>
+#include <iostream>
 #include <netdb.h>
 #include <sstream>
-#include <iostream>
-#include <cstring>
-#include <fcntl.h>
-#include <errno.h>
+
 #include "Constantes.h"
 #include "Socket.h"
 
@@ -30,26 +31,6 @@ Socket::Socket(int fdNuevo) {
 Socket::Socket(const Socket& original) {
 	fd = original.fd;
 	valido = original.valido;
-}
-
-int Socket::setNonblocking() {
-	int flags;
-
-	if (-1 == (flags = fcntl(fd, F_GETFL, 0))) {
-		flags = 0;
-	}
-	return fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-
-}
-
-int Socket::setBlocking() {
-	int flags;
-
-	if (-1 == (flags = fcntl(fd, F_GETFL, 0))) {
-		flags = 0;
-	}
-	return fcntl(fd, F_SETFL, flags & ~O_NONBLOCK);
-
 }
 
 Socket::~Socket() {

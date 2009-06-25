@@ -19,17 +19,13 @@ void Consola::setControlador(Controlador *c){
 	this->controlador = c;
 }
 
-void Consola::actualizarEstado(Torrent*){
-
-}
+void Consola::actualizarEstado(Torrent*){}
 
 void Consola::addTorrent(Torrent* t){
 	torrents.push_back(t);
 }
 
-void Consola::mostrarNotificacion(std::string){
-
-}
+void Consola::mostrarNotificacion(std::string){}
 
 int Consola::correr(){
 	pantallaPrincipal();
@@ -151,7 +147,8 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 		<<" NOMBRE: "<< (*it)->getNombre()<<std::endl
 		<<" ESTADO: "<< (*it)->getEstado()<<std::endl
 		<<" DESCARGADO: "<<(*it)->getTamanioDescargado()<<" SUBIDO: "<<(*it)->getTamanioSubido()<<std::endl
-		<<" PROGRESO: "<< (int)((*it)->getTamanioDescargado() / (*it)->getTamanio() )<<" %"<<std::endl
+		<<" PROGRESO: "<< (int) ((((*it)->getTamanioDescargado()/1024) * 100)
+				/ ((*it)->getTamanio()/1024))<<std::endl
 		<<" CANTIDAD PEERS: "<<(*it)->getCantPeers()<<std::endl
 		<<" CANTIDAD ARCHIVOS: "<<(*it)->getFileManager()->getCantArchivos()<<std::endl;
 		std::cout<<std::endl<<" [1] VOLVER"<<std::endl
@@ -163,6 +160,7 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 		std::cin>>opcion;
 		switch (opcion) {
 		case 1: volver = true;
+		break;
 		case 2:{
 			std::string estado = (*it)->getEstado();
 			if( estado == T_DETENIDO){

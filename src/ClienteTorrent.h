@@ -8,12 +8,13 @@
 #ifndef CLIENTETORRENT_H_
 #define CLIENTETORRENT_H_
 
-#include <list>
 #include <iostream>
+#include <list>
+#include "Configuracion.h"
 #include "Controlador.h"
 #include "Socket.h"
 #include "Thread.h"
-#include "Configuracion.h"
+
 
 /* ********************************************************************
  * El cliente torrent es el encargado de agregar y sacar torrents.    *
@@ -83,9 +84,10 @@ public:
 
 	Configuracion* getConfiguracion();
 
-	void inicializarDirectorios();
-
 	std::list<Torrent*> * getListaTorrents();
+
+	/*Crea las carpetas que necesita el programa.*/
+	void inicializarDirectorios();
 
 };
 
