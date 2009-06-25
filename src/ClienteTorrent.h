@@ -38,7 +38,7 @@ private:
 	char peer_id[20];
 	Socket peerListener; //socket para escuchar conexiones de peers
 	unsigned int puerto; //puerto en el que escucha conexiones
-	bool activo; // TODO sirve para dejar de escuchar conexiones
+	bool activo; //sirve para dejar de escuchar conexiones
 	Controlador *controlador;
 	Configuracion config;
 

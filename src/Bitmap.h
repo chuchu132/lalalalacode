@@ -47,7 +47,7 @@ public:
 	/*Devuelve false si hay almenos 1 bit en 1*/
 	bool estaVacio();
 
-	/*TODO nombre poco feliz pero es lo que hay <- LU: esta bien el nombre.. sino se podria llamar Partes.. es lo mismo XD
+	/*
 	 * Aplica bit a bit la funcion ~(A + ~(B))
 	 * donde A son los bits del Bitmap "this"
 	 * y B son los bits del Bitmap "otro".

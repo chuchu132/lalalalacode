@@ -45,7 +45,6 @@ ClienteTorrent::~ClienteTorrent() {
 void* ClienteTorrent::run() {
 
 	if(peerListener.listen(config.getPuerto(),CANT_CLIENTES )==ERROR){
-		std::cout<<"ERROR EN EL LISTEN\n";
 		peerListener.close();
 	}
 	Socket* conexionPeerNuevo;
@@ -68,7 +67,7 @@ void* ClienteTorrent::run() {
 				if (conexionPeerNuevo->receiveExact(handshake, tamHsk) != ERROR) {
 					ParserMensaje parser;
 					std::string hash = parser.getHash(handshake,longProto);
-					std::cout<<hash<<std::endl;
+					std::cout<<hash<<std::endl;//TODO sacaaar!!
 					sleep(5);
 					Torrent* torrent = buscarTorrent(hash);
 					if (torrent != NULL) {
@@ -77,10 +76,6 @@ void* ClienteTorrent::run() {
 						if (peerNuevo != NULL) {
 							if (!torrent->agregarPeer(peerNuevo)) {
 								delete peerNuevo;
-							}
-							else {
-								std::cout<<"agregar PeerUp "
-								<<conexionPeerNuevo->getIp()<<std::endl;
 							}
 						}
 					}
@@ -160,7 +155,6 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 			notif += t->getNombre();
 		}
 		else {
-			std::cout<<"error al inicializar el torrent "<<std::endl;
 			delete t;
 			t = NULL;
 			notif = "Error al decodificar el archivo ";
