@@ -94,14 +94,14 @@ void Consola::pantAgrTorrent(){
 	if(opcion == 1){
 		clrscr();
 		std::cout<<std::endl
-		<<"  Fi-Torrent"<<std::endl
+		<<"  FI-TORRENT"<<std::endl
 		<<"  URL: ";
 		std::cin>>url;
 		Torrent* t =controlador->agregarTorrent(url);
 		if(t!=NULL){
 			addTorrent(t);
 			controlador->continuarTorrent(t);
-			std::cout<<"  Se agrrgo el torrent: "<<t->getNombre()<<std::endl;
+			std::cout<<"  Se agrego el torrent: "<<t->getNombre()<<std::endl;
 		}else
 			std::cout<<"  No se pudo agregar el torrent desde "<<url<<std::endl;
 		std::cout<<std::endl<<" [1] Volver"<<std::endl
@@ -143,10 +143,10 @@ void Consola::pantListaTorrent(){
 void Consola::mostrarDatosTorrent(int numTorrent){
 	std::list<Torrent*>::iterator it = torrents.begin();
 	for(int i =0; i<numTorrent;i++)	it++;
-	clrscr();
 	bool volver = false;
 	bool borrar = false;
 	while(!volver){
+		clrscr();
 		std::cout<<"\n DATOS TORRENT"<<std::endl
 		<<" NOMBRE: "<< (*it)->getNombre()<<std::endl
 		<<" ESTADO: "<< (*it)->getEstado()<<std::endl

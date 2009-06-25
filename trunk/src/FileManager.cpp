@@ -39,11 +39,16 @@ FileManager::~FileManager() {
 	guardarDatos();
 }
 
-/*TODO Pedir info_hash tratar de abrir un archivo con ese nombre
- * de la carpeta donde se guardan las descargas, sino existe
- * crearlo del tamaño TOTAL que indica e torrent y rellenar de
- * 0, si existe verificar cada pieza y crear un bitmap con
- * el estado del archivo.
+/*
+ * Se pide el info_hash del .torrent y se trata de abrir un archivo
+ * con ese info_hash como nombre dentro de la carpeta donde se guardan
+ * las descargas incompletas, sino existe se crea del tamaño TOTAL
+ * que indica el torrent, de existir el archivo, se trata de leer el
+ * bitmap, bytes subidos y bajados desde un archivo con info_hash por
+ * nombre y extension .data .
+ * Si no existe el archivo .data pero se encuentra una descarga
+ * incompleta se verificar cada pieza del archivo incompleto y se genera
+ * el bitmap.
  * Inicializar el resto de los campos segun corresponda con la
  * info obtenida del .torrent y del archivo descargado parcialmente.
  * */
@@ -302,7 +307,7 @@ UINT FileManager::writeBlock(UINT index, UINT begin, UINT longitud,
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
-		bytes = longitud; //TODO muestra todo lo que entra.
+		bytes = longitud; //cuenta todo lo que entra por mas que sean piezas repetidas o corruptas
 		if (verificarHashPieza(index)) {
 			bitmap.marcarBit(index);
 			if (descargaCompleta()) {

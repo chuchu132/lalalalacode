@@ -45,7 +45,6 @@ public:
 
 	std::string getUrl();
 
-	//TODO tal vez va privado
 	bool procesarResponse(std::string &buffer,int &longitud,int& posUltimoProcesado);
 
 	bool extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado);

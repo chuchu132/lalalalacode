@@ -39,7 +39,6 @@ void* Tracker::run() {
 				bufferTemp[cantidad] = '\0';
 				buffer.insert(caracteresProcesados,bufferTemp,cantidad);
 				longitud=caracteresProcesados+cantidad;
-				std::cout<<bufferTemp<<std::endl;
 				if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
 					buffer.erase(0,posUltimoProcesado);
 				}
