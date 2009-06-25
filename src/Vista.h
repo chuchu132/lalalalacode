@@ -23,7 +23,9 @@ protected:
 
 public:
 
-	virtual ~Vista(){};
+	Vista();
+
+	virtual ~Vista();
 
 	virtual void setControlador(Controlador *c);
 

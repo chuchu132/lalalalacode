@@ -251,24 +251,21 @@ void Ventana::on_button_erase_clicked() {
 
 void Ventana::on_button_stop_clicked() {
 	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL) {
+	if (t != NULL)
 		controlador->detenerTorrent(t);
-	}
 }
 
 void Ventana::on_button_continue_clicked() {
 	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL) {
+	if (t != NULL)
 		controlador->continuarTorrent(t);
-	}
 }
 
 void Ventana::on_button_peers_clicked() {
 	std::cout << "refrescar peers clickeado" << std::endl;
 	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL) {
+	if (t != NULL)
 		controlador->refrescarPeers(t);
-	}
 }
 
 void Ventana::on_button_up_clicked() {
@@ -341,9 +338,8 @@ int Ventana::correr() {
 		this->execute();
 		kit->run(*main_window);
 		return 0;
-	} else {
-		return 1;
 	}
+	return 1;
 }
 
 void* Ventana::run() {
@@ -382,7 +378,7 @@ unsigned int Ventana::getPuerto() {
 }
 
 std::string Ventana::getRutaDescargas() {
-	return RUTA_DESCARGAS;
+	return RUTA_DESCARGAS;//todo implementar!!
 }
 
 void Ventana::setControlador(Controlador *c){

@@ -60,8 +60,9 @@ private:
 	Gtk::Entry *entry_puerto;
 
 	/* clases para mostrar la lista de torrents */
-	TorrentView *torrents;
 	AttributesView *attr;
+	TorrentView *torrents;
+
 
 	bool error; //indica si hubo un error
 	bool activo;

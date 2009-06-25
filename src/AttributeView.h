@@ -52,8 +52,11 @@ private:
 
 	Torrent *torrent;//torrent seleccionado
 
+	/* muestra los peers del Torrent seleccionado */
 	void showPeers();
+	/* muestra informacion sobre Torrent seleccionado */
 	void showInformation();
+	/* muestra los archivos del Torrent seleccionado */
 	void showFiles();
 
 	void setPeersView();
@@ -61,6 +64,7 @@ private:
 	void setInformationView(Glib::RefPtr<Gtk::Builder> builder);
 	void setNotificationsView();
 
+	/* Signal Handler cuando se cambia de pestaña */
 	void on_page_selected(GtkNotebookPage*, guint);
 
 public:
@@ -81,6 +85,7 @@ public:
 	/* borra las notificaciones de la vista */
 	void clearNotifications();
 
+	/* le avisa al Attr view que torrent fue eliminado de la vista */
 	void torrentDeleted(Torrent*);
 
 };
