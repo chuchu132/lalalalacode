@@ -10,7 +10,12 @@
 
 #include <string>
 #include "Tipos.h"
-
+/*
+ * La clase Archivo no tiene comportamiento, se usa
+ * para almacenar la informacion de cada archivo
+ * que se esta descargando, facilitando el acceso
+ * a los diferentes campos.
+ */
 class Archivo {
 public:
 	Archivo();

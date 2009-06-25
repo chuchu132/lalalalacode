@@ -14,9 +14,8 @@
  * Tambien coordina el acceso al archivo que se
  * esta descargando.
  */
-
-#include <list>
 #include <fstream>
+#include <list>
 #include <string>
 #include "Archivo.h"
 #include "AvisoDescargaCompleta.h"
@@ -34,10 +33,12 @@ public:
 	FileManager(ClienteTorrent* cliente,Torrent* torrent);
 
 	virtual ~FileManager();
-
+	/*Retorna el tamanio en bytes del total de la descarga*/
 	ULINT getTamanio();
 
 	UINT getTamanioPieza();
+
+	UINT getTamanioPieza(UINT  index);
 
 	Bitmap* getBitmap();
 
@@ -47,13 +48,28 @@ public:
 	/* Devuelve un arreglo con el bloque pedido, quien lo solicita debe liberarlo*/
 	char* readBlock(UINT index,UINT begin,UINT longitud);
 
-	/*Recibe los Datos del Parser con la info del archivo .torrent y con el, inicializa el bitmap.*/
+	/*
+	 * Recibe los Datos del Parser con la info del archivo .torrent y con el, inicializa el bitmap.
+	 *
+	 * Se pide el info_hash del .torrent y se trata de abrir un archivo
+	 * con ese info_hash como nombre dentro de la carpeta donde se guardan
+	 * las descargas incompletas, sino existe se crea del tamaño TOTAL
+	 * que indica el torrent, de existir el archivo, se trata de leer el
+	 * bitmap, bytes subidos y bajados desde un archivo con info_hash por
+	 * nombre y extension .data .
+	 * Si no existe el archivo .data pero se encuentra una descarga
+	 * incompleta se verificar cada pieza del archivo incompleto y se genera
+	 * el bitmap.
+	 * Inicializar el resto de los campos segun corresponda con la
+	 * info obtenida del .torrent y del archivo descargado parcialmente.
+	 * */
 	bool inicializar(DatosParser* datos);
 
 	/* Escribe en disco el bloque */
 	/* Devuelve la cantidad de bytes escritos */
 	UINT writeBlock(UINT index,UINT begin,UINT longitud,const char* block) throw(AvisoDescargaCompleta);
 
+	/*Calcula el hash a la pieza index y luego lo compara con el hash recuperado del .torrent*/
 	bool verificarHashPieza(UINT index);
 
 	/* devuelve un iterador sobre los archivos.  */
@@ -62,19 +78,23 @@ public:
 	/* devuelve un iterador al ultimo elemento */
 	std::list<Archivo*>::iterator getEndArchivos();
 
+	/*Se guarda el estado de una descarga.*/
 	void guardarDatos();
 
 	/*Hace el split del archivo descargas*/
 	void descargaAarchivos();
 
-	UINT getTamanioPieza(UINT  index);
-
+	/* De las piezas que me ofrece el peer remoto, devuelve el index
+	 * a la primera que me falta descargar y que no esta descargando
+	 * ningun peer local.
+	 */
 	bool getPiezaAdescargar(UINT &index,Bitmap& mapaPeerRemoto);
 
+	/*Reinicia el bitmap donde se "reservan" las piezas a descargar.*/
+	void vaciarMapaPedidos();
 
 	void cancelarPedido(UINT index);
 
-	void vaciarMapaPedidos();
 
 private:
 	/*
@@ -96,18 +116,36 @@ private:
 	std::fstream descarga; // file del tamanio del total de la descarga.
 	UINT*  hashPiezas;
 
+	/*Crea un archivo en el path dado y reserva el espacio en disco.*/
 	bool crearArchivo(std::string path,ULINT tamanio);
 
+	/* ------- Metodos que forman parte del inicializar publico --------*/
+
+	/*Setea tamanio de archivo y piezas*/
 	bool inicializarTamaniosYpiezas(DatosParser* datos);
+
+	/*Inicializa la lista de Archivos con tamanios, nombres de carpeta, etc*/
 	bool inicializarArchivosYdirectorios(DatosParser* datos);
+
+	/*Recuperan los datos almacenados en disco, que permiten continuar
+	 * con una descarga pendiente.*/
 	bool inicializarDatosYbitmap(DatosParser* datos);
+
 	void inicializarBitmap();
+
+	/*Inicializa cantidad de bytes descargados y subidos*/
 	void inicializarDatos();
+
+	/*Inicializa el bitmap en cero*/
 	void inicializarBitmapVacio();
+
+	/*Genera un bitmap verificando el hash de cada una de las piezas*/
 	void recuperarBitmap();
 
+	/*Retorna si la descarga esta completa.*/
 	bool descargaCompleta();
 
+	/*Copia una parte de un archivo en el path de destino */
 	void copiar(ULINT desde, UINT cantidad, std::string destino);
 
 };

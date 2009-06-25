@@ -65,10 +65,16 @@ public:
 
 	bool enviarEventoReAnnounce(int numwant);
 
-	/*Cuando el Tracker recibe una lista de peers desde el Tracker remoto
-	 * los agrega a la lista de peers del Torrent*/
+	/* Cuando el Tracker recibe una lista de peers desde el Tracker remoto
+	 * los agrega a la lista de peers del Torrent
+	 * Estos peers son Peers Donw.
+	 */
 	void agregarPeer(std::string ip,UINT puerto);
 
+	/*
+	 * Se usa para agregar los peers up, que son los
+	 * que se conectan para descargar de nosotros
+	 */
 	bool agregarPeer(Peer* peerNuevo);
 
 	/* detiene el trafico del torrent */
@@ -78,15 +84,13 @@ public:
 	/* debe llamarse para activar al torrent */
 	void continuar(); //todo cambiar nombre.. no se entiende lo que hace sino XD
 
-	/* pausa el trafico del torrent */
-//	void pausar();
-
 	/* refresca la lista de peers del torrent. Pide peers al Tracker */
 	void refrescarPeers();
 
 	/* Calcula cuantos bytes faltan descargar */
 	ULINT left();
 
+	/* Devuelve un puntero al hash del torrent*/
 	UINT* getInfoHash();
 
 	std::string getHashString();
@@ -146,6 +150,7 @@ public:
 
 	std::list<Peer*>::iterator getIterPeers();
 	std::list<Peer*>::iterator getEndIterPeers();
+
 	UINT getCantidadMaximaPeers();
 
 	bool existePeerIP(std::string ip);
@@ -157,14 +162,15 @@ public:
 	std::string getTiempoRestante();
 
 	void descargaCompleta();
-
+	/*Vacia el mapa de pedidos, y borra los peers cuyas conexiones estan caidas*/
 	bool reiniciarPedidos(Peer* peerQueQueda);
 
 private:
 
-	/*No confundir con el run de Threads, este metodo se llama
+	/*
+	 *  No confundir con el run de Threads, este metodo se llama
 	 * una vez que el torrent esta inicializado, y pone a descargar/compartir el archivo
-	 * */
+	 */
 	/*para descargar hay que llamar al metodo continuar*/
 	void run();
 

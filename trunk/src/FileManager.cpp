@@ -11,10 +11,10 @@
 #include "FileManager.h"
 #include "Sha1.h"
 #include "Torrent.h"
-#include <fstream>
 #include <cstring>
 #include <cmath>
 #include <cstdlib>
+#include <fstream>
 #include <sys/stat.h>
 #include <sys/types.h>
 
@@ -39,19 +39,7 @@ FileManager::~FileManager() {
 	guardarDatos();
 }
 
-/*
- * Se pide el info_hash del .torrent y se trata de abrir un archivo
- * con ese info_hash como nombre dentro de la carpeta donde se guardan
- * las descargas incompletas, sino existe se crea del tamaño TOTAL
- * que indica el torrent, de existir el archivo, se trata de leer el
- * bitmap, bytes subidos y bajados desde un archivo con info_hash por
- * nombre y extension .data .
- * Si no existe el archivo .data pero se encuentra una descarga
- * incompleta se verificar cada pieza del archivo incompleto y se genera
- * el bitmap.
- * Inicializar el resto de los campos segun corresponda con la
- * info obtenida del .torrent y del archivo descargado parcialmente.
- * */
+
 bool FileManager::inicializar(DatosParser* datos) {
 	return (inicializarTamaniosYpiezas(datos)
 			&& inicializarArchivosYdirectorios(datos)
