@@ -146,9 +146,9 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 		std::cout<<"\n DATOS TORRENT"<<std::endl
 		<<" NOMBRE: "<< (*it)->getNombre()<<std::endl
 		<<" ESTADO: "<< (*it)->getEstado()<<std::endl
-		<<" DESCARGADO: "<<(*it)->getTamanioDescargado()<<" SUBIDO: "<<(*it)->getTamanioSubido()<<std::endl
+		<<" DESCARGADO: "<<(*it)->bytesToString((*it)->getTamanioDescargado())<<" SUBIDO: "<<(*it)->bytesToString((*it)->getTamanioSubido())<<std::endl
 		<<" PROGRESO: "<< (int) ((((*it)->getTamanioDescargado()/1024) * 100)
-				/ ((*it)->getTamanio()/1024))<<std::endl
+				/ ((*it)->getTamanio()/1024))<<" %"<<std::endl
 		<<" CANTIDAD PEERS: "<<(*it)->getCantPeers()<<std::endl
 		<<" CANTIDAD ARCHIVOS: "<<(*it)->getFileManager()->getCantArchivos()<<std::endl;
 		std::cout<<std::endl<<" [1] VOLVER"<<std::endl
@@ -164,8 +164,10 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 		case 2:{
 			std::string estado = (*it)->getEstado();
 			if( estado == T_DETENIDO){
+				if ((*it) != NULL)
 				controlador->continuarTorrent((*it));
 			}else{
+				if ((*it) != NULL)
 				controlador->detenerTorrent((*it));
 			}
 		}
