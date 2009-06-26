@@ -20,7 +20,9 @@ Tracker::Tracker() {
 }
 
 Tracker::~Tracker() {
-
+	refresh = false;
+	this->cerrarConexion();
+	//join?????????????
 }
 
 void* Tracker::run() {
@@ -57,12 +59,15 @@ void* Tracker::run() {
 				cerrarConexion();
 			if (connect()){
 				torrent->enviarEventoEstado(NULL,400);
-				refresh=false;
+				refresh = false;
+				seCerro = false;
 				caracteresProcesados=0;
 			}
 		}
 		sleep(3);
-	}while (trackerRemoto.is_valid()|| refresh);
+	}while (trackerRemoto.is_valid() || refresh);
+
+	std::cout<<"fin run del tracker"<<std::endl;//todo.. sacar!!
 	return NULL;
 }
 
@@ -227,7 +232,7 @@ void Tracker::decodificarPeers(char * cadena, UINT longitudCadena) {
 			puerto = ntohs(puerto);
 			std::string ip_string = ip.str();
 			if (!torrent->existePeerIP(ip_string)){
-			torrent->agregarPeer(ip_string, puerto);
+				torrent->agregarPeer(ip_string, puerto);
 			}
 			i++;
 			cantPeers = torrent->getCantPeers();

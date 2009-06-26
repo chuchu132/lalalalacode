@@ -18,7 +18,7 @@
 
 ClienteTorrent::ClienteTorrent() {
 	std::string temp = "-FITORRENT-FIUBA-";
-	temp += (rand()%1000 + 100);
+	temp += (rand()%1000);
 	memcpy(peer_id,temp.c_str(),LEN_SHA1);
 	inicializarDirectorios();
 	controlador = NULL;
@@ -54,7 +54,7 @@ void* ClienteTorrent::run() {
 
 	while (activo && peerListener.is_valid()) {
 		conexionPeerNuevo = peerListener.accept();
-		std::cout<<"conexion entrante de "<<conexionPeerNuevo->getPuerto()<<std::endl;
+		std::cout<<"conexion entrante en  "<<conexionPeerNuevo->getPuerto()<<std::endl;
 		if (conexionPeerNuevo != NULL) {
 
 			char longProto;
