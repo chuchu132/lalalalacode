@@ -159,14 +159,17 @@ bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &sal
 				salida.insert(0, aux, longitudBencode);
 				longitud = longitudBencode;
 				posUltimoProcesado=longitudBencode+marca;
+				delete[] aux;
 			} else {
+				delete[] aux;
 				return false;
 			}
 		}
 		else {
+			delete[] aux;
 			return false;
 		}
-		delete[] aux;
+
 	} else
 		return false;
 	return true;
