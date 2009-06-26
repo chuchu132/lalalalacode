@@ -18,7 +18,7 @@
 
 ClienteTorrent::ClienteTorrent() {
 	std::string temp = "-FITORRENT-FIUBA-";
-	temp += (rand()%1000);
+	temp += (rand()%1000 + 100);
 	memcpy(peer_id,temp.c_str(),LEN_SHA1);
 	inicializarDirectorios();
 	controlador = NULL;
