@@ -15,6 +15,12 @@
 #include "Tipos.h"
 
 
+/* ********************************************************************
+ * El BencodeParser tiene como objeto extraer los datos contenidos    *
+ * en un texto codificado en bencode y poder almacenarlos en una	  *
+ * extructura de facil acceso para el usuario                         *
+ **********************************************************************/
+
 class BencodeParser {
 private:
 

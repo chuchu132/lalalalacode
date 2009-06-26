@@ -12,6 +12,11 @@
 #include <string>
 
 
+/* ********************************************************************
+ * DatosParser almacena el contenido extraido de un archivo bencode    *
+ * posee metodos que facilitan la obtencion de los datos por nombre    *
+ * o posicionarse en distintas etiquetas del bencode 				   *
+ **********************************************************************/
 
 class DatosParser {
 
