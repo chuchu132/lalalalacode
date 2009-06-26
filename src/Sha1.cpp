@@ -147,8 +147,15 @@ void Sha1::asignacionParcial(unsigned & temp, unsigned bufferTemp[]) {
 void Sha1::rellenado() {
 
 
-	//Se realiza el padding como establece el estandar, debe realizarse el padding a 512bits
-	//Despues de terminado este procedimiento se obtiene el mensaje procesado por completo
+   /*
+	* Se realiza el padding como establece el estandar, debe realizarse el padding a 512bits
+	* El objetivo es el que la longitud sea multiplo de 512, el algoritmo procesa bloques de 512
+	* para obtener el mensaje digerido segun el estandar.
+	* Se agrega un '1' seguido de n cantidad de ceros seguido por un entero de 64 bit al final de mensaje
+	* para producir el padding del mensaje a longitud multiplo de 512. El entero de 64 bits es la longitud
+	* del mensaje original. Despues de terminado este procedimiento se obtiene el mensaje procesado por completo
+	*/
+
 	bloquesMensaje[IndiceArrayBloques++] = 0x80;
 
 	if (IndiceArrayBloques > 55) {

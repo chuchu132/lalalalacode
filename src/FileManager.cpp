@@ -288,15 +288,16 @@ char* FileManager::readBlock(UINT index, UINT begin, UINT longitud) {
 }
 
 UINT FileManager::writeBlock(UINT index, UINT begin, UINT longitud,
-		const char* block) throw(AvisoDescargaCompleta) {
+		const char* block,UINT &bytesRecibidos) throw(AvisoDescargaCompleta) {
 	UINT bytes = 0;
 	if (!bitmap.estaMarcada(index)) {
 
 		int offset = (index * tamanioPieza + begin);
 		descarga.seekp(offset); // se para en el offset inicial
 		descarga.write(block, longitud); // escribe
-		bytes = longitud; //cuenta todo lo que entra por mas que sean piezas repetidas o corruptas
+		bytesRecibidos = longitud; //cuenta todo lo que entra por mas que sean piezas repetidas o corruptas
 		if (verificarHashPieza(index)) {
+			bytes = longitud;//cuenta solo lo que se graba a disco y fue correctamente descargado
 			bitmap.marcarBit(index);
 			if (descargaCompleta()) {
 				throw AvisoDescargaCompleta();

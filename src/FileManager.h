@@ -67,7 +67,7 @@ public:
 
 	/* Escribe en disco el bloque */
 	/* Devuelve la cantidad de bytes escritos */
-	UINT writeBlock(UINT index,UINT begin,UINT longitud,const char* block) throw(AvisoDescargaCompleta);
+	UINT writeBlock(UINT index,UINT begin,UINT longitud,const char* block,UINT &bytesRecibidos) throw(AvisoDescargaCompleta);
 
 	/*Calcula el hash a la pieza index y luego lo compara con el hash recuperado del .torrent*/
 	bool verificarHashPieza(UINT index);
