@@ -23,13 +23,13 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	tracker = new Tracker();
 	tracker->setTorrent(this);
 	uploaded = 0;
-	uploadedAnt=0;
+	uploadedAnt = 0;
 	downloaded = 0;
 	downAnterior = 0;
-	bytesRecived=0;
-	bytesRecivedPrev=0;
+	bytesRecived = 0;
+	bytesRecivedPrev = 0;
 	velocidadAnt = 0;
-	velocidadAntUp=0;
+	velocidadAntUp = 0;
 	this->path = path;
 	estado = T_DETENIDO;
 	activo = false;
@@ -85,7 +85,7 @@ void Torrent::run() {
 
 	horaInicial = time(NULL);//Obtiene los segundos que pasaron desde 1970
 	horaAnterior = time(NULL);
-	horaAnteriorSubida= time (NULL);
+	horaAnteriorSubida = time(NULL);
 	downAnterior = downloaded;
 	if (controlador != NULL) {
 		std::string notif = "Conectando con ";
@@ -246,7 +246,7 @@ void Torrent::detener() {
 
 	if (activo) {
 		activo = false;
-		enviarEventoEstado(EVENT_STOPPED, -1);
+		//enviarEventoEstado(EVENT_STOPPED, -1);
 		tracker->cerrarConexion();
 		tracker->join();
 		std::cout << "tracker detenido" << std::endl;
@@ -320,7 +320,7 @@ int Torrent::getVelocidadSubida() {
 
 	uploadedAnt = uploaded;
 	velocidadAntUp = (int) ((diferencia / 1024) / tiempo);
-    return velocidadAntUp;
+	return velocidadAntUp;
 }
 
 int Torrent::getVelocidadBajada() {
@@ -439,7 +439,6 @@ void Torrent::setBytesRecived(ULINT bytes) {
 	if (controlador != NULL)
 		controlador->actualizarEstado(this);
 }
-
 
 void Torrent::setUploaded(ULINT bytes) {
 	uploaded += bytes;
