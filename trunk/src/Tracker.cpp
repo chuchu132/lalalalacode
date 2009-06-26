@@ -37,6 +37,7 @@ void* Tracker::run() {
 		while (trackerRemoto.is_valid() && !seCerro && !refresh) {
 			if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE-1)) > 0) {
 				bufferTemp[cantidad] = '\0';
+				std::cout<< bufferTemp <<std::endl;
 				buffer.insert(caracteresProcesados,bufferTemp,cantidad);
 				longitud=caracteresProcesados+cantidad;
 				if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
@@ -51,17 +52,17 @@ void* Tracker::run() {
 				seCerro = true;
 			}
 		}
-
-		if (trackerRemoto.is_valid()){
-			cerrarConexion();
+		if ( refresh){
+			if (trackerRemoto.is_valid())
+				cerrarConexion();
 			if (connect()){
 				torrent->enviarEventoEstado(NULL,400);
 				refresh=false;
+				caracteresProcesados=0;
 			}
 		}
 		sleep(3);
-	}while (trackerRemoto.is_valid());
-
+	}while (trackerRemoto.is_valid()|| refresh);
 	return NULL;
 }
 
