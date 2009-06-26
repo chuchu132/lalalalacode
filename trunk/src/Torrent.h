@@ -191,6 +191,7 @@ private:
 	UINT port; // puerto donde esta escuchando el Cliente.
 
 	ULINT uploaded;
+	ULINT uploadedAnt;
 	ULINT downloaded;
 	ULINT downAnterior;
 
@@ -204,8 +205,10 @@ private:
 
 	time_t horaInicial;
 	time_t horaAnterior;
+	time_t horaAnteriorSubida;
 
 	int velocidadAnt;
+	int velocidadAntUp;
 	time_t timeLastRefresh;
 	time_t timeLastDownload;
 
