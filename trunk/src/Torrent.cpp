@@ -25,6 +25,8 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	uploaded = 0;
 	downloaded = 0;
 	downAnterior = 0;
+	bytesRecived=0;
+	bytesRecivedPrev=0;
 	velocidadAnt = 0;
 	this->path = path;
 	estado = T_DETENIDO;
@@ -226,9 +228,9 @@ void Torrent::refrescarPeers() {
 void Torrent::continuar() {
 	if (!activo) {
 		activo = true;
-		if (downloaded >= getTamanio()) {
+		if (downloaded >= getTamanio())
 			estado = T_COMPLETO;
-		} else
+		else
 			estado = T_ACTIVO;
 
 		run();
@@ -315,9 +317,9 @@ int Torrent::getVelocidadBajada() {
 	if (tiempo <= 0)
 		return velocidadAnt;
 	horaAnterior = horaAct;
-	ULINT diferencia = downloaded - downAnterior;
+	ULINT diferencia = bytesRecived - bytesRecivedPrev;
 
-	downAnterior = downloaded;
+	bytesRecivedPrev = bytesRecived;
 	velocidadAnt = (int) ((diferencia / 1024) / tiempo);
 	return velocidadAnt;
 }
@@ -419,6 +421,13 @@ void Torrent::setDownloaded(ULINT bytes) {
 	if (controlador != NULL)
 		controlador->actualizarEstado(this);
 }
+
+void Torrent::setBytesRecived(ULINT bytes) {
+	bytesRecived += bytes;
+	if (controlador != NULL)
+		controlador->actualizarEstado(this);
+}
+
 
 void Torrent::setUploaded(ULINT bytes) {
 	uploaded += bytes;

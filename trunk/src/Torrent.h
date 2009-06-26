@@ -135,6 +135,8 @@ public:
 
 	void setDownloaded(ULINT bytes);
 
+	void setBytesRecived(ULINT bytes);
+
 	void setUploaded(ULINT bytes);
 
 	void setEstado(std::string estado);
@@ -190,6 +192,10 @@ private:
 
 	ULINT uploaded;
 	ULINT downloaded;
+	ULINT downAnterior;
+
+	ULINT bytesRecived;
+	ULINT bytesRecivedPrev;
 	Mutex llaveCambiosDownloaded;
 
 	float endGame; // porcentaje a partir del cual se vuelven a pedir todas las piezas restantes.
@@ -197,9 +203,7 @@ private:
 	Controlador *controlador;
 
 	time_t horaInicial;
-
 	time_t horaAnterior;
-	ULINT downAnterior;
 
 	int velocidadAnt;
 	time_t timeLastRefresh;

@@ -273,9 +273,11 @@ void Peer::procesarRequest(int index, int begin, int length) {
 
 void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 	try {
+		UINT bytesRecibidos=0;
 		UINT bytes = torrent->getFileManager()->writeBlock(index,
-				begin, longitud, data);
+				begin, longitud, data,bytesRecibidos);
 		torrent->setDownloaded(bytes);
+		torrent->setBytesRecived(bytesRecibidos);
 		if (torrent->getFileManager()->getBitmap()->estaMarcada(index)) {
 			repartirHave(index);
 			bitmap.desmarcarBit(index);// desmarca el bit que representa la pieza obtenida del bitmap del peer remoto
