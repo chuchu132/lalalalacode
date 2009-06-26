@@ -110,7 +110,7 @@ void ClienteTorrent::finalizar() {
 	{
 		std::cout<<"Finalizando clienteTorrent"<<std::endl;
 		activo = false;
-		peerListener.setNonblocking();
+		peerListener.close();
 		this->join();
 	}
 	std::list<Torrent*>::iterator it = torrents.begin();
