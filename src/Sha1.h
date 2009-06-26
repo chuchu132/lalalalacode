@@ -11,6 +11,13 @@ using namespace std;
 #ifndef _SHA1_H_
 #define _SHA1_H_
 
+
+/* ********************************************************************
+ * Sha1 es la clase encargada de la conversion de una cadena en su    *
+ * correspondiente codificacion con el algoritmo sha1 obteniendose    *
+ * el mensaje digerido del metodo									  *
+ **********************************************************************/
+
 class Sha1 {
 private:
 
