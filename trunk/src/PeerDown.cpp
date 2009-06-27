@@ -23,10 +23,11 @@ void* PeerDown::run() {
 		bool error = !recvHandshake(); // error puede ser en la conexion, en lo recibido o al procesar
 		while (getTorrent()->estaActivo() && !error && conexionEstaOK()) {
 			int length;
-			char* buffer;
+			char* buffer=NULL;
 			if (recvMsj(&buffer, length)) {
 				error = (!procesar(buffer, length));
-				delete[] buffer;
+				if (buffer!=NULL)
+					delete[] buffer;
 				if(getHuboCambios()){
 					cantidadKeepAlive = 0;
 				}
