@@ -121,7 +121,6 @@ void BencodeParser::parserNumerico()throw (ExcepcionCaracterInvalido) {
 	std::stringstream cadena;
 	cadena << val;
 	datos.agregarDato(cadena.str().c_str(), cadena.str().length() + 1);
-
 }
 
 void BencodeParser::parserCadena()throw (ExcepcionCaracterInvalido) {
@@ -129,7 +128,6 @@ void BencodeParser::parserCadena()throw (ExcepcionCaracterInvalido) {
 
 	while (isdigit(verCaracterSiguiente()))
 		len = len * 10 + (obtenerCaracter() - '0');
-
 	compararCaracter(':');
 	char *s = new char[len + 1];
 	int i;
@@ -139,7 +137,6 @@ void BencodeParser::parserCadena()throw (ExcepcionCaracterInvalido) {
 	}
 	s[len] = '\0';
 	datos.agregarDato(s, len + 1);
-
 	if (!strcmp(s, "info")) {
 		offsetInfoHash = pos;
 		contador = 0;
@@ -170,6 +167,7 @@ char BencodeParser::obtenerCaracter() {
 }
 
 void BencodeParser::compararCaracter(char c) throw (ExcepcionCaracterInvalido) {
+
 	if (obtenerCaracter() != c) {
 		std::cerr << "ERROR AL PARSEAR .torrent " << std::endl;
 		throw ExcepcionCaracterInvalido();
@@ -226,7 +224,7 @@ char* BencodeParser::archivoAString(const char *url, ULINT *tam) {
 
 	char *salida = NULL;
 
-	FILE *fp = fopen(url, "r");
+	FILE *fp = fopen(url, "rb");
 	if (fp != NULL) {
 
 		fseek(fp, 0, SEEK_END);
