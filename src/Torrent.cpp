@@ -336,6 +336,11 @@ int Torrent::getVelocidadBajada() {
 	return velocidadAnt;
 }
 
+Controlador* Torrent::getControlador(){
+	return controlador;
+}
+
+
 void Torrent::setControlador(Controlador* ctrl) {
 	this->controlador = ctrl;
 }

@@ -131,6 +131,8 @@ public:
 
 	time_t getTimeLastDown();
 
+	Controlador* getControlador();
+
 	void setControlador(Controlador* ctrl);
 
 	void setDownloaded(ULINT bytes);

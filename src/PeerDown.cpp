@@ -18,6 +18,8 @@ PeerDown::~PeerDown() {
 }
 
 void* PeerDown::run() {
+	time_t horaActual=time(NULL);
+	time_t horaAnterior;
 	if (sendHandshake() && sendBitfield()) {
 		int contadorCiclos = 0;
 		bool error = !recvHandshake(); // error puede ser en la conexion, en lo recibido o al procesar
@@ -47,7 +49,10 @@ void* PeerDown::run() {
 				}
 
 				contadorCiclos++;
-				if (contadorCiclos == 3) {
+				horaAnterior=horaActual;
+				horaActual=time(NULL);
+				int tiempo = (int) difftime(horaActual, horaAnterior);
+				if (contadorCiclos == 3||tiempo>60) {
 					contadorCiclos = 0;
 					sendKeepAlive();
 				}

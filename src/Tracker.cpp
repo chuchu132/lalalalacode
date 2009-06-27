@@ -46,6 +46,10 @@ void* Tracker::run() {
 					buffer.erase(0,posUltimoProcesado);
 				}
 				else {
+					//En caso de recibir un mensaje de falla del tracker lo notifico a la vistas
+					if (buffer.find("failure",0)!=string::npos)
+						 torrent->getControlador()->notificarVista(buffer);
+
 					caracteresProcesados+=cantidad;
 					buffer.resize(caracteresProcesados+cantidad);
 				}
@@ -55,8 +59,10 @@ void* Tracker::run() {
 			}
 		}
 		if ( refresh){
-			if (trackerRemoto.is_valid())
+			if (trackerRemoto.is_valid()){
+				torrent->removerPeersInactivos(NULL);
 				cerrarConexion();
+			}
 			if (connect()){
 				torrent->enviarEventoEstado(NULL,400);
 				refresh = false;
@@ -140,10 +146,12 @@ bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoP
 			}
 			delete datos;
 		}
-		return true;
-	} else {
+		else
+			return false ;
+	} else
 		return false;
-	}
+
+	return true;
 }
 
 bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado) {
