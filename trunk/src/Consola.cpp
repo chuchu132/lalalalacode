@@ -13,7 +13,10 @@
 
 Consola::Consola() {}
 
-Consola::~Consola() {}
+Consola::~Consola() {
+	if (controlador != NULL)
+		controlador->cerrarCliente();
+}
 
 void Consola::setControlador(Controlador *c){
 	this->controlador = c;

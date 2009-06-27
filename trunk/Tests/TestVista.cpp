@@ -16,11 +16,11 @@ TestVista::~TestVista() {}
 
 void TestVista::run(){
 
-	Gtk::Main kit(0,0);
+	//Gtk::Main kit(0,0);
 	ClienteTorrent cliente;
 	Controlador controlador(cliente);
-	Vista* ventana = new Ventana();
-
+	//Vista* ventana = new Ventana();
+	Vista* ventana = new Consola();
 	cliente.setControlador(&controlador);
 	ventana->setControlador(&controlador);
 	controlador.setVentana(ventana);
