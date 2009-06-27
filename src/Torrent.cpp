@@ -30,6 +30,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	bytesRecivedPrev = 0;
 	velocidadAnt = 0;
 	velocidadAntUp = 0;
+	peersUnchoked=0;
 	this->path = path;
 	estado = T_DETENIDO;
 	activo = false;
@@ -459,12 +460,20 @@ time_t Torrent::getTimeLastDown() {
 	return timeLastDownload;
 }
 
+UINT Torrent::getPeersUnchoked (){
+	return peersUnchoked;
+}
+
 void Torrent::setTimeRefresh(time_t Trefresh) {
 	timeLastRefresh = Trefresh;
 }
 
 void Torrent::setTimeLastDown(time_t horaActual) {
 	timeLastDownload = horaActual;
+}
+
+void Torrent::setPeersUnchoked (UINT cantidad){
+	peersUnchoked=cantidad;
 }
 
 bool Torrent::reiniciarPedidos(Peer* peerQueQueda) {
