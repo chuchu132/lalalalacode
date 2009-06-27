@@ -20,7 +20,6 @@
 #include "Vista.h"
 #include "TorrentView.h"
 #include "AttributeView.h"
-#include "ProgressView.h"
 
 class TorrentView;
 class Controlador;
@@ -37,6 +36,7 @@ private:
 	Gtk::Dialog *preferences_window; //ventana de preferencias
 	Gtk::AboutDialog *about_window; //ventana "acerca de"
 	Gtk::FileChooserDialog *select_window; //ventana de seleccion de archivo
+	Gtk::Dialog *progress_window;
 
 	Gtk::FileFilter filter; //filtro para la seleccion de archivos
 
@@ -59,16 +59,17 @@ private:
 
 	/* widgets */
 	Gtk::Entry *entry_puerto;
+	Gtk::ProgressBar *progress_bar;
+	sigc::connection id_activity;
 
 	/* clases para mostrar la lista de torrents */
 	AttributesView *attr;
 	TorrentView *torrents;
-	ProgressView progress;
 
 
 	bool error; //indica si hubo un error
 	bool activo;
-	bool procesando;
+	int procesar;
 	Mutex mutex_torrents;
 
 	//Signal handlers:
@@ -87,8 +88,6 @@ private:
 	void on_menu_preferences();
 
 	void button_accept_clicked();
-	void button_cancel_clicked();
-
 
 	//obtiene los botones desde el archivo
 	void getButtons();
@@ -106,6 +105,10 @@ private:
 	void connectSignals();
 
 	void* run();
+
+	bool mover();
+
+	void showBar(Glib::ustring texto);
 
 public:
 
@@ -135,9 +138,6 @@ public:
 	std::string getRutaDescargas();
 
 	void detener();
-
-	void setProcesando(bool);
-
 };
 
 #endif /* VENTANA_H_ */
