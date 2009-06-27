@@ -133,6 +133,8 @@ public:
 
 	Controlador* getControlador();
 
+	UINT getPeersUnchoked ();
+
 	void setControlador(Controlador* ctrl);
 
 	void setDownloaded(ULINT bytes);
@@ -146,6 +148,8 @@ public:
 	void setTimeRefresh(time_t Trefresh);
 
 	void setTimeLastDown(time_t horaActual);
+
+	void setPeersUnchoked (UINT cantidad);
 
 	bool estaActivo();
 
@@ -213,6 +217,8 @@ private:
 	int velocidadAntUp;
 	time_t timeLastRefresh;
 	time_t timeLastDownload;
+
+	UINT peersUnchoked;
 
 
 };

@@ -104,7 +104,7 @@ const int TAM_BLOQUES = 16384; //ver http://wiki.theory.org/BitTorrentSpecificat
 
 /* Configuracion Default */
 #define URL_CARPETA_TEMP "./incompletos/"
-#define RUTA_CONFIGURACION "FiTorrent.config"
+#define RUTA_CONFIGURACION "./FiTorrent.config"
 #define RUTA_DESCARGAS "./Descargas/"
 const unsigned int PUERTO_DEFAULT = 36277;
 const int PUERTO_DEFAULT_TRACKER = 80;
