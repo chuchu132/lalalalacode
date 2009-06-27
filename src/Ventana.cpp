@@ -235,7 +235,6 @@ void Ventana::connectSignals() {
 }
 
 void Ventana::on_button_add_clicked() {
-	std::cout.flush();
 	int result = select_window->run();
 	select_window->hide();
 	if (result == Gtk::RESPONSE_OK) {
@@ -244,27 +243,35 @@ void Ventana::on_button_add_clicked() {
 }
 
 void Ventana::on_button_erase_clicked() {
-	std::cout.flush();
-	showBar("Borrando Torrent");
-	procesar = 1;
+	Torrent *t = torrents->getSelectedTorrent();
+	if (t != NULL){
+		showBar("Borrando Torrent");
+		procesar = 1;
+	}
 }
 
 void Ventana::on_button_stop_clicked() {
-	std::cout.flush();
-	showBar("Deteniendo Torrent");
-	procesar = 2;
+	Torrent *t = torrents->getSelectedTorrent();
+	if (t != NULL){
+		showBar("Deteniendo Torrent");
+		procesar = 2;
+	}
 }
 
 void Ventana::on_button_continue_clicked() {
-	std::cout.flush();
-	showBar("Iniciando Torrent");
-	procesar = 3;
+	Torrent *t = torrents->getSelectedTorrent();
+	if (t != NULL){
+		showBar("Iniciando Torrent");
+		procesar = 3;
+	}
 }
 
 void Ventana::on_button_peers_clicked() {
 	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL)
-		controlador->refrescarPeers(t);
+	if (t != NULL) {
+		showBar("Refrescando Peers");
+		procesar = 4;
+	}
 }
 
 void Ventana::on_button_up_clicked() {
@@ -280,9 +287,8 @@ void Ventana::on_button_notifications_clicked() {
 }
 
 void Ventana::button_accept_clicked() {
-	std::cout.flush();
 	showBar("Agregando Torrent");
-	procesar = 4;
+	procesar = 5;
 }
 
 void Ventana::actualizarEstado(Torrent* t) {
@@ -343,7 +349,7 @@ void* Ventana::run() {
 			case 1:{//borrar torrent
 				mutex_torrents.lock();
 				Torrent *t = torrents->getSelectedTorrent();
-				if (t != NULL) {
+				if (t != NULL) {//ver si este if no es redundante
 					torrents->eraseSelectedRow();
 					controlador->borrarTorrent(t);
 					attr->torrentDeleted(t);
@@ -364,7 +370,13 @@ void* Ventana::run() {
 					controlador->continuarTorrent(t);
 			}
 				break;
-			case 4: {//agregar torrent
+			case 4:{//refrescar peers
+				Torrent *t = torrents->getSelectedTorrent();
+				if (t != NULL)
+					controlador->refrescarPeers(t);
+			}
+				break;
+			case 5: {//agregar torrent
 				Torrent *t = controlador->agregarTorrent(select_window->get_filename());
 				if (t != NULL) {
 					addTorrent(t);
