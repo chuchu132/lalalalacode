@@ -16,7 +16,10 @@ void Controlador::setVentana(Vista *ventana) {
 }
 
 Torrent* Controlador::agregarTorrent(std::string ruta) {
-	return cliente.agregarTorrent(ruta);
+	Torrent *t = cliente.agregarTorrent(ruta);
+	if (t != NULL)
+		t->continuar();
+	return t;
 }
 
 void Controlador::borrarTorrent(Torrent *t) {

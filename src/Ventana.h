@@ -20,6 +20,7 @@
 #include "Vista.h"
 #include "TorrentView.h"
 #include "AttributeView.h"
+#include "ProgressView.h"
 
 class TorrentView;
 class Controlador;
@@ -62,10 +63,12 @@ private:
 	/* clases para mostrar la lista de torrents */
 	AttributesView *attr;
 	TorrentView *torrents;
+	ProgressView progress;
 
 
 	bool error; //indica si hubo un error
 	bool activo;
+	bool procesando;
 	Mutex mutex_torrents;
 
 	//Signal handlers:
@@ -79,6 +82,7 @@ private:
 	void on_button_notifications_clicked();
 
 	void on_menu_about();
+	void on_menu_help();
 	void on_menu_quit();
 	void on_menu_preferences();
 
@@ -131,6 +135,8 @@ public:
 	std::string getRutaDescargas();
 
 	void detener();
+
+	void setProcesando(bool);
 
 };
 

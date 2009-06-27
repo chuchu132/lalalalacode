@@ -969,4 +969,54 @@ Luc&#xED;a Garbarini
       </object>
     </child>
   </object>
+  <object class="GtkDialog" id="progress_wind">
+    <property name="width_request">300</property>
+    <property name="height_request">100</property>
+    <property name="border_width">5</property>
+    <property name="title" translatable="yes">Procesando ...</property>
+    <property name="modal">True</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="icon">logo.png</property>
+    <property name="type_hint">normal</property>
+    <property name="skip_taskbar_hint">True</property>
+    <property name="has_separator">False</property>
+    <child internal-child="vbox">
+      <object class="GtkVBox" id="dialog-vbox15">
+        <property name="visible">True</property>
+        <property name="spacing">2</property>
+        <child>
+          <object class="GtkLabel" id="l_process">
+            <property name="visible">True</property>
+            <property name="label" translatable="yes">Procesando</property>
+          </object>
+          <packing>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child internal-child="action_area">
+          <object class="GtkHButtonBox" id="dialog-action_area15">
+            <property name="visible">True</property>
+            <property name="layout_style">center</property>
+            <child>
+              <object class="GtkProgressBar" id="progressbar1">
+                <property name="visible">True</property>
+                <property name="activity_mode">True</property>
+                <property name="pulse_step">0.099999999776482579</property>
+              </object>
+              <packing>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="padding">1</property>
+            <property name="pack_type">end</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+  </object>
 </interface>

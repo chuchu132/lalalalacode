@@ -6,8 +6,6 @@
  */
 
 #include "Ventana.h"
-#include "TorrentView.h"
-#include "AttributeView.h"
 
 #define WINDOW_FILE "res/wind.glade"
 
@@ -15,6 +13,7 @@
 #define ABOUT_WINDOW "about_wind"
 #define SELECT_WINDOW "select_wind"
 #define PREFERENCES_WINDOW "preferences_wind"
+#define PROGRESS_WINDOW "progress_wind"
 
 #define BUTTON_ADD 	"boton_agregar"
 #define BUTTON_ERASE "boton_borrar"
@@ -25,20 +24,21 @@
 #define BUTTON_PEERS "boton_peers"
 #define BUTTON_NOTIF "boton_notificaciones"
 #define ENTRY_PUERTO "entry1"
+#define PROGRESS_BAR "progressbar1"
+#define PROGRESS_LABEL "l_process"
 
 #define MENU_VBOX "vbox1"
+#define OPEN_HELP "firefox help/main.html"
 
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
 
 Ventana::Ventana():attr(new AttributesView()),torrents(new TorrentView()) {
 	error = false;
+	procesando = false;
 	controlador = NULL;
 	try {
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
-
-		//		attr = new AttributesView();
-		//		torrents = new TorrentView();
 		torrents->setAttributesView(attr);
 
 		this->getWindows();
@@ -87,6 +87,17 @@ void Ventana::getWindows() {
 	//obtengo la ventana de preferencias
 	preferences_window = 0;
 	builder->get_widget(PREFERENCES_WINDOW, preferences_window);
+
+	//obtengo la ventana de progreso
+	Gtk::Dialog *progress_window;
+	builder->get_widget(PROGRESS_WINDOW, progress_window);
+	progress.setWindow(progress_window);
+	Gtk::ProgressBar *progress_bar;
+	builder->get_widget(PROGRESS_BAR, progress_bar);
+	progress.setBarra(progress_bar);
+	Gtk::Label *progress_label;
+	builder->get_widget(PROGRESS_LABEL, progress_label);
+	progress.setLabel(progress_label);
 
 	filter.set_name("Archivos Torrent (*.torrent)");
 	filter.add_pattern("*.torrent");
@@ -139,12 +150,14 @@ void Ventana::setMenu() {
 
 	menu_editar->add(Gtk::Action::create("EditMenu", "Editar"));
 	menu_editar->add(Gtk::Action::create("EditPref", Gtk::Stock::PREFERENCES,
-			"_Preferencias", "Configurar puertos, conexiones, etc."),
+			"_Preferencias", "Preferencias de Configuracion"),
 			sigc::mem_fun(*this, &Ventana::on_menu_preferences));
 
 	menu_ayuda->add(Gtk::Action::create("HelpMenu", "Ayuda"));
-	menu_ayuda->add(Gtk::Action::create("HelpAbout", Gtk::Stock::ABOUT),
+	menu_ayuda->add(Gtk::Action::create("HelpAbout", Gtk::Stock::ABOUT,"A_cerca De", "Acerca de FiTorrent"),
 			sigc::mem_fun(*this, &Ventana::on_menu_about));
+	menu_ayuda->add(Gtk::Action::create("HelpMan", Gtk::Stock::HELP,"_Manual", "Manual de usuario"),
+			sigc::mem_fun(*this, &Ventana::on_menu_help));
 
 	menu_UIManager = Gtk::UIManager::create();
 	menu_UIManager->insert_action_group(menu_archivo);
@@ -169,6 +182,7 @@ void Ventana::setMenu() {
 		"      <menuitem action='EditPref'/>"
 		"    </menu>"
 		"    <menu action='HelpMenu'>"
+		"      <menuitem action='HelpMan'/>"
 		"      <menuitem action='HelpAbout'/>"
 		"    </menu>"
 		"  </menubar>"
@@ -229,7 +243,6 @@ void Ventana::connectSignals() {
 
 void Ventana::on_button_add_clicked() {
 	int result = select_window->run();
-
 	if (result == Gtk::RESPONSE_OK) {
 		this->button_accept_clicked();
 	} else if (result == Gtk::RESPONSE_CANCEL) {
@@ -242,7 +255,12 @@ void Ventana::on_button_erase_clicked() {
 	Torrent *t = torrents->getSelectedTorrent();
 	if (t != NULL) {
 		torrents->eraseSelectedRow();
+		procesando = true;
+		progress.setText("Borrando Torrent");
+		progress.execute();
 		controlador->borrarTorrent(t);
+		progress.hide();
+		procesando = false;
 		attr->torrentDeleted(t);
 	}
 	mutex_torrents.unlock();
@@ -250,8 +268,14 @@ void Ventana::on_button_erase_clicked() {
 
 void Ventana::on_button_stop_clicked() {
 	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL)
+	if (t != NULL){
+		procesando = true;
+		progress.setText("Deteniendo Torrent");
+		progress.execute();
 		controlador->detenerTorrent(t);
+		progress.hide();
+		procesando = false;
+	}
 }
 
 void Ventana::on_button_continue_clicked() {
@@ -280,14 +304,15 @@ void Ventana::on_button_notifications_clicked() {
 
 void Ventana::button_accept_clicked() {
 	std::string filename = select_window->get_filename();
+	progress.setText("Agregando Torrent");
 	select_window->hide();
+	procesando = true;
 	Torrent *t = controlador->agregarTorrent(filename);
 	if (t != NULL) {
-		mutex_torrents.lock();
-		torrents->addRow(t);
-		mutex_torrents.unlock();
-		controlador->continuarTorrent(t);
+		addTorrent(t);
 	}
+	progress.hide();
+	procesando = false;
 }
 
 void Ventana::button_cancel_clicked() {
@@ -319,6 +344,10 @@ void Ventana::on_menu_quit() {
 	main_window->hide();
 }
 
+void Ventana::on_menu_help() {
+	system(OPEN_HELP);
+}
+
 void Ventana::on_menu_preferences() {
 	int result = preferences_window->run();
 
@@ -341,7 +370,19 @@ int Ventana::correr() {
 void* Ventana::run() {
 	activo = true;//ver si hay que usar un mutex para activo
 	Torrent *t;
+//	bool abierta = false;
 	while (activo) {
+
+//		while (procesando) {
+//			if (!abierta){
+//				progress.run();
+//				abierta = true;
+//			}
+//			progress.mover();
+//			sleep(1);
+//
+//		}
+//		abierta = false;
 
 		if (controlador->hayCambios()) {
 			t = controlador->getCambio();
@@ -350,6 +391,7 @@ void* Ventana::run() {
 		} else {
 			sleep(2);
 		}
+
 	}
 	return NULL;
 }
@@ -378,3 +420,8 @@ std::string Ventana::getRutaDescargas() {
 void Ventana::setControlador(Controlador *c){
 	controlador = c;
 }
+
+void Ventana::setProcesando(bool estaProcesando) {
+	this->procesando = estaProcesando;
+}
+
