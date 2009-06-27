@@ -25,18 +25,17 @@
 #define BUTTON_NOTIF "boton_notificaciones"
 #define ENTRY_PUERTO "entry1"
 #define PROGRESS_BAR "progressbar1"
-#define PROGRESS_LABEL "l_process"
-
 #define MENU_VBOX "vbox1"
 #define OPEN_HELP "firefox help/main.html"
+//xdg-open help/main.html
 
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
 
 Ventana::Ventana():attr(new AttributesView()),torrents(new TorrentView()) {
 	error = false;
-	procesando = false;
 	controlador = NULL;
+	procesar = 0;
 	try {
 		builder = Gtk::Builder::create_from_file(WINDOW_FILE);
 		torrents->setAttributesView(attr);
@@ -89,15 +88,8 @@ void Ventana::getWindows() {
 	builder->get_widget(PREFERENCES_WINDOW, preferences_window);
 
 	//obtengo la ventana de progreso
-	Gtk::Dialog *progress_window;
-	builder->get_widget(PROGRESS_WINDOW, progress_window);
-	progress.setWindow(progress_window);
-	Gtk::ProgressBar *progress_bar;
 	builder->get_widget(PROGRESS_BAR, progress_bar);
-	progress.setBarra(progress_bar);
-	Gtk::Label *progress_label;
-	builder->get_widget(PROGRESS_LABEL, progress_label);
-	progress.setLabel(progress_label);
+	builder->get_widget(PROGRESS_WINDOW, progress_window);
 
 	filter.set_name("Archivos Torrent (*.torrent)");
 	filter.add_pattern("*.torrent");
@@ -223,6 +215,7 @@ void Ventana::getButtons() {
 }
 
 void Ventana::connectSignals() {
+
 	button_add->signal_clicked().connect(sigc::mem_fun(*this,
 			&Ventana::on_button_add_clicked));
 	button_erase->signal_clicked().connect(sigc::mem_fun(*this,
@@ -242,46 +235,30 @@ void Ventana::connectSignals() {
 }
 
 void Ventana::on_button_add_clicked() {
+	std::cout.flush();
 	int result = select_window->run();
+	select_window->hide();
 	if (result == Gtk::RESPONSE_OK) {
 		this->button_accept_clicked();
-	} else if (result == Gtk::RESPONSE_CANCEL) {
-		this->button_cancel_clicked();
 	}
 }
 
 void Ventana::on_button_erase_clicked() {
-	mutex_torrents.lock();
-	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL) {
-		torrents->eraseSelectedRow();
-		procesando = true;
-		progress.setText("Borrando Torrent");
-		progress.execute();
-		controlador->borrarTorrent(t);
-		progress.hide();
-		procesando = false;
-		attr->torrentDeleted(t);
-	}
-	mutex_torrents.unlock();
+	std::cout.flush();
+	showBar("Borrando Torrent");
+	procesar = 1;
 }
 
 void Ventana::on_button_stop_clicked() {
-	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL){
-		procesando = true;
-		progress.setText("Deteniendo Torrent");
-		progress.execute();
-		controlador->detenerTorrent(t);
-		progress.hide();
-		procesando = false;
-	}
+	std::cout.flush();
+	showBar("Deteniendo Torrent");
+	procesar = 2;
 }
 
 void Ventana::on_button_continue_clicked() {
-	Torrent *t = torrents->getSelectedTorrent();
-	if (t != NULL)
-		controlador->continuarTorrent(t);
+	std::cout.flush();
+	showBar("Iniciando Torrent");
+	procesar = 3;
 }
 
 void Ventana::on_button_peers_clicked() {
@@ -303,20 +280,9 @@ void Ventana::on_button_notifications_clicked() {
 }
 
 void Ventana::button_accept_clicked() {
-	std::string filename = select_window->get_filename();
-	progress.setText("Agregando Torrent");
-	select_window->hide();
-	procesando = true;
-	Torrent *t = controlador->agregarTorrent(filename);
-	if (t != NULL) {
-		addTorrent(t);
-	}
-	progress.hide();
-	procesando = false;
-}
-
-void Ventana::button_cancel_clicked() {
-	select_window->hide();
+	std::cout.flush();
+	showBar("Agregando Torrent");
+	procesar = 4;
 }
 
 void Ventana::actualizarEstado(Torrent* t) {
@@ -370,19 +336,46 @@ int Ventana::correr() {
 void* Ventana::run() {
 	activo = true;//ver si hay que usar un mutex para activo
 	Torrent *t;
-//	bool abierta = false;
 	while (activo) {
 
-//		while (procesando) {
-//			if (!abierta){
-//				progress.run();
-//				abierta = true;
-//			}
-//			progress.mover();
-//			sleep(1);
-//
-//		}
-//		abierta = false;
+		if (procesar){
+			switch (procesar) {
+			case 1:{//borrar torrent
+				mutex_torrents.lock();
+				Torrent *t = torrents->getSelectedTorrent();
+				if (t != NULL) {
+					torrents->eraseSelectedRow();
+					controlador->borrarTorrent(t);
+					attr->torrentDeleted(t);
+				}
+				mutex_torrents.unlock();
+			}
+				break;
+			case 2:{//detener torrent
+				Torrent *t = torrents->getSelectedTorrent();
+				if (t != NULL){
+					controlador->detenerTorrent(t);
+				}
+			}
+				break;
+			case 3: {//continuar torrent
+				Torrent *t = torrents->getSelectedTorrent();
+				if (t != NULL)
+					controlador->continuarTorrent(t);
+			}
+				break;
+			case 4: {//agregar torrent
+				Torrent *t = controlador->agregarTorrent(select_window->get_filename());
+				if (t != NULL) {
+					addTorrent(t);
+				}
+			}
+				break;
+			}
+			id_activity.disconnect();
+			progress_window->hide();
+			procesar = 0; //ya proceso
+		}
 
 		if (controlador->hayCambios()) {
 			t = controlador->getCambio();
@@ -391,7 +384,6 @@ void* Ventana::run() {
 		} else {
 			sleep(2);
 		}
-
 	}
 	return NULL;
 }
@@ -421,7 +413,16 @@ void Ventana::setControlador(Controlador *c){
 	controlador = c;
 }
 
-void Ventana::setProcesando(bool estaProcesando) {
-	this->procesando = estaProcesando;
+bool Ventana::mover() {
+	progress_bar->pulse();
+	return true;
+}
+
+void Ventana::showBar(Glib::ustring texto){
+	progress_bar->set_text(texto);
+	progress_window->show();
+	//actualiza la barra de progreso
+	id_activity = Glib::signal_timeout().connect(sigc::mem_fun(*this,
+		        &Ventana::mover), 200 );
 }
 
