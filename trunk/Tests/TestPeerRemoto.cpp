@@ -9,14 +9,9 @@
 #include "../src/ClienteTorrent.h"
 #include "../src/Controlador.h"
 #include "../src/Torrent.h"
-TestPeerRemoto::TestPeerRemoto() {
-	// TODO Auto-generated constructor stub
+TestPeerRemoto::TestPeerRemoto() {}
 
-}
-
-TestPeerRemoto::~TestPeerRemoto() {
-	// TODO Auto-generated destructor stub
-}
+TestPeerRemoto::~TestPeerRemoto() {}
 
 void TestPeerRemoto::run(){
 	ClienteTorrent cliente;

@@ -7,9 +7,12 @@
 
 #include "Controlador.h"
 
-Controlador::Controlador(ClienteTorrent& c) : cliente(c) {}
+Controlador::Controlador(ClienteTorrent& c) :
+	cliente(c) {
+}
 
-Controlador::~Controlador() {}
+Controlador::~Controlador() {
+}
 
 void Controlador::setVentana(Vista *ventana) {
 	this->vista = ventana;
@@ -43,7 +46,7 @@ void Controlador::actualizarEstado(Torrent *t) {
 void Controlador::agregarTorrentsEnVista() {
 	std::list<Torrent*>::iterator it;
 	for (it = cliente.getListaTorrents()->begin(); it
-			!= cliente.getListaTorrents()->end(); it++) {
+	!= cliente.getListaTorrents()->end(); it++) {
 		vista->addTorrent((*it));
 	}
 }
