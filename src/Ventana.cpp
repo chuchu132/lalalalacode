@@ -423,6 +423,7 @@ std::string Ventana::getRutaDescargas() {
 
 void Ventana::setControlador(Controlador *c){
 	controlador = c;
+	torrents->setControlador(c);
 }
 
 bool Ventana::mover() {

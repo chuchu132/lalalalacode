@@ -21,6 +21,9 @@
 #define SHOW_ALL "Todos"
 
 TorrentView::TorrentView() {
+
+	controlador = NULL;
+
 	columns.add(col_name);
 	columns.add(col_size);
 	columns.add(col_status);
@@ -62,7 +65,7 @@ void TorrentView::setTreeView(Gtk::TreeView *view_torrents) {
 
 	//mostrar una progress bar para el porcentaje de progreso
 	Gtk::CellRendererProgress* cell =
-			Gtk::manage(new Gtk::CellRendererProgress);
+		Gtk::manage(new Gtk::CellRendererProgress);
 	cols_count = this->view_torrents->append_column(COL_PROGRESS, *cell);
 	pColumn = this->view_torrents->get_column(cols_count - 1);
 	if (pColumn) {
@@ -151,8 +154,8 @@ void TorrentView::updateRowValues(Gtk::TreeModel::Row &row, Torrent *t) {
 	row[col_downspeed] = t->getVelocidadBajada();
 	row[col_upspeed] = t->getVelocidadSubida();
 	row[col_time] = t->getTiempoRestante();
-	row[col_progress] = (int) (((t->getTamanioDescargado()/1024) * 100)
-			/ (t->getTamanio()/1024));
+	row[col_progress] = (int) (((t->getTamanioDescargado() / 1024) * 100)
+			/ (t->getTamanio() / 1024));
 	row[col_completed] = t->bytesToString(t->getTamanioDescargado());
 }
 
@@ -235,24 +238,28 @@ void TorrentView::updateRow(Torrent *t) {
 
 void TorrentView::hideRows(std::string type) {
 	std::cout << "mostrar " << type << "s" << std::endl;
-	//todo
-	//	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
-	//	Gtk::TreeModel::Row row;
-	//	Torrent *t;
-	//	while (iter != list_torrents->children().end())
-	//	{
-	//		if (type == t->getEstado())
-	//		{
-	//			row = *iter;
-	//			attr->torrentDeleted(row[col_torrent]);
-	//			list_torrents->remove(iter);
-	//		}
-	//		iter++;
-	//	}
+	//todo concurrencia
+//	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
+//	Gtk::TreeModel::Row row;
+//	Torrent *t;
+//	while (iter != list_torrents->children().end()) {
+//		row = *iter;
+//		t = row[col_torrent];
+//		if (type != t->getEstado()) {
+//			attr->torrentDeleted(t);
+//			list_torrents->remove(iter);
+//		}
+//		iter++;
+//	}
 }
 
 void TorrentView::showAll() {
 	std::cout << "mostrar todos" << std::endl;
-	//todo
+//	this->empty();//todo.. ver concurrencia!!!!
+//	controlador->agregarTorrentsEnVista();
+}
+
+void TorrentView::setControlador(Controlador *c) {
+	controlador = c;
 }
 

@@ -53,6 +53,8 @@ private:
 	Glib::RefPtr<Gtk::TreeSelection> selection;
 	Glib::RefPtr<Gtk::TreeSelection> selection_categories;
 
+	Controlador *controlador;
+
 	AttributesView *attr;//muestra los atributos del torrent
 
 	/* Signal handler para fila del categories view seleccionada */
@@ -106,6 +108,8 @@ public:
 
 	/* vacia la lista de torrents */
 	void empty();
+
+	void setControlador(Controlador *c);
 
 };
 
