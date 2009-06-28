@@ -16,9 +16,9 @@
 
 
 /* ********************************************************************
- * El BencodeParser tiene como objeto extraer los datos contenidos    *
+ * El BencodeParser tiene como objetivo extraer los datos contenidos  *
  * en un texto codificado en bencode y poder almacenarlos en una	  *
- * extructura de facil acceso para el usuario                         *
+ * extructura de facil acceso para el usuario.                        *
  **********************************************************************/
 
 class BencodeParser {
@@ -37,7 +37,7 @@ private:
 	int offsetFin;//Marca el final del diccionario info
 	unsigned info_hash[5]; //Mensaje digerido del info_hash como lo devuelve el sha1
 
-	unsigned int marcaFinHash;
+	unsigned int marcaFinHash;//Marca el offset final del diccionario info
     std::stringbuf is;
     bool estado;
 public:

@@ -196,29 +196,29 @@ private:
 	bool activo;
 	UINT port; // puerto donde esta escuchando el Cliente.
 
-	ULINT uploaded;
-	ULINT uploadedAnt;
-	ULINT downloaded;
-	ULINT downAnterior;
+	ULINT uploaded;//cantidad de bytes actuales subidos a los peer.
+	ULINT uploadedAnt;//cantidad de bytes actuales subidos a los peer en un ciclo anterior.
+	ULINT downloaded;//cantidad de bytes actuales grabados en disco sin problemas
+	ULINT downAnterior;// cantidad de bytes grabados en un ciclo anterior
 
-	ULINT bytesRecived;
-	ULINT bytesRecivedPrev;
+	ULINT bytesRecived;// bytes descargados por la red. Cuenta todo lo que llega sin verificar que haya sido grabado
+	ULINT bytesRecivedPrev;// bytes descargados por la red, en un ciclo anterior al actual
 	Mutex llaveCambiosDownloaded;
 
 	float endGame; // porcentaje a partir del cual se vuelven a pedir todas las piezas restantes.
 
 	Controlador *controlador;
 
-	time_t horaInicial;
-	time_t horaAnterior;
-	time_t horaAnteriorSubida;
+	time_t horaInicial;//hora en que se realiza el refresh
+	time_t horaAnterior;//hora anterior para el calculo de la velocidad de bajada.
+	time_t horaAnteriorSubida;//hora anterior para el calculo de la velocidad de subida.
 
-	int velocidadAnt;
-	int velocidadAntUp;
-	time_t timeLastRefresh;
-	time_t timeLastDownload;
+	int velocidadAnt;//Velocidad de bajada
+	int velocidadAntUp;//Velocidad de subida
+	time_t timeLastRefresh;//Tiempo del ultimo Refresh que se realizo
+	time_t timeLastDownload;//Tiempo de la ultima vez q se descargo algun byte desde cualquier peer
 
-	UINT peersUnchoked;
+	UINT peersUnchoked;//cantidad de peers que se encuentran en unchoked
 
 
 };

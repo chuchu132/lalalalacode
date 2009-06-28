@@ -30,7 +30,7 @@ public:
 	 */
 	virtual void procesarKeepAlive();
 private:
-	int cantidadKeepAlive;
+	int cantidadKeepAlive;//lleva la cuenta de los keepalive que envia un peerdown sin recibir cambios del peer
 };
 
 #endif /* PEERDOWN_H_ */
