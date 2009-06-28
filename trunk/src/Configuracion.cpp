@@ -15,8 +15,12 @@
 Configuracion::Configuracion() {
 
 	cargarConfiguracionDefault();
+	char pathActual[BUFSIZE];
 
-	archivo.open(RUTA_CONFIGURACION,std::fstream::in);
+    rutaConfiguracion=getcwd(pathActual,BUFSIZE);
+    rutaConfiguracion.append("/FiTorrent.config");
+
+	archivo.open(rutaConfiguracion.c_str(),std::fstream::in);
 
 	if (archivo.is_open()) {
 		cargarConfiguracion();
@@ -35,7 +39,7 @@ void Configuracion::crearArchivo(){
 
 	archivo.clear();
 
-	archivo.open(RUTA_CONFIGURACION,std::ios_base::out | std::ios_base::trunc);
+	archivo.open(rutaConfiguracion.c_str(),std::ios_base::out | std::ios_base::trunc);
 }
 
 void Configuracion::cargarConfiguracionDefault() {

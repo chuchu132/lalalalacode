@@ -27,6 +27,7 @@ private:
 	std::list<std::string>  torrents; // lista con los torrents abiertos en la ultima ejecucion
 									 // y su estado
 	std::string estado;
+	std::string rutaConfiguracion;
 
 	void crearArchivo();
 
