@@ -47,8 +47,6 @@ public:
 
 	virtual std::string getRutaDescargas() = 0;
 
-	virtual void detener() = 0;
-
 	virtual bool huboError() = 0;
 };
 
