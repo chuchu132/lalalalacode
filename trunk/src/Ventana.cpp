@@ -9,6 +9,8 @@
 
 #define WINDOW_FILE "res/wind.glade"
 
+//nombres de los widgets en el archivo de la vista
+
 #define MAIN_WINDOW "main_wind"
 #define ABOUT_WINDOW "about_wind"
 #define SELECT_WINDOW "select_wind"
@@ -26,11 +28,13 @@
 #define ENTRY_PUERTO "entry1"
 #define PROGRESS_BAR "progressbar1"
 #define MENU_VBOX "vbox1"
-#define OPEN_HELP "firefox help/main.html"
-//xdg-open help/main.html
 
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
+
+#define OPEN_HELP "firefox help/main.html"
+//xdg-open help/main.html
+
 
 Ventana::Ventana():attr(new AttributesView()),torrents(new TorrentView()) {
 	error = false;
@@ -120,6 +124,7 @@ void Ventana::getViews() {
 }
 
 void Ventana::setMenu() {
+	//crea los menues
 	menu_archivo = Gtk::ActionGroup::create();
 	menu_editar = Gtk::ActionGroup::create();
 	menu_ayuda = Gtk::ActionGroup::create();
@@ -292,7 +297,7 @@ void Ventana::button_accept_clicked() {
 }
 
 void Ventana::actualizarEstado(Torrent* t) {
-	torrents->updateRow(t);//tal vez va el mutex aca tb
+	torrents->updateRow(t);//tal vez va el mutex aca tb todo sacar!
 	if (t == torrents->getSelectedTorrent())
 		attr->showInfo(t);
 }
@@ -340,56 +345,20 @@ int Ventana::correr() {
 }
 
 void* Ventana::run() {
-	activo = true;//ver si hay que usar un mutex para activo
+	activo = true;//ver si hay que usar un mutex para activo todo sacar
 	Torrent *t;
 	while (activo) {
 
 		if (procesar){
-			switch (procesar) {
-			case 1:{//borrar torrent
-				mutex_torrents.lock();
-				Torrent *t = torrents->getSelectedTorrent();
-				if (t != NULL) {//ver si este if no es redundante
-					torrents->eraseSelectedRow();
-					controlador->borrarTorrent(t);
-					attr->torrentDeleted(t);
-				}
-				mutex_torrents.unlock();
-			}
-				break;
-			case 2:{//detener torrent
-				Torrent *t = torrents->getSelectedTorrent();
-				if (t != NULL){
-					controlador->detenerTorrent(t);
-				}
-			}
-				break;
-			case 3: {//continuar torrent
-				Torrent *t = torrents->getSelectedTorrent();
-				if (t != NULL)
-					controlador->continuarTorrent(t);
-			}
-				break;
-			case 4:{//refrescar peers
-				Torrent *t = torrents->getSelectedTorrent();
-				if (t != NULL)
-					controlador->refrescarPeers(t);
-			}
-				break;
-			case 5: {//agregar torrent
-				Torrent *t = controlador->agregarTorrent(select_window->get_filename());
-				if (t != NULL) {
-					addTorrent(t);
-				}
-			}
-				break;
-			}
+			//verifica si hay que procesar alguna accion del usuario
+			procesarEvento();
 			id_activity.disconnect();
 			progress_window->hide();
 			procesar = 0; //ya proceso
 		}
 
 		if (controlador->hayCambios()) {
+			//actualiza cambios del modelo
 			t = controlador->getCambio();
 			actualizarEstado(t);
 			sleep(1);
@@ -399,6 +368,50 @@ void* Ventana::run() {
 	}
 	return NULL;
 }
+
+void Ventana::procesarEvento() {
+
+	switch (procesar) {
+	case 1:{//borrar torrent
+		mutex_torrents.lock();
+		Torrent *t = torrents->getSelectedTorrent();
+		if (t != NULL) {//ver si este if no es redundante
+			torrents->eraseSelectedRow();
+			controlador->borrarTorrent(t);
+			attr->torrentDeleted(t);
+		}
+		mutex_torrents.unlock();
+	}
+		break;
+	case 2:{//detener torrent
+		Torrent *t = torrents->getSelectedTorrent();
+		if (t != NULL){
+			controlador->detenerTorrent(t);
+		}
+	}
+		break;
+	case 3: {//continuar torrent
+		Torrent *t = torrents->getSelectedTorrent();
+		if (t != NULL)
+			controlador->continuarTorrent(t);
+	}
+		break;
+	case 4:{//refrescar peers
+		Torrent *t = torrents->getSelectedTorrent();
+		if (t != NULL)
+			controlador->refrescarPeers(t);
+	}
+		break;
+	case 5: {//agregar torrent
+		Torrent *t = controlador->agregarTorrent(select_window->get_filename());
+		if (t != NULL) {
+			addTorrent(t);
+		}
+	}
+		break;
+	}
+}
+
 
 void Ventana::detener() {
 	activo = false;
@@ -427,14 +440,14 @@ void Ventana::setControlador(Controlador *c){
 }
 
 bool Ventana::mover() {
-	progress_bar->pulse();
+	progress_bar->pulse(); //mueve la barra de progreso
 	return true;
 }
 
 void Ventana::showBar(Glib::ustring texto){
 	progress_bar->set_text(texto);
 	progress_window->show();
-	//actualiza la barra de progreso
+	//actualiza la barra de progreso cada un determinado tiempo
 	id_activity = Glib::signal_timeout().connect(sigc::mem_fun(*this,
 		        &Ventana::mover), 200 );
 }

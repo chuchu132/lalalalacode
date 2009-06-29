@@ -76,7 +76,7 @@ public:
 	/* toma lo que necesita del archivo de la vista */
 	void setAttributesView(Glib::RefPtr<Gtk::Builder>);
 
-	/* muestra informacion sobre el torrent */
+	/* muestra informacion sobre el torrent segun la pestaña seleccionada*/
 	void showInfo(Torrent *t);
 
 	/* agrega una notificacion en la vista */

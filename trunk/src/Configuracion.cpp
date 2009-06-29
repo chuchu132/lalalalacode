@@ -30,15 +30,12 @@ Configuracion::Configuracion() {
 }
 
 Configuracion::~Configuracion() {
-
 	guardarConfiguracion();
-
 }
 
 void Configuracion::crearArchivo(){
 
 	archivo.clear();
-
 	archivo.open(rutaConfiguracion.c_str(),std::ios_base::out | std::ios_base::trunc);
 }
 
@@ -101,22 +98,6 @@ void Configuracion::guardarConfiguracion() {
 	archivo.close();
 }
 
-void Configuracion::guardarPuerto(UINT puerto) {
-	this->puerto = puerto;
-}
-
-void Configuracion::guardarRutaDescargas(std::string ruta) {
-	rutaDescargas = ruta;
-}
-
-std::string Configuracion::getRutaDescargas() {
-	return rutaDescargas;
-}
-
-UINT Configuracion::getPuerto() {
-	return puerto;
-}
-
 std::string Configuracion::leerRuta() {
 	std::string ruta;
 	char aux;
@@ -161,3 +142,19 @@ std::string Configuracion::getEstadoTorrent() {
 	return estado;
 }
 
+
+void Configuracion::guardarPuerto(UINT puerto) {
+	this->puerto = puerto;
+}
+
+void Configuracion::guardarRutaDescargas(std::string ruta) {
+	rutaDescargas = ruta;
+}
+
+std::string Configuracion::getRutaDescargas() {
+	return rutaDescargas;
+}
+
+UINT Configuracion::getPuerto() {
+	return puerto;
+}
