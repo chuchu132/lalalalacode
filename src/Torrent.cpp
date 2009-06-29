@@ -30,7 +30,7 @@ Torrent::Torrent(ClienteTorrent* clienteTorrent, std::string path) :
 	bytesRecivedPrev = 0;
 	velocidadAnt = 0;
 	velocidadAntUp = 0;
-	peersUnchoked=0;
+	peersUnchoked = 0;
 	this->path = path;
 	estado = T_DETENIDO;
 	activo = false;
@@ -247,7 +247,7 @@ void Torrent::detener() {
 
 	if (activo) {
 		activo = false;
-		//enviarEventoEstado(EVENT_STOPPED, -1);
+		//enviarEventoEstado(EVENT_STOPPED, -1); todo
 		tracker->cerrarConexion();
 		tracker->join();
 		std::cout << "tracker detenido" << std::endl;
@@ -259,6 +259,43 @@ void Torrent::detener() {
 			controlador->actualizarEstado(this);
 	}
 }
+
+bool Torrent::reiniciarPedidos(Peer* peerQueQueda) {
+	ULINT total = fileManager.getTamanio();
+	float porcent = (downloaded / total);
+	if (porcent > endGame) {
+		fileManager.vaciarMapaPedidos();
+		removerPeersInactivos(peerQueQueda);
+		if (endGame == SEGUNDO_END_GAME) {
+			endGame = 1.0;
+		} else {
+			endGame = SEGUNDO_END_GAME;
+		}
+		return true;
+	}
+	return false;
+}
+
+void Torrent::descargaCompleta() {
+	activo = false;
+	downloaded = fileManager.getTamanio();
+	enviarEventoEstado(EVENT_COMPLETED, -1);
+	tracker->cerrarConexion(); //todo ver esto hace que no se puedan bajar de nosotros :S
+	tracker->join();
+	detenerPeers();
+	estado = T_COMPLETO;
+	fileManager.descargaAarchivos();
+	fileManager.guardarDatos();
+
+	if (controlador != NULL) {
+		std::string notif = "Se completo la descarga del Torrent ";
+		notif += getNombre();
+		controlador->notificarVista(notif);
+		controlador->actualizarEstado(this);
+	}
+}
+
+//Getters & Setters
 
 std::string Torrent::getNombre() {
 	return nombre;
@@ -337,10 +374,9 @@ int Torrent::getVelocidadBajada() {
 	return velocidadAnt;
 }
 
-Controlador* Torrent::getControlador(){
+Controlador* Torrent::getControlador() {
 	return controlador;
 }
-
 
 void Torrent::setControlador(Controlador* ctrl) {
 	this->controlador = ctrl;
@@ -460,7 +496,7 @@ time_t Torrent::getTimeLastDown() {
 	return timeLastDownload;
 }
 
-UINT Torrent::getPeersUnchoked (){
+UINT Torrent::getPeersUnchoked() {
 	return peersUnchoked;
 }
 
@@ -472,41 +508,6 @@ void Torrent::setTimeLastDown(time_t horaActual) {
 	timeLastDownload = horaActual;
 }
 
-void Torrent::setPeersUnchoked (UINT cantidad){
-	peersUnchoked=cantidad;
-}
-
-bool Torrent::reiniciarPedidos(Peer* peerQueQueda) {
-	ULINT total = fileManager.getTamanio();
-	float porcent = (downloaded / total);
-	if (porcent > endGame) {
-		fileManager.vaciarMapaPedidos();
-		removerPeersInactivos(peerQueQueda);
-		if (endGame == SEGUNDO_END_GAME) {
-			endGame = 1.0;
-		} else {
-			endGame = SEGUNDO_END_GAME;
-		}
-		return true;
-	}
-	return false;
-}
-
-void Torrent::descargaCompleta() {
-	activo = false;
-	downloaded = fileManager.getTamanio();
-	enviarEventoEstado(EVENT_COMPLETED, -1);
-	tracker->cerrarConexion(); //todo ver esto hace que no se puedan bajar de nosotros :S
-	tracker->join();
-	detenerPeers();
-	estado = T_COMPLETO;
-	fileManager.descargaAarchivos();
-	fileManager.guardarDatos();
-
-	if (controlador != NULL) {
-		std::string notif = "Se completo la descada del Torrent ";
-		notif += getNombre();
-		controlador->notificarVista(notif);
-		controlador->actualizarEstado(this);
-	}
+void Torrent::setPeersUnchoked(UINT cantidad) {
+	peersUnchoked = cantidad;
 }

@@ -162,7 +162,6 @@ void AttributesView::showInformation() {
 }
 
 void AttributesView::showFiles() {
-	//muestra los archivos del torrent
 	list_files->clear();
 
 	std::list<Archivo*>::iterator it =

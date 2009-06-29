@@ -26,6 +26,7 @@ ClienteTorrent::ClienteTorrent() {
 
 	std::string estado;
 	Torrent *t;
+	//agrega los torrents que estaban agregados en la ultima sesion
 	while (config.hayTorrents()) {
 		t = agregarTorrent(config.obtenerTorrent());
 		if (t != NULL) {
@@ -164,9 +165,6 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 
 	if (controlador != NULL){
 		controlador->notificarVista(notif);
-	}
-	else{
-		std::cout<<notif<<std::endl;
 	}
 	return t;
 }

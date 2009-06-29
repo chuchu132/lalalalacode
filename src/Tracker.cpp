@@ -22,7 +22,7 @@ Tracker::Tracker() {
 Tracker::~Tracker() {
 	refresh = false;
 	this->cerrarConexion();
-	//join?????????????
+	//join????????????? todo
 }
 
 void* Tracker::run() {
@@ -77,18 +77,6 @@ void* Tracker::run() {
 	return NULL;
 }
 
-void Tracker::setRefresh(bool refresh){
-	this->refresh = refresh;
-}
-
-std::string Tracker::getPath() {
-	return path;
-}
-
-std::string Tracker::getUrl() {
-	return url;
-}
-
 bool Tracker::connect() {
 
 	if (this->url.length() > 0) {
@@ -119,14 +107,6 @@ void Tracker::inicilizar(std::string url) {
 	} else {
 		this->url.assign(url, ini + 2, fin - (ini + 2));
 	}
-}
-
-UINT Tracker::getMinInterval() {
-	return minInterval;
-}
-
-void Tracker::setTorrent(Torrent* unTorrent) {
-	this->torrent = unTorrent;
 }
 
 bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoProcesado) {
@@ -212,7 +192,6 @@ int Tracker::obtenerLongitudBencode (std::string &buffer,UINT &marca){
 
 }
 
-
 void Tracker::decodificarPeers(char * cadena, UINT longitudCadena) {
 
 	int cantMax =  torrent->getCantidadMaximaPeers();
@@ -265,4 +244,22 @@ void Tracker::decodificarPeers(char * cadena, UINT longitudCadena) {
 	}while(!refresh && torrent->estaActivo());
 }
 
+std::string Tracker::getPath() {
+	return path;
+}
 
+std::string Tracker::getUrl() {
+	return url;
+}
+
+UINT Tracker::getMinInterval() {
+	return minInterval;
+}
+
+void Tracker::setTorrent(Torrent* unTorrent) {
+	this->torrent = unTorrent;
+}
+
+void Tracker::setRefresh(bool refresh){
+	this->refresh = refresh;
+}

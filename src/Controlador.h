@@ -21,12 +21,13 @@ class Torrent;
 class Configuracion;
 
 class Controlador {
+	/* El controlador establece el lazo entre la vista y el modelo */
 
 private:
 	Vista *vista;
 	ClienteTorrent &cliente;
 	Mutex mutex_lista;
-	std::list<Torrent*> actualizaciones;
+	std::list<Torrent*> actualizaciones; //lista de torrents a actualizar
 public:
 
 	Controlador(ClienteTorrent&);
@@ -44,7 +45,9 @@ public:
 	/* agrega un torrent al cliente */
 	Torrent* agregarTorrent(std::string ruta);
 
+	/* detiene el torrent */
 	void detenerTorrent(Torrent*);
+
 
 	void continuarTorrent(Torrent*);
 
@@ -63,12 +66,15 @@ public:
 	/* inicia la vista */
 	int correrVista();
 
+	/* guarda la configuracion establecida en la vista en el modelo */
 	void guardarConfiguracion();
 
 	void detenerVista();
 
+	/* indica si hay elementos en la lista de actualizaciones */
 	bool hayCambios();
 
+	/* obtiene el torrent a actualizar en la vista */
 	Torrent* getCambio();
 
 };

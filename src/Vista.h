@@ -35,6 +35,7 @@ public:
 	/* agrega el torrent a la vista */
 	virtual void addTorrent(Torrent*) = 0;
 
+	/* muestra una notificacion para el usuario */
 	virtual void mostrarNotificacion(std::string) = 0;
 
 	/* abre la ventana principal */

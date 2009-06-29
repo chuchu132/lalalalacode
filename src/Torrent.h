@@ -67,7 +67,7 @@ public:
 
 	/* Cuando el Tracker recibe una lista de peers desde el Tracker remoto
 	 * los agrega a la lista de peers del Torrent
-	 * Estos peers son Peers Donw.
+	 * Estos peers son Peers Down.
 	 */
 	void agregarPeer(std::string ip,UINT puerto);
 
@@ -99,8 +99,6 @@ public:
 
 	/* Devuelve el estado por ej: "detenido", "pausado", "conectando", "completo", etc */
 	std::string getEstado();
-
-	bool estaCompleto();
 
 	/* devuelve el tamaño del archivo en bytes */
 	ULINT getTamanio();
@@ -135,6 +133,14 @@ public:
 
 	UINT getPeersUnchoked ();
 
+	UINT getCantidadMaximaPeers();
+
+	std::string getTiempoRestante();
+
+	std::list<Peer*>::iterator getIterPeers();
+	std::list<Peer*>::iterator getEndIterPeers();
+
+
 	void setControlador(Controlador* ctrl);
 
 	void setDownloaded(ULINT bytes);
@@ -151,25 +157,25 @@ public:
 
 	void setPeersUnchoked (UINT cantidad);
 
+
+	bool estaCompleto();
+
 	bool estaActivo();
 
-	/* transforma bytes en un string */
+
+	/* transforma bytes en un string con formato */
 	std::string bytesToString(ULINT bytes);
-
-	std::list<Peer*>::iterator getIterPeers();
-	std::list<Peer*>::iterator getEndIterPeers();
-
-	UINT getCantidadMaximaPeers();
 
 	bool existePeerIP(std::string ip);
 
 	void removerPeersInactivos(Peer* peerQueQueda);
 
+	/* cierra las conexiones con todos los peers */
 	void detenerPeers();
 
-	std::string getTiempoRestante();
-
+	/* se ejecuta al completarse la descarga */
 	void descargaCompleta();
+
 	/*Vacia el mapa de pedidos, y borra los peers cuyas conexiones estan caidas*/
 	bool reiniciarPedidos(Peer* peerQueQueda);
 

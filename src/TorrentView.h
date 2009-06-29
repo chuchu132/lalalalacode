@@ -20,7 +20,7 @@ class Torrent;
 class AttributesView;
 
 class TorrentView {
-	/* Lista de Torrents perteneciente a la vista */
+	/* Maneja la parte superior de la ventana, donde se muestra la lista de torrents */
 
 private:
 
@@ -54,7 +54,6 @@ private:
 	Glib::RefPtr<Gtk::TreeSelection> selection_categories;
 
 	Controlador *controlador;
-
 	AttributesView *attr;//muestra los atributos del torrent
 
 	/* Signal handler para fila del categories view seleccionada */
@@ -84,6 +83,8 @@ public:
 	/* vista que muestra a los torrents segun su estado */
 	void setCategoriesView(Gtk::TreeView *view_categories);
 
+	/* setea la vista de atributos de los torrents */
+	/* es obligatorio llamar a esta funcion para inicializar el atributo */
 	void setAttributesView(AttributesView *attr);
 
 	/* agregar una fila para este torrent */

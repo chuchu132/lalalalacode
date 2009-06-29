@@ -16,41 +16,38 @@
 
 class Torrent;
 class Tracker: public Thread{
+
 public:
 	Tracker();
+
 	virtual ~Tracker();
 
-	/*En el run el tracker va a estar escuchando al tracker remoto*/
-	void* run();
-
-	/*
-	 * Cada vez que llega un mensaje desde el tracker remoto se lo
-	 * procesa y luego continua recibiendo
-	 */
-	void procesar(std::string mensajeRecibido);
-
-	/* Recibe una url por ejemplo: http://open.tracker.thepiratebay.org:80/announce
-	 * De la url extrae la direccion del host, el puerto (sino usa el default) y
-	 * el path.
-	 */
-	void inicilizar(std::string url);
-
-	/*se conecta a la url seteada con inicializar*/
+	/* se conecta a la url seteada con inicializar*/
 	bool connect();
 
 	bool send(const char* stream,UINT size);
 
 	void cerrarConexion();
 
+	/* En el run el tracker escucha al tracker remoto*/
+	void* run();
+
+	/* Cada vez que llega un mensaje desde el tracker remoto se lo
+	 * procesa y luego continua recibiendo */
+	void procesar(std::string mensajeRecibido);
+
+	/* Procesa la lista de peer que envia el tracker luego de un request
+	 * los decodifica y los agrega en la lista del torrent. */
+	bool procesarResponse(std::string &buffer,int &longitud,int& posUltimoProcesado);
+
+	/* Recibe una url por ejemplo: http://open.tracker.thepiratebay.org:80/announce
+	 * De la url extrae la direccion del host, el puerto (sino usa el default) y
+	 * el path. */
+	void inicilizar(std::string url);
+
 	std::string getPath();
 
 	std::string getUrl();
-
-	/*
-	 * Procesa la lista de peer que envia el tracker luego de un request
-	 * los decodifica y los agrega en la lista del torrent.
-	 */
-	bool procesarResponse(std::string &buffer,int &longitud,int& posUltimoProcesado);
 
 	UINT getMinInterval();
 
@@ -77,15 +74,11 @@ private:
 	 */
 	bool extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado);
 
-	/*
-	 * Retorna la longitud total del bencode dentro del "buffer"
-	 * Retorna en marca la posicion dentro del buffer del comienzo del bencode
-	 */
+	/*Retorna la longitud total del bencode dentro del "buffer"
+	 * Retorna en marca la posicion dentro del buffer del comienzo del bencode */
 	int obtenerLongitudBencode (std::string &buffer,UINT &marca);
 
-	/*
-	 * Realiza la decodificacion de la cadena binaria de peers y los agrega a los PeerDown
-	 */
+	/*Realiza la decodificacion de la cadena binaria de peers y los agrega a los PeerDown */
 	void decodificarPeers(char* cadena,UINT longitudCadena);
 };
 

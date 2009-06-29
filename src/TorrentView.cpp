@@ -165,7 +165,6 @@ void TorrentView::addRow(Torrent *t) {
 	row[col_name] = t->getNombre();
 	row[col_size] = t->bytesToString(t->getTamanio());
 	row[col_torrent] = t;
-	row[col_name] = t->getNombre();
 
 	updateRowValues(row, t);
 }
@@ -226,6 +225,7 @@ void TorrentView::empty() {
 void TorrentView::updateRow(Torrent *t) {
 	Gtk::TreeModel::Children::iterator iter = list_torrents->children().begin();
 	Gtk::TreeModel::Row row;
+	//busca la fila del torrent y actualiza sus valores
 	while (iter != list_torrents->children().end()) {
 		row = *iter;
 		if (row[col_torrent] == t) {

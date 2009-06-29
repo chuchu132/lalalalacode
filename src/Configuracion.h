@@ -17,7 +17,7 @@
 #include "Constantes.h"
 
 class Configuracion {
-	/* Guarda la configuracion del Cliente BitTorrent */
+	/* Guarda la configuracion del Cliente BitTorrent en un archivo */
 
 private:
 	std::fstream archivo; //archivo de configuracion
@@ -27,19 +27,18 @@ private:
 	std::list<std::string>  torrents; // lista con los torrents abiertos en la ultima ejecucion
 									 // y su estado
 	std::string estado;
-	std::string rutaConfiguracion;
+	std::string rutaConfiguracion;//ruta en la que se encuentra el arch de config
 
 	void crearArchivo();
 
 	/* guarda la configuracion actual en el archivo */
 	void guardarConfiguracion();
 
+	/* lee una ruta entre <> desde archivo */
 	std::string leerRuta();
 
 	/* carga la configuracion desde el archivo */
 	void cargarConfiguracion();
-
-
 
 public:
 
@@ -58,12 +57,16 @@ public:
 	/* devuelve la ruta en la que se deben guardar los archivos descargados */
 	std::string getRutaDescargas();
 
+	/* devuelve el puerto en el que se deben escuchar las conexiones de peers entrantes */
 	UINT getPuerto();
 
+	/* obtiene la ruta de un torrent abierto en la sesion anterior */
 	std::string obtenerTorrent();
 
+	/* devuelve el estado del torrent abierto en la sesion anterior */
 	std::string getEstadoTorrent();
 
+	/* indica si todavia quedan torrents por agregar al cliente */
 	bool hayTorrents();
 
 	/* carga la configuracion por default */

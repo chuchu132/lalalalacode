@@ -62,15 +62,15 @@ private:
 	Gtk::ProgressBar *progress_bar;
 	sigc::connection id_activity;
 
-	/* clases para mostrar la lista de torrents */
+	/* clases de las distintas partes de la ventana */
 	AttributesView *attr;
 	TorrentView *torrents;
 
 
-	bool error; //indica si hubo un error
-	bool activo;
-	int procesar;
-	Mutex mutex_torrents;
+	bool error; //indica si hubo un error al cargar la vista
+	bool activo; //indica si esta activo el loop de actualizaciones de la vista
+	int procesar; //cada accion a procesar tiene un num de identificacion
+	Mutex mutex_torrents;//mutex de la lista de torrents
 
 	//Signal handlers:
 	void on_button_add_clicked();
@@ -106,9 +106,13 @@ private:
 
 	void* run();
 
+	/* mueve la barra de progreso de la ventana de procesamiento */
 	bool mover();
-
+	/* muestra la ventana de procesamiento con el texto especificado */
 	void showBar(Glib::ustring texto);
+
+	/* realiza la accion correspondiente al campo procesar */
+	void procesarEvento();
 
 public:
 
