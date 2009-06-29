@@ -26,7 +26,6 @@ void TestVista::run(){
 	controlador.setVentana(ventana);
 	//cliente.execute();
 	controlador.correrVista();
-	controlador.detenerVista();
 	//	char opcion = ' ';
 	//		if (ventana->huboError()) {
 	//			do {
