@@ -180,8 +180,10 @@ void Consola::mostrarDatosTorrent(int numTorrent){
 		break;
 		}
 	}
-	if(borrar)
+	if(borrar){
 		controlador->borrarTorrent((*it));
+		torrents.remove(*it);
+	}
 }
 
 void Consola::pantallaConfiguracion(){
