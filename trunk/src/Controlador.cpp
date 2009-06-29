@@ -68,9 +68,6 @@ int Controlador::correrVista() {
 	return vista->correr();
 }
 
-void Controlador::detenerVista() {
-	vista->detener();
-}
 
 void Controlador::guardarConfiguracion() {
 	Configuracion *config = cliente.getConfiguracion();
