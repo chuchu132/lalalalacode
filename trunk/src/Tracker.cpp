@@ -80,7 +80,7 @@ void* Tracker::run() {
 bool Tracker::connect() {
 
 	if (this->url.length() > 0) {
-		return (trackerRemoto.connect(this->url, puerto) == OK);
+		return (trackerRemoto.connectWithTimeout(this->url, puerto,5*TIME_OUT_CONNECT) == OK);
 	} else {
 		return false;
 	}
