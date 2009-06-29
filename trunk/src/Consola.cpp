@@ -44,7 +44,6 @@ std::string Consola::getRutaDescargas(){
 	return RUTA_DESCARGAS;
 }
 
-void Consola::detener(){}
 
 bool Consola::huboError(){
 	return false;

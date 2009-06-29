@@ -37,8 +37,6 @@ public:
 
 	std::string getRutaDescargas();
 
-	void detener();
-
 	bool huboError();
 
 private:

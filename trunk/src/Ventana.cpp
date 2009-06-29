@@ -339,6 +339,7 @@ int Ventana::correr() {
 		Gtk::Main* kit = Gtk::Main::instance();
 		this->execute();
 		kit->run(*main_window);
+		detener();
 		return 0;
 	}
 	return 1;
