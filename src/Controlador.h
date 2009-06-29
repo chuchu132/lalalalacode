@@ -69,8 +69,6 @@ public:
 	/* guarda la configuracion establecida en la vista en el modelo */
 	void guardarConfiguracion();
 
-	void detenerVista();
-
 	/* indica si hay elementos en la lista de actualizaciones */
 	bool hayCambios();
 
