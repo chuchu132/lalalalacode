@@ -80,7 +80,7 @@ bool Peer::procesar(char* buffer, int length) {
 		procesarBitfield(bitfield, longitud);
 	}
 		break;
-	case ID_MSJ_REQUEST: {
+	case ID_MSJ_REQUEST: { std::cout<< " request "<<std::endl;
 		UINT index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);
@@ -266,6 +266,7 @@ void Peer::procesarRequest(int index, int begin, int length) {
 	if (am_choking) {
 		sendMsg(ID_MSJ_CHOKE);
 	} else {
+		std::cout<< " uploaded "<< length <<std::endl;
 		sendPiece(index, begin, length);
 		torrent->setUploaded(length);
 	}
@@ -396,6 +397,10 @@ bool Peer::getPeer_interested() {
 
 void Peer::setPeer_interested(bool estado) {
 	peer_interested = estado;
+}
+
+void Peer::setAm_choking (bool estado){
+	am_choking=estado;
 }
 
 char Peer::getTipo() {

@@ -29,7 +29,7 @@ private:
 
 	bool error; // Atributo para verificar si hubo un error en el mensaje
 
-	unsigned char bloquesMensaje[64]; // bloques de mensaje de 512 bits 512-bit
+	unsigned char bloquesMensaje[64]; // bloques de mensaje de 512 bits
 	int IndiceArrayBloques; // Indice para el array de bloques del mensaje
 
 	//Metodos de la clase Sha1

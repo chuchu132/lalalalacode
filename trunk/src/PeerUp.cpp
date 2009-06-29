@@ -33,7 +33,8 @@ void* PeerUp::run(){
 			if (getPeer_interested() && getAm_choking()){
 				if (cantUnchoked<3){
 					sendMsg(ID_MSJ_UNCHOKE);
-					this->getTorrent()->setPeersUnchoked(cantUnchoked+1);
+					setAm_choking(false);
+					getTorrent()->setPeersUnchoked(cantUnchoked+1);
 					unchoked=true;
 				}
 				else
