@@ -436,7 +436,7 @@ bool FileManager::getPiezaAdescargar(UINT &index,
 	if (resto != 0) {
 		char* bitmapAux = noPidioNadie->getBitmap();
 		UINT tam = noPidioNadie->getTamanioEnBytes();
-		bitmapAux[tam] = (bitmapAux[tam] & (0xFF << (8 - resto)));
+		bitmapAux[tam-1] = (bitmapAux[tam-1] & (0xFF << (8 - resto)));
 	}
 	if ((retorno = noPidioNadie->getPrimeroLibre(index))) {
 		mapaPedidos.marcarBit(index);
