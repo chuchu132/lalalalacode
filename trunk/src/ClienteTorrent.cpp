@@ -200,8 +200,8 @@ Configuracion* ClienteTorrent::getConfiguracion() {
 }
 
 void ClienteTorrent::inicializarDirectorios(){
-	mkdir(config.getRutaDescargas().c_str(),0755);
-	mkdir(URL_CARPETA_TEMP,0755);
+	mkdir(config.getRutaDescargas().c_str(),PERMISOS);
+	mkdir(URL_CARPETA_TEMP,PERMISOS);
 	return;
 }
 
