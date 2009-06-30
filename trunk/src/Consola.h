@@ -44,6 +44,8 @@ private:
 	int wherex;
 	int wherey;
 	int cantidadLineas;
+	std::string rutaDescargas;
+	UINT puerto;
 	std::list<Torrent*> torrents;
 	int clrscr();
 	void pantAgrTorrent();
