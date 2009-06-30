@@ -27,6 +27,7 @@ FileManager::FileManager(ClienteTorrent* cliente, Torrent* torrent) {
 }
 
 FileManager::~FileManager() {
+	descarga.close();
 	if (hashPiezas != NULL) {
 		delete[] hashPiezas;
 	}
