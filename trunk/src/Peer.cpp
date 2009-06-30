@@ -35,12 +35,10 @@ bool Peer::procesar(char* buffer, int length) {
 	huboCambios = true;
 	switch (id) {
 	case ID_MSJ_CHOKE: {
-		std::cout << getIp() << " mando Choke" << std::endl;
 		peer_choking = true;
 	}
 		break;
 	case ID_MSJ_UNCHOKE: {
-		std::cout << getIp() << " mando UnChoke" << std::endl;
 		peer_choking = false;
 		if (am_interested && !tienePiezaPendiente()) {
 			UINT index;
@@ -60,10 +58,14 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_INTERESTED: {
+		std::cout << getIp() << " mando Interested" << std::endl;
+		this->sendMsg(ID_MSJ_UNCHOKE);
+		this->setAm_choking(false);
 		peer_interested = true;
 	}
 		break;
 	case ID_MSJ_NOT_INTERESTED: {
+		std::cout << getIp() << " mando UnInterested" << std::endl;
 		peer_interested = false;
 	}
 		break;
@@ -80,7 +82,8 @@ bool Peer::procesar(char* buffer, int length) {
 		procesarBitfield(bitfield, longitud);
 	}
 		break;
-	case ID_MSJ_REQUEST: { std::cout<< " request "<<std::endl;
+	case ID_MSJ_REQUEST: {
+		std::cout<< " request "<<std::endl;
 		UINT index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);
@@ -263,13 +266,13 @@ void Peer::procesarBitfield(const char* bitfield, int length) {
 }
 
 void Peer::procesarRequest(int index, int begin, int length) {
-	if (am_choking) {
+	/*if (am_choking) {
 		sendMsg(ID_MSJ_CHOKE);
-	} else {
+	} else {*/
 		std::cout<< " uploaded "<< length <<std::endl;
 		sendPiece(index, begin, length);
 		torrent->setUploaded(length);
-	}
+	//}
 }
 
 void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
