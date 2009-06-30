@@ -45,8 +45,6 @@ public:
 
 private:
 
-	int wherex;
-	int wherey;
 	int cantidadLineas;
 	std::string rutaDescargas;
 	UINT puerto;
