@@ -100,6 +100,7 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 		if ((*it)->getHashString().compare(hashTorrent) == 0) {
 			return (*it);
 		}
+		it++;
 	}
 	return NULL;
 }
