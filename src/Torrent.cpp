@@ -88,6 +88,7 @@ void Torrent::run() {
 	horaAnterior = time(NULL);
 	horaAnteriorSubida = time(NULL);
 	downAnterior = downloaded;
+	uploadedAnt= uploaded;
 	if (controlador != NULL) {
 		std::string notif = "Conectando con ";
 		notif += tracker->getUrl();
