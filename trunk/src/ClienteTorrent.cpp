@@ -17,8 +17,8 @@
 #define CANT_CLIENTES 5
 
 ClienteTorrent::ClienteTorrent() {
-	std::string temp = "-FITORRENT-FIUBA-";
-	temp += (rand()%1000);
+	std::string temp = "-FITORRENT-FIUBA----";
+	temp += (rand()%10);
 	memcpy(peer_id,temp.c_str(),LEN_SHA1);
 	inicializarDirectorios();
 	controlador = NULL;
