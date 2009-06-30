@@ -8,14 +8,13 @@
 #include "Controlador.h"
 
 Controlador::Controlador(ClienteTorrent& c) :
-	cliente(c) {
-}
+	cliente(c) {}
 
-Controlador::~Controlador() {
-}
+Controlador::~Controlador() {}
 
 void Controlador::setVentana(Vista *ventana) {
 	this->vista = ventana;
+	guardarConfigEnVista();
 }
 
 Torrent* Controlador::agregarTorrent(std::string ruta) {
@@ -63,6 +62,11 @@ void Controlador::notificarVista(std::string notificacion) {
 	vista->mostrarNotificacion(notificacion);
 }
 
+void Controlador::guardarConfigEnVista() {
+	vista->setRutaDescargas(cliente.getConfiguracion()->getRutaDescargas());
+	vista->setPuerto(cliente.getPuerto());
+}
+
 int Controlador::correrVista() {
 	agregarTorrentsEnVista();
 	return vista->correr();
@@ -72,9 +76,10 @@ int Controlador::correrVista() {
 void Controlador::guardarConfiguracion() {
 	Configuracion *config = cliente.getConfiguracion();
 	UINT puerto = vista->getPuerto();
-	if (puerto != 0)
-		config->guardarPuerto(vista->getPuerto());
+	if ((puerto > 1025) && (puerto < 65535))
+		config->guardarPuerto(puerto);
 	config->guardarRutaDescargas(vista->getRutaDescargas());
+	std::cout<<"Puerto: "<<puerto<<" Carpeta:"<<vista->getRutaDescargas()<<std::endl; //todo sacar!!!
 }
 
 bool Controlador::hayCambios() {

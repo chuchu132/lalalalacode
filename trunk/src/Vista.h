@@ -47,6 +47,10 @@ public:
 
 	virtual std::string getRutaDescargas() = 0;
 
+	virtual void setPuerto(UINT puerto) = 0;
+
+	virtual void setRutaDescargas(std::string ruta) = 0;
+
 	virtual bool huboError() = 0;
 };
 

@@ -119,11 +119,10 @@ void AttributesView::showPeers() {
 	list_peers->clear();
 	std::list<Peer*>::iterator it = torrent->getIterPeers();
 	std::list<Peer*>::iterator end = torrent->getEndIterPeers();
-	Gtk::TreeModel::Row row;
 
 	while (it != end) {
-		Gtk::TreeModel::Row row = (*list_peers->append());
-		row[col_name_peers] = (*it)->getIp(); //no muestra nada :S
+		Gtk::TreeModel::Row	row = (*list_peers->append());
+		row[col_name_peers] = (*it)->getIp();
 		row[col_port_peers] = (*it)->getPuerto();
 		switch ((*it)->getTipo()) {
 		case 'P':
@@ -138,7 +137,6 @@ void AttributesView::showPeers() {
 		}
 		it++;
 	}
-
 }
 
 void AttributesView::showInformation() {
@@ -197,8 +195,8 @@ void AttributesView::clearNotifications() {
 void AttributesView::torrentDeleted(Torrent *t) {
 	if (torrent == t) {
 		torrent = NULL;
-		list_files->clear();
 		list_peers->clear();
+		list_files->clear();
 		lparts->set_text(" ");
 		lfiles->set_text(" ");
 		lpeers->set_text(" ");
