@@ -52,7 +52,7 @@ const int  LEN_MSJ_NOT_INTERESTED = LEN_MSJ_COMMON;
 const int  LEN_MSJ_HAVE = 5;
 const int  LEN_BASE_MSJ_BITFIELD = 1;
 const int  LEN_MSJ_REQUEST = 13;
-const int  LEN_BASE_MSJ_PIECE = 13;//9;
+const int  LEN_BASE_MSJ_PIECE = 9;//13;
 const int  LEN_MSJ_CANCEL = 13;
 
 /*Longitudes de los mensajes constantes*/
@@ -104,7 +104,6 @@ const int TAM_BLOQUES = 16384; //ver http://wiki.theory.org/BitTorrentSpecificat
 
 /* Configuracion Default */
 #define URL_CARPETA_TEMP "./incompletos/"
-//#define RUTA_CONFIGURACION "./FiTorrent.config"
 #define RUTA_DESCARGAS "./Descargas/"
 const unsigned int PUERTO_DEFAULT = 36277;
 const int PUERTO_DEFAULT_TRACKER = 80;
