@@ -101,6 +101,7 @@ void AttributesView::setNotificationsView() {
 }
 
 void AttributesView::showInfo(Torrent *t) {
+	mutex_info.lock();
 	torrent = t;
 	switch (page_selected) {
 	case 1:
@@ -113,6 +114,7 @@ void AttributesView::showInfo(Torrent *t) {
 		showFiles();
 		break;
 	}
+	mutex_info.unlock();
 }
 
 void AttributesView::showPeers() {
@@ -178,7 +180,7 @@ void AttributesView::showFiles() {
 void AttributesView::on_page_selected(GtkNotebookPage* page, guint page_num) {
 	page_selected = page_num;
 	if (this->torrent != NULL)
-		this->showInfo(this->torrent);
+		showInfo(this->torrent);
 }
 
 void AttributesView::addNotification(std::string notif) {
@@ -193,6 +195,7 @@ void AttributesView::clearNotifications() {
 }
 
 void AttributesView::torrentDeleted(Torrent *t) {
+	mutex_info.lock();
 	if (torrent == t) {
 		torrent = NULL;
 		list_peers->clear();
@@ -205,4 +208,5 @@ void AttributesView::torrentDeleted(Torrent *t) {
 		lurl->set_text(" ");
 		lhash->set_text(" ");
 	}
+	mutex_info.unlock();
 }

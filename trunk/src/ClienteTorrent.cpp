@@ -17,35 +17,38 @@
 #define CANT_CLIENTES 5
 
 ClienteTorrent::ClienteTorrent() {
+	std::cout << "*** Iniciando FiTorrent ***" << std::endl;
 	std::string temp = "-FITORRENT-FIUBA----";
-	temp += (rand()%10);
-	memcpy(peer_id,temp.c_str(),LEN_SHA1);
+	temp += (rand() % 10);
+	memcpy(peer_id, temp.c_str(), LEN_SHA1);
 	inicializarDirectorios();
 	controlador = NULL;
 	activo = false;
 
+	//agrega los torrents que estaban agregados en la ultima sesion
 	std::string estado;
 	Torrent *t;
-	//agrega los torrents que estaban agregados en la ultima sesion
 	while (config.hayTorrents()) {
 		t = agregarTorrent(config.obtenerTorrent());
 		if (t != NULL) {
 			estado = config.getEstadoTorrent();
 			t->setEstado(estado);
-			if ( estado != T_DETENIDO)
+			if (estado != T_DETENIDO)
 				t->continuar();
 		}
 	}
+	std::cout << "*** FiTorrent ha iniciado correctamente ***" << std::endl;
 }
 
 ClienteTorrent::~ClienteTorrent() {
 	if (activo)
 		finalizar();
+	std::cout << "*** FiTorrent se ha cerrado correctamente ***" << std::endl;
 }
 
 void* ClienteTorrent::run() {
 
-	if(peerListener.listen(config.getPuerto(),CANT_CLIENTES )==ERROR){
+	if (peerListener.listen(config.getPuerto(), CANT_CLIENTES) == ERROR) {
 		peerListener.close();
 	}
 	Socket* conexionPeerNuevo;
@@ -55,11 +58,9 @@ void* ClienteTorrent::run() {
 
 	while (activo && peerListener.is_valid()) {
 		conexionPeerNuevo = peerListener.accept();
-		std::cout<<"conexion entrante en  "<<conexionPeerNuevo->getPuerto()<<std::endl;
 		if (conexionPeerNuevo != NULL) {
 
 			char longProto;
-
 			cantidad = conexionPeerNuevo->receiveExact(&longProto, 1);
 
 			if (cantidad > 0) {
@@ -67,8 +68,7 @@ void* ClienteTorrent::run() {
 				char* handshake = new char[tamHsk];
 				if (conexionPeerNuevo->receiveExact(handshake, tamHsk) != ERROR) {
 					ParserMensaje parser;
-					std::string hash = parser.getHash(handshake,longProto);
-					std::cout<<hash<<std::endl;//TODO sacaaar!!
+					std::string hash = parser.getHash(handshake, longProto);
 					sleep(5);
 					Torrent* torrent = buscarTorrent(hash);
 					if (torrent != NULL) {
@@ -82,8 +82,7 @@ void* ClienteTorrent::run() {
 					}
 				}
 				delete[] handshake;
-			}
-			else{ //Si no envia el handshake luego de conectarse se cierra la coneccion con ese peer
+			} else { //Si no envia el handshake luego de conectarse se cierra la coneccion con ese peer
 				conexionPeerNuevo->close();
 			}
 		}
@@ -97,9 +96,8 @@ void* ClienteTorrent::run() {
 
 Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 	std::list<Torrent*>::iterator it = torrents.begin();
-	Sha1 sha;
 	while (it != torrents.end()) {
-		if (sha.salidaAstring((*it)->getInfoHash()).compare(hashTorrent) == 0) {
+		if ((*it)->getHashString().compare(hashTorrent) == 0) {
 			return (*it);
 		}
 	}
@@ -107,9 +105,9 @@ Torrent* ClienteTorrent::buscarTorrent(std::string hashTorrent) {
 }
 
 void ClienteTorrent::finalizar() {
-	if (activo)
-	{
-		std::cout<<"Finalizando clienteTorrent"<<std::endl;
+	if (activo) {
+		std::cout << "Cerrando FiTorrent" << std::endl;
+		std::cout.flush();
 		activo = false;
 		peerListener.close();
 		this->join();
@@ -133,7 +131,7 @@ std::string ClienteTorrent::getPeerId() {
 	return temp;
 }
 
-UINT ClienteTorrent::getPuerto(){
+UINT ClienteTorrent::getPuerto() {
 	return config.getPuerto();
 }
 
@@ -146,16 +144,22 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		notif = "Error al examinar el archivo ";
 		notif += ruta;
 		t = NULL;
-	}
-	else {
+	} else {
 		t = new Torrent(this, ruta);
 		t->setControlador(controlador);
-		if ( t->inicializarTorrent(&parserTorrent)){
-			torrents.push_back(t); //agrego el torrent a la lista de torrents
-			notif = "Se ha agregado el Torrent ";
-			notif += t->getNombre();
-		}
-		else {
+		if (t->inicializarTorrent(&parserTorrent)) {
+			//busca si el torrent no fue agregado anteriormente
+			if (this->buscarTorrent(t->getHashString()) == NULL) {
+				torrents.push_back(t); //agrego el torrent a la lista de torrents
+				notif = "Se ha agregado el Torrent ";
+				notif += t->getNombre();
+			} else {
+				notif = "Ya existe el Torrent ";
+				notif += t->getNombre();
+				delete t;
+				t = NULL;
+			}
+		} else {
 			delete t;
 			t = NULL;
 			notif = "Error al decodificar el archivo ";
@@ -163,14 +167,14 @@ Torrent* ClienteTorrent::agregarTorrent(std::string ruta) {
 		}
 	}
 
-	if (controlador != NULL){
+	if (controlador != NULL) {
 		controlador->notificarVista(notif);
 	}
 	return t;
 }
 
 void ClienteTorrent::borrarTorrent(Torrent *t) {
-	std::list<Torrent*>::iterator  it = torrents.begin();
+	std::list<Torrent*>::iterator it = torrents.begin();
 	std::string notif = "Se ha borrado el Torrent ";
 	while (it != torrents.end()) {
 		if ((*it) == t) {
@@ -188,7 +192,7 @@ void ClienteTorrent::borrarTorrent(Torrent *t) {
 void ClienteTorrent::setControlador(Controlador *ctrl) {
 	this->controlador = ctrl;
 	//seteo el controlador a todos los torrents existentes
-	std::list<Torrent*>::iterator  it = torrents.begin();
+	std::list<Torrent*>::iterator it = torrents.begin();
 	while (it != torrents.end()) {
 		(*it)->setControlador(ctrl);
 		it++;
@@ -199,9 +203,9 @@ Configuracion* ClienteTorrent::getConfiguracion() {
 	return &config;
 }
 
-void ClienteTorrent::inicializarDirectorios(){
-	mkdir(config.getRutaDescargas().c_str(),PERMISOS);
-	mkdir(URL_CARPETA_TEMP,PERMISOS);
+void ClienteTorrent::inicializarDirectorios() {
+	mkdir(config.getRutaDescargas().c_str(), PERMISOS);
+	mkdir(URL_CARPETA_TEMP, PERMISOS);
 	return;
 }
 
