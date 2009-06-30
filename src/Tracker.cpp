@@ -22,7 +22,6 @@ Tracker::Tracker() {
 Tracker::~Tracker() {
 	refresh = false;
 	this->cerrarConexion();
-	this->join();
 }
 
 void* Tracker::run() {
