@@ -250,11 +250,9 @@ void Torrent::detener() {
 		activo = false;
 		tracker->cerrarConexion();
 		tracker->join();
-		std::cout << "tracker detenido" << std::endl;
 		detenerPeers();
 		removerPeersInactivos(NULL);
 		estado = T_DETENIDO;
-		std::cout << "torrent detenido" << std::endl;
 		if (controlador != NULL)
 			controlador->actualizarEstado(this);
 	}
