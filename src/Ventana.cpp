@@ -356,7 +356,7 @@ int Ventana::correr() {
 }
 
 void* Ventana::run() {
-	activo = true;//ver si hay que usar un mutex para activo todo sacar
+	activo = true;
 	Torrent *t;
 	while (activo) {
 

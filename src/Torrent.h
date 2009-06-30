@@ -82,7 +82,7 @@ public:
 
 	/* reanuda el trafico del torrent */
 	/* debe llamarse para activar al torrent */
-	void continuar(); //todo cambiar nombre.. no se entiende lo que hace sino XD
+	void continuar();
 
 	/* refresca la lista de peers del torrent. Pide peers al Tracker */
 	void refrescarPeers();

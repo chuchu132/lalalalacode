@@ -267,13 +267,8 @@ void Peer::procesarBitfield(const char* bitfield, int length) {
 }
 
 void Peer::procesarRequest(int index, int begin, int length) {
-	/*if (am_choking) { //TODO sacar
-		sendMsg(ID_MSJ_CHOKE);
-	} else {*/
-		std::cout<< " uploaded "<< length <<std::endl;
 		sendPiece(index, begin, length);
 		torrent->setUploaded(length);
-	//}
 }
 
 void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
@@ -300,7 +295,7 @@ void Peer::procesarPiece(int index, int begin, int longitud, char* data) {
 }
 
 void Peer::procesarCancel(int index, int begin, int length) {
-	//TODO de momento se ignora.
+	//se ignora este mensaje.
 }
 
 void Peer::repartirHave(int index) {

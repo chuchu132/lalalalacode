@@ -79,7 +79,6 @@ void Controlador::guardarConfiguracion() {
 	if ((puerto > 1025) && (puerto < 65535))
 		config->guardarPuerto(puerto);
 	config->guardarRutaDescargas(vista->getRutaDescargas());
-	std::cout<<"Puerto: "<<puerto<<" Carpeta:"<<vista->getRutaDescargas()<<std::endl; //todo sacar!!!
 }
 
 bool Controlador::hayCambios() {
