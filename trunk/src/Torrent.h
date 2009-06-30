@@ -207,8 +207,8 @@ private:
 	ULINT downloaded;//cantidad de bytes actuales grabados en disco sin problemas
 	ULINT downAnterior;// cantidad de bytes grabados en un ciclo anterior
 
-	ULINT bytesRecived;// bytes descargados por la red. Cuenta todo lo que llega sin verificar que haya sido grabado
-	ULINT bytesRecivedPrev;// bytes descargados por la red, en un ciclo anterior al actual
+	ULINT bytesReceived;// bytes descargados por la red. Cuenta todo lo que llega sin verificar que haya sido grabado
+	ULINT bytesReceivedPrev;// bytes descargados por la red, en un ciclo anterior al actual
 	Mutex llaveCambiosDownloaded;
 
 	float endGame; // porcentaje a partir del cual se vuelven a pedir todas las piezas restantes.

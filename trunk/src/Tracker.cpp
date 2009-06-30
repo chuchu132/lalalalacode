@@ -239,7 +239,7 @@ void Tracker::decodificarPeers(char * cadena, UINT longitudCadena) {
 			}
 
 		}
-		rondas ++;
+		rondas ++; //TODO.. es necesaria esta variable? :S
 		i = 0;
 	}while(!refresh && torrent->estaActivo());
 }
