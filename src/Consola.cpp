@@ -11,7 +11,10 @@
 #include <cstdlib>
 #include <iostream>
 
-Consola::Consola() {}
+Consola::Consola() {
+	puerto = PUERTO_DEFAULT;
+	rutaDescargas = RUTA_DESCARGAS;
+}
 
 Consola::~Consola() {
 	if (controlador != NULL)
@@ -35,13 +38,13 @@ int Consola::correr(){
 	return OK;
 }
 
-//TODO ver quien tiene este puerto
+
 UINT Consola::getPuerto(){
-	return PUERTO_DEFAULT;
+	return puerto;
 }
 
 std::string Consola::getRutaDescargas(){
-	return RUTA_DESCARGAS;
+	return rutaDescargas;
 }
 
 
@@ -208,6 +211,7 @@ void Consola::pantallaConfiguracion(){
 			std::string url;
 			std::cout<<"\n  Nueva URL: ";
 			std::cin>>url;
+			rutaDescargas = url;
 		}
 		break;
 		case 3:{
@@ -215,6 +219,7 @@ void Consola::pantallaConfiguracion(){
 			UINT puerto;
 			std::cout<<"\n  Nuevo Puerto: ";
 			std::cin>>puerto;
+			this->puerto = puerto;
 		}
 		break;
 		}
