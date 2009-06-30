@@ -36,7 +36,6 @@ bool Peer::procesar(char* buffer, int length) {
 	switch (id) {
 	case ID_MSJ_CHOKE: {
 		peer_choking = true;
-		std::cout<<"nos mando choke"<<std::endl;
 	}
 		break;
 	case ID_MSJ_UNCHOKE: {
@@ -59,14 +58,12 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_INTERESTED: {
-		std::cout << getIp() << " mando Interested" << std::endl;
 		this->sendMsg(ID_MSJ_UNCHOKE);
 		this->setAm_choking(false);
 		peer_interested = true;
 	}
 		break;
 	case ID_MSJ_NOT_INTERESTED: {
-		std::cout << getIp() << " mando UnInterested" << std::endl;
 		peer_interested = false;
 	}
 		break;
@@ -84,7 +81,6 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_REQUEST: {
-		std::cout<< " request "<<std::endl;
 		UINT index, begin, length2;
 		parser.decodificarRequest(buffer, index, begin, length2);
 		procesarRequest(index, begin, length2);

@@ -457,8 +457,7 @@ void Ventana::setPuerto(UINT puerto) {
 }
 
 void Ventana::setRutaDescargas(std::string ruta) {
-	if (! folder_button->set_filename(ruta))
-		std::cout<<"error al setear el filename en el boton"<<std::endl;
+	folder_button->set_filename(ruta);
 }
 
 void Ventana::setControlador(Controlador *c){
