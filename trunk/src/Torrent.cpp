@@ -248,7 +248,6 @@ void Torrent::detener() {
 
 	if (activo) {
 		activo = false;
-		//enviarEventoEstado(EVENT_STOPPED, -1); TODO!
 		tracker->cerrarConexion();
 		tracker->join();
 		std::cout << "tracker detenido" << std::endl;
@@ -281,7 +280,7 @@ void Torrent::descargaCompleta() {
 	activo = false;
 	downloaded = fileManager.getTamanio();
 	enviarEventoEstado(EVENT_COMPLETED, -1);
-	tracker->cerrarConexion(); //todo ver esto hace que no se puedan bajar de nosotros :S
+	tracker->cerrarConexion();
 	tracker->join();
 	detenerPeers();
 	estado = T_COMPLETO;

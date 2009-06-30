@@ -22,65 +22,62 @@ Tracker::Tracker() {
 Tracker::~Tracker() {
 	refresh = false;
 	this->cerrarConexion();
-	//join????????????? todo
+	this->join();
 }
 
 void* Tracker::run() {
 	int cantidad;
-	int caracteresProcesados=0;
-	int longitud,posUltimoProcesado;
+	int caracteresProcesados = 0;
+	int longitud, posUltimoProcesado;
 	bool seCerro = false;
 	std::string buffer;
 	char bufferTemp[BUFSIZE];
 	memset(bufferTemp, 0, BUFSIZE);
-	refresh=false;
+	refresh = false;
 
-	do{
+	do {
 		while (trackerRemoto.is_valid() && !seCerro && !refresh) {
-			if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE-1)) > 0) {
+			if ((cantidad = this->trackerRemoto.receive(bufferTemp, BUFSIZE - 1)) > 0) {
 				bufferTemp[cantidad] = '\0';
-				std::cout<< bufferTemp <<std::endl;
-				buffer.insert(caracteresProcesados,bufferTemp,cantidad);
-				longitud=caracteresProcesados+cantidad;
-				if (procesarResponse(buffer,longitud,posUltimoProcesado)) {
-					buffer.erase(0,posUltimoProcesado);
+				buffer.insert(caracteresProcesados, bufferTemp, cantidad);
+				longitud = caracteresProcesados + cantidad;
+				if (procesarResponse(buffer, longitud, posUltimoProcesado)) {
+					buffer.erase(0, posUltimoProcesado);
+				} else {
+					//En caso de recibir un mensaje de falla del tracker lo notifica a la vistas
+					if (buffer.find("failure", 0) != string::npos)
+						if (torrent->getControlador() != NULL)
+							torrent->getControlador()->notificarVista(buffer);
+					caracteresProcesados += cantidad;
+					buffer.resize(caracteresProcesados + cantidad);
 				}
-				else {
-					//En caso de recibir un mensaje de falla del tracker lo notifico a la vistas
-					if (buffer.find("failure",0)!=string::npos)
-						 torrent->getControlador()->notificarVista(buffer);
-
-					caracteresProcesados+=cantidad;
-					buffer.resize(caracteresProcesados+cantidad);
-				}
-
 			} else {
 				seCerro = true;
 			}
 		}
-		if ( refresh){
-			if (trackerRemoto.is_valid()){
+		if (refresh) {
+			if (trackerRemoto.is_valid()) {
 				torrent->removerPeersInactivos(NULL);
 				cerrarConexion();
 			}
-			if (connect()){
-				torrent->enviarEventoEstado(NULL,400);
+			if (connect()) {
+				torrent->enviarEventoEstado(NULL, 400);
 				refresh = false;
 				seCerro = false;
-				caracteresProcesados=0;
+				caracteresProcesados = 0;
 			}
 		}
 		sleep(3);
-	}while (trackerRemoto.is_valid() || refresh);
+	} while (trackerRemoto.is_valid() || refresh);
 
-	std::cout<<"fin run del tracker"<<std::endl;//todo.. sacar!!
 	return NULL;
 }
 
 bool Tracker::connect() {
 
 	if (this->url.length() > 0) {
-		return (trackerRemoto.connectWithTimeout(this->url, puerto,5*TIME_OUT_CONNECT) == OK);
+		return (trackerRemoto.connectWithTimeout(this->url, puerto, 5*
+				TIME_OUT_CONNECT ) == OK);
 	} else {
 		return false;
 	}
@@ -109,9 +106,10 @@ void Tracker::inicilizar(std::string url) {
 	}
 }
 
-bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoProcesado) {
+bool Tracker::procesarResponse(std::string& buffer, int& longitud,
+		int &posUltimoProcesado) {
 	std::string salida;
-	if (extraerBencode(buffer, longitud,salida,posUltimoProcesado)) {
+	if (extraerBencode(buffer, longitud, salida, posUltimoProcesado)) {
 		BencodeParser parser(salida.c_str(), longitud);
 		if (parser.procesar()) {
 			DatosParser* datos;
@@ -125,41 +123,39 @@ bool Tracker::procesarResponse(std::string& buffer,int& longitud,int &posUltimoP
 				delete[] aux;
 			}
 			delete datos;
-		}
-		else
-			return false ;
+		} else
+			return false;
 	} else
 		return false;
 
 	return true;
 }
 
-bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &salida,int &posUltimoProcesado) {
+bool Tracker::extraerBencode(std::string &buffer, int &longitud,
+		std::string &salida, int &posUltimoProcesado) {
 
-	unsigned i = 0, marca,longitudBencode;
-	longitudBencode=obtenerLongitudBencode (buffer,marca);
-	if(longitudBencode>0){
-		char *aux = new char[longitudBencode+1];
-		int longTemp = (longitudBencode+marca-1);
-		if (longTemp <= longitud -1) {
+	unsigned i = 0, marca, longitudBencode;
+	longitudBencode = obtenerLongitudBencode(buffer, marca);
+	if (longitudBencode > 0) {
+		char *aux = new char[longitudBencode + 1];
+		int longTemp = (longitudBencode + marca - 1);
+		if (longTemp <= longitud - 1) {
 			if (buffer[longTemp] == 'e') {
 				i = 0;
-				for (unsigned pos = marca; pos
-				< (longitudBencode + marca); pos++) {
+				for (unsigned pos = marca; pos < (longitudBencode + marca); pos++) {
 					aux[i] = buffer[pos];
 					i++;
 				}
 				aux[i] = '\0';
 				salida.insert(0, aux, longitudBencode);
 				longitud = longitudBencode;
-				posUltimoProcesado=longitudBencode+marca;
+				posUltimoProcesado = longitudBencode + marca;
 				delete[] aux;
 			} else {
 				delete[] aux;
 				return false;
 			}
-		}
-		else {
+		} else {
 			delete[] aux;
 			return false;
 		}
@@ -169,42 +165,43 @@ bool Tracker::extraerBencode(std::string &buffer, int &longitud,std::string &sal
 	return true;
 }
 
-int Tracker::obtenerLongitudBencode (std::string &buffer,UINT &marca){
+int Tracker::obtenerLongitudBencode(std::string &buffer, UINT &marca) {
 
-	unsigned inicio = 0, i=0,marcaPeers,marcaFinLong,salida;
+	unsigned inicio = 0, i = 0, marcaPeers, marcaFinLong, salida;
 
-	marca       = buffer.find("d8:complete", 0);
-	marcaPeers  = buffer.find("peers",0);
-	marcaFinLong= buffer.find(":",marcaPeers);
+	marca = buffer.find("d8:complete", 0);
+	marcaPeers = buffer.find("peers", 0);
+	marcaFinLong = buffer.find(":", marcaPeers);
 
-	if (marca != string::npos && marcaPeers != string::npos && marcaFinLong != string::npos) {
+	if (marca != string::npos && marcaPeers != string::npos && marcaFinLong
+			!= string::npos) {
 		//Obtengo la longitud total de los peers
 		std::string longitudPeers;
-		for (inicio = marcaPeers + 5; inicio < marcaFinLong ; inicio++) {
+		for (inicio = marcaPeers + 5; inicio < marcaFinLong; inicio++) {
 			longitudPeers[i] = buffer[inicio];
 			i++;
 		}
-		longitudPeers[i]='\0';
-		salida= atoi(longitudPeers.c_str())+(marcaFinLong-marca)+2;
+		longitudPeers[i] = '\0';
+		salida = atoi(longitudPeers.c_str()) + (marcaFinLong - marca) + 2;
 		return salida;
-	}
-	else return ERROR;
+	} else
+		return ERROR;
 
 }
 
 void Tracker::decodificarPeers(char * cadena, UINT longitudCadena) {
 
-	int cantMax =  torrent->getCantidadMaximaPeers();
+	int cantMax = torrent->getCantidadMaximaPeers();
 	int cantPeers = torrent->getCantPeers();
 	int cantIps = (int) (longitudCadena / 6);
 	unsigned short int puerto;
 	int i = 0;
-	int rondas = 0;
 	refresh = false;
 	time_t horaActual;
-	UINT difInterval,difDownload;
-	do{
-		while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo() && !refresh) {
+	UINT difInterval, difDownload;
+	do {
+		while ((cantMax > cantPeers) && (i < cantIps) && torrent->estaActivo()
+				&& !refresh) {
 			std::stringstream ip;
 			int index = (i * 6);
 			UCHAR temp = (UCHAR) cadena[index];
@@ -218,30 +215,32 @@ void Tracker::decodificarPeers(char * cadena, UINT longitudCadena) {
 			memcpy(&puerto, cadena + index + 4, sizeof(USINT));
 			puerto = ntohs(puerto);
 			std::string ip_string = ip.str();
-			if (!torrent->existePeerIP(ip_string)){
+			if (!torrent->existePeerIP(ip_string)) {
 				torrent->agregarPeer(ip_string, puerto);
 			}
 			i++;
 			cantPeers = torrent->getCantPeers();
-			while( torrent->estaActivo() && (cantPeers == cantMax) && !refresh){
+			while (torrent->estaActivo() && (cantPeers == cantMax) && !refresh) {
 				torrent->removerPeersInactivos(NULL);
 				cantPeers = torrent->getCantPeers();
 				sleep(5);
 			}
 
 			horaActual = time(NULL);
-			difInterval = (UINT) difftime(horaActual, torrent->getTimeRefresh());
-			difDownload = (UINT) difftime(horaActual, torrent->getTimeLastDown());
-			if (difInterval >= minInterval && difDownload >=MIN_REFRESH_DOWNLOAD) {
+			difInterval
+			= (UINT) difftime(horaActual, torrent->getTimeRefresh());
+			difDownload = (UINT) difftime(horaActual,
+					torrent->getTimeLastDown());
+			if (difInterval >= minInterval && difDownload
+					>= MIN_REFRESH_DOWNLOAD) {
 				torrent->refrescarPeers();
 				torrent->setTimeRefresh(horaActual);
 				torrent->setTimeLastDown(horaActual);
 			}
 
 		}
-		rondas ++; //TODO.. es necesaria esta variable? :S
 		i = 0;
-	}while(!refresh && torrent->estaActivo());
+	} while (!refresh && torrent->estaActivo());
 }
 
 std::string Tracker::getPath() {
@@ -260,6 +259,6 @@ void Tracker::setTorrent(Torrent* unTorrent) {
 	this->torrent = unTorrent;
 }
 
-void Tracker::setRefresh(bool refresh){
+void Tracker::setRefresh(bool refresh) {
 	this->refresh = refresh;
 }

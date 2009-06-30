@@ -51,8 +51,7 @@ public:
 	 * devuelve un puntero al objeto torrent o NULL en caso de error */
 	Torrent* agregarTorrent(std::string ruta);
 
-	/* borra el torrent indicado en el parametro
-	 * ver si devuelve algo en caso de error */
+	/* borra el torrent indicado en el parametro */
 	void borrarTorrent(Torrent*);
 
 	/*El ClienteTorrent recibe conexiones de Peers remotos y los

@@ -15,7 +15,7 @@ int main(int argc, char **argv) {
 	Gtk::Main kit(0, 0);
 	ClienteTorrent cliente;
 	Controlador controlador(cliente);
-	Vista* ventana;
+	Vista* ventana = NULL;
 	if (argc > 1) {
 		std::string arg1 = argv[1];
 		if (arg1 == "-c") {
