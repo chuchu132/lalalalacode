@@ -886,7 +886,7 @@ Luc&#xED;a Garbarini
             <child>
               <object class="GtkLabel" id="label3">
                 <property name="visible">True</property>
-                <property name="label" translatable="yes">El puerto se modificara al reinicial el programa</property>
+                <property name="label" translatable="yes">El puerto se modificara al reiniciar el programa</property>
               </object>
               <packing>
                 <property name="top_attach">2</property>

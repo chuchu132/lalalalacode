@@ -34,9 +34,7 @@
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
 
-//#define OPEN_HELP "firefox help/main.html"
 #define OPEN_HELP "xdg-open help/main.html"
-//xdg-open help/main.html
 
 
 Ventana::Ventana():attr(new AttributesView()),torrents(new TorrentView()) {
@@ -250,6 +248,7 @@ void Ventana::on_button_add_clicked() {
 	if (result == Gtk::RESPONSE_OK) {
 		this->button_accept_clicked();
 	}
+	select_window->set_filter(filter);
 }
 
 void Ventana::on_button_erase_clicked() {
@@ -387,7 +386,7 @@ void Ventana::procesarEvento() {
 	case 1:{//borrar torrent
 		mutex_torrents.lock();
 		Torrent *t = torrents->getSelectedTorrent();
-		if (t != NULL) {//ver si este if no es redundante
+		if (t != NULL) {
 			torrents->eraseSelectedRow();
 			controlador->borrarTorrent(t);
 			attr->torrentDeleted(t);

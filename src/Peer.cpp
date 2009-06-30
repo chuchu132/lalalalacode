@@ -36,6 +36,7 @@ bool Peer::procesar(char* buffer, int length) {
 	switch (id) {
 	case ID_MSJ_CHOKE: {
 		peer_choking = true;
+		std::cout<<"nos mando choke"<<std::endl;
 	}
 		break;
 	case ID_MSJ_UNCHOKE: {
