@@ -209,8 +209,8 @@ void Consola::pantallaConfiguracion() {
 	while (continuar) {
 		clrscr();
 		std::cout << "\n Configuracion" << std::endl << "  VALORES ACTUALES:"
-		<< std::endl << "  RUTA DE DESCARGAS: " << RUTA_DESCARGAS
-		<< std::endl << "  PUERTO : " << PUERTO_DEFAULT << std::endl
+		<< std::endl << "  RUTA DE DESCARGAS: " << rutaDescargas
+		<< std::endl << "  PUERTO : " << puerto << std::endl
 		<< " [1] VOLVER" << std::endl << " [2] CAMBIAR URL DESCARGAS"
 		<< std::endl << " [3] CAMBIAR PUERTO" << std::endl
 		<< "Opcion: ";
