@@ -44,6 +44,7 @@ private:
 
 	Gtk::TreeModelColumn<Glib::ustring> col_categories;
 	Gtk::TreeModelColumn<std::string> col_cat_status;
+	Gtk::TreeModelColumn<UINT> col_cantidad;
 
 	/* lista */
 	Glib::RefPtr<Gtk::ListStore> list_torrents;
@@ -51,25 +52,14 @@ private:
 
 	/* fila seleccionada */
 	Glib::RefPtr<Gtk::TreeSelection> selection;
-	Glib::RefPtr<Gtk::TreeSelection> selection_categories;
 
-	Controlador *controlador;
 	AttributesView *attr;//muestra los atributos del torrent
-
-	/* Signal handler para fila del categories view seleccionada */
-	void on_category_selected();
 
 	/* Signal handler para fila del tree view seleccionada */
 	void on_row_selected();
 
 	/* actualiza la fila con los datos del torrent */
 	void updateRowValues(Gtk::TreeModel::Row &row, Torrent *t);
-
-	/* muestra todos los torrents */
-	void showAll();
-
-	/* oculta los que no tienen este estado */
-	void hideRows(std::string);
 
 public:
 
@@ -110,8 +100,9 @@ public:
 	/* vacia la lista de torrents */
 	void empty();
 
-	void setControlador(Controlador *c);
-
+	/* actualiza la cantidad de torrents en cada estado */
+	/* en caso de no tener nuevo estado recibe estado = "" */
+	void updateCantidad(std::string estado, std::string anterior);
 };
 
 #endif /* TORRENTVIEW_H_ */

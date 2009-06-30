@@ -51,6 +51,7 @@ private:
 	Gtk::Label *lname;
 
 	Torrent *torrent;//torrent seleccionado
+	Mutex mutex_info; //mutex para la actualizacion de informacion
 
 	/* muestra los peers del Torrent seleccionado */
 	void showPeers();

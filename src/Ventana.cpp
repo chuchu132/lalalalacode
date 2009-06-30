@@ -301,7 +301,7 @@ void Ventana::button_accept_clicked() {
 }
 
 void Ventana::actualizarEstado(Torrent *t) {
-	torrents->updateRow(t);//tal vez va el mutex aca tb todo sacar!
+	torrents->updateRow(t);
 	if (t == torrents->getSelectedTorrent())
 		attr->showInfo(t);
 }
@@ -388,8 +388,10 @@ void Ventana::procesarEvento() {
 		Torrent *t = torrents->getSelectedTorrent();
 		if (t != NULL) {
 			torrents->eraseSelectedRow();
+			std::string estado = t->getEstado();
 			controlador->borrarTorrent(t);
 			attr->torrentDeleted(t);
+			torrents->updateCantidad("",estado);
 		}
 		mutex_torrents.unlock();
 	}
@@ -461,7 +463,6 @@ void Ventana::setRutaDescargas(std::string ruta) {
 
 void Ventana::setControlador(Controlador *c){
 	controlador = c;
-	torrents->setControlador(c);
 }
 
 bool Ventana::mover() {
