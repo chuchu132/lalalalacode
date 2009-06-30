@@ -266,7 +266,7 @@ void Peer::procesarBitfield(const char* bitfield, int length) {
 }
 
 void Peer::procesarRequest(int index, int begin, int length) {
-	/*if (am_choking) {
+	/*if (am_choking) { //TODO sacar
 		sendMsg(ID_MSJ_CHOKE);
 	} else {*/
 		std::cout<< " uploaded "<< length <<std::endl;
