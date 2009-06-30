@@ -58,7 +58,7 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_INTERESTED: {
-		//this->sendMsg(ID_MSJ_UNCHOKE); TODO!!!
+		this->sendMsg(ID_MSJ_UNCHOKE);
 		this->setAm_choking(false);
 		peer_interested = true;
 	}
@@ -226,7 +226,7 @@ bool Peer::sendPiece(int index, int begin, int lenght) {
 	if ((data = fileManager->readBlock(index, begin, lenght)) != NULL) {
 		ParserMensaje parser;
 		bool retorno;
-		int tamBuffer = (LEN_BASE_MSJ_PIECE + lenght + 1);
+		int tamBuffer = (LEN_BASE_MSJ_PIECE + lenght + LEN_BASE_SEND_UPLOAD);
 		char* buffer = new char[tamBuffer];
 		parser.crearMensajePiece(index, begin, lenght, data, buffer);
 		llaveEnvio.lock();

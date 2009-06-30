@@ -52,7 +52,8 @@ const int  LEN_MSJ_NOT_INTERESTED = LEN_MSJ_COMMON;
 const int  LEN_MSJ_HAVE = 5;
 const int  LEN_BASE_MSJ_BITFIELD = 1;
 const int  LEN_MSJ_REQUEST = 13;
-const int  LEN_BASE_MSJ_PIECE = 9;//13;
+const int  LEN_BASE_MSJ_PIECE = 9;
+const int  LEN_BASE_SEND_UPLOAD= 5;
 const int  LEN_MSJ_CANCEL = 13;
 
 /*Longitudes de los mensajes constantes*/
