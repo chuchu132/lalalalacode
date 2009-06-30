@@ -58,7 +58,7 @@ bool Peer::procesar(char* buffer, int length) {
 	}
 		break;
 	case ID_MSJ_INTERESTED: {
-		this->sendMsg(ID_MSJ_UNCHOKE);
+		//this->sendMsg(ID_MSJ_UNCHOKE); TODO!!!
 		this->setAm_choking(false);
 		peer_interested = true;
 	}
