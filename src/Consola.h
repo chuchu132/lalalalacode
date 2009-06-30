@@ -37,6 +37,10 @@ public:
 
 	std::string getRutaDescargas();
 
+	void setPuerto(UINT puerto);
+
+	void setRutaDescargas(std::string ruta);
+
 	bool huboError();
 
 private:

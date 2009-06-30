@@ -49,6 +49,7 @@ private:
 	Gtk::ToolButton *button_down;
 	Gtk::ToolButton *button_peers;
 	Gtk::ToolButton *button_notif;
+	Gtk::Button *button_configDefault;
 
 	/* menu */
 	Glib::RefPtr<Gtk::ActionGroup> menu_archivo;
@@ -58,9 +59,10 @@ private:
 	Gtk::Widget* menu;
 
 	/* widgets */
-	Gtk::Entry *entry_puerto;
-	Gtk::ProgressBar *progress_bar;
-	sigc::connection id_activity;
+	Gtk::Entry *entry_puerto; //entry que guarda el puerto
+	Gtk::FileChooserButton *folder_button;//boton selector de carpetas
+	Gtk::ProgressBar *progress_bar;//barra que muestra actividad
+	sigc::connection id_activity;//id del refresh de la barra
 
 	/* clases de las distintas partes de la ventana */
 	AttributesView *attr;
@@ -81,6 +83,7 @@ private:
 	void on_button_down_clicked();
 	void on_button_peers_clicked();
 	void on_button_notifications_clicked();
+	void on_button_ConfigDefault_clicked();
 
 	void on_menu_about();
 	void on_menu_help();
@@ -140,6 +143,10 @@ public:
 	unsigned int getPuerto();
 
 	std::string getRutaDescargas();
+
+	void setPuerto(UINT puerto);
+
+	void setRutaDescargas(std::string ruta);
 
 	void detener();
 };

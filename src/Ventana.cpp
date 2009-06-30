@@ -25,6 +25,8 @@
 #define BUTTON_DOWN	"boton_bajar"
 #define BUTTON_PEERS "boton_peers"
 #define BUTTON_NOTIF "boton_notificaciones"
+#define BUTTON_FOLDER "filechooserbutton"
+#define BUTTON_CONFIG "button_configDefault"
 #define ENTRY_PUERTO "entry1"
 #define PROGRESS_BAR "progressbar1"
 #define MENU_VBOX "vbox1"
@@ -32,7 +34,8 @@
 #define VIEW_TORRENTS "torrents"
 #define VIEW_CATEGORIES "clasificacion"
 
-#define OPEN_HELP "firefox help/main.html"
+//#define OPEN_HELP "firefox help/main.html"
+#define OPEN_HELP "xdg-open help/main.html"
 //xdg-open help/main.html
 
 
@@ -105,9 +108,6 @@ void Ventana::getWindows() {
 	preferences_window->add_button(Gtk::Stock::CANCEL, Gtk::RESPONSE_CANCEL);
 	preferences_window->add_button(Gtk::Stock::APPLY, Gtk::RESPONSE_APPLY);
 	builder->get_widget(ENTRY_PUERTO, entry_puerto);
-	std::stringstream buf;
-	buf << PUERTO_DEFAULT;
-	entry_puerto->set_text(buf.str());
 }
 
 void Ventana::getViews() {
@@ -217,6 +217,8 @@ void Ventana::getButtons() {
 	builder->get_widget(BUTTON_DOWN, button_down);
 	builder->get_widget(BUTTON_PEERS, button_peers);
 	builder->get_widget(BUTTON_NOTIF, button_notif);
+	builder->get_widget(BUTTON_FOLDER, folder_button);
+	builder->get_widget(BUTTON_CONFIG, button_configDefault);
 }
 
 void Ventana::connectSignals() {
@@ -237,9 +239,12 @@ void Ventana::connectSignals() {
 			&Ventana::on_button_peers_clicked));
 	button_notif->signal_clicked().connect(sigc::mem_fun(*this,
 			&Ventana::on_button_notifications_clicked));
+	button_configDefault->signal_clicked().connect(sigc::mem_fun(*this,
+			&Ventana::on_button_ConfigDefault_clicked));
 }
 
 void Ventana::on_button_add_clicked() {
+	select_window->set_filter(filter);
 	int result = select_window->run();
 	select_window->hide();
 	if (result == Gtk::RESPONSE_OK) {
@@ -296,10 +301,15 @@ void Ventana::button_accept_clicked() {
 	procesar = 5;
 }
 
-void Ventana::actualizarEstado(Torrent* t) {
+void Ventana::actualizarEstado(Torrent *t) {
 	torrents->updateRow(t);//tal vez va el mutex aca tb todo sacar!
 	if (t == torrents->getSelectedTorrent())
 		attr->showInfo(t);
+}
+
+void Ventana::on_button_ConfigDefault_clicked() {
+	setPuerto(PUERTO_DEFAULT);
+	setRutaDescargas(RUTA_DESCARGAS);
 }
 
 void Ventana::addTorrent(Torrent *t) {
@@ -326,6 +336,7 @@ void Ventana::on_menu_help() {
 }
 
 void Ventana::on_menu_preferences() {
+	controlador->guardarConfigEnVista();
 	int result = preferences_window->run();
 
 	if (result == Gtk::RESPONSE_APPLY) {
@@ -385,34 +396,37 @@ void Ventana::procesarEvento() {
 	}
 		break;
 	case 2:{//detener torrent
+		mutex_torrents.lock();
 		Torrent *t = torrents->getSelectedTorrent();
-		if (t != NULL){
+		if (t != NULL)
 			controlador->detenerTorrent(t);
-		}
+		mutex_torrents.unlock();
 	}
 		break;
 	case 3: {//continuar torrent
+		mutex_torrents.lock();
 		Torrent *t = torrents->getSelectedTorrent();
 		if (t != NULL)
 			controlador->continuarTorrent(t);
+		mutex_torrents.unlock();
 	}
 		break;
 	case 4:{//refrescar peers
+		mutex_torrents.lock();
 		Torrent *t = torrents->getSelectedTorrent();
 		if (t != NULL)
 			controlador->refrescarPeers(t);
+		mutex_torrents.unlock();
 	}
 		break;
 	case 5: {//agregar torrent
 		Torrent *t = controlador->agregarTorrent(select_window->get_filename());
-		if (t != NULL) {
+		if (t != NULL)
 			addTorrent(t);
-		}
 	}
 		break;
 	}
 }
-
 
 void Ventana::detener() {
 	activo = false;
@@ -432,7 +446,18 @@ unsigned int Ventana::getPuerto() {
 }
 
 std::string Ventana::getRutaDescargas() {
-	return RUTA_DESCARGAS;//TODO implementar!!
+	return folder_button->get_filename();
+}
+
+void Ventana::setPuerto(UINT puerto) {
+	std::stringstream buf;
+	buf << puerto;
+	entry_puerto->set_text(buf.str());
+}
+
+void Ventana::setRutaDescargas(std::string ruta) {
+	if (! folder_button->set_filename(ruta))
+		std::cout<<"error al setear el filename en el boton"<<std::endl;
 }
 
 void Ventana::setControlador(Controlador *c){

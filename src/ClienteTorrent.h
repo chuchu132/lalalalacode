@@ -72,6 +72,7 @@ public:
 
 	std::string getPeerId();
 
+	/* devuelve el puerto en el que esta escuchando conexiones el cliente */
 	UINT getPuerto();
 
 	Configuracion* getConfiguracion();
