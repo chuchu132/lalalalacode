@@ -112,7 +112,7 @@ void Sha1::procesarBloques() {
 void Sha1::setearBloque(unsigned Aux[], unsigned bufferTemp[]) {
 
 	int cont;
-
+    //Inicializo las 16 primeras palabras del array Aux
 	for (cont = 0; cont < 16; cont++) {
 		Aux[cont]  = ((unsigned) bloquesMensaje[cont * 4]) << 24;
 		Aux[cont] |= ((unsigned) bloquesMensaje[cont * 4 + 1]) << 16;
@@ -188,6 +188,7 @@ void Sha1::rellenadoParcial(int limite) {
 }
 
 unsigned Sha1::circularShift(int cantBits, unsigned bloque) {
+	/*realiza el shift circular de bloque en cantBits posiciones a la izquierda*/
 	return ((bloque << cantBits) & 0xFFFFFFFF) | ((bloque & 0xFFFFFFFF) >> (32 - cantBits));
 }
 
